@@ -4,7 +4,7 @@ using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
 
-namespace SocialNetworkApi.Application.Features.Chatrooms.Queries.GetChatroomById;
+namespace SocialNetworkApi.Application.Features.Chatrooms.Queries;
 
 public class GetChatroomByIdQueryHandler : IRequestHandler<GetChatroomByIdQuery, QueryResult<ChatroomDto>>
 {

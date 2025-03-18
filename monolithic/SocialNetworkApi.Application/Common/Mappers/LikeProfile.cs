@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using SocialNetworkApi.Application.Common.DTOs;
-using SocialNetworkApi.Application.Features.Likes.Commands.CreateLike;
+using SocialNetworkApi.Application.Features.Likes.Commands;
 using SocialNetworkApi.Domain.Entities;
 
 namespace SocialNetworkApi.Application.Common.Mappers;

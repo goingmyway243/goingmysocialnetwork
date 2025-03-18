@@ -1,6 +1,6 @@
 using System;
 
-namespace SocialNetworkApi.Application.Features.Comments.Queries.GetCommentById;
+namespace SocialNetworkApi.Application.Features.Comments.Queries;
 
 public class GetCommentByIdQueryHandler
 {

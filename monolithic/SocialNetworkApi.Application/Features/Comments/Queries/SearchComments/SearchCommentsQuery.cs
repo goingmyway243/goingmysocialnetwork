@@ -1,6 +1,6 @@
 using System;
 
-namespace SocialNetworkApi.Application.Features.Comments.Queries.SearchComment;
+namespace SocialNetworkApi.Application.Features.Comments.Queries;
 
 public class SearchCommentsQuery
 {

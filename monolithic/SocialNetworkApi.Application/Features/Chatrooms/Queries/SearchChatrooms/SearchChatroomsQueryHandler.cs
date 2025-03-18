@@ -1,6 +1,6 @@
 using System;
 
-namespace SocialNetworkApi.Application.Features.Chatrooms.Queries.SearchChatroom;
+namespace SocialNetworkApi.Application.Features.Chatrooms.Queries;
 
 public class SearchChatroomsQueryHandler
 {

@@ -1,6 +1,6 @@
 using System;
 
-namespace SocialNetworkApi.Application.Features.Contents.Queries.SearchContent;
+namespace SocialNetworkApi.Application.Features.Contents.Queries;
 
 public class SearchContentsQuery
 {

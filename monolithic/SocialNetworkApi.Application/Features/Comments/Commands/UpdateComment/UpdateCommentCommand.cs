@@ -1,7 +1,7 @@
 using MediatR;
 using SocialNetworkApi.Application.Common.DTOs;
 
-namespace SocialNetworkApi.Application.Features.Comments.Commands.UpdateComment;
+namespace SocialNetworkApi.Application.Features.Comments.Commands;
 
 public class UpdateCommentCommand : IRequest<CommandResult<CommentDto>>
 {

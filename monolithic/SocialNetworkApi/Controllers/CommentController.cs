@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SocialNetworkApi.Domain.Entities;
+using SocialNetworkApi.Application.Common.DTOs;
+using SocialNetworkApi.Application.Features.Comments.Commands;
+using MediatR;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -9,34 +9,71 @@ namespace SocialNetworkApi.Api.Controllers
     [Route("api/[controller]")]
     public class CommentController : ControllerBase
     {
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CommentEntity>>> GetComments()
+        private readonly IMediator _mediator;
+
+        public CommentController(IMediator mediator)
         {
-            // Implementation for getting all comments
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        public Task<ActionResult<IEnumerable<CommentDto>>> GetComments()
+        {
+            throw new NotImplementedException();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CommentEntity>> GetComment(int id)
+        public Task<ActionResult<CommentDto>> GetComment(int id)
         {
-            // Implementation for getting a comment by id
+            throw new NotImplementedException();
         }
 
         [HttpPost]
-        public async Task<ActionResult<CommentEntity>> CreateComment(CommentEntity comment)
+        public async Task<ActionResult<CommentDto>> CreateComment([FromBody] CreateCommentCommand request)
         {
-            // Implementation for creating a new comment
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateComment(int id, CommentEntity comment)
+        public async Task<IActionResult> UpdateComment(Guid id, [FromBody] UpdateCommentCommand request)
         {
-            // Implementation for updating a comment
+            if (id != request.Id)
+            {
+                return BadRequest("Your request is invalid!");
+            }
+
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteComment(int id)
+        public async Task<IActionResult> DeleteComment(Guid id)
         {
-            // Implementation for deleting a comment
+            var request = new DeleteCommentCommand { Id = id };
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
     }
 }

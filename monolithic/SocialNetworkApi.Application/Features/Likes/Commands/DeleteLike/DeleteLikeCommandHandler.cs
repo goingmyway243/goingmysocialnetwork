@@ -4,7 +4,7 @@ using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
 using System;
 
-namespace SocialNetworkApi.Application.Features.Likes.Commands.DeleteLike;
+namespace SocialNetworkApi.Application.Features.Likes.Commands;
 
 public class DeleteLikeCommandHandler : IRequestHandler<DeleteLikeCommand, CommandResult<Guid>>
 {

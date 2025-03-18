@@ -1,6 +1,6 @@
 using System;
 
-namespace SocialNetworkApi.Application.Features.ChatMessages.Queries.SearchChatMessage;
+namespace SocialNetworkApi.Application.Features.ChatMessages.Queries;
 
 public class SearchChatMessagesQuery
 {

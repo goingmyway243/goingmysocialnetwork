@@ -4,7 +4,7 @@ using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
 
-namespace SocialNetworkApi.Application.Features.Likes.Commands.UpdateLike;
+namespace SocialNetworkApi.Application.Features.Likes.Commands;
 
 public class UpdateLikeCommandHandler : IRequestHandler<UpdateLikeCommand, CommandResult<LikeDto>>
 {

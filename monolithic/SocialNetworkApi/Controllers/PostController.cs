@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using SocialNetworkApi.Application.Common.DTOs;
+using SocialNetworkApi.Application.Features.Posts.Commands;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -15,38 +17,63 @@ namespace SocialNetworkApi.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public Task<ActionResult<IEnumerable<PostDto>>> GetAll()
         {
-            return Ok(await _mediator.Send(new GetAllPostsQuery()));
+            throw new NotImplementedException();
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        public Task<ActionResult<PostDto>> GetById(Guid id)
         {
-            return Ok(await _mediator.Send(new GetPostByIdQuery { Id = id }));
+            throw new NotImplementedException();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreatePostCommand request)
+        public async Task<ActionResult<PostDto>> CreatePost([FromBody] CreatePostCommand request)
         {
-            return Ok(await _mediator.Send(request));
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdatePostCommand request)
+        public async Task<IActionResult> UpdatePost(Guid id, [FromBody] UpdatePostCommand request)
         {
-            if (request.Id != id)
+            if (id != request.Id)
             {
-                return BadRequest();
+                return BadRequest("Your request is invalid!");
             }
 
-            return Ok(await _mediator.Send(request));
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> DeletePost(Guid id)
         {
-            return Ok(await _mediator.Send(new DeletePostCommand { Id = id }));
+            var request = new DeletePostCommand { Id = id };
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SocialNetworkApi.Domain.Entities;
+using MediatR;
+using SocialNetworkApi.Application.Common.DTOs;
+using SocialNetworkApi.Application.Features.Likes.Commands;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -9,34 +9,71 @@ namespace SocialNetworkApi.Api.Controllers
     [Route("api/[controller]")]
     public class LikeController : ControllerBase
     {
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<LikeEntity>>> GetLikes()
+        private readonly IMediator _mediator;
+
+        public LikeController(IMediator mediator)
         {
-            // Implementation for getting all likes
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        public Task<ActionResult<IEnumerable<LikeDto>>> GetLikes()
+        {
+            throw new NotImplementedException();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<LikeEntity>> GetLike(int id)
+        public Task<ActionResult<LikeDto>> GetLike(Guid id)
         {
-            // Implementation for getting a like by id
+            throw new NotImplementedException();
         }
 
         [HttpPost]
-        public async Task<ActionResult<LikeEntity>> CreateLike(LikeEntity like)
+        public async Task<ActionResult<LikeDto>> CreateLike([FromBody] CreateLikeCommand request)
         {
-            // Implementation for creating a new like
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLike(int id, LikeEntity like)
+        public async Task<IActionResult> UpdateLike(Guid id, UpdateLikeCommand request)
         {
-            // Implementation for updating a like
+            if (id != request.Id)
+            {
+                return BadRequest("Your request is invalid!");
+            }
+
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLike(int id)
+        public async Task<IActionResult> DeleteLike(Guid id)
         {
-            // Implementation for deleting a like
+            var request = new DeleteLikeCommand { Id = id };
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
     }
 }

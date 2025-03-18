@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SocialNetworkApi.Domain.Entities;
+using MediatR;
+using SocialNetworkApi.Application.Common.DTOs;
+using SocialNetworkApi.Application.Features.ChatMessages.Commands;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -9,34 +9,71 @@ namespace SocialNetworkApi.Api.Controllers
     [Route("api/[controller]")]
     public class ChatMessageController : ControllerBase
     {
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ChatMessageEntity>>> GetChatMessages()
+        private readonly IMediator _mediator;
+
+        public ChatMessageController(IMediator mediator)
         {
-            // Implementation for getting all chat messages
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        public Task<ActionResult<IEnumerable<ChatMessageDto>>> GetChatMessages()
+        {
+            throw new NotImplementedException();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ChatMessageEntity>> GetChatMessage(int id)
+        public Task<ActionResult<ChatMessageDto>> GetChatMessage(Guid id)
         {
-            // Implementation for getting a chat message by id
+            throw new NotImplementedException();
         }
 
         [HttpPost]
-        public async Task<ActionResult<ChatMessageEntity>> CreateChatMessage(ChatMessageEntity chatMessage)
+        public async Task<ActionResult<ChatMessageDto>> CreateChatMessage([FromBody] CreateChatMessageCommand request)
         {
-            // Implementation for creating a new chat message
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateChatMessage(int id, ChatMessageEntity chatMessage)
+        public async Task<IActionResult> UpdateChatMessage(Guid id, [FromBody] UpdateChatMessageCommand request)
         {
-            // Implementation for updating a chat message
+            if (id != request.Id)
+            {
+                return BadRequest("Your request is invalid!");
+            }
+
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteChatMessage(int id)
+        public async Task<IActionResult> DeleteChatMessage(Guid id)
         {
-            // Implementation for deleting a chat message
+            var request = new DeleteChatMessageCommand { Id = id };
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
     }
 }

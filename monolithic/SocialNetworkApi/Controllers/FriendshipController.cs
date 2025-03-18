@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using SocialNetworkApi.Domain.Entities;
+using MediatR;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -9,34 +8,41 @@ namespace SocialNetworkApi.Api.Controllers
     [Route("api/[controller]")]
     public class FriendshipController : ControllerBase
     {
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<FriendshipEntity>>> GetFriendships()
+        private readonly IMediator _mediator;
+
+        public FriendshipController(IMediator mediator)
         {
-            // Implementation for getting all friendships
+            _mediator = mediator;
+        }
+        
+        [HttpGet]
+        public Task<ActionResult<IEnumerable<FriendshipEntity>>> GetFriendships()
+        {
+            throw new NotImplementedException();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<FriendshipEntity>> GetFriendship(int id)
+        public Task<ActionResult<FriendshipEntity>> GetFriendship(int id)
         {
-            // Implementation for getting a friendship by id
+            throw new NotImplementedException();
         }
 
         [HttpPost]
-        public async Task<ActionResult<FriendshipEntity>> CreateFriendship(FriendshipEntity friendship)
+        public Task<ActionResult<FriendshipEntity>> CreateFriendship(FriendshipEntity friendship)
         {
-            // Implementation for creating a new friendship
+            throw new NotImplementedException();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateFriendship(int id, FriendshipEntity friendship)
+        public Task<IActionResult> UpdateFriendship(int id, FriendshipEntity friendship)
         {
-            // Implementation for updating a friendship
+            throw new NotImplementedException();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFriendship(int id)
+        public Task<IActionResult> DeleteFriendship(int id)
         {
-            // Implementation for deleting a friendship
+            throw new NotImplementedException();
         }
     }
 }

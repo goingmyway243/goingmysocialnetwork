@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SocialNetworkApi.Domain.Entities;
+using SocialNetworkApi.Application.Common.DTOs;
+using SocialNetworkApi.Application.Features.Chatrooms.Commands;
+using MediatR;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -9,34 +9,71 @@ namespace SocialNetworkApi.Api.Controllers
     [Route("api/[controller]")]
     public class ChatroomController : ControllerBase
     {
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ChatroomEntity>>> GetChatrooms()
+        private readonly IMediator _mediator;
+
+        public ChatroomController(IMediator mediator)
         {
-            // Implementation for getting all chatrooms
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        public Task<ActionResult<IEnumerable<ChatroomDto>>> GetChatrooms()
+        {
+            throw new NotImplementedException();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ChatroomEntity>> GetChatroom(int id)
+        public Task<ActionResult<ChatroomDto>> GetChatroom(Guid id)
         {
-            // Implementation for getting a chatroom by id
+            throw new NotImplementedException();
         }
 
         [HttpPost]
-        public async Task<ActionResult<ChatroomEntity>> CreateChatroom(ChatroomEntity chatroom)
+        public async Task<ActionResult<ChatroomDto>> CreateChatroom([FromBody] CreateChatroomCommand request)
         {
-            // Implementation for creating a new chatroom
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateChatroom(int id, ChatroomEntity chatroom)
+        public async Task<IActionResult> UpdateChatroom(Guid id, [FromBody] UpdateChatroomCommand request)
         {
-            // Implementation for updating a chatroom
+            if (id != request.Id)
+            {
+                return BadRequest("Your request is invalid!");
+            }
+            
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteChatroom(int id)
+        public async Task<IActionResult> DeleteChatroom(Guid id)
         {
-            // Implementation for deleting a chatroom
+            var request = new DeleteChatroomCommand { Id = id };
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
     }
 }

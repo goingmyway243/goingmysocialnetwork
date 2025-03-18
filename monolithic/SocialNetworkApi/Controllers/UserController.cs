@@ -40,9 +40,14 @@ namespace SocialNetworkApi.Api.Controllers
             return Ok(result.Data);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateUserCommand request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserCommand request)
         {
+            if (id != request.Id)
+            {
+                return BadRequest("Your request is invalid!");
+            }
+            
             var result = await _mediator.Send(request);
             if (!result.IsSuccess)
             {

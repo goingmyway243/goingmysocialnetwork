@@ -1,6 +1,6 @@
 using System;
 
-namespace SocialNetworkApi.Application.Features.Friendships.Queries.SearchFriendship;
+namespace SocialNetworkApi.Application.Features.Friendships.Queries;
 
 public class SearchFriendshipsQuery
 {

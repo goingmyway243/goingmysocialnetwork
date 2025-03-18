@@ -1,7 +1,7 @@
 using MediatR;
 using SocialNetworkApi.Application.Common.DTOs;
 
-namespace SocialNetworkApi.Application.Features.Likes.Commands.UpdateLike;
+namespace SocialNetworkApi.Application.Features.Likes.Commands;
 
 public class UpdateLikeCommand : IRequest<CommandResult<LikeDto>>
 {

@@ -4,7 +4,7 @@ using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
 
-namespace SocialNetworkApi.Application.Features.Comments.Commands.CreateComment;
+namespace SocialNetworkApi.Application.Features.Comments.Commands;
 
 public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, CommandResult<CommentDto>>
 {

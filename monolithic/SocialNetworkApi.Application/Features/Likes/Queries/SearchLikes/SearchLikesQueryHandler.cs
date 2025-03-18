@@ -1,6 +1,6 @@
 using System;
 
-namespace SocialNetworkApi.Application.Features.Likes.Queries.SearchLike;
+namespace SocialNetworkApi.Application.Features.Likes.Queries;
 
 public class SearchLikesQueryHandler
 {

@@ -1,6 +1,6 @@
 using System;
 
-namespace SocialNetworkApi.Application.Features.Friendships.Commands.CreateFriendship;
+namespace SocialNetworkApi.Application.Features.Friendships.Commands;
 
 public class CreateFriendshipCommand
 {

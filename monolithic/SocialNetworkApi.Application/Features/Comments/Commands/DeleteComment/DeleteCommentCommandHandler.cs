@@ -3,7 +3,7 @@ using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
 
-namespace SocialNetworkApi.Application.Features.Comments.Commands.DeleteComment;
+namespace SocialNetworkApi.Application.Features.Comments.Commands;
 
 public class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentCommand, CommandResult<Guid>>
 {

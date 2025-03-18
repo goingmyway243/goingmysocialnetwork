@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SocialNetworkApi.Domain.Entities;
+using MediatR;
+using SocialNetworkApi.Application.Features.Contents.Commands;
+using SocialNetworkApi.Application.Common.DTOs;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -9,34 +9,57 @@ namespace SocialNetworkApi.Api.Controllers
     [Route("api/[controller]")]
     public class ContentController : ControllerBase
     {
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContentEntity>>> GetContents()
+        private readonly IMediator _mediator;
+
+        public ContentController(IMediator mediator)
         {
-            // Implementation for getting all contents
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        public Task<ActionResult<IEnumerable<ContentDto>>> GetContents()
+        {
+            throw new NotImplementedException();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ContentEntity>> GetContent(int id)
+        public Task<ActionResult<ContentDto>> GetContent(Guid id)
         {
-            // Implementation for getting a content by id
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<ContentEntity>> CreateContent(ContentEntity content)
-        {
-            // Implementation for creating a new content
+            throw new NotImplementedException();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateContent(int id, ContentEntity content)
+        public async Task<IActionResult> UpdateContent(Guid id, [FromBody] UpdateContentCommand request)
         {
-            // Implementation for updating a content
+            if (id != request.Id)
+            {
+                return BadRequest("Your request is invalid!");
+            }
+
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteContent(int id)
+        public async Task<IActionResult> DeleteContent(Guid id)
         {
-            // Implementation for deleting a content
+            var request = new DeleteContentCommand { Id = id };
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
 
-namespace SocialNetworkApi.Application.Features.Comments.Commands.UpdateComment;
+namespace SocialNetworkApi.Application.Features.Comments.Commands;
 
 public class UpdateCommentCommandHandler : IRequestHandler<UpdateCommentCommand, CommandResult<CommentDto>>
 {

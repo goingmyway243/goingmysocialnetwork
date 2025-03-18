@@ -1,6 +1,6 @@
 using System;
 
-namespace SocialNetworkApi.Application.Features.Friendships.Commands.DeleteFriendship;
+namespace SocialNetworkApi.Application.Features.Friendships.Commands;
 
 public class DeleteFriendshipCommand
 {

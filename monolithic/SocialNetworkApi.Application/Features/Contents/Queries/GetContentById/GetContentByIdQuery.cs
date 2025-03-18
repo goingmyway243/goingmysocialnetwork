@@ -1,6 +1,6 @@
 using System;
 
-namespace SocialNetworkApi.Application.Features.Contents.Queries.GetContentById;
+namespace SocialNetworkApi.Application.Features.Contents.Queries;
 
 public class GetContentByIdQuery
 {

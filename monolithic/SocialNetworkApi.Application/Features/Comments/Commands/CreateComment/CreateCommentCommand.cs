@@ -1,7 +1,7 @@
 using MediatR;
 using SocialNetworkApi.Application.Common.DTOs;
 
-namespace SocialNetworkApi.Application.Features.Comments.Commands.CreateComment;
+namespace SocialNetworkApi.Application.Features.Comments.Commands;
 
 public class CreateCommentCommand : IRequest<CommandResult<CommentDto>>
 {

@@ -1,7 +1,7 @@
 using MediatR;
 using SocialNetworkApi.Application.Common.DTOs;
 
-namespace SocialNetworkApi.Application.Features.Chatrooms.Commands.UpdateChatroom;
+namespace SocialNetworkApi.Application.Features.Chatrooms.Commands;
 
 public class UpdateChatroomCommand : IRequest<CommandResult<ChatroomDto>>
 {

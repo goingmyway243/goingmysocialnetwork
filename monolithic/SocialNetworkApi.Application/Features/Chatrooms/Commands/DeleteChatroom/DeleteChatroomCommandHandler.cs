@@ -4,7 +4,7 @@ using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
 
-namespace SocialNetworkApi.Application.Features.Chatrooms.Commands.DeleteChatroom;
+namespace SocialNetworkApi.Application.Features.Chatrooms.Commands;
 
 public class DeleteChatroomCommandHandler : IRequestHandler<DeleteChatroomCommand, CommandResult<Guid>>
 {

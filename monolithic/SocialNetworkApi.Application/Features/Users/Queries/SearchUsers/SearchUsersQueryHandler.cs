@@ -1,6 +1,6 @@
 using System;
 
-namespace SocialNetworkApi.Application.Features.Users.Queries.SearchUser;
+namespace SocialNetworkApi.Application.Features.Users.Queries;
 
 public class SearchUsersQueryHandler
 {

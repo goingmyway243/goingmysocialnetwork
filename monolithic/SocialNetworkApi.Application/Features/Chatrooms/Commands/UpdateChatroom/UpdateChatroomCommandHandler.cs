@@ -4,7 +4,7 @@ using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
 
-namespace SocialNetworkApi.Application.Features.Chatrooms.Commands.UpdateChatroom;
+namespace SocialNetworkApi.Application.Features.Chatrooms.Commands;
 
 public class UpdateChatroomCommandHandler : IRequestHandler<UpdateChatroomCommand, CommandResult<ChatroomDto>>
 {
