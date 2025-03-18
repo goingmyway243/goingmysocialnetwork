@@ -1,0 +1,9 @@
+<div class="create-post-bar" *ngIf="fullSize" (click)="openDialog()">
+  <user-avatar [showInfo]="false"></user-avatar>
+  <div class="placeholder">
+    {{ placeholder }}
+  </div>
+</div>
+<button class="primary create-post-button" *ngIf="!fullSize" (click)="openDialog()">
+  {{ buttonText }}
+</button>

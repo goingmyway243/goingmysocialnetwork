@@ -1,0 +1,17 @@
+.request-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--theme-color);
+  padding: 12px;
+  border-radius: 12px;
+
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+
+    button {
+      flex: 1;
+    }
+  }
+}

@@ -1,0 +1,72 @@
+.create-post-dialog {
+  background: var(--theme-color);
+  width: 500px;
+
+  .header {
+    position: relative;
+    border-bottom: 1px solid var(--secondary-color);
+    padding: 12px;
+
+    .title {
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .close-button {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      border-radius: 50%;
+      background: var(--disabled-color);
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      &:hover {
+        opacity: .7;
+      }
+
+      i {
+        position: relative;
+        top: 4px;
+        left: 7.5px;
+      }
+    }
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+
+    .post-input {
+      resize: none;
+      border: none;
+      width: 100%;
+      min-height: 100px;
+      outline: none;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      border: 1px solid var(--secondary-color);
+      border-radius: 12px;
+      padding: 12px;
+
+      .fa-images {
+        color: var(--text-color-success);
+        font-size: 20px;
+        cursor: pointer;
+
+        &:hover {
+          opacity: .7;
+        }
+      }
+    }
+
+    .post-button {
+      border-radius: 12px;
+    }
+  }
+}

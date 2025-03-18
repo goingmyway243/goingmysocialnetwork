@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    tools {
+        nodejs 'Node 22'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'echo "Building..."'
+                sh 'npm install'
+                sh 'npm run build --prod'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                sh 'echo "Packaging..."'
+                sh 'docker build -t going-my-social:${env.BUILD_ID} .'
+                sh 'docker save going-my-social:${env.BUILD_ID} > going-my-social-${env.BUILD_ID}.tar'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'echo "Deploying..."'
+                sshagent(['going-my-social-server']) {
+                    sh 'scp going-my-social-${env.BUILD_ID}.tar going-my-linux-01@40.83.124.227:~/going-my-social-${env.BUILD_ID}.tar'
+                    sh '''
+                        ssh going-my-linux-01@40.83.124.227 "
+                            docker rm -f going-my-social || true && \
+                            docker load < ~/going-my-social-${env.BUILD_ID}.tar && \
+                            docker run -d --name going-my-social -p 4200:80 going-my-social:${env.BUILD_ID}
+                        "
+                    '''
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,42 @@
+<div class="app-sidebar">
+  <div class="user-info-container">
+    <user-avatar></user-avatar>
+  </div>
+
+  <div class="menu-container">
+    <div class="menu-item --active" (click)="navigateTo('/home')">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </div>
+    <div class="menu-item">
+      <i class="fa-solid fa-compass"></i>
+      <span>Explore</span>
+    </div>
+    <div class="menu-item">
+      <i class="fa-solid fa-bell"></i>
+      <span>Notifications</span>
+    </div>
+    <div class="menu-item">
+      <i class="fa-solid fa-envelope"></i>
+      <span>Messages</span>
+    </div>
+    <div class="menu-item">
+      <i class="fa-solid fa-bookmark"></i>
+      <span>Bookmarks</span>
+    </div>
+    <div class="menu-item">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Analytics</span>
+    </div>
+    <div class="menu-item">
+      <i class="fa-solid fa-palette"></i>
+      <span>Theme</span>
+    </div>
+    <div class="menu-item">
+      <i class="fa-solid fa-gear"></i>
+      <span>Settings</span>
+    </div>
+  </div>
+
+  <create-post [buttonText]="'Create Post'"></create-post>
+</div>

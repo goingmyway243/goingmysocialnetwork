@@ -1,0 +1,22 @@
+.opal-tabstrip-headers {
+  display: flex;
+  justify-content: space-between;
+  
+  .opal-tabstrip-title {
+    display: block;
+    flex: 1;
+    text-align: center;
+    padding: var(--common-padding);
+    border-bottom: 5px solid var(--disabled-color);
+    cursor: pointer;
+
+    &.active {
+      color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    &.disabled {
+      opacity: .7;
+    }
+  }
+}

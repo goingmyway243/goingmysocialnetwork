@@ -1,0 +1,47 @@
+.app-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .user-info-container {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    background: var(--theme-color);
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .menu-container {
+    display: flex;
+    flex-direction: column;
+    background: var(--theme-color);
+    border-radius: 12px;
+    overflow: hidden;
+
+    .menu-item {
+      display: flex;
+      gap: 20px;
+      padding: 16px 20px;
+      align-items: center;
+      border-left: 8px solid transparent;
+      box-sizing: border-box;
+      cursor: pointer;
+
+      &.--active {
+       border-color: var(--primary-color);
+       color: var(--primary-color);
+      }
+
+      span, i {
+        font-size: 20px;
+      }
+
+      i {
+        display: flex;
+        justify-content: center;
+        width: 24px;
+      }
+    }
+  }
+}

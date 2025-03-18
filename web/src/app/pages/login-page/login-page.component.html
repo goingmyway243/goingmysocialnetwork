@@ -1,0 +1,73 @@
+<div class="login-page">
+  <!-- Main Content -->
+  <div class="login-content">
+    <!-- Left Section -->
+    <div class="login-left">
+      <div class="illustration">
+        <!-- You can add your rocket illustration here -->
+        <img class="coin" src="imgs/login/coin.png" alt="Coin">
+        <img class="dots" src="imgs/login/dots.png" alt="Dots">
+        <img class="spring" src="imgs/login/spring.png" alt="Spring">
+        <img class="white-outline" src="imgs/login/white-outline.png" alt="White Outline">
+        <img class="rocket" src="imgs/login/rocket.png" alt="Rocket">
+        <img class="stars" src="imgs/login/stars.png" alt="Stars">
+        <img class="cloud" src="imgs/login/cloud.png" alt="Cloud">
+      </div>
+      <div class="welcome-text">
+        <div>Connect, Share and Grow Together</div>
+        <div>With <span class="brand-name">Goingmysocial</span></div>
+      </div>
+    </div>
+
+    <!-- Right Section - Login Form -->
+    <div class="login-right">
+      <div class="login-form-container">
+        <h1 class="form-title">Sign In</h1>
+
+        <form class="login-form">
+          <!-- Username Input -->
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input #usernameInput
+                  matInput 
+                  type="text" 
+                  [formControl]="loginForm.controls.username">
+            <mat-icon matSuffix>person</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input #passwordInput
+                  matInput 
+                  type="password" 
+                  [formControl]="loginForm.controls.password">
+            <mat-icon matSuffix>lock</mat-icon>
+          </mat-form-field>
+
+          <!-- Forgot Password Link -->
+          <div class="forgot-password">
+            Forgot Password?
+          </div>
+
+          <!-- Sign In Button -->
+          <button type="submit" class="btn-signin" (click)="login($event)">
+            Sign In
+            <i class="arrow-right-icon"></i>
+          </button>
+        </form>
+
+        <!-- Social Login -->
+        <div class="social-login">
+          <i class="fa-brands fa-google"></i>
+          <i class="fa-brands fa-facebook"></i>
+          <i class="fa-brands fa-x-twitter"></i>
+          <i class="fa-brands fa-github"></i>
+        </div>
+
+        <div class="signup-link">
+          Don't have an account? <span class="signup-link-text" (click)="navigateToSignup()">Sign Up</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

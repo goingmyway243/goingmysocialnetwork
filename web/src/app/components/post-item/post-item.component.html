@@ -1,0 +1,33 @@
+<div class="post-item">
+  <div class="post-header">
+    <user-avatar></user-avatar>
+    <i class="fa-solid fa-ellipsis"></i>
+  </div>
+
+  <div class="post-body">
+    <div class="text-container">Sample post</div>
+    <div class="image-container">
+      <img src="imgs/sample.jpg" />
+    </div>
+  </div>
+
+  <div class="action-buttons">
+    <div class="left-section">
+      <i class="fa-regular fa-heart"></i>
+      <i class="fa-regular fa-comment-dots"></i>
+      <i class="fa-regular fa-share-from-square"></i>
+    </div>
+
+    <div class="right-section">
+      <i class="fa-regular fa-bookmark"></i>
+    </div>
+  </div>
+
+  <div class="post-footer">
+    <div class="comment-input-container">
+      <user-avatar class="comment-avatar" [showInfo]="false"></user-avatar>
+      <input type="text" class="comment-input" placeholder="Write a comment...">
+      <mat-icon color="primary" class="comment-button">send</mat-icon>
+    </div>
+  </div>
+</div>

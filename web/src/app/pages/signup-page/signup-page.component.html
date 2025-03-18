@@ -1,0 +1,87 @@
+<div class="signup-page">
+  <div class="signup-form-container">
+    <div class="form-title">Sign up</div>
+    <mat-stepper #stepper [linear]="true" class="stepper-container">
+      <mat-step [stepControl]="firstForm" label="Create your account">
+        <div class="first-step-wrapper">
+          <form [formGroup]="firstForm" class="first-form">
+            <mat-form-field>
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="userName">
+              <mat-error *ngIf="firstForm.controls.userName.invalid && (firstForm.controls.userName.dirty || firstForm.controls.userName.touched)">
+                Username is required
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Password</mat-label>
+              <input matInput type="password" formControlName="password">
+              <mat-error *ngIf="firstForm.controls.password.invalid && (firstForm.controls.password.dirty || firstForm.controls.password.touched)">
+                Password is required and must be at least 8 characters long
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Confirm password</mat-label>
+              <input matInput type="password" formControlName="confirmPassword">
+              <mat-error *ngIf="firstForm.controls.confirmPassword.invalid && (firstForm.controls.confirmPassword.dirty || firstForm.controls.confirmPassword.touched)">
+                Passwords must match
+              </mat-error>
+            </mat-form-field>
+          </form>
+          <button mat-flat-button color="primary" matStepperNext>Next</button>
+        </div>
+      </mat-step>
+
+      <mat-step [stepControl]="secondForm" label="Fill in your information">
+        <div class="second-step-wrapper">
+          <form [formGroup]="secondForm" class="second-form">
+            <mat-form-field>
+              <mat-label>Your name</mat-label>
+              <input matInput formControlName="name">
+              <mat-error *ngIf="secondForm.controls.name.invalid && (secondForm.controls.name.dirty || secondForm.controls.name.touched)">
+                Name is required
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email">
+              <mat-error *ngIf="secondForm.controls.email.invalid && (secondForm.controls.email.dirty || secondForm.controls.email.touched)">
+                Email is required and must be a valid email address
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Date of birth</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="secondForm.controls.dateOfBirth.invalid && (secondForm.controls.dateOfBirth.dirty || secondForm.controls.dateOfBirth.touched)">
+                Date of birth is required
+              </mat-error>
+            </mat-form-field>
+          </form>
+          <button mat-flat-button color="primary" matStepperNext>Next</button>
+        </div>
+      </mat-step>
+
+      <mat-step label="Done">
+        <div class="third-form">
+          <div>Congratulation</div>
+          <mat-icon class="check-icon">check_circle</mat-icon>
+          <div>Your account has been created successfully</div>
+          <button mat-flat-button color="primary" (click)="navigateToLogin()">
+            <mat-icon>arrow_back_ios</mat-icon>
+            Go back to login
+          </button>
+        </div>
+      </mat-step>
+    </mat-stepper>
+    
+    <button *ngIf="showBackButton()" 
+      mat-raised-button 
+      class="back-to-login" 
+      (click)="navigateToLogin()">
+      <mat-icon>arrow_back</mat-icon>
+      Back to login
+    </button>
+  </div>
+</div>

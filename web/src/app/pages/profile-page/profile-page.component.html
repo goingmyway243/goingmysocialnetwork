@@ -1,0 +1,30 @@
+<div class="flex flex-col align-center justify-center">
+  <div class="flex gap-4 bg-blue-500 w-full h-64 justify-end items-end p-4">
+    <button mat-raised-button>
+      <mat-icon matSuffix>photo_camera</mat-icon>
+      Upload image
+    </button>
+  </div>
+
+  <div class="flex items-center gap-4 border-b-2 border-gray-200 pb-4 mt-2 xl:-mt-6 xl:items-end">
+    <img class="w-32 h-32 rounded-full" src="/imgs/default-avatar.png"/>
+    <div class="flex flex-col gap-2 py-2">
+      <div class="text-black text-2xl font-bold">Light</div>
+      <div class="text-black text-sm">Software Engineer</div>
+    </div>
+  </div>
+
+  <mat-tab-group class="mt-2">
+    <mat-tab label="Posts">
+      <div class="flex flex-col gap-4 py-4">
+        <create-post [fullSize]="true" [placeholder]="'What\'s on your mind?'"></create-post>
+        <post-item></post-item>
+        <post-item></post-item>
+        <post-item></post-item>
+      </div>
+    </mat-tab>
+    <mat-tab label="About"></mat-tab>
+    <mat-tab label="Friends"></mat-tab>
+    <mat-tab label="Photos"></mat-tab>
+  </mat-tab-group>
+</div>

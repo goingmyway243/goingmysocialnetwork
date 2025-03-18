@@ -1,0 +1,121 @@
+/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@import '../public/fontawesome/css/all.css';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+:root {
+  --common-padding: 12px 16px;
+  --common-padding-vertical: 16px 12px;
+  --small-padding: 8px 12px;
+  --theme-color: #ffffff;
+  --reverse-theme-color: #000000;
+  --primary-color: #0052FF;
+  --secondary-color: #4D8FFF;
+  --tertiary-color: #F0F5FF;
+  --disabled-color: #E8E8E8;
+  --disabled-dark-color: #CCCCCC;
+  --error-color: #FFB3B3;
+  --success-color: #90EE90;
+  --warning-color: #FFD1A1;
+  --info-color: #B3B3FF;
+  --text-color-primary: #ffffff;
+  --text-color-secondary: #666666;
+  --text-color-tertiary: #888888;
+  --text-color-disabled: #CCCCCC;
+  --text-color-error: #FF0000;
+  --text-color-success: #008000;
+  --text-color-warning: #FFA500;
+
+  @include mat.menu-overrides((container-color: var(--theme-color)));
+}
+
+* {
+  font-family: "Sour Gummy", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--tertiary-color);
+  padding: 0;
+  margin: 0;
+}
+
+input {
+  border: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+button {
+  cursor: pointer;
+
+  &.primary {
+    color: var(--text-color-primary);
+    background-color: var(--primary-color);
+    padding: var(--common-padding);
+    border: none;
+    border-radius: 32px;
+    min-width: 100px;
+  }
+
+  &.secondary {
+    color: var(--text-color-primary);
+    background-color: var(--secondary-color);
+    border: none;
+    padding: var(--common-padding);
+    min-width: 100px;
+    border-radius: 32px;
+  }
+
+  &.disabled {
+    background-color: var(--disabled-color);
+    border: none;
+    padding: var(--common-padding);
+    min-width: 100px;
+    border-radius: 32px;
+  }
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.custom-panel-dialog .mat-mdc-dialog-surface {
+  border-radius: 12px;
+}
+
+.custom-menu {
+  .mat-mdc-menu-item {
+    padding: var(--common-padding);
+
+    .mat-mdc-menu-item-text {
+      display: flex;
+      gap: 12px;
+    }
+  }
+}
+
+.login-form mat-form-field {
+  .mat-mdc-text-field-wrapper {
+    border: none;
+    border-radius: 12px;
+    background: rgba($color: white, $alpha: 0.5);
+    font-size: 20px;
+
+    .mdc-floating-label {
+      color: var(--text-color-primary);
+    }
+  }
+}

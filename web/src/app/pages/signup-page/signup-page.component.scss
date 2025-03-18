@@ -1,0 +1,71 @@
+.signup-page {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: url('/imgs/login/1.jpg');
+  padding: 64px;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+
+  .signup-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    height: 80%;
+    gap: 32px;
+
+    .form-title {
+      font-size: 32px;
+      color: white;
+    }
+
+    .stepper-container {
+      background: rgba($color: white, $alpha: 0.4);
+      border: 4px solid white;
+      border-radius: 32px;
+
+      .first-step-wrapper,
+      .second-step-wrapper,
+      .third-form-wrapper {
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        gap: 16px;
+      }
+
+      .first-form,
+      .second-form,
+      .third-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .third-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        text-align: center;
+        font-size: 24px;
+
+        .check-icon {
+          font-size: 48px;
+          color:green;
+          width: 48px;
+          height: 48px;
+          background: white;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    .back-to-login {
+      width: 100%;
+      max-width: 200px;
+    }
+  }
+}

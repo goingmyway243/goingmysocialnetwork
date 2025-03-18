@@ -1,0 +1,22 @@
+.search-bar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  background: var(--tertiary-color);
+  padding: var(--common-padding);
+  border-radius: 32px;
+  width: 100%;
+
+  .search-input {
+    flex: 1;
+    width: 100%;
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  i {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,28 @@
+.app-body {
+  display: flex;
+  padding: 12px;
+  justify-content: space-between;
+  gap: 40px;
+
+  .page-container {
+    flex: 1;
+  }
+
+  .sidebar {
+    width: 280px;
+  }
+
+  .optional-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 320px;
+    gap: 12px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .app-body {
+    padding-left: 160px;
+    padding-right: 160px;
+  }
+}

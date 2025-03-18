@@ -1,0 +1,24 @@
+<div class="app-header">
+  <div class="logo">
+    {{ 'GoingmySocial' }}
+  </div>
+  
+  <search-bar [placeholder]="'Search for creators, inspirations, and projects'"></search-bar>
+  
+  <div class="action-buttons">
+    <create-post [buttonText]="'Create'"></create-post>
+    <user-avatar [mat-menu-trigger-for]="menu" [showInfo]="false"></user-avatar>
+    <mat-menu #menu="matMenu" class="custom-menu">
+      <ng-template matMenuContent>
+        <div mat-menu-item (click)="navigateToProfile()">
+          <i class="fa-solid fa-user"></i>
+          <span>Profile</span>
+        </div>
+        <div mat-menu-item (click)="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Logout</span>
+        </div>
+      </ng-template>
+    </mat-menu>
+  </div>
+</div>
