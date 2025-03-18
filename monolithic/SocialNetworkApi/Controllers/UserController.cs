@@ -55,7 +55,7 @@ namespace SocialNetworkApi.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var result = await _mediator.Send(new DeleteUserCommand { UserId = id });
+            var result = await _mediator.Send(new DeleteUserCommand { Id = id });
             if (!result.IsSuccess)
             {
                 return BadRequest(result.Error);

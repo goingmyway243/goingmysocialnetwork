@@ -6,5 +6,5 @@ namespace SocialNetworkApi.Application.Features.Users.Commands;
 
 public class DeleteUserCommand : IRequest<CommandResult<Guid>>
 {
-    public Guid UserId { get; set; }
+    public Guid Id { get; set; }
 }
