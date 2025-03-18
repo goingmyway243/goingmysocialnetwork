@@ -1,8 +1,10 @@
-using System;
+using MediatR;
+using SocialNetworkApi.Application.Common.DTOs;
 
 namespace SocialNetworkApi.Application.Features.Chatrooms.Commands;
 
-public class CreateChatroomCommand
+public class CreateChatroomCommand : IRequest<CommandResult<ChatroomDto>>
 {
-
+    public string ChatroomName { get; set; } = string.Empty;
+    public List<Guid> ParticipantIds { get; set; } = new List<Guid>();
 }

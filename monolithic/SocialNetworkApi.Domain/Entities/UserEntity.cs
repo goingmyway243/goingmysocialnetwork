@@ -16,7 +16,7 @@ public class UserEntity : IdentityUser<Guid>
     public string? Address { get; set; }
     public string? City { get; set; }
 
-    // Relationships
+    // Relationship
     public ICollection<PostEntity> Posts { get; set; } = new List<PostEntity>();
 
     public bool HasRole(UserRole role) => Role == role;

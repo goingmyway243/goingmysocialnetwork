@@ -6,7 +6,6 @@ public class ChatroomEntity : BaseEntity
 {
     public string ChatroomName { get; set; } = string.Empty;
 
-    // Relationships
-    public virtual List<UserEntity> ChatMembers { get; set; } = new List<UserEntity>();
-    public virtual List<ChatMessageEntity> Messages { get; set; } = new List<ChatMessageEntity>();
+    // Relationship
+    public virtual List<ChatroomParticipantEntity> Participants { get; set; } = new List<ChatroomParticipantEntity>();
 }

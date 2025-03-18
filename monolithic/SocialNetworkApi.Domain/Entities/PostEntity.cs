@@ -10,7 +10,7 @@ public class PostEntity : AuditedEntity
     public int LikeCount { get; set; }
     public int CommentCount { get; set; }
 
-    // Relationships
+    // Relationship
     public UserEntity User { get; set; } = null!;
     public PostEntity SharePost { get; set; } = null!;
     public List<ContentEntity> Contents { get; set; } = new List<ContentEntity>();

@@ -1,5 +1,3 @@
-using System;
-
 namespace SocialNetworkApi.Application.Common.DTOs;
 
 public class PostDto
@@ -10,4 +8,8 @@ public class PostDto
     public Guid? SharePostId { get; set; }
     public int LikeCount { get; set; }
     public int CommentCount { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? ModifiedAt { get; set; }
+    public Guid CreatedBy { get; set; }
+    public Guid? ModifiedBy { get; set; }
 }

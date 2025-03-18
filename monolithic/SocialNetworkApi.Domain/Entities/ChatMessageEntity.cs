@@ -8,7 +8,7 @@ public class ChatMessageEntity : AuditedEntity
     public Guid UserId { get; set; }
     public Guid ChatroomId { get; set; }
 
-    // Relationships
+    // Relationship
     public UserEntity User { get; set; } = null!;
     public ChatroomEntity Chatroom { get; set; } = null!;
 }

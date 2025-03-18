@@ -19,6 +19,11 @@ public class CreateLikeCommandHandler : IRequestHandler<CreateLikeCommand, Comma
 
     public async Task<CommandResult<LikeDto>> Handle(CreateLikeCommand request, CancellationToken cancellationToken)
     {
+        if (request.UserId == default || request.PostId == default)
+        {
+            return CommandResult<LikeDto>.Failure("Invalid data.");
+        }
+
         var existingLikeInPost = await _likeRepository
             .FirstOrDefaultAsync(l => l.UserId == request.UserId && l.PostId == request.PostId);
 

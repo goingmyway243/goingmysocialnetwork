@@ -10,6 +10,6 @@ public class ContentEntity : AuditedEntity
     public ContentType Type { get; set; }
     public Guid PostId { get; set; }
 
-    // Relationships
+    // Relationship
     public PostEntity Post { get; set; } = null!;
 }
