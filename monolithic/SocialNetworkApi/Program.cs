@@ -1,7 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using SocialNetworkApi.Application.Common.Interfaces;
+using SocialNetworkApi.Domain.Interfaces;
+using SocialNetworkApi.Infrastructure.Identity;
 using SocialNetworkApi.Infrastructure.Persistence;
+using SocialNetworkApi.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Register app services
+builder.Services.AddScoped<IIdentityService, IdentityService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -23,7 +32,25 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 #endif
 );
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowedHostsPolicy", policy =>
+    {
+        policy.WithOrigins(builder.Configuration["AllowedHosts"] ?? "*")
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+
+// Seed the database
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.EnsureCreated(); // Create the database if it doesn't exist
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -31,16 +58,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else
-{
-    // Seed the database
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        dbContext.Database.EnsureCreated(); // Create the database if it doesn't exist
-        dbContext.Database.Migrate(); // Apply migrations automatically
-    }
-}
+
+app.UseCors("AllowedHostsPolicy");
 
 app.UseHttpsRedirection();
 

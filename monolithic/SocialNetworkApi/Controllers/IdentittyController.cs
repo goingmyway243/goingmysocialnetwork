@@ -41,7 +41,7 @@ public class IdentityController : ControllerBase
     }
 
     [HttpGet("check-role")]
-    public async Task<bool> CheckUserInRole(string userId, string role)
+    public async Task<bool> CheckUserInRole(Guid userId, string role)
     {
         if (!Enum.TryParse<UserRole>(role, true, out var roleEnum))
         {
