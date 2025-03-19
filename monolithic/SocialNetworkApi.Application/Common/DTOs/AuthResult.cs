@@ -2,28 +2,22 @@ namespace SocialNetworkApi.Application.Common.DTOs;
 
 public class AuthResult
 {
-    public Guid UserId { get; set; }
-    public string UserName { get; set; }
-    public string JwtToken { get; set; }
-    public bool IsSuccess { get; set; }
+    public UserDto? User { get; set; }
     public string Error { get; set; }
 
-    public AuthResult(Guid userId, string userName, string jwtToken, bool success = false, string error = "")
+    public AuthResult(UserDto? user, string error = "")
     {
-        UserId = userId;
-        UserName = userName;
-        JwtToken = jwtToken;
-        IsSuccess = success;
+        User = user;
         Error = error;
     }
 
-    public static AuthResult Success(Guid userId, string userName, string jwtToken)
+    public static AuthResult Success(UserDto? user)
     {
-        return new AuthResult(userId, userName, jwtToken, true);
+        return new AuthResult(user);
     }
 
     public static AuthResult Failure(string error)
     {
-        return new AuthResult(default, "", "", false, error);
+        return new AuthResult(null, error);
     }
 }

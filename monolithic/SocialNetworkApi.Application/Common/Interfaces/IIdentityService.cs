@@ -6,11 +6,10 @@ namespace SocialNetworkApi.Application.Common.Interfaces;
 
 public interface IIdentityService
 {
-    Task<AuthResult> CreateUserAsync(RegisterDto registerDto);
+    Task<RegisterResult> CreateUserAsync(RegisterDto registerDto);
     Task<AuthResult> PasswordSignInAsync(LoginDto loginDto);
     Task SignOutAsync();
     Task<bool> IsUserInRoleAsync(string userId, UserRole role);
     Guid GetCurrentUserId();
     string GeneratePasswordHash(UserEntity user, string password);
-    string GenerateJwtToken(UserEntity user);
 }

@@ -1,3 +1,4 @@
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Application.Common.DTOs;
@@ -9,10 +10,12 @@ namespace SocialNetworkApi.Application.Features.Chatrooms.Queries;
 public class GetChatroomByIdQueryHandler : IRequestHandler<GetChatroomByIdQuery, QueryResult<ChatroomDto>>
 {
     private readonly IRepository<ChatroomEntity> _chatroomRepository;
+    private readonly IMapper _mapper;
 
-    public GetChatroomByIdQueryHandler(IRepository<ChatroomEntity> chatroomRepository)
+    public GetChatroomByIdQueryHandler(IRepository<ChatroomEntity> chatroomRepository, IMapper mapper)
     {
         _chatroomRepository = chatroomRepository;
+        _mapper = mapper;
     }
 
     public async Task<QueryResult<ChatroomDto>> Handle(GetChatroomByIdQuery request, CancellationToken cancellationToken)
@@ -30,7 +33,7 @@ public class GetChatroomByIdQueryHandler : IRequestHandler<GetChatroomByIdQuery,
         {
             Id = chatroom.Id,
             ChatroomName = chatroom.ChatroomName,
-            ParticipantIds = chatroom.Participants.Select(x => x.Id).ToList(),
+            Participants = chatroom.Participants.Select(u => _mapper.Map<UserDto>(u)).ToList(),
         };
 
         return QueryResult<ChatroomDto>.Success(result);

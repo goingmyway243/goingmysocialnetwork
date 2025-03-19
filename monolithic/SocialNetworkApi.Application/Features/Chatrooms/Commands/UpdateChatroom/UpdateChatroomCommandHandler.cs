@@ -1,3 +1,4 @@
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Application.Common.DTOs;
@@ -9,10 +10,12 @@ namespace SocialNetworkApi.Application.Features.Chatrooms.Commands;
 public class UpdateChatroomCommandHandler : IRequestHandler<UpdateChatroomCommand, CommandResult<ChatroomDto>>
 {
     private readonly IRepository<ChatroomEntity> _chatroomRepository;
+    private readonly IMapper _mapper;
 
-    public UpdateChatroomCommandHandler(IRepository<ChatroomEntity> chatroomRepository)
+    public UpdateChatroomCommandHandler(IRepository<ChatroomEntity> chatroomRepository, IMapper mapper)
     {
         _chatroomRepository = chatroomRepository;
+        _mapper = mapper;
     }
 
     public async Task<CommandResult<ChatroomDto>> Handle(UpdateChatroomCommand request, CancellationToken cancellationToken)
@@ -34,7 +37,7 @@ public class UpdateChatroomCommandHandler : IRequestHandler<UpdateChatroomComman
         {
             Id = chatroom.Id,
             ChatroomName = chatroom.ChatroomName,
-            ParticipantIds = chatroom.Participants.Select(x => x.Id).ToList()
+            Participants = chatroom.Participants.Select(u => _mapper.Map<UserDto>(u)).ToList()
         });
     }
 }

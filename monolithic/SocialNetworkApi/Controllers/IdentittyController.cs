@@ -19,7 +19,6 @@ public class IdentityController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto request)
     {
-
         var result = await _identityService.CreateUserAsync(request);
         if (result.IsSuccess)
         {
@@ -33,9 +32,9 @@ public class IdentityController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginDto request)
     {
         var result = await _identityService.PasswordSignInAsync(request);
-        if (result.IsSuccess)
+        if (result.User != null)
         {
-            return Ok(result);
+            return Ok(result.User);
         }
 
         return BadRequest(result.Error);
