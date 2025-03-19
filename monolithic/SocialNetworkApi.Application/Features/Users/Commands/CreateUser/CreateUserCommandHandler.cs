@@ -49,7 +49,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Comma
         var user = new UserEntity
         {
             Id = Guid.NewGuid(),
-            UserName = request.Email,
             Email = request.Email,
             Role = request.Role,
             DateOfBirth = request.DateOfBirth,
@@ -63,7 +62,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Comma
             City = request.City
         };
 
-        user.PasswordHash = _identityService.GeneratePasswordHash(user, request.Password);
+        user.PasswordHash = _identityService.GeneratePasswordHash(request.Password);
 
         await _userRepository.InsertAsync(user);
 

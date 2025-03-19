@@ -1,33 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LoginRequest, RegisterRequest, RegisterResponse } from '../models/auth.model';
+import { ILoginRequest, IRegisterRequest, IRegisterResponse } from '../models/auth.model';
 import { User } from '../models/user.model';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
     providedIn: 'root',
 })
 export class IdentityService {
-    private readonly baseUrl = 'api/identity';
+    private readonly apiUrl = `${environment.baseUrl}/api/identity`;
 
     constructor(private http: HttpClient) {}
 
-    register(request: RegisterRequest): Observable<RegisterResponse> {
-        return this.http.post<RegisterResponse>(`${this.baseUrl}/register`, request);
+    register(request: IRegisterRequest): Observable<IRegisterResponse> {
+        return this.http.post<IRegisterResponse>(`${this.apiUrl}/register`, request);
     }
 
-    login(request: LoginRequest): Observable<User> {
-        return this.http.post<User>(`${this.baseUrl}/login`, request);
+    login(request: ILoginRequest): Observable<User> {
+        return this.http.post<User>(`${this.apiUrl}/login`, request);
     }
 
     checkUserInRole(userId: string, role: string): Observable<boolean> {
-        return this.http.get<boolean>(`${this.baseUrl}/check-role`, {
+        return this.http.get<boolean>(`${this.apiUrl}/check-role`, {
             params: { userId, role },
         });
     }
 
     logout(): Observable<void> {
-        return this.http.get<void>(`${this.baseUrl}/logout`);
+        return this.http.get<void>(`${this.apiUrl}/logout`);
     }
 }

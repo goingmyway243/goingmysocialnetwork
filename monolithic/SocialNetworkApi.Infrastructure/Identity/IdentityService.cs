@@ -1,29 +1,26 @@
 using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Common.Interfaces;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Enums;
+using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Infrastructure.Identity;
 
 public class IdentityService : IIdentityService
 {
-    private readonly UserManager<UserEntity> _userManager;
-    private readonly SignInManager<UserEntity> _signInManager;
-    private readonly HttpContextAccessor _httpContextAccessor;
+    private readonly IRepository<UserEntity> _userRepository;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
 
     public IdentityService(
-        UserManager<UserEntity> userManager,
-        SignInManager<UserEntity> signInManager,
-        HttpContextAccessor httpContextAccessor,
+        IRepository<UserEntity> userRepository,
+        IHttpContextAccessor httpContextAccessor,
         IMapper mapper)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
+        _userRepository = userRepository;
         _httpContextAccessor = httpContextAccessor;
         _mapper = mapper;
     }
@@ -45,7 +42,7 @@ public class IdentityService : IIdentityService
             return RegisterResult.Failure("Your date of birth is invalid!");
         }
 
-        var existingUser = await _userManager.FindByEmailAsync(registerDto.Email);
+        var existingUser = await _userRepository.FirstOrDefaultAsync(u => u.Email == registerDto.Email);
         if (existingUser != null)
         {
             return RegisterResult.Failure("User with this email already exists!");
@@ -53,26 +50,29 @@ public class IdentityService : IIdentityService
 
         var user = new UserEntity
         {
-            UserName = registerDto.Email,
+            Id = Guid.NewGuid(),
             Email = registerDto.Email,
             FullName = registerDto.FullName,
-            DateOfBirth = registerDto.DateOfBirth
+            DateOfBirth = registerDto.DateOfBirth,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password)
         };
 
-        var result = await _userManager.CreateAsync(user, registerDto.Password);
-
-        if (!result.Succeeded)
+        try
+        {
+            await _userRepository.InsertAsync(user);
+        }
+        catch
         {
             return RegisterResult.Failure("Failed to create user!");
         }
 
-        return RegisterResult.Success(user.Id, user.UserName);
+        return RegisterResult.Success(user.Id, user.Email);
     }
 
     public async Task<AuthResult> PasswordSignInAsync(LoginDto loginDto)
     {
-        var user = await _userManager.FindByEmailAsync(loginDto.Email);
-        if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
+        var user = await _userRepository.FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+        if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
         {
             return AuthResult.Failure("Invalid username or password!");
         }
@@ -80,14 +80,14 @@ public class IdentityService : IIdentityService
         return AuthResult.Success(_mapper.Map<UserDto>(user));
     }
 
-    public async Task SignOutAsync()
+    public Task SignOutAsync()
     {
-        await _signInManager.SignOutAsync();
+        return Task.CompletedTask;
     }
 
-    public async Task<bool> IsUserInRoleAsync(string userId, UserRole role)
+    public async Task<bool> IsUserInRoleAsync(Guid userId, UserRole role)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userRepository.GetByIdAsync(userId);
         if (user == null)
         {
             throw new Exception("User not found!");
@@ -107,8 +107,8 @@ public class IdentityService : IIdentityService
         return default;
     }
 
-    public string GeneratePasswordHash(UserEntity user, string password)
+    public string GeneratePasswordHash(string password)
     {
-        return _userManager.PasswordHasher.HashPassword(user, password);
+        return BCrypt.Net.BCrypt.HashPassword(password);
     }
 }

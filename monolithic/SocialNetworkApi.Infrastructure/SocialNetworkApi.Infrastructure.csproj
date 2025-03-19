@@ -7,6 +7,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3" />
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.3.efcore.9.0.0" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
@@ -15,6 +16,10 @@
   <ItemGroup>
     <ProjectReference Include="..\SocialNetworkApi.Application\SocialNetworkApi.Application.csproj" />
     <ProjectReference Include="..\SocialNetworkApi.Domain\SocialNetworkApi.Domain.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Folder Include="Persistence\Migrations\" />
   </ItemGroup>
 
 </Project>

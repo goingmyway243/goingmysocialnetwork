@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { IdentityService } from '../../common/services/identity.service';
+import { catchError, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-signup-page',
@@ -29,7 +31,7 @@ export class SignupPageComponent {
   @ViewChild('stepper') stepper!: MatStepper;
 
   public firstForm = new FormGroup({
-    userName: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
     confirmPassword: new FormControl('', [
       Validators.required,
@@ -45,14 +47,13 @@ export class SignupPageComponent {
 
   public secondForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
     dateOfBirth: new FormControl('', [Validators.required])
   });
 
   public isLoading = signal(false);
   public error = signal<string | null>(null);
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private identityApiSvc: IdentityService) { }
 
   public showBackButton(): boolean {
     return !this.stepper || this.stepper.selectedIndex !== this.stepper.steps.length - 1;
@@ -62,15 +63,26 @@ export class SignupPageComponent {
     this.router.navigate(['/login']);
   }
 
-  async onSubmit() {
-    try {
-      this.isLoading.set(true);
-      this.error.set(null);
-      // ... rest of your submit logic
-    } catch (err: any) {
-      this.error.set(err.message);
-    } finally {
-      this.isLoading.set(false);
-    }
+  onSubmit(stepper: MatStepper) {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    const newUser = {
+      email: this.firstForm.controls.email.value ?? '',
+      password: this.firstForm.controls.password.value ?? '',
+      fullName: this.secondForm.controls.name.value ?? '',
+      dateOfBirth: new Date(this.secondForm.controls.dateOfBirth.value ?? '')
+    };
+
+    this.identityApiSvc.register(newUser)
+      .pipe(catchError(err => {
+        this.error.set(err.message);
+        this.isLoading.set(false);
+        return throwError(() => new Error("Something went wrong: " + err.message));
+      }))
+      .subscribe(result => {
+        console.log(result);
+        stepper.next();
+      });
   }
 }

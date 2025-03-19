@@ -1,7 +1,5 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using SocialNetworkApi.Application.Common.Interfaces;
-using SocialNetworkApi.Domain.Common;
 using SocialNetworkApi.Domain.Interfaces;
 using SocialNetworkApi.Infrastructure.Persistence;
 
@@ -11,13 +9,11 @@ public class Repository<T> : IRepository<T> where T : class
 {
     private readonly ApplicationDbContext _context;
     private readonly DbSet<T> _dbSet;
-    private readonly IIdentityService _identityService;
 
-    public Repository(ApplicationDbContext context, IIdentityService identityService)
+    public Repository(ApplicationDbContext context)
     {
         _context = context;
         _dbSet = context.Set<T>();
-        _identityService = identityService;
     }
 
     public async Task<T?> GetByIdAsync(Guid id)
@@ -47,24 +43,12 @@ public class Repository<T> : IRepository<T> where T : class
 
     public async Task InsertAsync(T entity)
     {
-        if (entity is AuditedEntity auditedEntity)
-        {
-            auditedEntity.CreatedBy = _identityService.GetCurrentUserId();
-            auditedEntity.CreatedAt = DateTime.UtcNow;
-        }
-
         await _dbSet.AddAsync(entity);
         await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(T entity)
     {
-        if (entity is AuditedEntity auditedEntity)
-        {
-            auditedEntity.ModifiedBy = _identityService.GetCurrentUserId();
-            auditedEntity.ModifiedAt = DateTime.UtcNow;
-        }
-        
         _dbSet.Update(entity);
         await _context.SaveChangesAsync();
     }

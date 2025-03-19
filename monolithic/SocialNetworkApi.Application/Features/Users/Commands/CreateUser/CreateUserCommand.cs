@@ -9,7 +9,7 @@ public class CreateUserCommand : IRequest<CommandResult<UserDto>>
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public UserRole Role { get; set; } = UserRole.User;
-    public DateTime? DateOfBirth { get; set; }
+    public DateTime DateOfBirth { get; set; }
     public string? FullName { get; set; }
     public string? ProfilePicture { get; set; }
     public string? Bio { get; set; }

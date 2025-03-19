@@ -1,15 +1,16 @@
-export class LoginRequest {
-    email: string = '';
-    password: string = '';
+export interface ILoginRequest {
+    email: string;
+    password: string;
 }
 
-export class RegisterRequest {
-    email: string = '';
-    password: string = '';
-    fullName: string = '';
+export interface IRegisterRequest {
+    email: string;
+    password: string;
+    fullName: string;
+    dateOfBirth: Date;
 }
 
-export class RegisterResponse {
-    userId: string = '';
-    email: string = '';
+export interface IRegisterResponse {
+    userId: string;
+    userName: string;
 }

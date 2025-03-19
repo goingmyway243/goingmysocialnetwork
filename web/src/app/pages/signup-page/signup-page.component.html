@@ -6,10 +6,10 @@
         <div class="first-step-wrapper">
           <form [formGroup]="firstForm" class="first-form">
             <mat-form-field>
-              <mat-label>Username</mat-label>
-              <input matInput formControlName="userName">
-              <mat-error *ngIf="firstForm.controls.userName.invalid && (firstForm.controls.userName.dirty || firstForm.controls.userName.touched)">
-                Username is required
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email">
+              <mat-error *ngIf="firstForm.controls.email.invalid && (firstForm.controls.email.dirty || firstForm.controls.email.touched)">
+                Email is required and must be a valid email address
               </mat-error>
             </mat-form-field>
             <mat-form-field>
@@ -42,13 +42,6 @@
               </mat-error>
             </mat-form-field>
             <mat-form-field>
-              <mat-label>Email</mat-label>
-              <input matInput type="email" formControlName="email">
-              <mat-error *ngIf="secondForm.controls.email.invalid && (secondForm.controls.email.dirty || secondForm.controls.email.touched)">
-                Email is required and must be a valid email address
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field>
               <mat-label>Date of birth</mat-label>
               <input matInput [matDatepicker]="picker" formControlName="dateOfBirth">
               <mat-hint>MM/DD/YYYY</mat-hint>
@@ -59,7 +52,7 @@
               </mat-error>
             </mat-form-field>
           </form>
-          <button mat-flat-button color="primary" matStepperNext>Next</button>
+          <button mat-flat-button color="primary" (click)="onSubmit(stepper)">Register</button>
         </div>
       </mat-step>
 

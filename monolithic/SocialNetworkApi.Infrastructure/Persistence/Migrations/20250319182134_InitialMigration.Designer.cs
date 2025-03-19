@@ -12,8 +12,8 @@ using SocialNetworkApi.Infrastructure.Persistence;
 namespace SocialNetworkApi.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250314170117_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250319182134_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,27 @@ namespace SocialNetworkApi.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ChatRooms");
+                });
+
+            modelBuilder.Entity("SocialNetworkApi.Domain.Entities.ChatroomParticipantEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("ChatroomId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatroomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatroomParticipants");
                 });
 
             modelBuilder.Entity("SocialNetworkApi.Domain.Entities.CommentEntity", b =>
@@ -264,32 +285,27 @@ namespace SocialNetworkApi.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
                     b.Property<string>("Address")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Bio")
                         .HasColumnType("longtext");
 
-                    b.Property<Guid?>("ChatroomEntityId")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("City")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DateOfBirth")
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("FullName")
                         .HasMaxLength(100)
@@ -303,26 +319,18 @@ namespace SocialNetworkApi.Infrastructure.Persistence.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("longtext");
+                    b.Property<Guid?>("ModifiedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("ProfilePicture")
                         .HasMaxLength(255)
@@ -333,22 +341,11 @@ namespace SocialNetworkApi.Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Website")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChatroomEntityId");
 
                     b.ToTable("Users");
                 });
@@ -356,7 +353,26 @@ namespace SocialNetworkApi.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("SocialNetworkApi.Domain.Entities.ChatMessageEntity", b =>
                 {
                     b.HasOne("SocialNetworkApi.Domain.Entities.ChatroomEntity", "Chatroom")
-                        .WithMany("Messages")
+                        .WithMany()
+                        .HasForeignKey("ChatroomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SocialNetworkApi.Domain.Entities.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chatroom");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SocialNetworkApi.Domain.Entities.ChatroomParticipantEntity", b =>
+                {
+                    b.HasOne("SocialNetworkApi.Domain.Entities.ChatroomEntity", "Chatroom")
+                        .WithMany("Participants")
                         .HasForeignKey("ChatroomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -428,7 +444,7 @@ namespace SocialNetworkApi.Infrastructure.Persistence.Migrations
                         .HasForeignKey("SharePostId");
 
                     b.HasOne("SocialNetworkApi.Domain.Entities.UserEntity", "User")
-                        .WithMany("Posts")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -438,18 +454,9 @@ namespace SocialNetworkApi.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SocialNetworkApi.Domain.Entities.UserEntity", b =>
-                {
-                    b.HasOne("SocialNetworkApi.Domain.Entities.ChatroomEntity", null)
-                        .WithMany("ChatMembers")
-                        .HasForeignKey("ChatroomEntityId");
-                });
-
             modelBuilder.Entity("SocialNetworkApi.Domain.Entities.ChatroomEntity", b =>
                 {
-                    b.Navigation("ChatMembers");
-
-                    b.Navigation("Messages");
+                    b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("SocialNetworkApi.Domain.Entities.PostEntity", b =>
@@ -459,11 +466,6 @@ namespace SocialNetworkApi.Infrastructure.Persistence.Migrations
                     b.Navigation("Contents");
 
                     b.Navigation("Like");
-                });
-
-            modelBuilder.Entity("SocialNetworkApi.Domain.Entities.UserEntity", b =>
-                {
-                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }
