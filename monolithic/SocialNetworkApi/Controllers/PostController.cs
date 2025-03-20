@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Features.Posts.Commands;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SocialNetworkApi.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class PostController : ControllerBase
     {
