@@ -7,7 +7,7 @@
   
   <div class="action-buttons">
     <create-post [buttonText]="'Create'"></create-post>
-    <user-avatar [mat-menu-trigger-for]="menu" [showInfo]="false"></user-avatar>
+    <user-avatar [user]="currentUser" [mat-menu-trigger-for]="menu" [showInfo]="false"></user-avatar>
     <mat-menu #menu="matMenu" class="custom-menu">
       <ng-template matMenuContent>
         <div mat-menu-item (click)="navigateToProfile()">

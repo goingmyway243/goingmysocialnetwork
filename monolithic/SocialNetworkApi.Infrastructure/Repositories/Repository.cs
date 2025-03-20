@@ -1,5 +1,8 @@
 using System.Linq.Expressions;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using SocialNetworkApi.Domain.Common;
 using SocialNetworkApi.Domain.Interfaces;
 using SocialNetworkApi.Infrastructure.Persistence;
 
@@ -8,12 +11,14 @@ namespace SocialNetworkApi.Infrastructure.Repositories;
 public class Repository<T> : IRepository<T> where T : class
 {
     private readonly ApplicationDbContext _context;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly DbSet<T> _dbSet;
 
-    public Repository(ApplicationDbContext context)
+    public Repository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _dbSet = context.Set<T>();
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<T?> GetByIdAsync(Guid id)
@@ -43,12 +48,23 @@ public class Repository<T> : IRepository<T> where T : class
 
     public async Task InsertAsync(T entity)
     {
+        if (entity is AuditedEntity auditedEntity)
+        {
+            auditedEntity.CreatedBy = GetCurrentUserId();
+        }
+
         await _dbSet.AddAsync(entity);
         await _context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(T entity)
     {
+        if (entity is AuditedEntity auditedEntity)
+        {
+            auditedEntity.ModifiedBy = GetCurrentUserId();
+            auditedEntity.ModifiedAt = DateTime.UtcNow;
+        }
+
         _dbSet.Update(entity);
         await _context.SaveChangesAsync();
     }
@@ -57,5 +73,16 @@ public class Repository<T> : IRepository<T> where T : class
     {
         _dbSet.Remove(entity);
         await _context.SaveChangesAsync();
+    }
+
+    private Guid GetCurrentUserId()
+    {
+        var userId = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (Guid.TryParse(userId, out var result))
+        {
+            return result;
+        }
+
+        return default;
     }
 }

@@ -30,7 +30,7 @@ export class LoginPageComponent {
     password: new FormControl('')
   });
 
-  constructor(private router: Router, private identityApiSvc: IdentityService) { }
+  constructor(private router: Router, private identitySvc: IdentityService) { }
 
   public navigateToSignup() {
     this.router.navigate(['/signup']);
@@ -48,13 +48,12 @@ export class LoginPageComponent {
       password: this.loginForm.controls.password.value!
     }
 
-    this.identityApiSvc.login(request)
+    this.identitySvc.loginAsync(request)
       .pipe(catchError(err => {
         return throwError(() => new Error(err.error));
       }))
-      .subscribe(result => {
-        console.log(result);
-        // this.router.navigate(['/home']);
+      .subscribe(_ => {
+        this.router.navigate(['/home']);
       });
 
   }

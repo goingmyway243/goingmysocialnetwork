@@ -2,9 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using SocialNetworkApi.Application.Features.Users.Queries;
 using SocialNetworkApi.Application.Features.Users.Commands;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SocialNetworkApi.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -47,7 +50,7 @@ namespace SocialNetworkApi.Api.Controllers
             {
                 return BadRequest("Your request is invalid!");
             }
-            
+
             var result = await _mediator.Send(request);
             if (!result.IsSuccess)
             {

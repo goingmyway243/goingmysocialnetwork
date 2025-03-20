@@ -1,5 +1,5 @@
 <div class="create-post-bar" *ngIf="fullSize" (click)="openDialog()">
-  <user-avatar [showInfo]="false"></user-avatar>
+  <user-avatar [user]="currentUser" [showInfo]="false"></user-avatar>
   <div class="placeholder">
     {{ placeholder }}
   </div>

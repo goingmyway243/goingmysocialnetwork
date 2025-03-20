@@ -1,6 +1,4 @@
-using System.Security.Claims;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Common.Interfaces;
 using SocialNetworkApi.Domain.Entities;
@@ -12,17 +10,25 @@ namespace SocialNetworkApi.Infrastructure.Identity;
 public class IdentityService : IIdentityService
 {
     private readonly IRepository<UserEntity> _userRepository;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMapper _mapper;
 
     public IdentityService(
         IRepository<UserEntity> userRepository,
-        IHttpContextAccessor httpContextAccessor,
         IMapper mapper)
     {
         _userRepository = userRepository;
-        _httpContextAccessor = httpContextAccessor;
         _mapper = mapper;
+    }
+
+    public async Task<AuthResult> GetUserById(Guid id)
+    {
+        var user = await _userRepository.GetByIdAsync(id);
+        if (user == null)
+        {
+            return AuthResult.Failure("User not found!");
+        }
+
+        return AuthResult.Success(_mapper.Map<UserDto>(user));
     }
 
     public async Task<RegisterResult> CreateUserAsync(RegisterDto registerDto)
@@ -94,17 +100,6 @@ public class IdentityService : IIdentityService
         }
 
         return user.HasRole(role);
-    }
-
-    public Guid GetCurrentUserId()
-    {
-        var userId = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (Guid.TryParse(userId, out var result))
-        {
-            return result;
-        }
-
-        return default;
     }
 
     public string GeneratePasswordHash(string password)

@@ -7,15 +7,15 @@
   </div>
 
   <div class="body">
-    <user-avatar></user-avatar>
+    <user-avatar [user]="currentUser"></user-avatar>
 
-    <textarea class="post-input" placeholder="What's on your mind?"></textarea>
+    <textarea class="post-input" [(ngModel)]="caption" placeholder="What's on your mind?"></textarea>
 
     <div class="action-buttons">
       <div>Add to your post</div>
       <i class="fa-solid fa-images"></i>
     </div>
 
-    <button class="primary post-button">Post</button>
+    <button class="primary post-button" (click)="onPost()">Post</button>
   </div>
 </div>

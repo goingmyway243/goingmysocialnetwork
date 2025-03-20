@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace SocialNetworkApi.Api.Controllers
 {
-    [ApiController]
     [Authorize]
+    [ApiController]
     [Route("api/[controller]")]
     public class PostController : ControllerBase
     {

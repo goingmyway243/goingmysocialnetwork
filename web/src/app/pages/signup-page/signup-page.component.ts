@@ -53,7 +53,7 @@ export class SignupPageComponent {
   public isLoading = signal(false);
   public error = signal<string | null>(null);
 
-  constructor(private router: Router, private identityApiSvc: IdentityService) { }
+  constructor(private router: Router, private identitySvc: IdentityService) { }
 
   public showBackButton(): boolean {
     return !this.stepper || this.stepper.selectedIndex !== this.stepper.steps.length - 1;
@@ -74,7 +74,7 @@ export class SignupPageComponent {
       dateOfBirth: new Date(this.secondForm.controls.dateOfBirth.value ?? '')
     };
 
-    this.identityApiSvc.register(newUser)
+    this.identitySvc.registerAsync(newUser)
       .pipe(catchError(err => {
         this.error.set(err.error);
         this.isLoading.set(false);

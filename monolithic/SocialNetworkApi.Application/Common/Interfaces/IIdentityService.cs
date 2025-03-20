@@ -5,10 +5,10 @@ namespace SocialNetworkApi.Application.Common.Interfaces;
 
 public interface IIdentityService
 {
+    Task<AuthResult> GetUserById(Guid id);
     Task<RegisterResult> CreateUserAsync(RegisterDto registerDto);
     Task<AuthResult> PasswordSignInAsync(LoginDto loginDto);
     Task SignOutAsync();
     Task<bool> IsUserInRoleAsync(Guid userId, UserRole role);
-    Guid GetCurrentUserId();
     string GeneratePasswordHash(string password);
 }
