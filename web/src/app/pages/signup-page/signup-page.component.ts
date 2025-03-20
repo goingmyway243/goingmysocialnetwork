@@ -76,9 +76,9 @@ export class SignupPageComponent {
 
     this.identityApiSvc.register(newUser)
       .pipe(catchError(err => {
-        this.error.set(err.message);
+        this.error.set(err.error);
         this.isLoading.set(false);
-        return throwError(() => new Error("Something went wrong: " + err.message));
+        return throwError(() => new Error("Something went wrong: " + err.error));
       }))
       .subscribe(result => {
         console.log(result);

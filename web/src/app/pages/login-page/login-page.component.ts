@@ -5,6 +5,9 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { IdentityService } from '../../common/services/identity.service';
+import { ILoginRequest } from '../../common/models/auth.model';
+import { catchError, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
@@ -21,21 +24,13 @@ import { Router } from '@angular/router';
 })
 export class LoginPageComponent {
   public showError = signal(false);
-  
+
   public loginForm = new FormGroup({
     username: new FormControl(''),
     password: new FormControl('')
   });
 
-  constructor(private router: Router) {}
-
-  public onSubmit() {
-    if (this.loginForm.valid) {
-      console.log('Form submitted:', this.loginForm.value);
-    } else {
-      console.log('Form is invalid');
-    }
-  }
+  constructor(private router: Router, private identityApiSvc: IdentityService) { }
 
   public navigateToSignup() {
     this.router.navigate(['/signup']);
@@ -43,6 +38,24 @@ export class LoginPageComponent {
 
   public login(evt: MouseEvent) {
     evt.preventDefault();
-    this.router.navigate(['/home']);
+
+    if (this.loginForm.invalid) {
+      return;
+    }
+
+    const request: ILoginRequest = {
+      email: this.loginForm.controls.username.value!,
+      password: this.loginForm.controls.password.value!
+    }
+
+    this.identityApiSvc.login(request)
+      .pipe(catchError(err => {
+        return throwError(() => new Error(err.error));
+      }))
+      .subscribe(result => {
+        console.log(result);
+        // this.router.navigate(['/home']);
+      });
+
   }
 }
