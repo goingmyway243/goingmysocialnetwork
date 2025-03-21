@@ -14,4 +14,5 @@ public class PostDto
     public Guid? ModifiedBy { get; set; }
 
     public UserDto? User { get; set; }
+    public IEnumerable<ContentDto>? Contents { get; set; }
 }

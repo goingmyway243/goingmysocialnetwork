@@ -5,6 +5,7 @@ import { ICreatePostRequest, ISearchPostRequest } from '../dtos/post-api.dto';
 import { environment } from '../../../environments/environment';
 import { IPagedResponse } from '../dtos/common-api.dto';
 import { Post } from '../models/post.model';
+import { ContentType } from '../enums/content-type.enum';
 
 @Injectable({
     providedIn: 'root',
@@ -20,8 +21,23 @@ export class PostApiService extends BaseApiService {
         return this.post('search', request);
     }
 
-    createPost(request: ICreatePostRequest): Observable<any> {
-        return this.post('', request);
+    createPost(request: ICreatePostRequest, contentFiles: File[]): Observable<any> {
+        const formData = new FormData();
+        formData.append('Caption', request.caption);
+        formData.append('UserId', request.userId);
+        if (request.sharePostId) {
+            formData.append('SharePostId', request.sharePostId);
+        }
+
+        console.log(request);
+        
+        contentFiles.forEach((value, index) => {
+            formData.append(`Contents[${index}].Type`, ContentType.Image.toString());
+            formData.append(`Contents[${index}].FormFile`, value);
+        });
+
+        console.log(formData);
+        return this.post('', formData);
     }
 
     updatePost(postId: string, postData: any): Observable<any> {

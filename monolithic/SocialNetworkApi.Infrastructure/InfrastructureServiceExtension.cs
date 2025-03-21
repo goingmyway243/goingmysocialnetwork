@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure.Storage.Blobs;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using SocialNetworkApi.Domain.Interfaces;
 using SocialNetworkApi.Infrastructure.Identity;
 using SocialNetworkApi.Infrastructure.Persistence;
 using SocialNetworkApi.Infrastructure.Repositories;
+using SocialNetworkApi.Infrastructure.Storage;
 
 namespace SocialNetworkApi.Infrastructure
 {
@@ -14,11 +16,24 @@ namespace SocialNetworkApi.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(
             this IServiceCollection services,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            string contentRootPath)
         {
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            // Configure Storage
+            var storageConnectionString = configuration.GetConnectionString("AzureBlobStorage");
+            if (string.IsNullOrEmpty(storageConnectionString))
+            {
+                services.AddScoped<IStorageService, LocalStorageService>();
+            }
+            else
+            {
+                services.AddSingleton(new BlobServiceClient(storageConnectionString));
+                services.AddScoped<IStorageService, AzureStorageService>();
+            }
 
             // Configure MySQL
             var connectionString = configuration.GetConnectionString("MySQLConnection");

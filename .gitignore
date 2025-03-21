@@ -5,6 +5,7 @@ obj/
 *.userosscache
 *.suo
 *.userprefs
+Public/
 
 # Visual Studio files
 .vs/

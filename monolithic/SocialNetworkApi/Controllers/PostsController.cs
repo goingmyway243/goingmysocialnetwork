@@ -38,7 +38,7 @@ namespace SocialNetworkApi.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<PostDto>> CreatePost([FromBody] CreatePostCommand request)
+        public async Task<ActionResult<PostDto>> CreatePost([FromForm] CreatePostCommand request)
         {
             var result = await _mediator.Send(request);
             if (result.IsSuccess)

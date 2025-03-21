@@ -2,7 +2,7 @@
   <div class="header">
     <div class="title">Create a post</div>
     <div class="close-button" (click)="closeDialog()">
-      <i class="fa-solid fa-x"></i>
+      <mat-icon class="close-icon">close</mat-icon>
     </div>
   </div>
 
@@ -11,9 +11,23 @@
 
     <textarea class="post-input" [(ngModel)]="caption" placeholder="What's on your mind?"></textarea>
 
+    <div class="images-container">
+      @for (item of uploadFiles; track $index) {
+        <div class="image-wrapper">
+          <div class="close-button" (click)="removeImage($index)">
+            <mat-icon class="close-icon">close</mat-icon>
+          </div>
+          <img [src]="objectURLs[$index]">
+        </div>
+      }
+    </div>
+
     <div class="action-buttons">
       <div>Add to your post</div>
-      <i class="fa-solid fa-images"></i>
+      <label for="file-input">
+        <i class="fa-solid fa-images"></i>
+      </label>
+      <input id="file-input" type="file" accept="image/*" multiple hidden (change)="onFileSelected($event)">
     </div>
 
     <button class="primary post-button" (click)="createPost()">Post</button>

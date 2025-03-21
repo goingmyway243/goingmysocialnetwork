@@ -2,8 +2,8 @@ import { ContentType } from "../enums/content-type.enum";
 
 export interface IContent {
     id: string;
-    textContent?: string;
-    linkContent?: string;
+    textContent: string;
+    linkContent: string;
     type: ContentType;
     postId: string;
     createdAt: Date;
@@ -12,8 +12,8 @@ export interface IContent {
 
 export class Content implements IContent {
     id: string;
-    textContent?: string | undefined;
-    linkContent?: string | undefined;
+    textContent: string;
+    linkContent: string;
     type: ContentType;
     postId: string;
     createdAt: Date;

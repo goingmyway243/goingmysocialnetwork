@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using SocialNetworkApi.Domain.Enums;
 
 namespace SocialNetworkApi.Application.Common.DTOs;
@@ -13,4 +14,6 @@ public class ContentDto
     public DateTime? ModifiedAt { get; set; }
     public Guid CreatedBy { get; set; }
     public Guid? ModifiedBy { get; set; }
+
+    public IFormFile? FormFile { get; set; }
 }

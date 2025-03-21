@@ -8,4 +8,6 @@ public class CreatePostCommand : IRequest<CommandResultDto<PostDto>>
     public string Caption { get; set; } = string.Empty;
     public Guid UserId { get; set; }
     public Guid? SharePostId { get; set; }
+
+    public List<ContentDto> Contents { get; set; } = new List<ContentDto>();
 }
