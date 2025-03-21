@@ -7,11 +7,11 @@ namespace SocialNetworkApi.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CommentController : ControllerBase
+    public class CommentsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public CommentController(IMediator mediator)
+        public CommentsController(IMediator mediator)
         {
             _mediator = mediator;
         }

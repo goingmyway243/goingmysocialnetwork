@@ -13,6 +13,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/home-page/home-page.component').then(p => p.HomePageComponent)
       },
       {
+        path: 'explore',
+        loadComponent: () => import('./pages/explore-page/explore-page.component').then(p => p.ExplorePageComponent) 
+      },
+      {
         path: 'profile',
         loadComponent: () => import('./pages/profile-page/profile-page.component').then(p => p.ProfilePageComponent)
       },

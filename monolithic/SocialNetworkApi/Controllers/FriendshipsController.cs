@@ -6,11 +6,11 @@ namespace SocialNetworkApi.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FriendshipController : ControllerBase
+    public class FriendshipsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public FriendshipController(IMediator mediator)
+        public FriendshipsController(IMediator mediator)
         {
             _mediator = mediator;
         }

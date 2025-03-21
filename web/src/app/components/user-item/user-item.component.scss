@@ -1,0 +1,11 @@
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    background: var(--theme-color);
+    border-radius: 16px;
+    padding: var(--common-padding);
+
+    .friend-button {
+        border-radius: 8px;
+    }
+}

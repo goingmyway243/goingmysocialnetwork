@@ -34,7 +34,7 @@ export class HomePageComponent implements OnInit {
       this.currentUser.set(user);
     });
 
-    this.postApiSvc.searchPost({
+    this.postApiSvc.searchPosts({
       pageIndex: 0,
       pageSize: 10
     }).subscribe(result => {

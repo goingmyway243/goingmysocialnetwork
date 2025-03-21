@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using SocialNetworkApi.Application.Features.Users.Queries;
 using SocialNetworkApi.Application.Features.Users.Commands;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
 namespace SocialNetworkApi.Api.Controllers
@@ -10,11 +9,11 @@ namespace SocialNetworkApi.Api.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public UserController(IMediator mediator)
+        public UsersController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -29,6 +28,18 @@ namespace SocialNetworkApi.Api.Controllers
             }
 
             return Ok(result.Data);
+        }
+
+        [HttpPost("search")]
+        public async Task<IActionResult> SearchUsers([FromBody] SearchUsersQuery request)
+        {
+            var result = await _mediator.Send(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result);
         }
 
         [HttpPost]

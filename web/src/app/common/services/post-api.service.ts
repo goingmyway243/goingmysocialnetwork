@@ -10,13 +10,13 @@ import { Post } from '../models/post.model';
     providedIn: 'root',
 })
 export class PostApiService extends BaseApiService {
-    protected override apiUrl: string = `${environment.baseUrl}/api/post`;
+    protected override apiUrl: string = `${environment.baseUrl}/api/posts`;
 
     getPostById(postId: string): Observable<any> {
         return this.get(`${postId}`);
     }
 
-    searchPost(request: ISearchPostRequest): Observable<IPagedResponse<Post>> {
+    searchPosts(request: ISearchPostRequest): Observable<IPagedResponse<Post>> {
         return this.post('search', request);
     }
 

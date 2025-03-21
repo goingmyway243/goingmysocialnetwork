@@ -35,7 +35,7 @@ public class SearchPostsQueryHandler : IRequestHandler<SearchPostsQuery, PagedRe
 
         var totalCount = await query.CountAsync();
 
-        query = query.Skip(pagedRequest.PageIndex)
+        query = query.Skip(pagedRequest.PageIndex * pagedRequest.PageSize)
         .Take(pagedRequest.PageSize)
         .OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt)
         .Include(p => p.User);
@@ -47,7 +47,7 @@ public class SearchPostsQueryHandler : IRequestHandler<SearchPostsQuery, PagedRe
                 .WithPage(pagedRequest.PageIndex, totalCount);
         }
 
-        var items = result.Select(p => _mapper.Map<PostDto>(p)).ToList();
+        var items = result.Select(_mapper.Map<PostDto>);
         return PagedResultDto<PostDto>.Success(items)
             .WithPage(pagedRequest.PageIndex, totalCount);
     }

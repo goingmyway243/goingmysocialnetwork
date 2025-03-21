@@ -1,35 +1,35 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using SocialNetworkApi.Application.Common.DTOs;
-using SocialNetworkApi.Application.Features.Likes.Commands;
+using SocialNetworkApi.Application.Features.ChatMessages.Commands;
 
 namespace SocialNetworkApi.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LikeController : ControllerBase
+    public class ChatMessagesController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public LikeController(IMediator mediator)
+        public ChatMessagesController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpGet]
-        public Task<ActionResult<IEnumerable<LikeDto>>> GetLikes()
+        public Task<ActionResult<IEnumerable<ChatMessageDto>>> GetChatMessages()
         {
             throw new NotImplementedException();
         }
 
         [HttpGet("{id}")]
-        public Task<ActionResult<LikeDto>> GetLike(Guid id)
+        public Task<ActionResult<ChatMessageDto>> GetChatMessage(Guid id)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost]
-        public async Task<ActionResult<LikeDto>> CreateLike([FromBody] CreateLikeCommand request)
+        public async Task<ActionResult<ChatMessageDto>> CreateChatMessage([FromBody] CreateChatMessageCommand request)
         {
             var result = await _mediator.Send(request);
             if (result.IsSuccess)
@@ -43,7 +43,7 @@ namespace SocialNetworkApi.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLike(Guid id, UpdateLikeCommand request)
+        public async Task<IActionResult> UpdateChatMessage(Guid id, [FromBody] UpdateChatMessageCommand request)
         {
             if (id != request.Id)
             {
@@ -62,9 +62,9 @@ namespace SocialNetworkApi.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLike(Guid id)
+        public async Task<IActionResult> DeleteChatMessage(Guid id)
         {
-            var request = new DeleteLikeCommand { Id = id };
+            var request = new DeleteChatMessageCommand { Id = id };
             var result = await _mediator.Send(request);
             if (result.IsSuccess)
             {

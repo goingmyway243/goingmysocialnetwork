@@ -13,9 +13,16 @@ import { AuthService } from '../../common/services/auth.service';
     imports: [CreatePostComponent, UserAvatarComponent]
 })
 export class SidebarComponent extends AppCommonComponent {
+    activeMenu: string = 'home'; // Default active menu
+
     constructor(public router: Router, authSvc: AuthService) {
         super(authSvc);
-      }
+    }
+
+    setActiveMenu(menu: string): void {
+        this.activeMenu = menu;
+        this.navigateTo(menu);
+    }
 
     navigateTo(path: string): void {
         this.router.navigate([path]);

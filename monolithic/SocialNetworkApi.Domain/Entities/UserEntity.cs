@@ -8,8 +8,8 @@ public class UserEntity : AuditedEntity
     public string Email { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
     public UserRole Role { get; set; } = UserRole.User;
+    public string FullName { get; set; } = null!;
     public DateTime DateOfBirth { get; set; }
-    public string? FullName { get; set; }
     public string? ProfilePicture { get; set; }
     public string? Bio { get; set; }
     public string? Location { get; set; }

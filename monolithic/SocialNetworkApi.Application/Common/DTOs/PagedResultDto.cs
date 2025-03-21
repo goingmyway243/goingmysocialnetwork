@@ -2,13 +2,13 @@
 {
     public class PagedResultDto<T>
     {
-        public List<T>? Items { get; set; }
+        public IEnumerable<T>? Items { get; set; }
         public bool IsSuccess { get; set; }
         public string Error { get; set; }
         public int TotalCount { get; set; } 
         public int PageIndex { get; set; }
 
-        public PagedResultDto(List<T>? items, bool success = false, string error = "") {
+        public PagedResultDto(IEnumerable<T>? items, bool success = false, string error = "") {
             Items = items;
             IsSuccess = success;
             Error = error;
@@ -22,7 +22,7 @@
             return this;
         }
 
-        public static PagedResultDto<T> Success(List<T> data)
+        public static PagedResultDto<T> Success(IEnumerable<T> data)
         {
             return new PagedResultDto<T>(data, true);
         }

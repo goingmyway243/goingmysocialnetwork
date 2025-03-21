@@ -10,11 +10,11 @@ namespace SocialNetworkApi.Api.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class PostController : ControllerBase
+    public class PostsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public PostController(IMediator mediator)
+        public PostsController(IMediator mediator)
         {
             _mediator = mediator;
         }

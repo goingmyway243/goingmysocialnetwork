@@ -1,0 +1,30 @@
+<div class="explore-page">
+    <mat-tab-group mat-stretch-tabs="false" (selectedIndexChange)="onSelectedTabChange($event)">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <div class="flex items-center gap-2">
+                    <mat-icon>newspaper</mat-icon>
+                    <div>Posts</div>
+                </div>
+            </ng-template>
+            <div class="flex flex-col gap-4 py-2">
+                @for (item of postItems(); track $index) {
+                    <post-item [postData]="item"></post-item>
+                }
+            </div>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <div class="flex items-center gap-2">
+                    <mat-icon>person</mat-icon>
+                    <div>Users</div>
+                </div>
+            </ng-template>
+            <div class="flex flex-col gap-4 py-2">
+                @for (item of userItems(); track $index) {
+                    <user-item [userData]="item"></user-item>
+                }
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>
