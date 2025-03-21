@@ -6,7 +6,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Contents.Commands;
 
-public class UpdateContentCommandHandler : IRequestHandler<UpdateContentCommand, CommandResult<ContentDto>>
+public class UpdateContentCommandHandler : IRequestHandler<UpdateContentCommand, CommandResultDto<ContentDto>>
 {
     private readonly IRepository<ContentEntity> _contentRepository;
     private readonly IMapper _mapper;
@@ -16,17 +16,17 @@ public class UpdateContentCommandHandler : IRequestHandler<UpdateContentCommand,
         _contentRepository = contentRepository;
         _mapper = mapper;
     }
-    public async Task<CommandResult<ContentDto>> Handle(UpdateContentCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<ContentDto>> Handle(UpdateContentCommand request, CancellationToken cancellationToken)
     {
         var content = await _contentRepository.GetByIdAsync(request.Id);
         if (content == null)
         {
-            return CommandResult<ContentDto>.Failure("Content not found");
+            return CommandResultDto<ContentDto>.Failure("Content not found");
         }
 
         content.TextContent = request.TextContent;
         await _contentRepository.UpdateAsync(content);
 
-        return CommandResult<ContentDto>.Success(_mapper.Map<ContentDto>(content));
+        return CommandResultDto<ContentDto>.Success(_mapper.Map<ContentDto>(content));
     }
 }

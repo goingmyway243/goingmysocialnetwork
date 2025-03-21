@@ -5,7 +5,7 @@ import { CreatePostComponent } from "../create-post/create-post.component";
 import { UserAvatarComponent } from "../user-avatar/user-avatar.component";
 import { Router } from '@angular/router';
 import { AppCommonComponent } from '../app-common/app-common.component';
-import { IdentityService } from '../../common/services/identity.service';
+import { AuthService } from '../../common/services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -15,8 +15,8 @@ import { IdentityService } from '../../common/services/identity.service';
   imports: [MatMenuModule, SearchBarComponent, CreatePostComponent, UserAvatarComponent]
 })
 export class AppHeaderComponent extends AppCommonComponent {
-  constructor(public router: Router, identitySvc: IdentityService) {
-    super(identitySvc);
+  constructor(public router: Router, authSvc: AuthService) {
+    super(authSvc);
   }
 
   public logout() {

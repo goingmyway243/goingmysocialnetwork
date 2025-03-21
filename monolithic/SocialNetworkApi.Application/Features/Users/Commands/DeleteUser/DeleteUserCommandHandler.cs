@@ -5,7 +5,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Users.Commands;
 
-public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, CommandResult<Guid>>
+public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, CommandResultDto<Guid>>
 {
     private readonly IRepository<UserEntity> _userRepository;
 
@@ -14,16 +14,16 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, Comma
         _userRepository = userRepository;
     }
 
-    public async Task<CommandResult<Guid>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<Guid>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByIdAsync(request.Id);
         if (user == null)
         {
-            return CommandResult<Guid>.Failure("User not found.");
+            return CommandResultDto<Guid>.Failure("User not found.");
         }
 
         await _userRepository.DeleteAsync(user);
 
-        return CommandResult<Guid>.Success(user.Id);
+        return CommandResultDto<Guid>.Success(user.Id);
     }
 }

@@ -20,38 +20,38 @@ public class IdentityService : IIdentityService
         _mapper = mapper;
     }
 
-    public async Task<AuthResult> GetUserById(Guid id)
+    public async Task<AuthResultDto> GetUserById(Guid id)
     {
         var user = await _userRepository.GetByIdAsync(id);
         if (user == null)
         {
-            return AuthResult.Failure("User not found!");
+            return AuthResultDto.Failure("User not found!");
         }
 
-        return AuthResult.Success(_mapper.Map<UserDto>(user));
+        return AuthResultDto.Success(_mapper.Map<UserDto>(user));
     }
 
-    public async Task<RegisterResult> CreateUserAsync(RegisterDto registerDto)
+    public async Task<RegisterResultDto> CreateUserAsync(RegisterRequestDto registerDto)
     {
         if (string.IsNullOrWhiteSpace(registerDto.Email) || string.IsNullOrWhiteSpace(registerDto.Password))
         {
-            return RegisterResult.Failure("Email and password are required!");
+            return RegisterResultDto.Failure("Email and password are required!");
         }
 
         if (string.IsNullOrWhiteSpace(registerDto.FullName))
         {
-            return RegisterResult.Failure("Full name is required!");
+            return RegisterResultDto.Failure("Full name is required!");
         }
 
         if (registerDto.DateOfBirth == default || registerDto.DateOfBirth < DateTime.Now.AddYears(-100) || registerDto.DateOfBirth > DateTime.Now)
         {
-            return RegisterResult.Failure("Your date of birth is invalid!");
+            return RegisterResultDto.Failure("Your date of birth is invalid!");
         }
 
         var existingUser = await _userRepository.FirstOrDefaultAsync(u => u.Email == registerDto.Email);
         if (existingUser != null)
         {
-            return RegisterResult.Failure("User with this email already exists!");
+            return RegisterResultDto.Failure("User with this email already exists!");
         }
 
         var user = new UserEntity
@@ -69,21 +69,21 @@ public class IdentityService : IIdentityService
         }
         catch
         {
-            return RegisterResult.Failure("Failed to create user!");
+            return RegisterResultDto.Failure("Failed to create user!");
         }
 
-        return RegisterResult.Success(user.Id, user.Email);
+        return RegisterResultDto.Success(user.Id, user.Email);
     }
 
-    public async Task<AuthResult> PasswordSignInAsync(LoginDto loginDto)
+    public async Task<AuthResultDto> PasswordSignInAsync(LoginRequestDto loginDto)
     {
         var user = await _userRepository.FirstOrDefaultAsync(u => u.Email == loginDto.Email);
         if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
         {
-            return AuthResult.Failure("Invalid username or password!");
+            return AuthResultDto.Failure("Invalid username or password!");
         }
 
-        return AuthResult.Success(_mapper.Map<UserDto>(user));
+        return AuthResultDto.Success(_mapper.Map<UserDto>(user));
     }
 
     public Task SignOutAsync()

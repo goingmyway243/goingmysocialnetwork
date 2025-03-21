@@ -6,7 +6,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Chatrooms.Commands;
 
-public class CreateChatroomCommandHandler : IRequestHandler<CreateChatroomCommand, CommandResult<ChatroomDto>>
+public class CreateChatroomCommandHandler : IRequestHandler<CreateChatroomCommand, CommandResultDto<ChatroomDto>>
 {
     private readonly IRepository<ChatroomEntity> _chatroomRepository;
     private readonly IRepository<UserEntity> _userRepository;
@@ -22,11 +22,11 @@ public class CreateChatroomCommandHandler : IRequestHandler<CreateChatroomComman
         _mapper = mapper;
     }
 
-    public async Task<CommandResult<ChatroomDto>> Handle(CreateChatroomCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<ChatroomDto>> Handle(CreateChatroomCommand request, CancellationToken cancellationToken)
     {
         if (request.ParticipantIds.Count == 0)
         {
-            return CommandResult<ChatroomDto>.Failure("Cannot create a chatroom without participant.");
+            return CommandResultDto<ChatroomDto>.Failure("Cannot create a chatroom without participant.");
         }
 
         var chatroom = new ChatroomEntity
@@ -44,6 +44,6 @@ public class CreateChatroomCommandHandler : IRequestHandler<CreateChatroomComman
             ChatroomName = chatroom.ChatroomName
         };
 
-        return CommandResult<ChatroomDto>.Success(resultDto);
+        return CommandResultDto<ChatroomDto>.Success(resultDto);
     }
 }

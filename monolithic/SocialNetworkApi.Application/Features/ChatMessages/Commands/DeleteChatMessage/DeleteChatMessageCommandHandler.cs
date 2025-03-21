@@ -5,7 +5,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.ChatMessages.Commands;
 
-public class DeleteChatMessageCommandHandler : IRequestHandler<DeleteChatMessageCommand, CommandResult<Guid>>
+public class DeleteChatMessageCommandHandler : IRequestHandler<DeleteChatMessageCommand, CommandResultDto<Guid>>
 {
     private readonly IRepository<ChatMessageEntity> _chatMessageRepository;
 
@@ -14,15 +14,15 @@ public class DeleteChatMessageCommandHandler : IRequestHandler<DeleteChatMessage
         _chatMessageRepository = chatMessageRepository;
     }
 
-    public async Task<CommandResult<Guid>> Handle(DeleteChatMessageCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<Guid>> Handle(DeleteChatMessageCommand request, CancellationToken cancellationToken)
     {
         var chatMessage = await _chatMessageRepository.GetByIdAsync(request.Id);
         if (chatMessage == null)
         {
-            return CommandResult<Guid>.Failure("Chat message not found.");
+            return CommandResultDto<Guid>.Failure("Chat message not found.");
         }
 
         await _chatMessageRepository.DeleteAsync(chatMessage);
-        return CommandResult<Guid>.Success(chatMessage.Id);
+        return CommandResultDto<Guid>.Success(chatMessage.Id);
     }
 }

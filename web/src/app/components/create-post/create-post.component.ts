@@ -1,10 +1,11 @@
 import { NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UserAvatarComponent } from "../user-avatar/user-avatar.component";
 import { MatDialog } from '@angular/material/dialog';
 import { CreatePostDialogComponent } from '../../dialogs/create-post-dialog/create-post-dialog.component';
-import { IdentityService } from '../../common/services/identity.service';
 import { AppCommonComponent } from '../app-common/app-common.component';
+import { AuthService } from '../../common/services/auth.service';
+import { Post } from '../../common/models/post.model';
 
 @Component({
   selector: 'create-post',
@@ -18,13 +19,21 @@ export class CreatePostComponent extends AppCommonComponent {
   @Input() fullSize: boolean = false;
   @Input() buttonText: string = '';
 
-  constructor(public dialog: MatDialog, identitySvc: IdentityService) {
-    super(identitySvc);
+  @Output() onCreatePost = new EventEmitter<Post>();
 
-    this.currentUser = identitySvc.getCurrentUser();
+
+  constructor(public dialog: MatDialog, authSvc: AuthService) {
+    super(authSvc);
+
+    this.currentUser = authSvc.getCurrentUser();
   }
 
   public openDialog() {
-    this.dialog.open(CreatePostDialogComponent, { panelClass: 'custom-panel-dialog' });
+    this.dialog.open(CreatePostDialogComponent, { panelClass: 'custom-panel-dialog' })
+      .afterClosed().subscribe(data => {
+        if (data) {
+          this.onCreatePost.emit(data);
+        }
+      });
   }
 }

@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Features.Posts.Commands;
-using Microsoft.AspNetCore.Authorization;
+using SocialNetworkApi.Application.Features.Posts.Queries;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -18,10 +19,16 @@ namespace SocialNetworkApi.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public Task<ActionResult<IEnumerable<PostDto>>> GetAll()
+        [HttpPost("search")]
+        public async Task<ActionResult<PagedResultDto<PostDto>>> SearchPosts([FromBody] SearchPostsQuery request)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

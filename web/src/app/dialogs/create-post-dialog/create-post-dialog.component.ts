@@ -1,10 +1,10 @@
-import { Component, model } from '@angular/core';
+import { Component } from '@angular/core';
 import { UserAvatarComponent } from "../../components/user-avatar/user-avatar.component";
 import { MatDialogRef } from '@angular/material/dialog';
 import { AppCommonComponent } from '../../components/app-common/app-common.component';
-import { IdentityService } from '../../common/services/identity.service';
 import { PostApiService } from '../../common/services/post-api.service';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../common/services/auth.service';
 
 @Component({
   selector: 'create-post-dialog',
@@ -19,17 +19,17 @@ export class CreatePostDialogComponent extends AppCommonComponent {
   constructor(
     private dialogRef: MatDialogRef<CreatePostDialogComponent>,
     private postApiSvc: PostApiService,
-    identitySvc: IdentityService,
+    authSvc: AuthService,
   ) {
-    super(identitySvc)
+    super(authSvc)
   }
 
-  onPost() {
+  createPost() {
     this.postApiSvc.createPost({
       caption: this.caption,
-      userId: this.identitySvc.getCurrentUserId(),
+      userId: this.authSvc.getCurrentUserId(),
     }).subscribe(result => {
-      console.log('success: ' + result);
+      this.dialogRef.close(result);
     })
   }
 

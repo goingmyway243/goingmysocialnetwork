@@ -6,7 +6,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.ChatMessages.Commands;
 
-public class CreateChatMessageCommandHandler : IRequestHandler<CreateChatMessageCommand, CommandResult<ChatMessageDto>>
+public class CreateChatMessageCommandHandler : IRequestHandler<CreateChatMessageCommand, CommandResultDto<ChatMessageDto>>
 {
     private readonly IRepository<ChatMessageEntity> _chatMessageRepository;
     private readonly IMapper _mapper;
@@ -19,16 +19,16 @@ public class CreateChatMessageCommandHandler : IRequestHandler<CreateChatMessage
         _mapper = mapper;
     }
 
-    public async Task<CommandResult<ChatMessageDto>> Handle(CreateChatMessageCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<ChatMessageDto>> Handle(CreateChatMessageCommand request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.Message))
         {
-            return CommandResult<ChatMessageDto>.Failure("Message is required!");
+            return CommandResultDto<ChatMessageDto>.Failure("Message is required!");
         }
 
         if (request.UserId == default ||  request.ChatroomId == default)
         {
-            return CommandResult<ChatMessageDto>.Failure("Invalid user or chatroom!");
+            return CommandResultDto<ChatMessageDto>.Failure("Invalid user or chatroom!");
         }
 
         var chatMessage = _mapper.Map<ChatMessageEntity>(request);
@@ -36,6 +36,6 @@ public class CreateChatMessageCommandHandler : IRequestHandler<CreateChatMessage
 
 
         await _chatMessageRepository.InsertAsync(chatMessage);
-        return CommandResult<ChatMessageDto>.Success(_mapper.Map<ChatMessageDto>(chatMessage));
+        return CommandResultDto<ChatMessageDto>.Success(_mapper.Map<ChatMessageDto>(chatMessage));
     }
 }

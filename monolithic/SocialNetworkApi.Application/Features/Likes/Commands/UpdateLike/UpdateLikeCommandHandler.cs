@@ -6,7 +6,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Likes.Commands;
 
-public class UpdateLikeCommandHandler : IRequestHandler<UpdateLikeCommand, CommandResult<LikeDto>>
+public class UpdateLikeCommandHandler : IRequestHandler<UpdateLikeCommand, CommandResultDto<LikeDto>>
 {
     private readonly IRepository<LikeEntity> _likeRepository;
     private readonly IMapper _mapper;
@@ -17,7 +17,7 @@ public class UpdateLikeCommandHandler : IRequestHandler<UpdateLikeCommand, Comma
         _mapper = mapper;
     }
 
-    public Task<CommandResult<LikeDto>> Handle(UpdateLikeCommand request, CancellationToken cancellationToken)
+    public Task<CommandResultDto<LikeDto>> Handle(UpdateLikeCommand request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }

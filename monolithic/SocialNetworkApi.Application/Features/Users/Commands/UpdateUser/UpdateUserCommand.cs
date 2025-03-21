@@ -3,7 +3,7 @@ using SocialNetworkApi.Application.Common.DTOs;
 
 namespace SocialNetworkApi.Application.Features.Users.Commands;
 
-public class UpdateUserCommand : IRequest<CommandResult<UserDto>>
+public class UpdateUserCommand : IRequest<CommandResultDto<UserDto>>
 {
     public Guid Id { get; set; }
     public DateTime? DateOfBirth { get; set; }

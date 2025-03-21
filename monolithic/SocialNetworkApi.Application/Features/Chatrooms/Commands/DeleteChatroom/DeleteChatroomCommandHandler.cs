@@ -6,7 +6,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Chatrooms.Commands;
 
-public class DeleteChatroomCommandHandler : IRequestHandler<DeleteChatroomCommand, CommandResult<Guid>>
+public class DeleteChatroomCommandHandler : IRequestHandler<DeleteChatroomCommand, CommandResultDto<Guid>>
 {
     private readonly IRepository<ChatroomEntity> _chatroomRepository;
 
@@ -15,7 +15,7 @@ public class DeleteChatroomCommandHandler : IRequestHandler<DeleteChatroomComman
         _chatroomRepository = chatroomRepository;
     }
 
-    public async Task<CommandResult<Guid>> Handle(DeleteChatroomCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<Guid>> Handle(DeleteChatroomCommand request, CancellationToken cancellationToken)
     {
         var chatroom = await _chatroomRepository
             .GetAll()
@@ -23,10 +23,10 @@ public class DeleteChatroomCommandHandler : IRequestHandler<DeleteChatroomComman
             .FirstOrDefaultAsync(cr => cr.Id == request.Id, cancellationToken);
         if (chatroom == null)
         {
-            return CommandResult<Guid>.Failure("Chatroom not found.");
+            return CommandResultDto<Guid>.Failure("Chatroom not found.");
         }
 
         await _chatroomRepository.DeleteAsync(chatroom);
-        return CommandResult<Guid>.Success(chatroom.Id);
+        return CommandResultDto<Guid>.Success(chatroom.Id);
     }
 }

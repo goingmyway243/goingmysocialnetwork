@@ -6,7 +6,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Users.Commands;
 
-public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, CommandResult<UserDto>>
+public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, CommandResultDto<UserDto>>
 {
     private readonly IRepository<UserEntity> _userRepository;
     private readonly IMapper _mapper;
@@ -17,12 +17,12 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Comma
         _mapper = mapper;
     }
 
-    public async Task<CommandResult<UserDto>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<UserDto>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByIdAsync(request.Id);
         if (user == null)
         {
-            return CommandResult<UserDto>.Failure("User not found.");
+            return CommandResultDto<UserDto>.Failure("User not found.");
         }
 
         user.FullName = request.FullName ?? user.FullName;
@@ -38,6 +38,6 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Comma
         await _userRepository.UpdateAsync(user);
 
         var result = _mapper.Map<UserDto>(user);
-        return CommandResult<UserDto>.Success(result);
+        return CommandResultDto<UserDto>.Success(result);
     }
 }

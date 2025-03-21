@@ -5,8 +5,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { IdentityService } from '../../common/services/identity.service';
-import { ILoginRequest } from '../../common/models/auth.model';
+import { IdentityApiService } from '../../common/services/identity-api.service';
+import { ILoginRequest } from '../../common/dtos/identity-api.dto';
 import { catchError, throwError } from 'rxjs';
 
 @Component({
@@ -30,7 +30,7 @@ export class LoginPageComponent {
     password: new FormControl('')
   });
 
-  constructor(private router: Router, private identitySvc: IdentityService) { }
+  constructor(private router: Router, private identityApiSvc: IdentityApiService) { }
 
   public navigateToSignup() {
     this.router.navigate(['/signup']);
@@ -48,7 +48,7 @@ export class LoginPageComponent {
       password: this.loginForm.controls.password.value!
     }
 
-    this.identitySvc.loginAsync(request)
+    this.identityApiSvc.loginAsync(request)
       .pipe(catchError(err => {
         return throwError(() => new Error(err.error));
       }))

@@ -7,7 +7,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Users.Commands;
 
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CommandResult<UserDto>>
+public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CommandResultDto<UserDto>>
 {
     private readonly IRepository<UserEntity> _userRepository;
     private readonly IIdentityService _identityService;
@@ -23,27 +23,27 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Comma
         _mapper = mapper;
     }
 
-    public async Task<CommandResult<UserDto>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<UserDto>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
         {
-            return CommandResult<UserDto>.Failure("Email and password are required!");
+            return CommandResultDto<UserDto>.Failure("Email and password are required!");
         }
 
         if (string.IsNullOrWhiteSpace(request.FullName))
         {
-            return CommandResult<UserDto>.Failure("Full name is required!");
+            return CommandResultDto<UserDto>.Failure("Full name is required!");
         }
 
         if (request.DateOfBirth == default || request.DateOfBirth < DateTime.Now.AddYears(-100) || request.DateOfBirth > DateTime.Now)
         {
-            return CommandResult<UserDto>.Failure("Your date of birth is invalid!");
+            return CommandResultDto<UserDto>.Failure("Your date of birth is invalid!");
         }
 
         var existingUser = await _userRepository.FirstOrDefaultAsync(u => u.Email == request.Email);
         if (existingUser != null)
         {
-            return CommandResult<UserDto>.Failure("User with this email already exists!");
+            return CommandResultDto<UserDto>.Failure("User with this email already exists!");
         }
 
         var user = new UserEntity
@@ -67,6 +67,6 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Comma
         await _userRepository.InsertAsync(user);
 
         var result = _mapper.Map<UserDto>(user);
-        return CommandResult<UserDto>.Success(result);
+        return CommandResultDto<UserDto>.Success(result);
     }
 }

@@ -5,7 +5,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Posts.Commands;
 
-public class DeletePostCommandHandler : IRequestHandler<DeletePostCommand, CommandResult<Guid>>
+public class DeletePostCommandHandler : IRequestHandler<DeletePostCommand, CommandResultDto<Guid>>
 {
     private readonly IRepository<PostEntity> _postRepository;
 
@@ -14,15 +14,15 @@ public class DeletePostCommandHandler : IRequestHandler<DeletePostCommand, Comma
         _postRepository = postRepository;
     }
 
-    public async Task<CommandResult<Guid>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<Guid>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
         var post = await _postRepository.GetByIdAsync(request.Id);
         if (post == null)
         {
-            return CommandResult<Guid>.Failure("Post not found.");
+            return CommandResultDto<Guid>.Failure("Post not found.");
         }
 
         await _postRepository.DeleteAsync(post);
-        return CommandResult<Guid>.Success(post.Id);
+        return CommandResultDto<Guid>.Success(post.Id);
     }
 }

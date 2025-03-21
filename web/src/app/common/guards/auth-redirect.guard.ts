@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { IdentityService } from '../services/identity.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthRedirectGuard implements CanActivate {
 
-  constructor(private identityService: IdentityService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
-    const isAuthenticated = this.identityService.isAuthenticated();
+    const isAuthenticated = this.authService.isAuthenticated();
 
     if (isAuthenticated) {
       this.router.navigate(['/']);

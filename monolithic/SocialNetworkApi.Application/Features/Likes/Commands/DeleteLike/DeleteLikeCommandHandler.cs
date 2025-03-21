@@ -6,7 +6,7 @@ using System;
 
 namespace SocialNetworkApi.Application.Features.Likes.Commands;
 
-public class DeleteLikeCommandHandler : IRequestHandler<DeleteLikeCommand, CommandResult<Guid>>
+public class DeleteLikeCommandHandler : IRequestHandler<DeleteLikeCommand, CommandResultDto<Guid>>
 {
     private readonly IRepository<LikeEntity> _likeRepository;
 
@@ -14,15 +14,15 @@ public class DeleteLikeCommandHandler : IRequestHandler<DeleteLikeCommand, Comma
     {
         _likeRepository = likeRepository;
     }
-    public async Task<CommandResult<Guid>> Handle(DeleteLikeCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<Guid>> Handle(DeleteLikeCommand request, CancellationToken cancellationToken)
     {
         var like = await _likeRepository.GetByIdAsync(request.Id);
         if (like == null)
         {
-            return CommandResult<Guid>.Failure("Like not found.");
+            return CommandResultDto<Guid>.Failure("Like not found.");
         }
 
         await _likeRepository.DeleteAsync(like);
-        return CommandResult<Guid>.Success(like.Id);
+        return CommandResultDto<Guid>.Success(like.Id);
     }
 }

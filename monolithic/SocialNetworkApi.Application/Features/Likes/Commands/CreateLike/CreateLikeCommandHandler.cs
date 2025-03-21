@@ -6,7 +6,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Likes.Commands;
 
-public class CreateLikeCommandHandler : IRequestHandler<CreateLikeCommand, CommandResult<LikeDto>>
+public class CreateLikeCommandHandler : IRequestHandler<CreateLikeCommand, CommandResultDto<LikeDto>>
 {
     private readonly IRepository<LikeEntity> _likeRepository;
     private readonly IMapper _mapper;
@@ -17,11 +17,11 @@ public class CreateLikeCommandHandler : IRequestHandler<CreateLikeCommand, Comma
         _mapper = mapper;
     }
 
-    public async Task<CommandResult<LikeDto>> Handle(CreateLikeCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<LikeDto>> Handle(CreateLikeCommand request, CancellationToken cancellationToken)
     {
         if (request.UserId == default || request.PostId == default)
         {
-            return CommandResult<LikeDto>.Failure("Invalid data.");
+            return CommandResultDto<LikeDto>.Failure("Invalid data.");
         }
 
         var existingLikeInPost = await _likeRepository
@@ -30,7 +30,7 @@ public class CreateLikeCommandHandler : IRequestHandler<CreateLikeCommand, Comma
         if (existingLikeInPost != null)
         {
             var existingLikeDto = _mapper.Map<LikeDto>(existingLikeInPost);
-            return CommandResult<LikeDto>.Success(existingLikeDto);
+            return CommandResultDto<LikeDto>.Success(existingLikeDto);
         }
 
         var likeInPost = _mapper.Map<LikeEntity>(request);
@@ -39,6 +39,6 @@ public class CreateLikeCommandHandler : IRequestHandler<CreateLikeCommand, Comma
         await _likeRepository.InsertAsync(likeInPost);
 
         var result = _mapper.Map<LikeDto>(likeInPost);
-        return CommandResult<LikeDto>.Success(result);
+        return CommandResultDto<LikeDto>.Success(result);
     }
 }

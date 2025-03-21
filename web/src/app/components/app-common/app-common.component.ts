@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { IdentityService } from '../../common/services/identity.service';
 import { User } from '../../common/models/user.model';
+import { AuthService } from '../../common/services/auth.service';
 
 @Component({
   selector: 'app-common',
@@ -11,11 +11,11 @@ import { User } from '../../common/models/user.model';
 export class AppCommonComponent implements OnInit {
   currentUser!: User | null;
 
-  constructor(public identitySvc: IdentityService) {
+  constructor(public authSvc: AuthService) {
   }
 
   ngOnInit(): void {
-    this.identitySvc.currentUser$.subscribe(user => {
+    this.authSvc.currentUser$.subscribe(user => {
       this.currentUser = user;
     })
   }

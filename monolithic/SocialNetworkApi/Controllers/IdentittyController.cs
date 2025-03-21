@@ -1,11 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Common.Interfaces;
 using SocialNetworkApi.Domain.Enums;
+using System.Security.Claims;
 
 namespace SocialNetworkApi.Api.Controllers;
 
@@ -44,7 +42,7 @@ public class IdentityController : ControllerBase
 
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterDto request)
+    public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
     {
         var result = await _identityService.CreateUserAsync(request);
         if (result.IsSuccess)
@@ -56,7 +54,7 @@ public class IdentityController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginDto request)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
     {
         var result = await _identityService.PasswordSignInAsync(request);
         if (result.User == null)

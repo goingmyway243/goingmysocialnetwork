@@ -1,3 +1,5 @@
+import { User } from "./user.model";
+
 export interface IPost {
     id: string;
     caption: string;
@@ -18,6 +20,8 @@ export class Post implements IPost {
     commentCount: number;
     createdAt: Date;
     modifiedAt?: Date | undefined;
+
+    user?: User;
 
     constructor(post: IPost) {
         this.id = post.id;

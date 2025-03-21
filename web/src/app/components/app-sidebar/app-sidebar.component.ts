@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { CreatePostComponent } from "../create-post/create-post.component";
 import { UserAvatarComponent } from "../user-avatar/user-avatar.component";
 import { Router } from '@angular/router';
-import { IdentityService } from '../../common/services/identity.service';
 import { AppCommonComponent } from '../app-common/app-common.component';
+import { AuthService } from '../../common/services/auth.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -13,8 +13,8 @@ import { AppCommonComponent } from '../app-common/app-common.component';
     imports: [CreatePostComponent, UserAvatarComponent]
 })
 export class SidebarComponent extends AppCommonComponent {
-    constructor(public router: Router, identitySvc: IdentityService) {
-        super(identitySvc);
+    constructor(public router: Router, authSvc: AuthService) {
+        super(authSvc);
       }
 
     navigateTo(path: string): void {

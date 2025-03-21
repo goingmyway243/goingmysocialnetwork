@@ -6,7 +6,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Comments.Commands;
 
-public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, CommandResult<CommentDto>>
+public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, CommandResultDto<CommentDto>>
 {
     private readonly IRepository<CommentEntity> _commentRepository;
     private readonly IMapper _mapper;
@@ -16,11 +16,11 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
         _commentRepository = commentRepository;
         _mapper = mapper;
     }
-    public async Task<CommandResult<CommentDto>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<CommentDto>> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
     {
         if (request.UserId == default || request.PostId == default)
         {
-            return CommandResult<CommentDto>.Failure("Invalid data!");
+            return CommandResultDto<CommentDto>.Failure("Invalid data!");
         }
 
         var comment = _mapper.Map<CommentEntity>(request);
@@ -29,6 +29,6 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
         await _commentRepository.InsertAsync(comment);
 
         var result = _mapper.Map<CommentDto>(request);
-        return CommandResult<CommentDto>.Success(result);
+        return CommandResultDto<CommentDto>.Success(result);
     }
 }

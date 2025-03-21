@@ -5,7 +5,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Contents.Commands;
 
-public class DeleteContentCommandHandler : IRequestHandler<DeleteContentCommand, CommandResult<Guid>>
+public class DeleteContentCommandHandler : IRequestHandler<DeleteContentCommand, CommandResultDto<Guid>>
 {
     private readonly IRepository<ContentEntity> _contentRepository;
 
@@ -14,16 +14,16 @@ public class DeleteContentCommandHandler : IRequestHandler<DeleteContentCommand,
         _contentRepository = contentRepository;
     }
 
-    public async Task<CommandResult<Guid>> Handle(DeleteContentCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<Guid>> Handle(DeleteContentCommand request, CancellationToken cancellationToken)
     {
         var content = await _contentRepository.GetByIdAsync(request.Id);
         if (content == null)
         {
-            return CommandResult<Guid>.Failure("Content not found");
+            return CommandResultDto<Guid>.Failure("Content not found");
         }
 
         await _contentRepository.DeleteAsync(content);
 
-        return CommandResult<Guid>.Success(content.Id);
+        return CommandResultDto<Guid>.Success(content.Id);
     }
 }

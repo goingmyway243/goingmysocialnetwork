@@ -7,7 +7,7 @@ import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { IdentityService } from '../../common/services/identity.service';
+import { IdentityApiService } from '../../common/services/identity-api.service';
 
 @Component({
   selector: 'dashboard-page',
@@ -31,25 +31,17 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   constructor
     (
       private router: Router,
-      private identityService: IdentityService
+      private identityApiService: IdentityApiService
     ) { }
 
   ngOnInit(): void {
-    this.fetchUserInfoIfNeeded();
+    this.identityApiService.fetchUserInfoIfNeeded().subscribe();
 
     // Initial check
     this.showOptionalSidebar.set(this.router.url === '/' || this.router.url === '/home');
 
     // Subscribe to router events
     this.subscribeRouterEvents();
-  }
-
-  private fetchUserInfoIfNeeded() {
-    const isAuthenticated = this.identityService.isAuthenticated();
-    const currentUser = this.identityService.getCurrentUser();
-    if (isAuthenticated && !currentUser) {
-      this.identityService.getUserInfoAsync().subscribe();
-    }
   }
 
   private subscribeRouterEvents() {

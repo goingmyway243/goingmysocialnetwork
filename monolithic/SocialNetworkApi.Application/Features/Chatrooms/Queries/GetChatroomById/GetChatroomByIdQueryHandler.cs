@@ -7,7 +7,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Chatrooms.Queries;
 
-public class GetChatroomByIdQueryHandler : IRequestHandler<GetChatroomByIdQuery, QueryResult<ChatroomDto>>
+public class GetChatroomByIdQueryHandler : IRequestHandler<GetChatroomByIdQuery, QueryResultDto<ChatroomDto>>
 {
     private readonly IRepository<ChatroomEntity> _chatroomRepository;
     private readonly IMapper _mapper;
@@ -18,7 +18,7 @@ public class GetChatroomByIdQueryHandler : IRequestHandler<GetChatroomByIdQuery,
         _mapper = mapper;
     }
 
-    public async Task<QueryResult<ChatroomDto>> Handle(GetChatroomByIdQuery request, CancellationToken cancellationToken)
+    public async Task<QueryResultDto<ChatroomDto>> Handle(GetChatroomByIdQuery request, CancellationToken cancellationToken)
     {
         var chatroom = await _chatroomRepository
             .GetAll()
@@ -26,7 +26,7 @@ public class GetChatroomByIdQueryHandler : IRequestHandler<GetChatroomByIdQuery,
             .FirstOrDefaultAsync(cr => cr.Id == request.Id, cancellationToken);
         if (chatroom == null)
         {
-            return QueryResult<ChatroomDto>.Failure("Chatroom not found.");
+            return QueryResultDto<ChatroomDto>.Failure("Chatroom not found.");
         }
 
         var result = new ChatroomDto
@@ -36,6 +36,6 @@ public class GetChatroomByIdQueryHandler : IRequestHandler<GetChatroomByIdQuery,
             Participants = chatroom.Participants.Select(u => _mapper.Map<UserDto>(u)).ToList(),
         };
 
-        return QueryResult<ChatroomDto>.Success(result);
+        return QueryResultDto<ChatroomDto>.Success(result);
     }
 }

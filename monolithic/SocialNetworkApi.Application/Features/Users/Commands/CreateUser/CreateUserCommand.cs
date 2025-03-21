@@ -4,7 +4,7 @@ using SocialNetworkApi.Domain.Enums;
 
 namespace SocialNetworkApi.Application.Features.Users.Commands;
 
-public class CreateUserCommand : IRequest<CommandResult<UserDto>>
+public class CreateUserCommand : IRequest<CommandResultDto<UserDto>>
 {
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;

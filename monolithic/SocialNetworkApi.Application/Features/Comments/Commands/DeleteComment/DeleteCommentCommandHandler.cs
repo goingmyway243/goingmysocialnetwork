@@ -5,7 +5,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Comments.Commands;
 
-public class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentCommand, CommandResult<Guid>>
+public class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentCommand, CommandResultDto<Guid>>
 {
     private readonly IRepository<CommentEntity> _commentRepository;
 
@@ -13,15 +13,15 @@ public class DeleteCommentCommandHandler : IRequestHandler<DeleteCommentCommand,
     {
         _commentRepository = commentRepository;
     }
-    public async Task<CommandResult<Guid>> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<Guid>> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
     {
         var comment = await _commentRepository.GetByIdAsync(request.Id);
         if (comment == null)
         {
-            return CommandResult<Guid>.Failure("Comment not found.");
+            return CommandResultDto<Guid>.Failure("Comment not found.");
         }
 
         await _commentRepository.DeleteAsync(comment);
-        return CommandResult<Guid>.Success(comment.Id);
+        return CommandResultDto<Guid>.Success(comment.Id);
     }
 }

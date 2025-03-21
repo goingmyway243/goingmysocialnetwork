@@ -6,7 +6,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.ChatMessages.Commands;
 
-public class UpdateChatMessageCommandHandler : IRequestHandler<UpdateChatMessageCommand, CommandResult<ChatMessageDto>>
+public class UpdateChatMessageCommandHandler : IRequestHandler<UpdateChatMessageCommand, CommandResultDto<ChatMessageDto>>
 {
     private readonly IRepository<ChatMessageEntity> _chatMessageRepository;
     private readonly IMapper _mapper;
@@ -19,17 +19,17 @@ public class UpdateChatMessageCommandHandler : IRequestHandler<UpdateChatMessage
         _mapper = mapper;
     }
 
-    public async Task<CommandResult<ChatMessageDto>> Handle(UpdateChatMessageCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<ChatMessageDto>> Handle(UpdateChatMessageCommand request, CancellationToken cancellationToken)
     {
         var chatMessage = await _chatMessageRepository.GetByIdAsync(request.Id);
         if (chatMessage == null)
         {
-            return CommandResult<ChatMessageDto>.Failure("Chat message not found.");
+            return CommandResultDto<ChatMessageDto>.Failure("Chat message not found.");
         }
 
         chatMessage.Message = request.Message;
 
         await _chatMessageRepository.UpdateAsync(chatMessage);
-        return CommandResult<ChatMessageDto>.Success(_mapper.Map<ChatMessageDto>(chatMessage));
+        return CommandResultDto<ChatMessageDto>.Success(_mapper.Map<ChatMessageDto>(chatMessage));
     }
 }

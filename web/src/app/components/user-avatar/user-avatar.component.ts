@@ -10,6 +10,6 @@ import { User } from '../../common/models/user.model';
   styleUrl: './user-avatar.component.scss'
 })
 export class UserAvatarComponent {
-  @Input({ required: true }) user!: User | null;
+  @Input({ required: true }) user!: User | null | undefined;
   @Input() showInfo: boolean = true;
 }

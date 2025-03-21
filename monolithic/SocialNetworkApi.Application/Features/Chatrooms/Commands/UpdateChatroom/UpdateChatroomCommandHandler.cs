@@ -7,7 +7,7 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Chatrooms.Commands;
 
-public class UpdateChatroomCommandHandler : IRequestHandler<UpdateChatroomCommand, CommandResult<ChatroomDto>>
+public class UpdateChatroomCommandHandler : IRequestHandler<UpdateChatroomCommand, CommandResultDto<ChatroomDto>>
 {
     private readonly IRepository<ChatroomEntity> _chatroomRepository;
     private readonly IMapper _mapper;
@@ -18,7 +18,7 @@ public class UpdateChatroomCommandHandler : IRequestHandler<UpdateChatroomComman
         _mapper = mapper;
     }
 
-    public async Task<CommandResult<ChatroomDto>> Handle(UpdateChatroomCommand request, CancellationToken cancellationToken)
+    public async Task<CommandResultDto<ChatroomDto>> Handle(UpdateChatroomCommand request, CancellationToken cancellationToken)
     {
         var chatroom = await _chatroomRepository
             .GetAll()
@@ -26,14 +26,14 @@ public class UpdateChatroomCommandHandler : IRequestHandler<UpdateChatroomComman
             .FirstOrDefaultAsync(cr => cr.Id == request.Id, cancellationToken);
         if (chatroom == null)
         {
-            return CommandResult<ChatroomDto>.Failure("Chatroom not found.");
+            return CommandResultDto<ChatroomDto>.Failure("Chatroom not found.");
         }
 
         chatroom.ChatroomName = request.ChatroomName;
 
         await _chatroomRepository.UpdateAsync(chatroom);
 
-        return CommandResult<ChatroomDto>.Success(new ChatroomDto
+        return CommandResultDto<ChatroomDto>.Success(new ChatroomDto
         {
             Id = chatroom.Id,
             ChatroomName = chatroom.ChatroomName,

@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { IdentityService } from '../../common/services/identity.service';
+import { IdentityApiService } from '../../common/services/identity-api.service';
 import { catchError, throwError } from 'rxjs';
 
 @Component({
@@ -53,7 +53,7 @@ export class SignupPageComponent {
   public isLoading = signal(false);
   public error = signal<string | null>(null);
 
-  constructor(private router: Router, private identitySvc: IdentityService) { }
+  constructor(private router: Router, private identityApiSvc: IdentityApiService) { }
 
   public showBackButton(): boolean {
     return !this.stepper || this.stepper.selectedIndex !== this.stepper.steps.length - 1;
@@ -74,7 +74,7 @@ export class SignupPageComponent {
       dateOfBirth: new Date(this.secondForm.controls.dateOfBirth.value ?? '')
     };
 
-    this.identitySvc.registerAsync(newUser)
+    this.identityApiSvc.registerAsync(newUser)
       .pipe(catchError(err => {
         this.error.set(err.error);
         this.isLoading.set(false);
