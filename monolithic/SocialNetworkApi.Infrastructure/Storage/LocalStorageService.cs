@@ -10,10 +10,6 @@ public class LocalStorageService : IStorageService
     public LocalStorageService(IHostEnvironment hostEnvironment)
     {
         _storagePath = Path.Combine(hostEnvironment.ContentRootPath, "Public");
-        if (!Directory.Exists(_storagePath))
-        {
-            Directory.CreateDirectory(_storagePath);
-        }
     }
 
     public Task DeleteFileAsync(string fileName)
@@ -41,13 +37,20 @@ public class LocalStorageService : IStorageService
         }
     }
 
-    public async Task<string> UploadFileAsync(Stream fileStream, string fileName, string contentType)
+    public async Task<string> UploadFileAsync(Stream fileStream, string fileName, string contentType, string folder)
     {
-        var filePath = Path.Combine(_storagePath, fileName);
-        using (var fileStreamOutput = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+        var folderPath = Path.Combine(_storagePath, folder);
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        var filePath = Path.Combine(folderPath, fileName);
+        using (var fileStreamOutput = new FileStream(filePath, FileMode.Create, FileAccess.Write))
         {
             await fileStream.CopyToAsync(fileStreamOutput);
         }
-        return "http://localhost:5046/files/" + fileName;
+        
+        return $"http://localhost:5046/files/{folder}/{fileName}";
     }
 }

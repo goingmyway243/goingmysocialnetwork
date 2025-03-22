@@ -1,3 +1,4 @@
+import { Content } from "./content.model";
 import { User } from "./user.model";
 
 export interface IPost {
@@ -22,6 +23,7 @@ export class Post implements IPost {
     modifiedAt?: Date | undefined;
 
     user?: User;
+    contents?: Content[];
 
     constructor(post: IPost) {
         this.id = post.id;

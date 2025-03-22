@@ -32,7 +32,7 @@ public class AzureStorageService : IStorageService
         return memoryStream;
     }
 
-    public async Task<string> UploadFileAsync(Stream fileStream, string fileName, string contentType)
+    public async Task<string> UploadFileAsync(Stream fileStream, string fileName, string contentType, string folder)
     {
         var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
         var blobClient = containerClient.GetBlobClient(fileName);

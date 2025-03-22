@@ -6,9 +6,11 @@
 
   <div class="post-body">
     <div class="text-container">{{ postData.caption }}</div>
-    <!-- <div class="image-container">
-      <img src="imgs/sample.jpg" />
-    </div> -->
+    <div class="image-container">
+      @for (item of postData.contents; track $index) {
+        <img [src]="item.linkContent">
+      }
+    </div>
   </div>
 
   <div class="action-buttons">

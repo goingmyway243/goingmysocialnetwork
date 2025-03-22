@@ -39,24 +39,25 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, Comma
             return CommandResultDto<PostDto>.Failure("User not found!");
         }
 
-        var contents = request.Contents;
-        if (contents.Count != 0)
-        {
-            contents.ForEach(async p =>
-            {
-                if (p.FormFile != null)
-                {
-                    var file = p.FormFile;
-                    using (var stream = file.OpenReadStream())
-                    {
-                        p.LinkContent = await _storageService.UploadFileAsync(stream, file.Name, file.ContentType);
-                    }
-                }
-            });
-        }
-
         var post = _mapper.Map<PostEntity>(request);
         post.Id = Guid.NewGuid();
+
+        var contents = request.Contents;
+        for (int i = 0; i < contents.Count; i++)
+        {
+            var p = contents[i];
+            if (p.FormFile != null)
+            {
+                var file = p.FormFile;
+                var extension = Path.GetExtension(file.FileName);
+                var fileName = $"{post.Id}_content_{i}{extension}";
+                using (var stream = file.OpenReadStream())
+                {
+                    p.LinkContent = await _storageService.UploadFileAsync(stream, fileName, file.ContentType, "posts");
+                }
+            }
+        }
+
         post.Contents = contents.Select(_mapper.Map<ContentEntity>).ToList();
 
         await _postRepository.InsertAsync(post);

@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -64,6 +64,12 @@ app.UseStaticFiles(new StaticFileOptions()
     FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Public")),
     RequestPath = "/files"
 });
+
+var staticFilePath = Path.Combine(app.Environment.ContentRootPath, "Public");
+if (!Directory.Exists(staticFilePath))
+{
+    Directory.CreateDirectory(staticFilePath);
+}
 
 app.UseCors("AllowedHostsPolicy");
 

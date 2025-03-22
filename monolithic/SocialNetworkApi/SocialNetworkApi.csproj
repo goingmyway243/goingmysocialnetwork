@@ -19,4 +19,8 @@
     <ProjectReference Include="..\SocialNetworkApi.Application\SocialNetworkApi.Application.csproj" />
     <ProjectReference Include="..\SocialNetworkApi.Infrastructure\SocialNetworkApi.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Public\" />
+  </ItemGroup>
 </Project>

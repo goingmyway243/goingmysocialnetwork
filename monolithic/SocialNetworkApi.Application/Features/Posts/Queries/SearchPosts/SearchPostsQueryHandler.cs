@@ -36,9 +36,10 @@ public class SearchPostsQueryHandler : IRequestHandler<SearchPostsQuery, PagedRe
         var totalCount = await query.CountAsync();
 
         query = query.Skip(pagedRequest.PageIndex * pagedRequest.PageSize)
-        .Take(pagedRequest.PageSize)
-        .OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt)
-        .Include(p => p.User);
+            .Take(pagedRequest.PageSize)
+            .OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt)
+            .Include(p => p.User)
+            .Include(p => p.Contents);
 
         var result = await query.ToListAsync();
         if (result == null)
