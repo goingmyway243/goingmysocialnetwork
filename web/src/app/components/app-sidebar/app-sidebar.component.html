@@ -22,7 +22,9 @@
       <i class="fa-solid fa-bell"></i>
       <span>Notifications</span>
     </div> -->
-    <div class="menu-item">
+    <div class="menu-item"
+      [class.--active]="activeMenu === 'message'" 
+      (click)="setActiveMenu('message')">
       <i class="fa-solid fa-envelope"></i>
       <span>Messages</span>
     </div>

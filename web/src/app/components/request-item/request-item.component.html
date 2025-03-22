@@ -1,10 +1,12 @@
 <div class="request-item">
   <user-avatar [user]="requestData.user"></user-avatar>
 
-  <div class="action-buttons">
-    <button class="primary" (click)="acceptRequest()">Accept</button>
-    <button class="disabled" (click)="declineRequest()">Decline</button>
-  </div>
+  @if (!showNotification()) {
+    <div class="action-buttons">
+      <button class="primary" (click)="acceptRequest()">Accept</button>
+      <button class="disabled" (click)="declineRequest()">Decline</button>
+    </div>
+  }
 
   @if (showNotification()) {
     <div class="notification-container">

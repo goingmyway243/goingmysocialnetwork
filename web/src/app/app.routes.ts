@@ -14,7 +14,11 @@ export const routes: Routes = [
       },
       {
         path: 'explore',
-        loadComponent: () => import('./pages/explore-page/explore-page.component').then(p => p.ExplorePageComponent) 
+        loadComponent: () => import('./pages/explore-page/explore-page.component').then(p => p.ExplorePageComponent)
+      },
+      {
+        path: 'message',
+        loadComponent: () => import('./pages/message-page/message-page.component').then(p => p.MessagePageComponent)
       },
       {
         path: 'profile',

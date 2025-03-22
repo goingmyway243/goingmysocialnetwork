@@ -17,6 +17,10 @@ export class AppCommonComponent implements OnInit {
   ngOnInit(): void {
     this.authSvc.currentUser$.subscribe(user => {
       this.currentUser = user;
-    })
+    });
+
+    this.onInit();
   }
+
+  onInit(): void {};
 }

@@ -3,6 +3,7 @@
   padding: 12px;
   justify-content: space-between;
   gap: 40px;
+  min-height: calc(100vh - 92px);
 
   .page-container {
     flex: 1;

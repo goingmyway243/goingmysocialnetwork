@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RequestItemComponent } from "../request-item/request-item.component";
 import { AuthService } from '../../common/services/auth.service';
 import { FriendshipApiService } from '../../common/services/friendship-api.service';
@@ -11,9 +11,9 @@ import { Friendship } from '../../common/models/friendship.model';
   templateUrl: './request-box.component.html',
   styleUrl: './request-box.component.scss'
 })
-export class RequestBoxComponent {
+export class RequestBoxComponent implements OnInit {
   pendingRequests = signal<Friendship[]>([]);
-  
+
   constructor(
     private authSvc: AuthService,
     private friendshipApiSvc: FriendshipApiService
@@ -22,8 +22,11 @@ export class RequestBoxComponent {
   ngOnInit(): void {
     this.authSvc.currentUser$.subscribe(user => {
       if (user) {
-        this.friendshipApiSvc.getPendingRequests(user.id, { pageIndex: 0, pageSize: 2 })
-          .subscribe(fs => this.pendingRequests.set(fs.items));
+        const sub = this.friendshipApiSvc.getPendingRequests(user.id, { pageIndex: 0, pageSize: 2 })
+          .subscribe(fs => {
+            this.pendingRequests.set(fs.items);
+            sub.unsubscribe();
+          });
       }
     });
   }

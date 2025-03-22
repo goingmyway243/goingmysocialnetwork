@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CreatePostComponent } from "../create-post/create-post.component";
 import { UserAvatarComponent } from "../user-avatar/user-avatar.component";
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppCommonComponent } from '../app-common/app-common.component';
 import { AuthService } from '../../common/services/auth.service';
 
@@ -15,8 +15,12 @@ import { AuthService } from '../../common/services/auth.service';
 export class SidebarComponent extends AppCommonComponent {
     activeMenu: string = 'home'; // Default active menu
 
-    constructor(public router: Router, authSvc: AuthService) {
+    constructor(public router: Router, private route: ActivatedRoute, authSvc: AuthService) {
         super(authSvc);
+    }
+
+    override onInit(): void {
+        this.activeMenu = location.pathname.split('/')[1] || 'home';
     }
 
     setActiveMenu(menu: string): void {

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Features.Chatrooms.Commands;
 using MediatR;
+using SocialNetworkApi.Application.Features.Chatrooms.Queries;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -16,10 +17,16 @@ namespace SocialNetworkApi.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public Task<ActionResult<IEnumerable<ChatroomDto>>> GetChatrooms()
+        [HttpPost("search")]
+        public async Task<ActionResult<PagedResultDto<ChatroomDto>>> SearchChatrooms([FromBody] SearchChatroomsQuery request)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

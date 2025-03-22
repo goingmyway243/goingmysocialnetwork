@@ -41,7 +41,7 @@ public class SearchPostsQueryHandler : IRequestHandler<SearchPostsQuery, PagedRe
             .Include(p => p.User)
             .Include(p => p.Contents);
 
-        var result = await query.ToListAsync();
+        var result = await query.ToListAsync(cancellationToken);
         if (result == null)
         {
             return PagedResultDto<PostDto>.Failure("Unexpected error occured!")

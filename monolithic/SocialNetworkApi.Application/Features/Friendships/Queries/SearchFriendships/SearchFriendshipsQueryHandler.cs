@@ -41,7 +41,7 @@ public class SearchFriendshipsQueryHandler : IRequestHandler<SearchFriendshipsQu
         var friendships = await searchFriendshipQuery.OrderByDescending(p => p.CreatedAt)
             .Skip(pagedRequest.SkipCount)
             .Take(pagedRequest.PageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         if (friendships == null)
         {

@@ -4,32 +4,10 @@
     <i class="fa-solid fa-pen-to-square"></i>
   </div>
   <search-bar [placeholder]="'Search messages'"></search-bar>
-  <app-tabstrip class="tab-container">
-    <app-tabstrip-tab [tabTitle]="tabTitle1"
-                      [tabContent]="tabContent1">
-      <ng-template #tabTitle1>
-        <div>Friends</div>
-      </ng-template>
-      <ng-template #tabContent1>
-        <div class="message-container">
-          <message-item></message-item>
-          <message-item></message-item>
-          <message-item></message-item>
-          <message-item></message-item>
-          <message-item></message-item>
-          <message-item></message-item>
-        </div>
-      </ng-template>
-    </app-tabstrip-tab>
-    <app-tabstrip-tab [tabTitle]="tabTitle2"
-                      [tabContent]="tabContent2">
-      <ng-template #tabTitle2>
-        <div>Requests</div>
-      </ng-template>
-      <ng-template #tabContent2>
-      </ng-template>
-    </app-tabstrip-tab>
-  </app-tabstrip>
+  <div class="message-container">
+    @for (item of chatrooms(); track $index) {
+      <message-item></message-item>
+    }
+  </div>
 
-  
 </div>

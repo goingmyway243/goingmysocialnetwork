@@ -29,11 +29,13 @@ export class CreatePostComponent extends AppCommonComponent {
   }
 
   public openDialog() {
-    this.dialog.open(CreatePostDialogComponent, { panelClass: 'custom-panel-dialog' })
+    const sub = this.dialog.open(CreatePostDialogComponent, { panelClass: 'custom-panel-dialog' })
       .afterClosed().subscribe(data => {
         if (data) {
           this.onCreatePost.emit(data);
         }
+        
+        sub.unsubscribe();
       });
   }
 }

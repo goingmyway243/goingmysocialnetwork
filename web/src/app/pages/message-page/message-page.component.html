@@ -1,0 +1,29 @@
+<div class="message-page">
+    <!-- Chat Content -->
+    <div class="chat-content">
+        <div class="chat-header">
+            <user-avatar [user]="null" [showInfo]="false"></user-avatar>
+        </div>
+        <div class="chat-messages">
+            <div class="message received">
+                <p>Giờ hườm mới về tới nhà</p>
+            </div>
+            <div class="message sent">
+                <p>Khó quá để mai cũng được...</p>
+            </div>
+            <!-- Add more messages here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Aa">
+            <mat-icon color="primary">send</mat-icon>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="side-bar">
+        <div class="chat-list">
+            <message-item class="chat-item active"></message-item>
+            <!-- Add more chat items here -->
+        </div>
+    </div>
+</div>
