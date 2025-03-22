@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SocialNetworkApi.Domain.Entities;
 using MediatR;
+using SocialNetworkApi.Application.Features.Friendships.Commands;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -14,7 +15,7 @@ namespace SocialNetworkApi.Api.Controllers
         {
             _mediator = mediator;
         }
-        
+
         [HttpGet]
         public Task<ActionResult<IEnumerable<FriendshipEntity>>> GetFriendships()
         {
@@ -28,21 +29,49 @@ namespace SocialNetworkApi.Api.Controllers
         }
 
         [HttpPost]
-        public Task<ActionResult<FriendshipEntity>> CreateFriendship(FriendshipEntity friendship)
+        public async Task<ActionResult<FriendshipEntity>> CreateFriendship([FromBody] CreateFriendshipCommand request)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result.Data);
         }
 
         [HttpPut("{id}")]
-        public Task<IActionResult> UpdateFriendship(int id, FriendshipEntity friendship)
+        public async Task<IActionResult> UpdateFriendship(Guid id, [FromBody] UpdateFriendshipCommand request)
         {
-            throw new NotImplementedException();
+            if (id != request.Id)
+            {
+                return BadRequest("Your request is invalid!");
+            }
+
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
 
         [HttpDelete("{id}")]
-        public Task<IActionResult> DeleteFriendship(int id)
+        public async Task<IActionResult> DeleteFriendship(Guid id)
         {
-            throw new NotImplementedException();
+            var request = new DeleteFriendshipCommand { Id = id };
+            var result = await _mediator.Send(request);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
         }
     }
 }

@@ -1,7 +1,31 @@
 <div class="user-item">
     <user-avatar [user]="userData"></user-avatar>
-    <button class="friend-button" mat-flat-button>
-        <mat-icon>add</mat-icon>
-        Add Friend
-    </button>
+    @if (userData.id === currentUserId) {
+        <button class="action-button" mat-flat-button>
+            <mat-icon>person</mat-icon>
+            View Profile
+        </button>
+    }
+    @else {
+        @switch (userData.friendship?.status) {
+            @case (FriendshipStatus.Pending) {
+                <button class="action-button" mat-flat-button>
+                <mat-icon>hourglass_empty</mat-icon>
+                    Request Sent
+                </button>
+            }
+            @case (FriendshipStatus.Accepted) {
+                <button class="action-button" mat-flat-button>
+                    <mat-icon>check</mat-icon>
+                    Friends
+                </button>
+            }
+            @default {
+                <button class="action-button" mat-flat-button (click)="addFriend(userData)">
+                    <mat-icon>add</mat-icon>
+                    Add Friend
+                </button>
+            }
+        }
+    }
 </div>

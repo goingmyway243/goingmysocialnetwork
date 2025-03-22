@@ -1,4 +1,4 @@
-import { IUser } from "./user.model";
+import { IUser, User } from "./user.model";
 
 export interface IChatroom {
     id: string;
@@ -9,7 +9,7 @@ export interface IChatroom {
 export class Chatroom implements IChatroom {
     id: string;
     chatroomName: string;
-    participants: IUser[];
+    participants: User[];
 
     constructor(chatroom: IChatroom) {
         this.id = chatroom.id;

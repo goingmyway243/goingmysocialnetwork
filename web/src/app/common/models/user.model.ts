@@ -1,4 +1,5 @@
 import { UserRole } from "../enums/user-role.enum";
+import { Friendship } from "./friendship.model";
 
 export interface IUser {
     id: string;
@@ -25,6 +26,8 @@ export class User implements IUser {
     bio?: string;
     location?: string;
     website?: string;
+
+    friendship?: Friendship;
 
     constructor(user: IUser) {
         this.id = user.id;

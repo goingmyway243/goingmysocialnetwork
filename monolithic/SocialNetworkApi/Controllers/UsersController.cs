@@ -3,6 +3,7 @@ using MediatR;
 using SocialNetworkApi.Application.Features.Users.Queries;
 using SocialNetworkApi.Application.Features.Users.Commands;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -33,6 +34,15 @@ namespace SocialNetworkApi.Api.Controllers
         [HttpPost("search")]
         public async Task<IActionResult> SearchUsers([FromBody] SearchUsersQuery request)
         {
+            if (request.IncludeFriendship && !request.RequestUserId.HasValue)
+            {
+                var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (Guid.TryParse(currentUserId, out Guid userId))
+                {
+                    request.RequestUserId = userId;
+                }
+            }
+
             var result = await _mediator.Send(request);
             if (!result.IsSuccess)
             {

@@ -6,7 +6,8 @@ export interface ICreatePostRequest {
     sharePostId?: string;
 }
 
-export interface ISearchPostRequest extends IPagedRequest {
+export interface ISearchPostRequest {
     ownerId?: string;
     searchText?: string;
+    pagedRequest: IPagedRequest;
 }

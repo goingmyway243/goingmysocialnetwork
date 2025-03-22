@@ -20,6 +20,7 @@ export class AppHeaderComponent extends AppCommonComponent {
   }
 
   public logout() {
+    localStorage.clear();
     this.router.navigate(['/login']);
   }
 

@@ -1,4 +1,3 @@
-using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Enums;
 
 namespace SocialNetworkApi.Application.Common.DTOs;
@@ -17,4 +16,6 @@ public class UserDto
     public string? Gender { get; set; }
     public string? Address { get; set; }
     public string? City { get; set; }
+
+    public FriendshipDto? Friendship { get; set; }
 }

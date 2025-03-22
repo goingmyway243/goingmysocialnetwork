@@ -35,8 +35,10 @@ export class HomePageComponent implements OnInit {
     });
 
     this.postApiSvc.searchPosts({
-      pageIndex: 0,
-      pageSize: 10
+      pagedRequest: {
+        pageIndex: 0,
+        pageSize: 10
+      }
     }).subscribe(result => {
       this.postItems.set(result.items);
     });
