@@ -1,7 +1,10 @@
-<div class="request-box">
-  <div class="title">Requests</div>
-  <div class="request-container">
-    <request-item></request-item>
-    <request-item></request-item>
+@if (pendingRequests().length > 0) {
+  <div class="request-box">
+    <div class="title">Requests</div>
+    <div class="request-container">
+      @for (item of pendingRequests(); track $index) {
+        <request-item [requestData]="item"></request-item>
+      }
+    </div>
   </div>
-</div>
+}

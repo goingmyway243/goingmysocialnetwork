@@ -35,7 +35,7 @@ public class SearchUsersQueryHandler : IRequestHandler<SearchUsersQuery, PagedRe
 
         var totalCount = await searchUserQuery.CountAsync(cancellationToken);
 
-        searchUserQuery = searchUserQuery.Skip(pagedRequest.PageIndex * pagedRequest.PageSize)
+        searchUserQuery = searchUserQuery.Skip(pagedRequest.SkipCount)
         .Take(pagedRequest.PageSize)
         .OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt);
 

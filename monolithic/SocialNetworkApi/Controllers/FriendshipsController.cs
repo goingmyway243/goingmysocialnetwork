@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using SocialNetworkApi.Domain.Entities;
 using MediatR;
 using SocialNetworkApi.Application.Features.Friendships.Commands;
+using SocialNetworkApi.Application.Common.DTOs;
+using SocialNetworkApi.Application.Features.Friendships.Queries;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -16,10 +18,16 @@ namespace SocialNetworkApi.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public Task<ActionResult<IEnumerable<FriendshipEntity>>> GetFriendships()
+        [HttpPost("search")]
+        public async Task<ActionResult<PagedResultDto<FriendshipDto>>> SearchFriendships([FromBody] SearchFriendshipsQuery request)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

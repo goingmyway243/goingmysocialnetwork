@@ -1,4 +1,5 @@
 import { FriendshipStatus } from "../enums/friendship-status.enum";
+import { User } from "./user.model";
 
 export interface IFriendship {
     id: string;
@@ -16,6 +17,8 @@ export class Friendship implements IFriendship {
     status: FriendshipStatus;
     createAt: Date;
     modifiedAt?: Date | undefined;
+
+    user?: User;
 
     constructor(data: IFriendship){
         this.id = data.id;

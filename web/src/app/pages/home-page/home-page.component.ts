@@ -26,7 +26,7 @@ export class HomePageComponent implements OnInit {
   constructor(
     private router: Router,
     private authSvc: AuthService,
-    private postApiSvc: PostApiService
+    private postApiSvc: PostApiService,
   ) { }
 
   ngOnInit(): void {

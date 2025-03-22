@@ -1,8 +1,15 @@
 <div class="request-item">
-  <!-- <user-avatar></user-avatar> -->
+  <user-avatar [user]="requestData.user"></user-avatar>
 
   <div class="action-buttons">
-    <button class="primary">Accept</button>
-    <button class="disabled">Decline</button>
+    <button class="primary" (click)="acceptRequest()">Accept</button>
+    <button class="disabled" (click)="declineRequest()">Decline</button>
   </div>
+
+  @if (showNotification()) {
+    <div class="notification-container">
+      <mat-icon>{{ statusMessage() === 'accept' ? 'check' : 'close'}}</mat-icon>
+      {{ notificationMessage()}}
+    </div>
+  }
 </div>

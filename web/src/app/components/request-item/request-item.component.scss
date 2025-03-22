@@ -14,4 +14,12 @@
       flex: 1;
     }
   }
+
+  .notification-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: var(--tertiary-color);
+  }
 }
