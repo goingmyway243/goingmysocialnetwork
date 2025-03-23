@@ -2,6 +2,9 @@
 
 This project is a social networking application. Follow the instructions below to set up and run the application using Docker Compose.
 
+⚠️ Notes:
+Certain functions are not yet implemented.
+
 ## Prerequisites
 
 Ensure you have the following installed on your system:
