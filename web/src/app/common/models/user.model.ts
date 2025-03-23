@@ -1,3 +1,4 @@
+import { environment } from "../../../environments/environment";
 import { UserRole } from "../enums/user-role.enum";
 import { Friendship } from "./friendship.model";
 
@@ -39,5 +40,9 @@ export class User implements IUser {
         this.bio = user.bio;
         this.location = user.location;
         this.website = user.website;
+    }
+
+    getProfilePicture(): string {
+        return this.profilePicture ?? environment.defaultAvatar;
     }
 }

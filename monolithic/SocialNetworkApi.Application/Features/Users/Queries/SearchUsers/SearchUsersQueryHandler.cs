@@ -35,38 +35,36 @@ public class SearchUsersQueryHandler : IRequestHandler<SearchUsersQuery, PagedRe
 
         var totalCount = await searchUserQuery.CountAsync(cancellationToken);
 
-        searchUserQuery = searchUserQuery
+        var users = await searchUserQuery.OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt)
             .Skip(pagedRequest.SkipCount)
             .Take(pagedRequest.PageSize)
-            .OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt);
+            .ToListAsync(cancellationToken);
 
-        var result = await searchUserQuery.ToListAsync(cancellationToken);
-        if (result == null)
-        {
-            return PagedResultDto<UserDto>.Failure("Unexpected error occured!")
-                .WithPage(pagedRequest.PageIndex, totalCount);
-        }
-
-        var items = result.Select(_mapper.Map<UserDto>).ToList();
+        var result = users.Select(_mapper.Map<UserDto>).ToList();
         if (request.IncludeFriendship)
         {
-            var itemIds = items.Select(u => u.Id);
-            var friendships = await _friendshipRepository.GetAll()
-                .Where(fs => (fs.UserId == request.RequestUserId && itemIds.Contains(fs.FriendId))
-                             || (fs.FriendId == request.RequestUserId && itemIds.Contains(fs.UserId)))
-                .ToListAsync();
-
-            items.ForEach(item =>
-            {
-                if (item.Id != request.RequestUserId)
-                {
-                    var friendship = friendships.FirstOrDefault(p => p.UserId == item.Id || p.FriendId == item.Id);
-                    item.Friendship = _mapper.Map<FriendshipDto>(friendship);
-                }
-            });
+            await IncludeFriendship(request, result);
         }
 
-        return PagedResultDto<UserDto>.Success(items)
+        return PagedResultDto<UserDto>.Success(result)
             .WithPage(pagedRequest.PageIndex, totalCount);
+    }
+
+    private async Task IncludeFriendship(SearchUsersQuery request, List<UserDto> result)
+    {
+        var itemIds = result.Select(u => u.Id);
+        var friendships = await _friendshipRepository.GetAll()
+            .Where(fs => (fs.UserId == request.RequestUserId && itemIds.Contains(fs.FriendId))
+                         || (fs.FriendId == request.RequestUserId && itemIds.Contains(fs.UserId)))
+            .ToListAsync();
+
+        result.ForEach(item =>
+        {
+            if (item.Id != request.RequestUserId)
+            {
+                var friendship = friendships.FirstOrDefault(p => p.UserId == item.Id || p.FriendId == item.Id);
+                item.Friendship = _mapper.Map<FriendshipDto>(friendship);
+            }
+        });
     }
 }

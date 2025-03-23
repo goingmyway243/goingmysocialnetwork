@@ -35,21 +35,16 @@ public class SearchPostsQueryHandler : IRequestHandler<SearchPostsQuery, PagedRe
 
         var totalCount = await query.CountAsync();
 
-        query = query.Skip(pagedRequest.SkipCount)
+        query = query.OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt)
+            .Skip(pagedRequest.SkipCount)
             .Take(pagedRequest.PageSize)
-            .OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt)
             .Include(p => p.User)
             .Include(p => p.Contents);
 
-        var result = await query.ToListAsync(cancellationToken);
-        if (result == null)
-        {
-            return PagedResultDto<PostDto>.Failure("Unexpected error occured!")
-                .WithPage(pagedRequest.PageIndex, totalCount);
-        }
+        var posts = await query.ToListAsync(cancellationToken);
 
-        var items = result.Select(_mapper.Map<PostDto>);
-        return PagedResultDto<PostDto>.Success(items)
+        var result = posts.Select(_mapper.Map<PostDto>);
+        return PagedResultDto<PostDto>.Success(result)
             .WithPage(pagedRequest.PageIndex, totalCount);
     }
 }

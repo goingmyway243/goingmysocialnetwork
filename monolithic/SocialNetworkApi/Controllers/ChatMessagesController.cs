@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Features.ChatMessages.Commands;
+using SocialNetworkApi.Application.Features.ChatMessages.Queries;
 
 namespace SocialNetworkApi.Api.Controllers
 {
@@ -16,10 +17,16 @@ namespace SocialNetworkApi.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public Task<ActionResult<IEnumerable<ChatMessageDto>>> GetChatMessages()
+        [HttpPost("search")]
+        public async Task<ActionResult<IEnumerable<ChatMessageDto>>> SearchChatMessages([FromBody] SearchChatMessagesQuery request)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(result);
         }
 
         [HttpGet("{id}")]

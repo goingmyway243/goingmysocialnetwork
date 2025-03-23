@@ -37,35 +37,44 @@ public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery,
 
         var totalCount = await searchQuery.CountAsync(cancellationToken);
 
-        var chatrooms = await searchQuery
+        searchQuery = searchQuery
             .Skip(pagedRequest.SkipCount)
-            .Take(pagedRequest.PageSize)
+            .Take(pagedRequest.PageSize);
+
+        var chatrooms = await searchQuery
             .Include(cr => cr.Participants)
             .ToListAsync(cancellationToken);
-        if (chatrooms == null)
-        {
-            return PagedResultDto<ChatroomDto>.Failure("Unexpected error occured!")
-                .WithPage(pagedRequest.PageIndex, totalCount);
-        }
 
-        var chatroomsParticipantIds = chatrooms
+        var latestMessages = await searchQuery.Select(cr =>
+            cr.ChatMessages.OrderByDescending(m => m.CreatedAt)
+                .FirstOrDefault()
+        )
+        .ToListAsync(cancellationToken);
+
+
+        var chatroomParticipantIds = chatrooms
             .SelectMany(cr => cr.Participants.Select(p => p.UserId))
             .Distinct()
             .ToList();
 
         var distinctUsers = await _userRepository.GetAll()
-            .Where(u => chatroomsParticipantIds.Contains(u.Id))
+            .Where(u => chatroomParticipantIds.Contains(u.Id))
             .ToDictionaryAsync(u => u.Id);
 
-        var chatroomDtos = chatrooms.Select(chatroom => new ChatroomDto
-        {
-            Id = chatroom.Id,
-            ChatroomName = chatroom.ChatroomName,
-            Participants = chatroom.Participants
-                .Where(p => distinctUsers.ContainsKey(p.UserId))
-                .Select(p => _mapper.Map<UserDto>(distinctUsers[p.UserId]))
-                .ToList()
-        }).ToList();
+        var chatroomDtos = chatrooms.Select(chatroom =>
+            new ChatroomDto
+            {
+                Id = chatroom.Id,
+                ChatroomName = chatroom.ChatroomName,
+                Participants = chatroom.Participants
+                    .Where(p => distinctUsers.ContainsKey(p.UserId))
+                    .Select(p => _mapper.Map<UserDto>(distinctUsers[p.UserId]))
+                    .ToList(),
+                LatestMessage = _mapper.Map<ChatMessageDto>(latestMessages.FirstOrDefault(m => m?.ChatroomId == chatroom.Id))
+            }
+        )
+        .OrderByDescending(cr => cr?.LatestMessage?.CreatedAt)
+        .ToList();
 
         return PagedResultDto<ChatroomDto>.Success(chatroomDtos)
             .WithPage(pagedRequest.PageIndex, totalCount);

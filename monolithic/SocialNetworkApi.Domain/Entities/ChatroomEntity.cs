@@ -8,4 +8,5 @@ public class ChatroomEntity : BaseEntity
 
     // Relationship
     public virtual List<ChatroomParticipantEntity> Participants { get; set; } = new List<ChatroomParticipantEntity>();
+    public virtual List<ChatMessageEntity> ChatMessages { get; set; } = new List<ChatMessageEntity>();
 }

@@ -1,15 +1,17 @@
-import { IUser, User } from "./user.model";
+import { ChatMessage } from "./chat-message.model";
+import { User } from "./user.model";
 
 export interface IChatroom {
     id: string;
     chatroomName: string;
-    participants: IUser[];
+    participants: User[];
 }
 
 export class Chatroom implements IChatroom {
     id: string;
     chatroomName: string;
     participants: User[];
+    latestMessage?: ChatMessage;
 
     constructor(chatroom: IChatroom) {
         this.id = chatroom.id;

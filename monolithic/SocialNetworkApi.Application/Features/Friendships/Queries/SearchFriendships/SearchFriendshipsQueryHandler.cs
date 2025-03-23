@@ -43,12 +43,6 @@ public class SearchFriendshipsQueryHandler : IRequestHandler<SearchFriendshipsQu
             .Take(pagedRequest.PageSize)
             .ToListAsync(cancellationToken);
 
-        if (friendships == null)
-        {
-            return PagedResultDto<FriendshipDto>.Failure("Unexpected error occured!")
-                .WithPage(pagedRequest.PageIndex, totalCount);
-        }
-
         var userIds = friendships.Select(p => p.UserId == request.UserId ? p.FriendId : p.UserId);
         var users = await _userRepository.GetAll().Where(u => userIds.Contains(u.Id)).ToListAsync();
 

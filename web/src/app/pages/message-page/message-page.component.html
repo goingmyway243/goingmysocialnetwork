@@ -2,7 +2,7 @@
     <!-- Chat Content -->
     <div class="chat-content">
         <div class="chat-header">
-            <user-avatar [user]="null" [showInfo]="false"></user-avatar>
+            <user-avatar [user]="chatUser()"></user-avatar>
         </div>
         <div class="chat-messages">
             <div class="message received">
@@ -22,8 +22,11 @@
     <!-- Sidebar -->
     <div class="side-bar">
         <div class="chat-list">
-            <message-item class="chat-item active"></message-item>
-            <!-- Add more chat items here -->
+            @for (item of chatrooms(); track $index) {
+                <div class="chat-item active" (click)="onMessageItemClick(item)">
+                    <message-item [chatroomData]="item"></message-item>
+                </div>
+            }
         </div>
     </div>
 </div>

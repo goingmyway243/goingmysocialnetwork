@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Moq;
 using SocialNetworkApi.Application.Common.DTOs;
+using SocialNetworkApi.Application.Common.Interfaces;
 using SocialNetworkApi.Application.Features.Posts.Commands;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
@@ -9,13 +10,17 @@ namespace SocialNetworkApi.Application.Test;
 
 public class PostFeaturesTest
 {
-    private readonly Mock<IRepository<PostEntity>> _postRepository;
-    private readonly Mock<IMapper> _mapper;
+    private readonly Mock<IRepository<PostEntity>> _postRepositoryMock;
+    private readonly Mock<IRepository<UserEntity>> _userRepositoryMock;
+    private readonly Mock<IStorageService> _storageServiceMock;
+    private readonly Mock<IMapper> _mapperMock;
 
     public PostFeaturesTest()
     {
-        _postRepository = new Mock<IRepository<PostEntity>>();
-        _mapper = new Mock<IMapper>();
+        _postRepositoryMock = new Mock<IRepository<PostEntity>>();
+        _userRepositoryMock = new Mock<IRepository<UserEntity>>();
+        _storageServiceMock = new Mock<IStorageService>();
+        _mapperMock = new Mock<IMapper>();
     }
 
     [Fact]
@@ -38,10 +43,14 @@ public class PostFeaturesTest
             UserId = request.UserId
         };
 
-        _mapper.Setup(m => m.Map<PostEntity>(request)).Returns(entity);
-        _mapper.Setup(m => m.Map<PostDto>(entity)).Returns(expectedPostDto);
+        _mapperMock.Setup(m => m.Map<PostEntity>(request)).Returns(entity);
+        _mapperMock.Setup(m => m.Map<PostDto>(entity)).Returns(expectedPostDto);
 
-        var handler = new CreatePostCommandHandler(_postRepository.Object, _mapper.Object);
+        var handler = new CreatePostCommandHandler(
+            _postRepositoryMock.Object, 
+            _userRepositoryMock.Object,
+            _storageServiceMock.Object,
+            _mapperMock.Object);
 
         // Act
         var result = await handler.Handle(request, CancellationToken.None);

@@ -1,9 +1,10 @@
 <div class="message-item">
-  <div class="avatar">
-    <img src="imgs/default-avatar.png" />
-  </div>
-  <div class="message-info">
-    <span class="user-name">{{ 'Light' }}</span>
-    <span class="message -unread">{{ 'light@yopmail.com' }}</span>
-  </div>
+  <user-avatar [user]="chatUser" [showInfo]="false"></user-avatar>
+  
+  @if (chatUser) {
+    <div class="message-info">
+      <span class="user-name">{{ chatUser.fullName }}</span>
+      <span class="message -unread">{{ chatroomData.latestMessage }}</span>
+    </div>
+  }
 </div>

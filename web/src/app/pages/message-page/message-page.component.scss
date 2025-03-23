@@ -31,6 +31,7 @@
                 display: inline-block;
 
                 &.received {
+                    align-self: flex-start;
                     background-color: var(--tertiary-color);
                     color: #000;
                 }
