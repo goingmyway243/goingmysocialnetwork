@@ -6,7 +6,7 @@
   <search-bar [placeholder]="'Search messages'"></search-bar>
   <div class="message-container">
     @for (item of chatrooms(); track $index) {
-      <message-item></message-item>
+      <message-item class="chatroom" [chatroomData]="item"></message-item>
     }
   </div>
 

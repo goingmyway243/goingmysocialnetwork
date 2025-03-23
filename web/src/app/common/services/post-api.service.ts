@@ -21,22 +21,19 @@ export class PostApiService extends BaseApiService {
         return this.post('search', request);
     }
 
-    createPost(request: ICreatePostRequest, contentFiles: File[]): Observable<any> {
+    createPost(request: ICreatePostRequest, contentFiles: File[]): Observable<Post> {
         const formData = new FormData();
         formData.append('Caption', request.caption);
         formData.append('UserId', request.userId);
         if (request.sharePostId) {
             formData.append('SharePostId', request.sharePostId);
         }
-
-        console.log(request);
         
         contentFiles.forEach((value, index) => {
             formData.append(`Contents[${index}].Type`, ContentType.Image.toString());
             formData.append(`Contents[${index}].FormFile`, value);
         });
-
-        console.log(formData);
+        
         return this.post('', formData);
     }
 

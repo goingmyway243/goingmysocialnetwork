@@ -6,11 +6,14 @@ import { AuthService } from '../../common/services/auth.service';
 import { ChatroomApiService } from '../../common/services/chatroom-api.service';
 import { User } from '../../common/models/user.model';
 import { Chatroom } from '../../common/models/chatroom.model';
+import { ChatMessageApiService } from '../../common/services/chat-message-api.service';
+import { ChatMessage } from '../../common/models/chat-message.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-message-page',
   standalone: true,
-  imports: [MatIconModule, UserAvatarComponent, MessageItemComponent],
+  imports: [FormsModule, MatIconModule, UserAvatarComponent, MessageItemComponent],
   templateUrl: './message-page.component.html',
   styleUrl: './message-page.component.scss'
 })
@@ -18,11 +21,15 @@ export class MessagePageComponent implements OnInit {
   currentUser = signal<User | null>(null);
   chatrooms = signal<Chatroom[]>([]);
   selectedChatroom = signal<Chatroom | null>(null);
+  chatMessages = signal<ChatMessage[]>([]);
   chatUser = computed(() => this.selectedChatroom()?.participants?.filter(p => p.id !== this.currentUser()?.id)[0] ?? null);
+
+  inputMessage: string = '';
 
   constructor(
     private authSvc: AuthService,
-    private chatroomApiSvc: ChatroomApiService
+    private chatroomApiSvc: ChatroomApiService,
+    private chatMessageApiSvc: ChatMessageApiService
   ) { }
 
   ngOnInit(): void {
@@ -39,17 +46,51 @@ export class MessagePageComponent implements OnInit {
           }
         }).subscribe(result => {
           this.chatrooms.set(result.items);
-          this.selectedChatroom.set(this.chatrooms()[0]);
+          this.changeChatroom(this.chatrooms()[0]);
         });
       }
     });
   }
 
-  onMessageItemClick(chatroom: Chatroom) {
+  changeChatroom(chatroom: Chatroom): void {
     if (chatroom.id === this.selectedChatroom()?.id) {
       return;
     }
-    
+
     this.selectedChatroom.set(chatroom);
+
+    const sub = this.chatMessageApiSvc.searchChatMessages({
+      searchText: '',
+      chatroomId: chatroom.id,
+      pagedRequest: {
+        pageIndex: 0,
+        pageSize: 10
+      }
+    }).subscribe(result => {
+      this.chatMessages.set(result.items);
+      sub.unsubscribe();
+    });
+  }
+
+  onKeyPress(event: KeyboardEvent): void {
+    if (event.key === 'Enter') {
+      this.sendMessage();
+    }
+  }
+
+  sendMessage(): void {
+    if (!this.inputMessage) {
+      return;
+    }
+
+    this.chatMessageApiSvc.createChatMessage({
+      chatroomId: this.selectedChatroom()!.id,
+      message: this.inputMessage,
+      userId: this.currentUser()!.id
+    }).subscribe(result => {
+      this.chatMessages.update(m => [result, ...m]);
+    });
+
+    this.inputMessage = '';
   }
 }

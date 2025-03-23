@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Content } from "../models/content.model";
 import { environment } from "../../../environments/environment";
+import * as moment from 'moment';
 
 export class Util {
     static getHttpErrorMessage(httpError: HttpErrorResponse): string {
@@ -17,6 +18,10 @@ export class Util {
         values.reverse();
 
         return [...values].join('/');
+    }
+
+    static getLocalDate(utcDate: Date): Date {
+        return moment.utc(utcDate).local().toDate();
     }
 
     static getTimeDiff(time: Date): string {

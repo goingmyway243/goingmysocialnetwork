@@ -23,11 +23,13 @@
     justify-content: center;
 
     .message {
+      display: flex;
+      justify-content: space-between;
       font-size: 14px;
-      color: var(--secondary-color);
-
+      color: var(--text-color-secondary);
+      
       &.-unread {
-        color: var(--text-color-secondary);
+        color: var(--secondary-color);
       }
     }
   }

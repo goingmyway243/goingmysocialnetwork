@@ -25,6 +25,11 @@ public class SearchChatMessagesQueryHandler : IRequestHandler<SearchChatMessages
         var pagedRequest = request.PagedRequest;
         var searchQuery = _chatMessageRepository.GetAll().Where(m => m.ChatroomId == request.ChatroomId);
 
+        if (!string.IsNullOrEmpty(request.SearchText))
+        {
+            searchQuery = searchQuery.Where(m => m.Message.Contains(request.SearchText));
+        }
+
         var totalCount = await searchQuery.CountAsync(cancellationToken);
 
         var messages = await searchQuery.Include(m => m.User)

@@ -29,17 +29,14 @@
                 padding: 8px;
                 border-radius: 16px;
                 display: inline-block;
+                align-self: flex-end;
+                background-color: var(--secondary-color);
+                color: #fff;
 
-                &.received {
+                &.mine {
                     align-self: flex-start;
                     background-color: var(--tertiary-color);
                     color: #000;
-                }
-
-                &.sent {
-                    align-self: flex-end;
-                    background-color: var(--secondary-color);
-                    color: #fff;
                 }
             }
         }

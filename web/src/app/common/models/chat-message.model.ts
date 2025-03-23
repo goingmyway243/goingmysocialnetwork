@@ -1,3 +1,5 @@
+import { User } from "./user.model";
+
 export interface IChatMessage {
     id: string;
     message: string;
@@ -5,8 +7,6 @@ export interface IChatMessage {
     chatroomId: string;
     createdAt: Date;
     modifiedAt?: Date;
-    createdBy: string;
-    modifiedBy?: string;
 }
 
 export class ChatMessage implements IChatMessage {
@@ -16,8 +16,8 @@ export class ChatMessage implements IChatMessage {
     chatroomId: string;
     createdAt: Date;
     modifiedAt?: Date | undefined;
-    createdBy: string;
-    modifiedBy?: string | undefined;
+
+    user?: User;
 
     constructor(chatMessage: IChatMessage) {
         this.id = chatMessage.id;
@@ -26,7 +26,5 @@ export class ChatMessage implements IChatMessage {
         this.chatroomId = chatMessage.chatroomId;
         this.createdAt = chatMessage.createdAt;
         this.modifiedAt = chatMessage.modifiedAt;
-        this.createdBy = chatMessage.createdBy;
-        this.modifiedBy = chatMessage.modifiedBy;
     }
 }

@@ -1,10 +1,13 @@
 <div class="message-item">
   <user-avatar [user]="chatUser" [showInfo]="false"></user-avatar>
-  
+
   @if (chatUser) {
-    <div class="message-info">
-      <span class="user-name">{{ chatUser.fullName }}</span>
-      <span class="message -unread">{{ chatroomData.latestMessage }}</span>
+  <div class="message-info">
+    <span class="user-name">{{ chatUser.fullName }}</span>
+    <div class="message">
+      <span class="content">{{ chatroomData.latestMessage?.message }}</span>
+      <span class="time">{{ getLocalDate(chatroomData.latestMessage?.createdAt) | date:'shortTime' }}</span>
     </div>
+  </div>
   }
 </div>
