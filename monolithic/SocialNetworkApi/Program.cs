@@ -66,17 +66,17 @@ if (app.Environment.IsDevelopment())
 
 app.Services.InitialzeDatabase();
 
-app.UseStaticFiles(new StaticFileOptions()
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Public")),
-    RequestPath = "/files"
-});
-
 var staticFilePath = Path.Combine(app.Environment.ContentRootPath, "Public");
 if (!Directory.Exists(staticFilePath))
 {
     Directory.CreateDirectory(staticFilePath);
 }
+
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(staticFilePath),
+    RequestPath = "/files"
+});
 
 app.UseCors("AllowedHostsPolicy");
 
