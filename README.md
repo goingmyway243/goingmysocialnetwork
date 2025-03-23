@@ -37,7 +37,3 @@ Ensure you have the following installed on your system:
   ```
 
 - Ensure no other services are running on the same ports.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
