@@ -1,6 +1,8 @@
 # .NET Core
 bin/
 obj/
+publish/
+publish.zip
 *.user
 *.userosscache
 *.suo
