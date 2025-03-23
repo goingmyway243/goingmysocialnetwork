@@ -22,6 +22,7 @@ namespace SocialNetworkApi.Infrastructure
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(ITransientRepository<>), typeof(TransientRepository<>));
 
             // Configure Storage
             var storageConnectionString = configuration.GetConnectionString("AzureBlobStorage");
@@ -37,7 +38,7 @@ namespace SocialNetworkApi.Infrastructure
 
             // Configure MySQL
             var connectionString = configuration.GetConnectionString("MySQLConnection");
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContextFactory<ApplicationDbContext>(options =>
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
 #if DEBUG
                 .LogTo(Console.WriteLine, LogLevel.Information)

@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using SocialNetworkApi.Application;
+using SocialNetworkApi.Hubs;
 using SocialNetworkApi.Infrastructure;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment.ContentRootPath);
 builder.Services.AddApplicationServices();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
@@ -42,9 +48,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowedHostsPolicy", policy =>
     {
-        policy.WithOrigins(builder.Configuration["AllowedHosts"] ?? "*")
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        policy.WithOrigins(builder.Configuration["AllowedHost"]!);
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+        policy.AllowCredentials();
     });
 });
 
@@ -80,5 +87,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ChatHub>("/chathub");
 
 app.Run();

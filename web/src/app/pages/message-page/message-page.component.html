@@ -23,7 +23,7 @@
         <div class="chat-list">
             @for (item of chatrooms(); track $index) {
                 <div class="chat-item active" (click)="changeChatroom(item)">
-                    <message-item [chatroomData]="item"></message-item>
+                    <message-item class="chatroom" [chatroomData]="item"></message-item>
                 </div>
             }
         </div>

@@ -9,6 +9,7 @@ import { Chatroom } from '../../common/models/chatroom.model';
 import { ChatMessageApiService } from '../../common/services/chat-message-api.service';
 import { ChatMessage } from '../../common/models/chat-message.model';
 import { FormsModule } from '@angular/forms';
+import { ChatService } from '../../common/services/chat.service';
 
 @Component({
   selector: 'app-message-page',
@@ -29,7 +30,8 @@ export class MessagePageComponent implements OnInit {
   constructor(
     private authSvc: AuthService,
     private chatroomApiSvc: ChatroomApiService,
-    private chatMessageApiSvc: ChatMessageApiService
+    private chatMessageApiSvc: ChatMessageApiService,
+    private chatSvc: ChatService
   ) { }
 
   ngOnInit(): void {
@@ -42,12 +44,18 @@ export class MessagePageComponent implements OnInit {
           searchText: '',
           pagedRequest: {
             pageIndex: 0,
-            pageSize: 10
+            pageSize: 20
           }
         }).subscribe(result => {
           this.chatrooms.set(result.items);
           this.changeChatroom(this.chatrooms()[0]);
         });
+      }
+    });
+
+    this.chatSvc.receivedMessage$.subscribe(message => {
+      if (message) {
+        this.chatMessages.update(m => [message, ...m]);
       }
     });
   }
@@ -63,8 +71,8 @@ export class MessagePageComponent implements OnInit {
       searchText: '',
       chatroomId: chatroom.id,
       pagedRequest: {
-        pageIndex: 0,
-        pageSize: 10
+        pageIndex: 1,
+        pageSize: 11
       }
     }).subscribe(result => {
       this.chatMessages.set(result.items);
@@ -82,13 +90,11 @@ export class MessagePageComponent implements OnInit {
     if (!this.inputMessage) {
       return;
     }
-
-    this.chatMessageApiSvc.createChatMessage({
+    
+    this.chatSvc.sendMessage({
       chatroomId: this.selectedChatroom()!.id,
       message: this.inputMessage,
       userId: this.currentUser()!.id
-    }).subscribe(result => {
-      this.chatMessages.update(m => [result, ...m]);
     });
 
     this.inputMessage = '';

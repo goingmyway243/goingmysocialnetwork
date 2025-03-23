@@ -14,7 +14,7 @@ public class CreateChatMessageCommandHandler : IRequestHandler<CreateChatMessage
     private readonly IMapper _mapper;
 
     public CreateChatMessageCommandHandler(
-        IRepository<ChatMessageEntity> chatMessageRepository,
+        ITransientRepository<ChatMessageEntity> chatMessageRepository,
         IRepository<UserEntity> userRepository,
         IRepository<ChatroomEntity> chatroomRepository,
         IMapper mapper)

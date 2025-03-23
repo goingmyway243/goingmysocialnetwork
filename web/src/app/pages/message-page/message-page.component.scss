@@ -23,6 +23,7 @@
             justify-content: end;
             padding: 10px;
             overflow-y: auto;
+            max-height: calc(100vh - 240px);
 
             .message {
                 margin-bottom: 10px;
@@ -74,6 +75,7 @@
         .chat-list {
             flex: 1;
             overflow-y: auto;
+            max-height: calc(100vh - 120px);
 
             .chat-item {
                 display: flex;
@@ -88,6 +90,10 @@
 
                 &:hover {
                     background-color: var(--disabled-color);
+                }
+
+                .chatroom {
+                    width: 100%;
                 }
             }
         }
