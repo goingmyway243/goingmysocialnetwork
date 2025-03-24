@@ -15,7 +15,12 @@
 
   <div class="action-buttons">
     <div class="left-section">
-      <i class="fa-regular fa-heart"></i>
+      <div class="like">
+        <i [class.fa-regular]="!liked" [class.fa-solid]="liked" class="fa-heart" (click)="likePost()"></i>
+        @if (postData.likeCount > 0) {
+          <span class="like-count">{{ postData.likeCount }}</span>
+        }
+      </div>
       <i class="fa-regular fa-comment-dots"></i>
       <i class="fa-regular fa-share-from-square"></i>
     </div>

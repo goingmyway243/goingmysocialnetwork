@@ -15,5 +15,5 @@ public class PostEntity : AuditedEntity
     public PostEntity SharePost { get; set; } = null!;
     public List<ContentEntity> Contents { get; set; } = new List<ContentEntity>();
     public List<CommentEntity> CommentEntities { get; set; } = new List<CommentEntity>();
-    public List<LikeEntity> Like { get; set; } = new List<LikeEntity>();
+    public List<LikeEntity> Likes { get; set; } = new List<LikeEntity>();
 }

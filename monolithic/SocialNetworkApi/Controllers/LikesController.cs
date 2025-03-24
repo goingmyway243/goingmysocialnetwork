@@ -22,14 +22,14 @@ namespace SocialNetworkApi.Api.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpGet("{id}")]
+        [HttpPost("{id}")]
         public Task<ActionResult<LikeDto>> GetLike(Guid id)
         {
             throw new NotImplementedException();
         }
 
         [HttpPost]
-        public async Task<ActionResult<LikeDto>> CreateLike([FromBody] CreateLikeCommand request)
+        public async Task<ActionResult<int>> ToggleLike([FromBody] ToggleLikeCommand request)
         {
             var result = await _mediator.Send(request);
             if (result.IsSuccess)
@@ -50,21 +50,6 @@ namespace SocialNetworkApi.Api.Controllers
                 return BadRequest("Your request is invalid!");
             }
 
-            var result = await _mediator.Send(request);
-            if (result.IsSuccess)
-            {
-                return Ok(result.Data);
-            }
-            else
-            {
-                return BadRequest(result.Error);
-            }
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLike(Guid id)
-        {
-            var request = new DeleteLikeCommand { Id = id };
             var result = await _mediator.Send(request);
             if (result.IsSuccess)
             {

@@ -15,4 +15,5 @@ public class PostDto
 
     public UserDto? User { get; set; }
     public IEnumerable<ContentDto>? Contents { get; set; }
+    public bool IsLikedByUser { get; set; }
 }

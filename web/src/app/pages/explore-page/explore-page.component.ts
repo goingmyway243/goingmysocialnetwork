@@ -72,7 +72,8 @@ export class ExplorePageComponent implements OnInit {
       pagedRequest: {
         pageIndex: pageIndex,
         pageSize: 10,
-      }
+      },
+      currentUserId: this.currentUserId()
     }).subscribe(result => {
       this.postItems.update(current => {
         pageIndex === 0 ? current = result.items : current.push(...result.items);

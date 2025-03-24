@@ -11,6 +11,6 @@ public class LikeProfile : Profile
     {
         CreateMap<LikeEntity, LikeDto>();
         CreateMap<LikeDto, LikeEntity>();
-        CreateMap<CreateLikeCommand, LikeEntity>();
+        CreateMap<ToggleLikeCommand, LikeEntity>();
     }
 }

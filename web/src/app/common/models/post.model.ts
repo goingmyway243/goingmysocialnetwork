@@ -24,6 +24,7 @@ export class Post implements IPost {
 
     user?: User;
     contents?: Content[];
+    isLikedByUser?: boolean;
 
     constructor(post: IPost) {
         this.id = post.id;

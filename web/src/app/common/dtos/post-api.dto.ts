@@ -10,4 +10,5 @@ export interface ISearchPostRequest {
     ownerId?: string;
     searchText?: string;
     pagedRequest: IPagedRequest;
+    currentUserId: string;
 }

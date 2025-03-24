@@ -54,8 +54,16 @@ export class MessagePageComponent implements OnInit {
     });
 
     this.chatSvc.receivedMessage$.subscribe(message => {
-      if (message && message.chatroomId === this.selectedChatroom()?.id) {
-        this.chatMessages.update(m => [message, ...m]);
+      if (message) {
+        if (message.chatroomId === this.selectedChatroom()?.id) {
+          this.chatMessages.update(m => [message, ...m]);
+        }
+
+        this.chatrooms().forEach(cr => {
+          if (cr.id === message.chatroomId) {
+            cr.latestMessage = message;
+          }
+        });
       }
     });
   }
@@ -90,7 +98,7 @@ export class MessagePageComponent implements OnInit {
     if (!this.inputMessage) {
       return;
     }
-    
+
     this.chatSvc.sendMessage({
       chatroomId: this.selectedChatroom()!.id,
       message: this.inputMessage,

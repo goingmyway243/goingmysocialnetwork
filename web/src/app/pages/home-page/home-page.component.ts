@@ -1,4 +1,4 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, OnInit, signal } from '@angular/core';
 import { PostItemComponent } from "../../components/post-item/post-item.component";
 import { CreatePostComponent } from "../../components/create-post/create-post.component";
 import { Router } from '@angular/router';
@@ -27,20 +27,25 @@ export class HomePageComponent implements OnInit {
     private router: Router,
     private authSvc: AuthService,
     private postApiSvc: PostApiService,
-  ) { }
+  ) {
+    effect(() => {
+      if (this.currentUser()) {
+        this.postApiSvc.searchPosts({
+          pagedRequest: {
+            pageIndex: 0,
+            pageSize: 10
+          },
+          currentUserId: this.currentUser()!.id
+        }).subscribe(result => {
+          this.postItems.set(result.items);
+        });
+      }
+    })
+  }
 
   ngOnInit(): void {
     this.authSvc.currentUser$.subscribe(user => {
       this.currentUser.set(user);
-    });
-
-    this.postApiSvc.searchPosts({
-      pagedRequest: {
-        pageIndex: 0,
-        pageSize: 10
-      }
-    }).subscribe(result => {
-      this.postItems.set(result.items);
     });
   }
 
