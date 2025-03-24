@@ -22,7 +22,7 @@
     <div class="side-bar">
         <div class="chat-list">
             @for (item of chatrooms(); track $index) {
-                <div class="chat-item active" (click)="changeChatroom(item)">
+                <div class="chat-item" [class.active]="item.id === selectedChatroom()?.id" (click)="changeChatroom(item)">
                     <message-item class="chatroom" [chatroomData]="item"></message-item>
                 </div>
             }

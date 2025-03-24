@@ -54,7 +54,7 @@ export class MessagePageComponent implements OnInit {
     });
 
     this.chatSvc.receivedMessage$.subscribe(message => {
-      if (message) {
+      if (message && message.chatroomId === this.selectedChatroom()?.id) {
         this.chatMessages.update(m => [message, ...m]);
       }
     });
