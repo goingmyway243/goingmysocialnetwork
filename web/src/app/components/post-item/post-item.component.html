@@ -21,7 +21,7 @@
           <span class="like-count">{{ postData.likeCount }}</span>
         }
       </div>
-      <i class="fa-regular fa-comment-dots"></i>
+      <i class="fa-regular fa-comment-dots" (click)="onCommentButtonClick()"></i>
       <i class="fa-regular fa-share-from-square"></i>
     </div>
 
@@ -30,11 +30,32 @@
     </div>
   </div>
 
-  <div class="post-footer">
-    <div class="comment-input-container">
-      <user-avatar class="comment-avatar" [user]="currentUser" [showInfo]="false"></user-avatar>
-      <input type="text" class="comment-input" placeholder="Write a comment...">
-      <mat-icon color="primary" class="comment-button">send</mat-icon>
+  @if (showComments) {
+    <div class="post-footer">
+      <div class="comment-container">
+        @for (item of postComments(); track $index) {
+          <div class="comment-item">
+            <user-avatar [user]="item.user" [showInfo]="false"></user-avatar>
+            <div class="comment">
+              <div class="user-name">{{ item.user?.fullName }}</div>
+              <div class="text">{{ item.comment }}</div>
+            </div>
+          </div>
+        }  
+      </div>
+
+      <div class="comment-input-container">
+        <user-avatar class="comment-avatar" [user]="currentUser" [showInfo]="false"></user-avatar>
+        <input #commentInput 
+          type="text" 
+          class="comment-input" 
+          placeholder="Write a comment..." 
+          [(ngModel)]="commentInputText"
+          (keydown)="onCommentInputKeyPress($event)">
+        <div class="comment-button" (click)="commentPost()">
+          <mat-icon color="primary" >send</mat-icon>
+        </div>
+      </div>
     </div>
-  </div>
+  }
 </div>

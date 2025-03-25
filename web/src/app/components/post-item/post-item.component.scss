@@ -27,7 +27,7 @@
 
     .image-container {
       overflow: hidden;
-      
+
       img {
         max-width: 720px;
         max-height: 400px;
@@ -51,10 +51,10 @@
         display: flex;
         gap: 4px;
 
-        .fa-solid.fa-heart{
+        .fa-solid.fa-heart {
           color: red;
         }
-        
+
         .like-count {
           display: flex;
           align-items: anchor-center;
@@ -67,13 +67,33 @@
 
   .post-footer {
     border-top: 1px solid var(--secondary-color);
-    padding-top: 12px;
-    
+
+    .comment-container {
+      padding: 12px 0;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 12px;
+
+      .comment-item {
+        display: flex;
+        gap: 12px;
+
+        .comment {
+          background: var(--tertiary-color);
+          border-radius: 20px;
+          padding: 8px;
+
+          .text {
+            font-weight: 500;
+          }
+        }
+      }
+    }
+
     .comment-input-container {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 0 12px;
 
       .comment-input {
         flex: 1;
@@ -93,6 +113,8 @@
       }
 
       .comment-button {
+        display: flex;
+        align-items: center;
         cursor: pointer;
 
         &:hover {

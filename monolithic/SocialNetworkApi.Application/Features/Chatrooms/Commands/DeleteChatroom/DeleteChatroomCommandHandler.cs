@@ -19,8 +19,9 @@ public class DeleteChatroomCommandHandler : IRequestHandler<DeleteChatroomComman
     {
         var chatroom = await _chatroomRepository
             .GetAll()
+            .Where(cr => cr.Id == request.Id)
             .Include(cr => cr.Participants)
-            .FirstOrDefaultAsync(cr => cr.Id == request.Id, cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
         if (chatroom == null)
         {
             return CommandResultDto<Guid>.Failure("Chatroom not found.");
