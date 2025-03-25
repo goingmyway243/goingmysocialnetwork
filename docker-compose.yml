@@ -11,6 +11,11 @@ services:
       MYSQL_PASSWORD: mysocialpassword
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -18,12 +23,12 @@ services:
 
   backend-api:
     build:
-      context: ./monolithic  # Path to your C# API project folder
+      context: ./monolithic
       dockerfile: Dockerfile
     container_name: goingmysocial-api
-    restart: always
     depends_on:
-      - mysql-db
+      mysql-db:
+        condition: service_healthy
     environment:
       ConnectionStrings__MySQLConnection: "server=mysql-db;database=goingmysocial;user=root;password=root"
       ASPNETCORE_URLS: "http://+:8080"
@@ -34,7 +39,7 @@ services:
 
   frontend-angular:
     build:
-      context: ./web  # Path to your Angular project folder
+      context: ./web
       dockerfile: Dockerfile
     container_name: goingmysocialnetwork
     depends_on:
