@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Common.Interfaces;
 using SocialNetworkApi.Application.Features.Posts.Commands;
+using SocialNetworkApi.Application.Features.Posts.Queries;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
 
@@ -61,5 +63,39 @@ public class PostFeaturesTest
         Assert.NotNull(result.Data);
         Assert.Equal(expectedPostDto.Caption, result.Data.Caption);
         Assert.Equal(expectedPostDto.UserId, result.Data.UserId);
+    }
+
+    [Theory]
+    [InlineData("Admin")]
+    [InlineData("Test")]
+    public async Task SearchPost_WithSearchTerm_ShouldReturnCorrectPosts(string searchTerm)
+    {
+        var postDto = new PostDto
+        {
+            Caption = "Testing cannot get",
+        };
+
+        var postEntity = new PostEntity
+        {
+            Caption = postDto.Caption
+        };
+
+        var query = new SearchPostsQuery()
+        {
+            SearchText = searchTerm
+        };
+
+        var likeRepoMock = new Mock<IRepository<LikeEntity>>();
+        var postRepoMock = new Mock<IRepository<PostEntity>>();
+        var mapperMock = new Mock<IMapper>();
+
+        _mapperMock.Setup(m => m.Map<PostDto>(postEntity)).Returns(postDto);
+
+        var handler = new SearchPostsQueryHandler(postRepoMock.Object, likeRepoMock.Object, mapperMock.Object);
+
+        var result = await handler.Handle(query, CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(1, searchTerm.Length);
     }
 }
