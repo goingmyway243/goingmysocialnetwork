@@ -1,3 +1,5 @@
+import { User } from "./user.model";
+
 export interface IComment {
     id: string;
     comment: string;
@@ -14,6 +16,8 @@ export class Comment implements IComment {
     userId: string;
     createdAt: Date;
     updatedAt?: Date;
+
+    user?: User;
 
     constructor(comment: IComment) {
         this.id = comment.id;

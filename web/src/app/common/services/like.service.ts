@@ -22,7 +22,7 @@ export class LikeApiService extends BaseApiService {
         return this.post('', request);
     }
 
-    updateLike(postId: string, postData: any): Observable<any> {
-        return this.put(`${postId}`, postData);
+    updateLike(likeId: string, postData: any): Observable<any> {
+        return this.put(`${likeId}`, postData);
     }
 }

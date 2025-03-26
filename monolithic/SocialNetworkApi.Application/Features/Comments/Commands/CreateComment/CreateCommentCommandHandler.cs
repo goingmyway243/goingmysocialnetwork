@@ -28,7 +28,7 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
 
         await _commentRepository.InsertAsync(comment);
 
-        var result = _mapper.Map<CommentDto>(request);
+        var result = _mapper.Map<CommentDto>(comment);
         return CommandResultDto<CommentDto>.Success(result);
     }
 }

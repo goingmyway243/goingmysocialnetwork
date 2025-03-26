@@ -32,10 +32,11 @@ public class SearchChatMessagesQueryHandler : IRequestHandler<SearchChatMessages
 
         var totalCount = await searchQuery.CountAsync(cancellationToken);
 
-        var messages = await searchQuery.Include(m => m.User)
+        var messages = await searchQuery
             .OrderByDescending(m => m.CreatedAt)
             .Skip(pagedRequest.SkipCount)
             .Take(pagedRequest.PageSize)
+            .Include(m => m.User)
             .ToListAsync(cancellationToken);
 
         var result = messages.Select(_mapper.Map<ChatMessageDto>).ToList();
