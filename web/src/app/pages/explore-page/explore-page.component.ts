@@ -27,6 +27,7 @@ export class ExplorePageComponent implements OnInit {
   _searchUsersIndex = 0;
   _currentTabIndex = 0;
 
+  initiated: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -79,6 +80,8 @@ export class ExplorePageComponent implements OnInit {
         pageIndex === 0 ? current = result.items : current.push(...result.items);
         return current;
       });
+
+      this.initiated = true;
     });
   }
 
@@ -96,6 +99,8 @@ export class ExplorePageComponent implements OnInit {
         pageIndex === 0 ? current = result.items : current.push(...result.items);
         return current;
       });
+      
+      this.initiated = true;
     });
   }
 }

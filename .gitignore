@@ -7,7 +7,7 @@ publish.zip
 *.userosscache
 *.suo
 *.userprefs
-Public/
+*/SocialNetworkApi/Public/*
 
 # Visual Studio files
 .vs/

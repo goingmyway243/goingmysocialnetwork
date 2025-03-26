@@ -1,31 +1,43 @@
 <div class="message-page">
-    <!-- Chat Content -->
-    <div class="chat-content">
-        <div class="chat-header">
-            <user-avatar [user]="chatUser()"></user-avatar>
-        </div>
-        <div class="chat-messages">
-            @for (item of chatMessages(); track $index) {
-                <div class="message"
-                    [class.mine]="item.userId === chatUser()?.id">
-                    <p>{{ item.message }}</p>
+    @if (initiated) {
+        @if (chatrooms().length === 0) {
+            <div class="flex flex-col gap-4">
+                <img src="/imgs/empty/undraw_unread-messages_hdpw.svg" class="max-w-sm self-center">
+                <div class="empty-message text-center text-xl">
+                    It’s a bit quiet here... Connect with others and start chatting!
                 </div>
-            }
-        </div>
-        <div class="chat-input">
-            <input type="text" placeholder="Aa" [(ngModel)]="inputMessage" (keydown)="onKeyPress($event)">
-            <mat-icon color="primary" (click)="sendMessage()">send</mat-icon>
-        </div>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="side-bar">
-        <div class="chat-list">
-            @for (item of chatrooms(); track $index) {
-                <div class="chat-item" [class.active]="item.id === selectedChatroom()?.id" (click)="changeChatroom(item)">
-                    <message-item class="chatroom" [chatroomData]="item"></message-item>
+            </div>
+        }
+        @else {
+            <!-- Chat Content -->
+            <div class="chat-content">
+                <div class="chat-header">
+                    <user-avatar [user]="chatUser()"></user-avatar>
                 </div>
-            }
-        </div>
-    </div>
+                <div class="chat-messages">
+                    @for (item of chatMessages(); track $index) {
+                        <div class="message"
+                            [class.mine]="item.userId === chatUser()?.id">
+                            <p>{{ item.message }}</p>
+                        </div>
+                    }
+                </div>
+                <div class="chat-input">
+                    <input type="text" placeholder="Aa" [(ngModel)]="inputMessage" (keydown)="onKeyPress($event)">
+                    <mat-icon color="primary" (click)="sendMessage()">send</mat-icon>
+                </div>
+            </div>
+        
+            <!-- Sidebar -->
+            <div class="side-bar">
+                <div class="chat-list">
+                    @for (item of chatrooms(); track $index) {
+                        <div class="chat-item" [class.active]="item.id === selectedChatroom()?.id" (click)="changeChatroom(item)">
+                            <message-item class="chatroom" [chatroomData]="item"></message-item>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
 </div>

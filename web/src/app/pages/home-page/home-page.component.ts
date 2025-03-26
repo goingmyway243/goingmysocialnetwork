@@ -23,6 +23,8 @@ export class HomePageComponent implements OnInit {
   );
   postItems = signal<Post[]>([]);
 
+  postLoaded: boolean = false;
+
   constructor(
     private router: Router,
     private authSvc: AuthService,
@@ -38,6 +40,7 @@ export class HomePageComponent implements OnInit {
           currentUserId: this.currentUser()!.id
         }).subscribe(result => {
           this.postItems.set(result.items);
+          this.postLoaded = true;
         });
       }
     })

@@ -25,6 +25,7 @@ export class MessagePageComponent implements OnInit {
   chatMessages = signal<ChatMessage[]>([]);
   chatUser = computed(() => this.selectedChatroom()?.participants?.filter(p => p.id !== this.currentUser()?.id)[0] ?? null);
 
+  initiated: boolean = false;
   inputMessage: string = '';
 
   constructor(
@@ -49,6 +50,7 @@ export class MessagePageComponent implements OnInit {
         }).subscribe(result => {
           this.chatrooms.set(result.items);
           this.changeChatroom(this.chatrooms()[0]);
+          this.initiated = true;
         });
       }
     });

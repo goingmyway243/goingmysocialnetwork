@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { IdentityApiService } from '../../common/services/identity-api.service';
 import { ILoginRequest } from '../../common/dtos/identity-api.dto';
 import { catchError, throwError } from 'rxjs';
+import { AppLoaderComponent } from "../../components/app-loader/app-loader.component";
 
 @Component({
   selector: 'app-login-page',
@@ -17,13 +18,15 @@ import { catchError, throwError } from 'rxjs';
     MatInputModule,
     MatIconModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    AppLoaderComponent
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss'
 })
 export class LoginPageComponent {
   public showError = signal(false);
+  public isLoading = signal(false);
 
   public loginForm = new FormGroup({
     username: new FormControl(''),
@@ -48,8 +51,11 @@ export class LoginPageComponent {
       password: this.loginForm.controls.password.value!
     }
 
+    this.isLoading.set(true);
+
     this.identityApiSvc.loginAsync(request)
       .pipe(catchError(err => {
+        this.isLoading.set(false);
         return throwError(() => new Error(err.error));
       }))
       .subscribe(_ => {

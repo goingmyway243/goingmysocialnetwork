@@ -8,8 +8,22 @@
                 </div>
             </ng-template>
             <div class="flex flex-col gap-4 py-2">
-                @for (item of postItems(); track $index) {
-                    <post-item [postData]="item"></post-item>
+                @if (initiated) {
+                    @if (postItems().length === 0)
+                    {
+                        <div class="flex flex-col gap-4 self-center w-[50%] max-w-lg">
+                            <img src="/imgs/empty/undraw_file-search_cbur.svg">
+                            <div class="empty-message text-center text-xl">
+                                Oops! Looks like we couldn’t find anything. Maybe try something else?
+                            </div>
+                        </div>
+                    }
+                    @else
+                    {
+                        @for (item of postItems(); track $index) {
+                            <post-item [postData]="item"></post-item>
+                        }
+                    }
                 }
             </div>
         </mat-tab>
@@ -21,8 +35,22 @@
                 </div>
             </ng-template>
             <div class="flex flex-col gap-4 py-2">
-                @for (item of userItems(); track $index) {
-                    <user-item [userData]="item"></user-item>
+                @if (initiated) {
+                    @if (userItems().length === 0)
+                    {
+                        <div class="flex flex-col gap-4 self-center w-[50%] max-w-lg">
+                            <img src="/imgs/empty/undraw_file-search_cbur.svg">
+                            <div class="empty-message text-center text-xl">
+                                Oops! Looks like we couldn’t find anything. Maybe try something else?
+                            </div>
+                        </div>
+                    }
+                    @else
+                    {
+                        @for (item of userItems(); track $index) {
+                            <user-item [userData]="item"></user-item>
+                        }
+                    }
                 }
             </div>
         </mat-tab>

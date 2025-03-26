@@ -51,8 +51,8 @@
 
           <!-- Sign In Button -->
           <button type="submit" class="btn-signin" (click)="login($event)">
-            Sign In
-            <i class="arrow-right-icon"></i>
+            <app-loader [hidden]="!isLoading()"></app-loader>
+            <span [hidden]="isLoading()">Sign In</span>
           </button>
         </form>
 
