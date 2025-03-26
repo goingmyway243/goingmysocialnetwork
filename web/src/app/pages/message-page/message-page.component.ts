@@ -75,7 +75,7 @@ export class MessagePageComponent implements OnInit {
 
     this.selectedChatroom.set(chatroom);
 
-    const sub = this.chatMessageApiSvc.searchChatMessages({
+    this.chatMessageApiSvc.searchChatMessages({
       searchText: '',
       chatroomId: chatroom.id,
       pagedRequest: {
@@ -84,7 +84,6 @@ export class MessagePageComponent implements OnInit {
       }
     }).subscribe(result => {
       this.chatMessages.set(result.items);
-      sub.unsubscribe();
     });
   }
 

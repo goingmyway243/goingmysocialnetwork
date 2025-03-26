@@ -22,10 +22,9 @@ export class RequestBoxComponent implements OnInit {
   ngOnInit(): void {
     this.authSvc.currentUser$.subscribe(user => {
       if (user) {
-        const sub = this.friendshipApiSvc.getPendingRequests(user.id, { pageIndex: 0, pageSize: 2 })
+        this.friendshipApiSvc.getPendingRequests(user.id, { pageIndex: 0, pageSize: 2 })
           .subscribe(fs => {
             this.pendingRequests.set(fs.items);
-            sub.unsubscribe();
           });
       }
     });

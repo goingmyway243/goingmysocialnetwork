@@ -24,7 +24,7 @@ export class MessageBoxComponent implements OnInit {
   ngOnInit(): void {
     this.authSvc.currentUser$.subscribe(user => {
       if (user) {
-        const sub = this.chatroomApiSvc.searchChatrooms({
+        this.chatroomApiSvc.searchChatrooms({
           searchText: '',
           userId: user.id,
           pagedRequest: {
@@ -33,7 +33,6 @@ export class MessageBoxComponent implements OnInit {
           }
         }).subscribe(result =>{
           this.chatrooms.set(result.items);
-          sub.unsubscribe();
         });
       }
     });

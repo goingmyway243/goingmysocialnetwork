@@ -67,7 +67,7 @@ export class ExplorePageComponent implements OnInit {
   }
 
   performSearchPosts(pageIndex: number = 0): void {
-    const searchPostSub = this.postApiSvc.searchPosts({
+    this.postApiSvc.searchPosts({
       searchText: this.searchText() ?? '',
       pagedRequest: {
         pageIndex: pageIndex,
@@ -79,13 +79,11 @@ export class ExplorePageComponent implements OnInit {
         pageIndex === 0 ? current = result.items : current.push(...result.items);
         return current;
       });
-
-      searchPostSub.unsubscribe();
     });
   }
 
   performSearchUsers(pageIndex: number = 0): void {
-    const searchUserSub = this.userApiSvc.searchUsers({
+    this.userApiSvc.searchUsers({
       searchText: this.searchText() ?? '',
       includeFriendship: true,
       requestUserId: this.currentUserId(),
@@ -98,8 +96,6 @@ export class ExplorePageComponent implements OnInit {
         pageIndex === 0 ? current = result.items : current.push(...result.items);
         return current;
       });
-
-      searchUserSub.unsubscribe();
     });
   }
 }
