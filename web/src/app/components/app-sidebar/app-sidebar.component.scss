@@ -46,3 +46,28 @@
     }
   }
 }
+
+
+@media screen and (max-width: 768px) {
+  .app-sidebar {
+    width: max-content;
+
+    .user-info-container{
+      display: none;
+    }
+    
+    .menu-container .menu-item {
+      padding: 16px;
+      border-left: none;
+
+      span {
+        display: none;
+      }
+    }
+
+    .create-post-btn {
+      display: none;
+    }
+  }
+  
+}

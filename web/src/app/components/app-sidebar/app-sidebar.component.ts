@@ -14,9 +14,15 @@ import { AuthService } from '../../common/services/auth.service';
 })
 export class SidebarComponent extends AppCommonComponent {
     activeMenu: string = 'home'; // Default active menu
+    isSmallScreen: boolean = false;
+
 
     constructor(public router: Router, private route: ActivatedRoute, authSvc: AuthService) {
         super(authSvc);
+        this.isSmallScreen = window.innerWidth < 768;
+        window.addEventListener('resize', () => {
+            this.isSmallScreen = window.innerWidth < 768;
+        });
     }
 
     override onInit(): void {

@@ -1,6 +1,6 @@
 <div class="app-sidebar">
   <div class="user-info-container">
-    <user-avatar [user]="currentUser"></user-avatar>
+    <user-avatar [user]="currentUser" [showInfo]="!isSmallScreen"></user-avatar>
   </div>
 
   <div class="menu-container">
@@ -46,5 +46,5 @@
     </div> -->
   </div>
 
-  <create-post [buttonText]="'Create Post'"></create-post>
+  <create-post class="create-post-btn" [buttonText]="'Create Post'"></create-post>
 </div>

@@ -6,7 +6,7 @@
   <search-bar [placeholder]="'Search for creators, inspirations, and projects'"></search-bar>
   
   <div class="action-buttons">
-    <create-post [buttonText]="'Create'"></create-post>
+    <create-post class="create-post-btn" [buttonText]="'Create'"></create-post>
     <user-avatar [user]="currentUser" [mat-menu-trigger-for]="menu" [showInfo]="false"></user-avatar>
     <mat-menu #menu="matMenu" class="custom-menu">
       <ng-template matMenuContent>

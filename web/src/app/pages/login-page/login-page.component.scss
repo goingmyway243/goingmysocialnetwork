@@ -192,3 +192,23 @@
     }
   }
 }
+
+@media screen and (max-width: 1024px) {
+  .login-page {
+    .login-content {
+      width: 90%;
+      min-width: none;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .login-page {
+    .login-content {
+      .login-left {
+        display: none;
+      }
+    }
+  }
+  
+}

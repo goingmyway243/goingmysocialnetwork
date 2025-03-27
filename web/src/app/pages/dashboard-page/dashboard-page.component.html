@@ -1,10 +1,10 @@
-<app-header></app-header>
-<div class="app-body">
+<app-header class="header"></app-header>
+<div class="app-body" [class.--with-optional-sidebar]="showOptionalSidebar()">
   <app-sidebar class="sidebar"></app-sidebar>
   <div class="page-container">
     <router-outlet></router-outlet>
   </div>
-  <div class="optional-sidebar" *ngIf="showOptionalSidebar()">
+  <div class="optional-sidebar">
     <message-box></message-box>
     <request-box></request-box>
   </div>

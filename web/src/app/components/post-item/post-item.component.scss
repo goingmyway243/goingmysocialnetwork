@@ -124,3 +124,16 @@
     }
   }
 }
+
+@media screen and (max-width: 768px) {
+  .post-item {
+    .post-body {
+      .image-container {
+        img {
+          max-width: 100%;
+        }
+      }
+    }
+  }
+  
+}
