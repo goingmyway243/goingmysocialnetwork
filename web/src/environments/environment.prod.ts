@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: 'http://localhost:5046',
+  baseUrl: 'https://goingmysocialserver.azurewebsites.net',
   defaultAvatar: 'imgs/default-avatar.png',
-  chathubUrl: 'http://localhost:5046/chathub'
+  chathubUrl: 'https://goingmysocialserver.azurewebsites.net/chathub'
 }

@@ -9,10 +9,10 @@ public class AzureStorageService : IStorageService
     private readonly BlobServiceClient _blobServiceClient;
     private readonly string _containerName;
 
-    public AzureStorageService(BlobServiceClient blobServiceClient, string containerName)
+    public AzureStorageService(BlobServiceClient blobServiceClient)
     {
         _blobServiceClient = blobServiceClient;
-        _containerName = containerName;
+        _containerName = "socialnetwork";
     }
 
     public async Task DeleteFileAsync(string fileName)
@@ -35,8 +35,13 @@ public class AzureStorageService : IStorageService
     public async Task<string> UploadFileAsync(Stream fileStream, string fileName, string contentType, string folder)
     {
         var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-        var blobClient = containerClient.GetBlobClient(fileName);
+        await containerClient.CreateIfNotExistsAsync();
+
+        var blobName = $"{folder}/{fileName}";
+        var blobClient = containerClient.GetBlobClient(blobName);
+
         await blobClient.UploadAsync(fileStream, new BlobHttpHeaders { ContentType = contentType });
+        
         return blobClient.Uri.ToString();
     }
 }
