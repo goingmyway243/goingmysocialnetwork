@@ -3,9 +3,11 @@ using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Features.Comments.Commands;
 using MediatR;
 using SocialNetworkApi.Application.Features.Comments.Queries;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SocialNetworkApi.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CommentsController : ControllerBase

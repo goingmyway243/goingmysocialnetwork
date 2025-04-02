@@ -3,9 +3,11 @@ using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Features.Chatrooms.Commands;
 using MediatR;
 using SocialNetworkApi.Application.Features.Chatrooms.Queries;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SocialNetworkApi.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ChatroomsController : ControllerBase

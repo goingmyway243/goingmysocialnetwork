@@ -4,9 +4,11 @@ using MediatR;
 using SocialNetworkApi.Application.Features.Friendships.Commands;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Features.Friendships.Queries;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SocialNetworkApi.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class FriendshipsController : ControllerBase

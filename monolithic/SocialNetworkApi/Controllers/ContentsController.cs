@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using SocialNetworkApi.Application.Features.Contents.Commands;
 using SocialNetworkApi.Application.Common.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SocialNetworkApi.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ContentsController : ControllerBase

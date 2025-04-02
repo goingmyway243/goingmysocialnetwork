@@ -3,9 +3,11 @@ using MediatR;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Application.Features.ChatMessages.Commands;
 using SocialNetworkApi.Application.Features.ChatMessages.Queries;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SocialNetworkApi.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ChatMessagesController : ControllerBase
