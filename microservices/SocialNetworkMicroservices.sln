@@ -1,0 +1,45 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35728.132 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.AppHost", "SocialNetworkMicroservices.AppHost\SocialNetworkMicroservices.AppHost.csproj", "{B216BEF5-2B68-4AA1-A064-44B300DB567D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.ServiceDefaults", "SocialNetworkMicroservices.ServiceDefaults\SocialNetworkMicroservices.ServiceDefaults.csproj", "{738151D0-371D-40CB-8F3B-B2083703CD66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.ApiService", "SocialNetworkMicroservices.ApiService\SocialNetworkMicroservices.ApiService.csproj", "{D189EA39-8D09-45EE-87EB-E2B0572665BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.Web", "SocialNetworkMicroservices.Web\SocialNetworkMicroservices.Web.csproj", "{A3101FB4-2CAF-49D3-9780-E3182066E551}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.Tests", "SocialNetworkMicroservices.Tests\SocialNetworkMicroservices.Tests.csproj", "{C3F78585-C75F-4D2B-BC66-11C120EE6A30}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B216BEF5-2B68-4AA1-A064-44B300DB567D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B216BEF5-2B68-4AA1-A064-44B300DB567D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B216BEF5-2B68-4AA1-A064-44B300DB567D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B216BEF5-2B68-4AA1-A064-44B300DB567D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{738151D0-371D-40CB-8F3B-B2083703CD66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{738151D0-371D-40CB-8F3B-B2083703CD66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{738151D0-371D-40CB-8F3B-B2083703CD66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{738151D0-371D-40CB-8F3B-B2083703CD66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D189EA39-8D09-45EE-87EB-E2B0572665BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D189EA39-8D09-45EE-87EB-E2B0572665BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D189EA39-8D09-45EE-87EB-E2B0572665BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D189EA39-8D09-45EE-87EB-E2B0572665BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3101FB4-2CAF-49D3-9780-E3182066E551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3101FB4-2CAF-49D3-9780-E3182066E551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3101FB4-2CAF-49D3-9780-E3182066E551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3101FB4-2CAF-49D3-9780-E3182066E551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
