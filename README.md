@@ -5,6 +5,9 @@ This project is a social networking application. Follow the instructions below t
 ⚠️ Notes:
 Certain functions are not yet implemented.
 
+## You can quickly access the demo at:
+[https://goingmysocial.azurewebsites.net/](https://goingmysocial.azurewebsites.net/)
+
 ## Prerequisites
 
 Ensure you have the following installed on your system:
