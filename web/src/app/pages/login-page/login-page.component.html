@@ -43,6 +43,12 @@
                   [formControl]="loginForm.controls.password">
             <mat-icon matSuffix>lock</mat-icon>
           </mat-form-field>
+          
+          @if (errorMsg()) {
+            <div class="error-msg">
+              {{ errorMsg() }}
+            </div>
+          }
 
           <!-- Forgot Password Link -->
           <div class="forgot-password">

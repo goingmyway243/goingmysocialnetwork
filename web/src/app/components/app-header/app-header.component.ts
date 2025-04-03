@@ -24,6 +24,10 @@ export class AppHeaderComponent extends AppCommonComponent {
     this.router.navigate(['/login']);
   }
 
+  public navigateToHome() {
+    this.router.navigate(['']);
+  }
+
   public navigateToProfile() {
     this.router.navigate(['/profile']);
   }

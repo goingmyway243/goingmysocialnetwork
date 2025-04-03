@@ -23,6 +23,13 @@
     justify-content: center;
     width: calc(100% - 60px);
 
+    .user-name,
+    .email {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-wrap: nowrap;
+    }
+
     .message {
       display: flex;
       justify-content: space-between;
@@ -37,11 +44,12 @@
         max-width: calc(100% - 64px);
         overflow: hidden;
         text-overflow: ellipsis;
+        text-wrap: nowrap;
       }
+    }
 
-      .time {
-        width: 60px;
-      }
+    .email {
+      color: var(--text-color-secondary);
     }
   }
 }

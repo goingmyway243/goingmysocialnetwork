@@ -10,6 +10,7 @@ import { ChatMessageApiService } from '../../common/services/chat-message-api.se
 import { ChatMessage } from '../../common/models/chat-message.model';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../common/services/chat.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-message-page',
@@ -27,8 +28,10 @@ export class MessagePageComponent implements OnInit, OnDestroy {
 
   initiated: boolean = false;
   inputMessage: string = '';
+  chatroomIdParam: string = '';
 
   constructor(
+    private route: ActivatedRoute,
     private authSvc: AuthService,
     private chatroomApiSvc: ChatroomApiService,
     private chatMessageApiSvc: ChatMessageApiService,
@@ -38,6 +41,10 @@ export class MessagePageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.chatSvc.startConnection();
     window.addEventListener('beforeunload', this.chatSvc.closeConnection.bind(this));
+
+    this.route.params.subscribe(params => {
+      this.chatroomIdParam = params['id'];
+    });
 
     this.authSvc.currentUser$.subscribe(user => {
       this.currentUser.set(user);
@@ -54,9 +61,12 @@ export class MessagePageComponent implements OnInit, OnDestroy {
           this.chatrooms.set(result.items);
           this.initiated = true;
 
-          const firstChatroom = this.chatrooms()[0];
-          if (firstChatroom) {
-            this.changeChatroom(firstChatroom);
+          const selectedChatroom = this.chatroomIdParam
+            ? this.chatrooms().find(c => c.id === this.chatroomIdParam)
+            : this.chatrooms()[0];
+            
+          if (selectedChatroom) {
+            this.changeChatroom(selectedChatroom);
           }
         });
       }

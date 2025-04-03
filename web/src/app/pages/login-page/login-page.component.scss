@@ -125,6 +125,15 @@
           flex-direction: column;
           gap: 12px;
 
+          .error-msg {
+            color: var(--text-color-error);
+            text-align: center;
+            background: rgba($color: white, $alpha: 0.4);
+            border-radius: 4px;
+            margin-top: -12px;
+            width: 250px;
+          }
+          
           .forgot-password {
             align-self: flex-end;
             color: var(--theme-color);

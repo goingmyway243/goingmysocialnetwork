@@ -4,10 +4,15 @@
   @if (chatUser) {
   <div class="message-info">
     <span class="user-name">{{ chatUser.fullName }}</span>
-    <div class="message">
-      <span class="content">{{ chatroomData.latestMessage?.message }}</span>
-      <span class="time">{{ getLocalDate(chatroomData.latestMessage?.createdAt) | date:'shortTime' }}</span>
-    </div>
+    <!-- @if (chatroomData.latestMessage) {
+      <div class="message">
+        <span class="content">{{ chatroomData.latestMessage.message }}</span>
+        <span class="time">{{ getLocalDate(chatroomData.latestMessage.createdAt) | date:'shortTime' }}</span>
+      </div>
+    }
+    @else {
+    } -->
+    <div class="email">{{ chatUser.email }}</div>
   </div>
   }
 </div>

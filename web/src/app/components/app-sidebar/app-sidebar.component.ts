@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { CreatePostComponent } from "../create-post/create-post.component";
 import { UserAvatarComponent } from "../user-avatar/user-avatar.component";
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AppCommonComponent } from '../app-common/app-common.component';
 import { AuthService } from '../../common/services/auth.service';
+import { filter } from 'rxjs';
 
 @Component({
     selector: 'app-sidebar',
@@ -27,6 +28,11 @@ export class SidebarComponent extends AppCommonComponent {
 
     override onInit(): void {
         this.activeMenu = location.pathname.split('/')[1] || 'home';
+        this.router.events
+            .pipe(filter(event => event instanceof NavigationEnd))
+            .subscribe((event: NavigationEnd) => {
+                this.activeMenu = event.url.split('/')[1] || 'home';
+            });
     }
 
     setActiveMenu(menu: string): void {

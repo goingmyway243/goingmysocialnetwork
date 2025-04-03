@@ -73,6 +73,8 @@
       display: flex;
       flex-direction: column-reverse;
       gap: 12px;
+      max-height: 240px;
+      overflow-y: auto;
 
       .comment-item {
         display: flex;

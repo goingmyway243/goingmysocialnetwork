@@ -25,7 +25,7 @@ import { AppLoaderComponent } from "../../components/app-loader/app-loader.compo
   styleUrl: './login-page.component.scss'
 })
 export class LoginPageComponent {
-  public showError = signal(false);
+  public errorMsg = signal('');
   public isLoading = signal(false);
 
   public loginForm = new FormGroup({
@@ -56,6 +56,7 @@ export class LoginPageComponent {
     this.identityApiSvc.loginAsync(request)
       .pipe(catchError(err => {
         this.isLoading.set(false);
+        this.errorMsg.set(err.error);
         return throwError(() => new Error(err.error));
       }))
       .subscribe(_ => {

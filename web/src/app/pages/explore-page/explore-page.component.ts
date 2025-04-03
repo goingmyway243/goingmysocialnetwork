@@ -36,7 +36,7 @@ export class ExplorePageComponent implements OnInit {
     private authSvc: AuthService
   ) {
     effect(() => {
-      if (this.searchText() || this.searchText() === '') {
+      if (this.currentUserId() && (this.searchText() || this.searchText() === '')) {
         this.performSearch();
       }
     });

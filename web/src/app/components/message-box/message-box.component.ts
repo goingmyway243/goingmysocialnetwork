@@ -4,6 +4,7 @@ import { MessageItemComponent } from "../message-item/message-item.component";
 import { AuthService } from '../../common/services/auth.service';
 import { Chatroom } from '../../common/models/chatroom.model';
 import { ChatroomApiService } from '../../common/services/chatroom-api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'message-box',
@@ -17,6 +18,7 @@ export class MessageBoxComponent implements OnInit {
   chatrooms = signal<Chatroom[]>([]);
 
   constructor(
+    private router: Router,
     private authSvc: AuthService,
     private chatroomApiSvc: ChatroomApiService
   ) { }
@@ -31,10 +33,14 @@ export class MessageBoxComponent implements OnInit {
             pageIndex: 0,
             pageSize: 10
           }
-        }).subscribe(result =>{
+        }).subscribe(result => {
           this.chatrooms.set(result.items);
         });
       }
     });
+  }
+
+  navigateToMessagePage(id: string): void {
+    this.router.navigate(['message', id])
   }
 }
