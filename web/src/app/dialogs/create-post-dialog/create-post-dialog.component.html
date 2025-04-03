@@ -30,6 +30,9 @@
       <input id="file-input" type="file" accept="image/*" multiple hidden (change)="onFileSelected($event)">
     </div>
 
-    <button class="primary post-button" (click)="createPost()">Post</button>
+    <button class="primary post-button" (click)="createPost()">
+      <app-loader [hidden]="!isLoading()"></app-loader>
+      <span [hidden]="isLoading()">Post</span>
+    </button>
   </div>
 </div>

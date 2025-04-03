@@ -52,8 +52,12 @@ export class MessagePageComponent implements OnInit, OnDestroy {
           }
         }).subscribe(result => {
           this.chatrooms.set(result.items);
-          this.changeChatroom(this.chatrooms()[0]);
           this.initiated = true;
+
+          const firstChatroom = this.chatrooms()[0];
+          if (firstChatroom) {
+            this.changeChatroom(firstChatroom);
+          }
         });
       }
     });
