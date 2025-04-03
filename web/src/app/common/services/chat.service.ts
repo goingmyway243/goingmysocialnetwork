@@ -6,35 +6,40 @@ import { ICreateChatMessageRequest } from '../dtos/chat-message-api.dto';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class ChatService {
-    private hubConnection!: signalR.HubConnection;
-    private _receivedMessageSubject = new BehaviorSubject<ChatMessage | null>(null);
+  private hubConnection!: signalR.HubConnection;
+  private _receivedMessageSubject = new BehaviorSubject<ChatMessage | null>(null);
 
-    receivedMessage$: Observable<ChatMessage | null> = this._receivedMessageSubject.asObservable();
+  receivedMessage$: Observable<ChatMessage | null> = this._receivedMessageSubject.asObservable();
 
-    constructor() {
-        this.startConnection();
+  constructor() {
+  }
+
+  startConnection() {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl(environment.chathubUrl, { withCredentials: true }) // Replace with your API URL
+      .withAutomaticReconnect()
+      .build();
+
+    this.hubConnection.start()
+      .then(() => console.log('Connected to SignalR!'))
+      .catch(err => console.error('Connection error: ', err));
+
+    this.hubConnection.on('ReceiveMessage', (chatMessage: ChatMessage) => {
+      this._receivedMessageSubject.next(chatMessage);
+    });
+  }
+
+  async closeConnection() {
+    if (this.hubConnection && this.hubConnection.state === signalR.HubConnectionState.Connected) {
+      await this.hubConnection.stop();
     }
+  }
 
-    private startConnection() {
-        this.hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl(environment.chathubUrl, { withCredentials: true }) // Replace with your API URL
-            .withAutomaticReconnect()
-            .build();
-
-        this.hubConnection.start()
-            .then(() => console.log('Connected to SignalR!'))
-            .catch(err => console.error('Connection error: ', err));
-
-        this.hubConnection.on('ReceiveMessage', (chatMessage: ChatMessage) => {
-            this._receivedMessageSubject.next(chatMessage);
-        });
-    }
-
-    sendMessage(message: ICreateChatMessageRequest) {
-        this.hubConnection.invoke('SendMessage', message)
-            .catch(err => console.error('Send error: ', err));
-    }
+  sendMessage(message: ICreateChatMessageRequest) {
+    this.hubConnection.invoke('SendMessage', message)
+      .catch(err => console.error('Send error: ', err));
+  }
 }

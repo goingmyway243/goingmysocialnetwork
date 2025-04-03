@@ -1,4 +1,4 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { UserAvatarComponent } from "../../components/user-avatar/user-avatar.component";
 import { MessageItemComponent } from "../../components/message-item/message-item.component";
@@ -18,7 +18,7 @@ import { ChatService } from '../../common/services/chat.service';
   templateUrl: './message-page.component.html',
   styleUrl: './message-page.component.scss'
 })
-export class MessagePageComponent implements OnInit {
+export class MessagePageComponent implements OnInit, OnDestroy {
   currentUser = signal<User | null>(null);
   chatrooms = signal<Chatroom[]>([]);
   selectedChatroom = signal<Chatroom | null>(null);
@@ -36,6 +36,9 @@ export class MessagePageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.chatSvc.startConnection();
+    window.addEventListener('beforeunload', this.chatSvc.closeConnection.bind(this));
+
     this.authSvc.currentUser$.subscribe(user => {
       this.currentUser.set(user);
 
@@ -68,6 +71,11 @@ export class MessagePageComponent implements OnInit {
         });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.chatSvc.closeConnection();
+    window.removeEventListener('beforeunload', this.chatSvc.closeConnection.bind(this));
   }
 
   changeChatroom(chatroom: Chatroom): void {
