@@ -48,10 +48,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowedHostsPolicy", policy =>
     {
-        policy.WithOrigins(builder.Configuration["AllowedHost"]!);
-        policy.AllowAnyHeader();
-        policy.AllowAnyMethod();
-        policy.AllowCredentials();
+        policy.WithOrigins(builder.Configuration["AllowedHost"]!)
+          .AllowCredentials()
+          .AllowAnyHeader()
+          .AllowAnyMethod();
     });
 });
 
