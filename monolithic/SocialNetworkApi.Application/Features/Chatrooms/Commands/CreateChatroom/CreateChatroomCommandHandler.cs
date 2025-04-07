@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
@@ -9,17 +8,11 @@ namespace SocialNetworkApi.Application.Features.Chatrooms.Commands;
 public class CreateChatroomCommandHandler : IRequestHandler<CreateChatroomCommand, CommandResultDto<ChatroomDto>>
 {
     private readonly IRepository<ChatroomEntity> _chatroomRepository;
-    private readonly IRepository<UserEntity> _userRepository;
-    private readonly IMapper _mapper;
 
     public CreateChatroomCommandHandler(
-        IRepository<ChatroomEntity> chatroomRepository,
-        IRepository<UserEntity> userRepository,
-        IMapper mapper)
+        IRepository<ChatroomEntity> chatroomRepository)
     {
         _chatroomRepository = chatroomRepository;
-        _userRepository = userRepository;
-        _mapper = mapper;
     }
 
     public async Task<CommandResultDto<ChatroomDto>> Handle(CreateChatroomCommand request, CancellationToken cancellationToken)
@@ -33,7 +26,7 @@ public class CreateChatroomCommandHandler : IRequestHandler<CreateChatroomComman
         {
             Id = Guid.NewGuid(),
             ChatroomName = request.ChatroomName,
-            Participants = request.ParticipantIds.Select(p => new ChatroomParticipantEntity { UserId = p }).ToList()
+            ParticipantIds = request.ParticipantIds
         };
 
         await _chatroomRepository.InsertAsync(chatroom);

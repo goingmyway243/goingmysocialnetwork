@@ -1,25 +1,31 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using Mongo2Go;
+using MongoDB.Driver;
 using Moq;
 using SocialNetworkApi.Domain.Entities;
-using SocialNetworkApi.Infrastructure.Persistence;
 using SocialNetworkApi.Infrastructure.Repositories;
 using System.Security.Cryptography;
 
 namespace SocialNetworkApi.Infrastructure.Test
 {
-    public class RepositoryTest
+    public class RepositoryTest : IDisposable
     {
-        private readonly DbContextOptions<ApplicationDbContext> _dbOptions;
+        private readonly IMongoDatabase _mongoDB;
+        private readonly MongoDbRunner _mongoDbRunner;
         private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
 
         public RepositoryTest()
         {
-            _dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("testdb")
-                .Options;
+            _mongoDbRunner = MongoDbRunner.Start();
+            _mongoDB = new MongoClient("mongodb://localhost:27017").GetDatabase("goingmysocial_test");//localhost:27017");
 
             _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        }
+
+        public void Dispose()
+        {
+            _mongoDB.Client.DropDatabase("goingmysocial_test");
+            _mongoDbRunner.Dispose();
         }
 
         [Fact]
@@ -34,14 +40,13 @@ namespace SocialNetworkApi.Infrastructure.Test
                 PasswordHash = RandomNumberGenerator.GetHexString(64)
             };
 
-            var dbContext = CreateDbContext();
-            var repository = new Repository<UserEntity>(dbContext, _httpContextAccessorMock.Object);
+            var repository = new Repository<UserEntity>(_mongoDB, _httpContextAccessorMock.Object, "users");
 
             await repository.InsertAsync(expectedUser);
 
-            var result = await dbContext.Set<UserEntity>().FindAsync(expectedUser.Id);
+            var result = await _mongoDB.GetCollection<UserEntity>("users").Find(p => p.Id == expectedUser.Id).FirstOrDefaultAsync();
 
-            var totalCount = await dbContext.Set<UserEntity>().CountAsync();
+            var totalCount = await _mongoDB.GetCollection<UserEntity>("users").CountDocumentsAsync(_ => true);
 
             Assert.NotNull(result);
             Assert.IsType<UserEntity>(result);
@@ -63,31 +68,22 @@ namespace SocialNetworkApi.Infrastructure.Test
                 LikeCount = 10
             };
 
-            var dbContext = CreateDbContext();
-            dbContext.Add(postToUpdate);
-            await dbContext.SaveChangesAsync();
+            await _mongoDB.GetCollection<PostEntity>("posts").InsertOneAsync(postToUpdate);
 
-            var repository = new Repository<PostEntity>(dbContext, _httpContextAccessorMock.Object);
+            var repository = new Repository<PostEntity>(_mongoDB, _httpContextAccessorMock.Object, "posts");
 
             // Act
             postToUpdate.LikeCount = newLikeCount;
-            
+
             await repository.UpdateAsync(postToUpdate);
 
-            var result = dbContext.Set<PostEntity>().Find(postToUpdate.Id);
+            var result = await _mongoDB.GetCollection<PostEntity>("posts").Find(p => p.Id == postToUpdate.Id).FirstOrDefaultAsync();
 
             // Assert
             Assert.NotNull(result);
             Assert.IsType<PostEntity>(result);
             Assert.Equal(postToUpdate.Id, result.Id);
             Assert.Equal(newLikeCount, result.LikeCount);
-        }
-
-        private ApplicationDbContext CreateDbContext()
-        {
-            var context = new ApplicationDbContext(_dbOptions);
-            context.Database.EnsureDeleted();
-            return context;
         }
     }
 }

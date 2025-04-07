@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
@@ -23,24 +24,25 @@ public class SearchChatMessagesQueryHandler : IRequestHandler<SearchChatMessages
     public async Task<PagedResultDto<ChatMessageDto>> Handle(SearchChatMessagesQuery request, CancellationToken cancellationToken)
     {
         var pagedRequest = request.PagedRequest;
-        var searchQuery = _chatMessageRepository.GetAll().Where(m => m.ChatroomId == request.ChatroomId);
+        var builder = Builders<ChatMessageEntity>.Filter;
+        var filter = builder.Eq(m => m.ChatroomId, request.ChatroomId);
 
         if (!string.IsNullOrEmpty(request.SearchText))
         {
-            searchQuery = searchQuery.Where(m => m.Message.Contains(request.SearchText));
+            filter &= builder.Regex(m => m.Message, new BsonRegularExpression(request.SearchText, "i"));
         }
 
-        var totalCount = await searchQuery.CountAsync(cancellationToken);
+        var totalCount = await _chatMessageRepository.GetAll().CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 
-        var messages = await searchQuery
-            .OrderByDescending(m => m.CreatedAt)
+        var messages = await _chatMessageRepository.GetAll()
+            .Find(filter)
+            .SortByDescending(m => m.CreatedAt)
             .Skip(pagedRequest.SkipCount)
-            .Take(pagedRequest.PageSize)
-            .Include(m => m.User)
+            .Limit(pagedRequest.PageSize)
             .ToListAsync(cancellationToken);
 
         var result = messages.Select(_mapper.Map<ChatMessageDto>).ToList();
         return PagedResultDto<ChatMessageDto>.Success(result)
-            .WithPage(pagedRequest.PageIndex, totalCount);
+            .WithPage(pagedRequest.PageIndex, (int)totalCount);
     }
 }

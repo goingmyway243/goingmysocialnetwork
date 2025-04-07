@@ -1,6 +1,5 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Enums;
@@ -47,19 +46,19 @@ public class UpdateFriendshipCommandHandler : IRequestHandler<UpdateFriendshipCo
 
     private async Task CreateChatroom(FriendshipEntity existingFriendship)
     {
-        var existingChatroom = await _chatroomRepository.GetAll()
-                        .FirstOrDefaultAsync(cr => cr.Participants.Any(p => p.UserId == existingFriendship.UserId)
-                                && cr.Participants.Any(p => p.UserId == existingFriendship.FriendId));
+        var existingChatroom = await _chatroomRepository.FirstOrDefaultAsync(cr => 
+            cr.ParticipantIds.Any(p => p == existingFriendship.UserId)
+            && cr.ParticipantIds.Any(p => p == existingFriendship.FriendId));
 
         if (existingChatroom == null)
         {
             var chatroom = new ChatroomEntity()
             {
                 Id = Guid.NewGuid(),
-                Participants = new List<ChatroomParticipantEntity>()
+                ParticipantIds = new List<Guid>()
                 {
-                    new ChatroomParticipantEntity { UserId = existingFriendship.UserId},
-                    new ChatroomParticipantEntity { UserId = existingFriendship.FriendId}
+                    existingFriendship.UserId,
+                    existingFriendship.FriendId
                 }
             };
 

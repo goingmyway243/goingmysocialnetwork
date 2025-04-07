@@ -1,49 +1,46 @@
 using System.Linq.Expressions;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using SocialNetworkApi.Domain.Common;
 using SocialNetworkApi.Domain.Interfaces;
-using SocialNetworkApi.Infrastructure.Persistence;
 
 namespace SocialNetworkApi.Infrastructure.Repositories;
 
-public class Repository<T> : IRepository<T> where T : class
+public class Repository<T> : IRepository<T> where T : BaseEntity
 {
-    private readonly ApplicationDbContext _context;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly DbSet<T> _dbSet;
+    private readonly IMongoCollection<T> _collection;
 
-    public Repository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+    public Repository(IMongoDatabase database, IHttpContextAccessor httpContextAccessor, string collectionName)
     {
-        _context = context;
-        _dbSet = context.Set<T>();
+        _collection = database.GetCollection<T>(collectionName);
         _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<T?> GetByIdAsync(Guid id)
     {
-        return await _dbSet.FindAsync(id);
+        return await _collection.Find(p => p.Id == id).FirstOrDefaultAsync();
     }
 
     public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
     {
-        return await _dbSet.FirstOrDefaultAsync(predicate);
+        return await _collection.Find(predicate).FirstOrDefaultAsync();
     }
 
-    public IQueryable<T> GetAll()
+    public IMongoCollection<T> GetAll()
     {
-        return _dbSet.AsQueryable();
+        return _collection;
     }
 
     public async Task<List<T>> GetAllAsync()
     {
-        return await _dbSet.ToListAsync();
+        return await _collection.Find(_ => true).ToListAsync();
     }
 
     public async Task<List<T>> FindAsync(Expression<Func<T, bool>> predicate)
     {
-        return await _dbSet.Where(predicate).ToListAsync();
+        return await _collection.Find(predicate).ToListAsync();
     }
 
     public async Task InsertAsync(T entity)
@@ -53,8 +50,7 @@ public class Repository<T> : IRepository<T> where T : class
             auditedEntity.CreatedBy = GetCurrentUserId();
         }
 
-        await _dbSet.AddAsync(entity);
-        await _context.SaveChangesAsync();
+        await _collection.InsertOneAsync(entity);
     }
 
     public async Task UpdateAsync(T entity)
@@ -65,14 +61,12 @@ public class Repository<T> : IRepository<T> where T : class
             auditedEntity.ModifiedAt = DateTime.UtcNow;
         }
 
-        _dbSet.Update(entity);
-        await _context.SaveChangesAsync();
+        await _collection.ReplaceOneAsync(p => p.Id == entity.Id, entity);
     }
 
     public async Task DeleteAsync(T entity)
     {
-        _dbSet.Remove(entity);
-        await _context.SaveChangesAsync();
+        await _collection.DeleteOneAsync(p => p.Id == entity.Id);
     }
 
     private Guid GetCurrentUserId()

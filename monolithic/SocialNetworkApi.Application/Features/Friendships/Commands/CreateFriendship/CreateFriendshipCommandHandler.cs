@@ -1,6 +1,5 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Enums;
@@ -26,9 +25,7 @@ public class CreateFriendshipCommandHandler : IRequestHandler<CreateFriendshipCo
 
     public async Task<CommandResultDto<FriendshipDto>> Handle(CreateFriendshipCommand request, CancellationToken cancellationToken)
     {
-        var existingUsers = await _userRepository.GetAll()
-            .Where(u => request.UserId == u.Id || request.FriendId == u.Id)
-            .ToListAsync();
+        var existingUsers = await _userRepository.FindAsync(u => request.UserId == u.Id || request.FriendId == u.Id);
 
         if (existingUsers.Count != 2)
         {

@@ -1,12 +1,13 @@
 ﻿using Azure.Storage.Blobs;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using SocialNetworkApi.Application.Common.Interfaces;
+using SocialNetworkApi.Domain.Common;
+using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
 using SocialNetworkApi.Infrastructure.Identity;
-using SocialNetworkApi.Infrastructure.Persistence;
 using SocialNetworkApi.Infrastructure.Repositories;
 using SocialNetworkApi.Infrastructure.Storage;
 
@@ -21,14 +22,19 @@ namespace SocialNetworkApi.Infrastructure
         {
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<IJwtService, JwtService>();
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(ITransientRepository<>), typeof(TransientRepository<>));
+            services.AddMongoRepository<UserEntity>("users");
+            services.AddMongoRepository<PostEntity>("posts");
+            services.AddMongoRepository<LikeEntity>("likes");
+            services.AddMongoRepository<CommentEntity>("comments");
+            services.AddMongoRepository<ChatroomEntity>("chatrooms");
+            services.AddMongoRepository<ChatMessageEntity>("chat_messages");
+            services.AddMongoRepository<FriendshipEntity>("friendships");
 
             // Configure Storage
             var storageConnectionString = configuration.GetConnectionString("AzureBlobStorage");
             if (string.IsNullOrEmpty(storageConnectionString))
             {
-                services.AddScoped<IStorageService, LocalStorageService>();
+                services.AddScoped<IStorageService, LocalStorageService>(_ => new LocalStorageService(contentRootPath));
             }
             else
             {
@@ -36,30 +42,26 @@ namespace SocialNetworkApi.Infrastructure
                 services.AddScoped<IStorageService, AzureStorageService>();
             }
 
-            // Configure MySQL
-            var connectionString = configuration.GetConnectionString("MySQLConnection");
-            services.AddDbContextFactory<ApplicationDbContext>(options =>
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-#if DEBUG
-                .LogTo(Console.WriteLine, LogLevel.Information)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors()
-#endif
-            );
+            // Configure MongoDB
+            services.AddSingleton<IMongoClient>(sp => new MongoClient(configuration.GetConnectionString("MongoDB")));
+
+            services.AddSingleton<IMongoDatabase>(sp =>
+            {
+                var client = sp.GetRequiredService<IMongoClient>();
+                return client.GetDatabase("goingmysocial");
+            });
 
             return services;
         }
 
-        public static IServiceProvider InitialzeDatabase(this IServiceProvider serviceProvider)
+        public static void AddMongoRepository<T>(this IServiceCollection services, string collectionName) where T : BaseEntity
         {
-            // Seed the database
-            using (var scope = serviceProvider.CreateScope())
+            services.AddScoped<IRepository<T>>(sp =>
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                dbContext.Database.EnsureCreated(); // Create the database if it doesn't exist
-            }
-
-            return serviceProvider;
+                var db = sp.GetRequiredService<IMongoDatabase>();
+                var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+                return new Repository<T>(db, httpContextAccessor, collectionName);
+            });
         }
     }
 }

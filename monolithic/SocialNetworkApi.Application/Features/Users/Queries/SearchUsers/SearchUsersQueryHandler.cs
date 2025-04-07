@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
@@ -26,19 +27,28 @@ public class SearchUsersQueryHandler : IRequestHandler<SearchUsersQuery, PagedRe
     public async Task<PagedResultDto<UserDto>> Handle(SearchUsersQuery request, CancellationToken cancellationToken)
     {
         var pagedRequest = request.PagedRequest;
-        var searchUserQuery = _userRepository.GetAll();
+        var builder = Builders<UserEntity>.Filter;
+        var filter = builder.Empty;
 
         if (!string.IsNullOrEmpty(request.SearchText))
         {
-            searchUserQuery = searchUserQuery.Where(p => p.FullName!.Contains(request.SearchText));
+            filter &= builder.Regex(p => p.FullName, new BsonRegularExpression(request.SearchText, "i"));
         }
 
-        var totalCount = await searchUserQuery.CountAsync(cancellationToken);
+        var totalCount = await _userRepository.GetAll().CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 
-        var users = await searchUserQuery.OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt)
-            .Skip(pagedRequest.SkipCount)
-            .Take(pagedRequest.PageSize)
-            .ToListAsync(cancellationToken);
+        var users = await _userRepository.GetAll()
+                    .Aggregate()
+                    .Match(filter)
+                    .Project(p => new {
+                        Document = p,
+                        SortDate = p.ModifiedAt ?? p.CreatedAt
+                    })
+                    .SortByDescending(p => p.SortDate)
+                    .Project(p => p.Document)
+                    .Skip(pagedRequest.SkipCount)
+                    .Limit(pagedRequest.PageSize)
+                    .ToListAsync(cancellationToken);
 
         var result = users.Select(_mapper.Map<UserDto>).ToList();
         if (request.IncludeFriendship)
@@ -47,16 +57,14 @@ public class SearchUsersQueryHandler : IRequestHandler<SearchUsersQuery, PagedRe
         }
 
         return PagedResultDto<UserDto>.Success(result)
-            .WithPage(pagedRequest.PageIndex, totalCount);
+            .WithPage(pagedRequest.PageIndex, (int)totalCount);
     }
 
     private async Task IncludeFriendship(SearchUsersQuery request, List<UserDto> result)
     {
         var itemIds = result.Select(u => u.Id);
-        var friendships = await _friendshipRepository.GetAll()
-            .Where(fs => (fs.UserId == request.RequestUserId && itemIds.Contains(fs.FriendId))
-                         || (fs.FriendId == request.RequestUserId && itemIds.Contains(fs.UserId)))
-            .ToListAsync();
+        var friendships = await _friendshipRepository.FindAsync(fs => (fs.UserId == request.RequestUserId && itemIds.Contains(fs.FriendId))
+                         || (fs.FriendId == request.RequestUserId && itemIds.Contains(fs.UserId)));
 
         result.ForEach(item =>
         {

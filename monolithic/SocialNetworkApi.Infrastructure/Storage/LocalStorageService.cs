@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Hosting;
 using SocialNetworkApi.Application.Common.Interfaces;
 
 namespace SocialNetworkApi.Infrastructure.Storage;
@@ -7,9 +6,9 @@ public class LocalStorageService : IStorageService
 {
     private readonly string _storagePath;
 
-    public LocalStorageService(IHostEnvironment hostEnvironment)
+    public LocalStorageService(string contentRootPath)
     {
-        _storagePath = Path.Combine(hostEnvironment.ContentRootPath, "Public");
+        _storagePath = Path.Combine(contentRootPath, "Public");
     }
 
     public Task DeleteFileAsync(string fileName)

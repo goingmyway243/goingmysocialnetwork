@@ -64,8 +64,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.Services.InitialzeDatabase();
-
 var staticFilePath = Path.Combine(app.Environment.ContentRootPath, "Public");
 if (!Directory.Exists(staticFilePath))
 {

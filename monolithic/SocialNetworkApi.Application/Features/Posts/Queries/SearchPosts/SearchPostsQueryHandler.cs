@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
@@ -10,15 +11,18 @@ namespace SocialNetworkApi.Application.Features.Posts.Queries;
 public class SearchPostsQueryHandler : IRequestHandler<SearchPostsQuery, PagedResultDto<PostDto>>
 {
     private readonly IRepository<PostEntity> _postRepository;
+    private readonly IRepository<UserEntity> _userRepository;
     private readonly IRepository<LikeEntity> _likeRepository;
     private readonly IMapper _mapper;
 
     public SearchPostsQueryHandler(
         IRepository<PostEntity> postRepository,
+        IRepository<UserEntity> userRepository,
         IRepository<LikeEntity> likeRepository,
         IMapper mapper)
     {
         _postRepository = postRepository;
+        _userRepository = userRepository;
         _likeRepository = likeRepository;
         _mapper = mapper;
     }
@@ -26,39 +30,52 @@ public class SearchPostsQueryHandler : IRequestHandler<SearchPostsQuery, PagedRe
     public async Task<PagedResultDto<PostDto>> Handle(SearchPostsQuery request, CancellationToken cancellationToken)
     {
         var pagedRequest = request.PagedRequest;
-        var query = _postRepository.GetAll();
+        var builder = Builders<PostEntity>.Filter;
+        var filter = builder.Empty;
 
         if (!string.IsNullOrEmpty(request.SearchText))
         {
-            query = query.Where(p => p.Caption.Contains(request.SearchText));
+            filter &= builder.Regex(p => p.Caption, new BsonRegularExpression(request.SearchText, "i"));
         }
 
         if (request.OwnerId != null)
         {
-            query = query.Where(p => p.UserId == request.OwnerId);
+            filter &= builder.Eq(p => p.UserId, request.OwnerId);
         }
 
-        var totalCount = await query.CountAsync();
+        var totalCount = await _postRepository.GetAll().CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 
-        query = query.OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt)
-            .Skip(pagedRequest.SkipCount)
-            .Take(pagedRequest.PageSize);
+        var posts = await _postRepository.GetAll()
+                    .Aggregate()
+                    .Match(filter)
+                    .Project(p => new
+                    {
+                        Document = p,
+                        SortDate = p.ModifiedAt ?? p.CreatedAt
+                    })
+                    .SortByDescending(p => p.SortDate)
+                    .Project(p => p.Document)
+                    .Skip(pagedRequest.SkipCount)
+                    .Limit(pagedRequest.PageSize)
+                    .ToListAsync(cancellationToken);
 
-        var existingLikeByUser = await query.Join(
-                _likeRepository.GetAll().Where(l => l.UserId == request.CurrentUserId),
-                p => p.Id,
-                l => l.PostId,
-                (posts, likes) => likes
-            ).ToListAsync(cancellationToken);
+        var userIds = posts.Select(p => p.UserId).Distinct().ToList();
+        var distincUsers = await _userRepository.FindAsync(u => userIds.Contains(u.Id));
 
-        var posts = await query.Include(p => p.User)
-            .Include(p => p.Contents)
-            .ToListAsync(cancellationToken);
+        var existingLikeByUser = await _likeRepository.FindAsync(l => l.UserId == request.CurrentUserId && posts.Select(p => p.Id).Contains(l.PostId));
 
         var result = posts.Select(_mapper.Map<PostDto>).ToList();
-        result.ForEach(p => p.IsLikedByUser = existingLikeByUser.FirstOrDefault(l => l.PostId == p.Id) != null);
+        result.ForEach(p => {
+            p.IsLikedByUser = existingLikeByUser.FirstOrDefault(l => l.PostId == p.Id) != null;
+
+            var userInfo = distincUsers.FirstOrDefault(u => u.Id == p.UserId);
+            if (userInfo != null)
+            {
+                p.User = _mapper.Map<UserDto>(userInfo);
+            }
+        });
 
         return PagedResultDto<PostDto>.Success(result)
-            .WithPage(pagedRequest.PageIndex, totalCount);
+            .WithPage(pagedRequest.PageIndex, (int)totalCount);
     }
 }

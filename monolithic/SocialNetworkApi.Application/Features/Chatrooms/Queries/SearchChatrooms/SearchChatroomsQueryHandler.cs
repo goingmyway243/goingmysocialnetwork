@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
@@ -10,15 +11,18 @@ namespace SocialNetworkApi.Application.Features.Chatrooms.Queries;
 public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery, PagedResultDto<ChatroomDto>>
 {
     private readonly IRepository<ChatroomEntity> _chatroomRepository;
+    private readonly IRepository<ChatMessageEntity> _chatMessageRepository;
     private readonly IRepository<UserEntity> _userRepository;
     private readonly IMapper _mapper;
 
     public SearchChatroomsQueryHandler(
         IRepository<ChatroomEntity> chatroomRepository,
+        IRepository<ChatMessageEntity> chatMessageRepository,
         IRepository<UserEntity> userRepository,
         IMapper mapper)
     {
         _chatroomRepository = chatroomRepository;
+        _chatMessageRepository = chatMessageRepository;
         _userRepository = userRepository;
         _mapper = mapper;
     }
@@ -26,49 +30,48 @@ public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery,
     public async Task<PagedResultDto<ChatroomDto>> Handle(SearchChatroomsQuery request, CancellationToken cancellationToken)
     {
         var pagedRequest = request.PagedRequest;
-        var searchQuery = _chatroomRepository.GetAll()
-            .AsNoTracking()
-            .Where(cr => cr.Participants.Any(p => p.UserId == request.UserId));
+        var builder = Builders<ChatroomEntity>.Filter;
+        var filter = builder.ElemMatch(cr => cr.ParticipantIds, p => p == request.UserId);
 
         if (!string.IsNullOrWhiteSpace(request.SearchText))
         {
-            searchQuery = searchQuery.Where(cr => EF.Functions.Like(cr.ChatroomName, $"%{request.SearchText}%"));
+            filter &= builder.Regex(cr => cr.ChatroomName, new BsonRegularExpression(request.SearchText, "i"));
         }
 
-        var totalCount = await searchQuery.CountAsync(cancellationToken);
+        var totalCount = await _chatroomRepository.GetAll().CountDocumentsAsync(filter, cancellationToken: cancellationToken);            
 
-        searchQuery = searchQuery
+        var chatrooms = await _chatroomRepository.GetAll()
+            .Find(filter)
             .Skip(pagedRequest.SkipCount)
-            .Take(pagedRequest.PageSize);
-
-        var chatrooms = await searchQuery
-            .Include(cr => cr.Participants)
+            .Limit(pagedRequest.PageSize)
             .ToListAsync(cancellationToken);
 
-        var latestMessages = await searchQuery.Select(cr =>
-            cr.ChatMessages.OrderByDescending(m => m.CreatedAt)
-                .FirstOrDefault()
-        )
-        .ToListAsync(cancellationToken);
+        var chatroomIds = chatrooms.Select(cr => cr.Id).ToList();
+
+        var latestMessages = await _chatMessageRepository.GetAll()
+            .Aggregate()
+            .Match(m => chatroomIds.Contains(m.ChatroomId))
+            .SortByDescending(m => m.CreatedAt)
+            .Group(m => m.ChatroomId, g => new { ChatroomId = g.Key, LatestMessage = g.First() })
+            .ToListAsync(cancellationToken);
 
 
         var chatroomParticipantIds = chatrooms
-            .SelectMany(cr => cr.Participants.Select(p => p.UserId))
+            .SelectMany(cr => cr.ParticipantIds)
             .Distinct()
             .ToList();
 
-        var distinctUsers = await _userRepository.GetAll()
-            .Where(u => chatroomParticipantIds.Contains(u.Id))
-            .ToDictionaryAsync(u => u.Id);
+        var chatroomParticipants = await _userRepository.FindAsync(u => chatroomParticipantIds.Contains(u.Id));
+        var distinctUsers = chatroomParticipants.ToDictionary(u => u.Id, u => u);
 
         var chatroomDtos = chatrooms.Select(chatroom =>
             new ChatroomDto
             {
                 Id = chatroom.Id,
                 ChatroomName = chatroom.ChatroomName,
-                Participants = chatroom.Participants
-                    .Where(p => distinctUsers.ContainsKey(p.UserId))
-                    .Select(p => _mapper.Map<UserDto>(distinctUsers[p.UserId]))
+                Participants = chatroom.ParticipantIds
+                    .Where(p => distinctUsers.ContainsKey(p))
+                    .Select(p => _mapper.Map<UserDto>(distinctUsers[p]))
                     .ToList(),
                 LatestMessage = _mapper.Map<ChatMessageDto>(latestMessages.FirstOrDefault(m => m?.ChatroomId == chatroom.Id))
             }
@@ -77,6 +80,6 @@ public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery,
         .ToList();
 
         return PagedResultDto<ChatroomDto>.Success(chatroomDtos)
-            .WithPage(pagedRequest.PageIndex, totalCount);
+            .WithPage(pagedRequest.PageIndex, (int)totalCount);
     }
 }

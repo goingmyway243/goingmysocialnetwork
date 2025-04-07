@@ -62,8 +62,8 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, Comma
 
         await _postRepository.InsertAsync(post);
 
-        post.User = existingUser;
         var result = _mapper.Map<PostDto>(post);
+        result.User = _mapper.Map<UserDto>(existingUser);
 
         return CommandResultDto<PostDto>.Success(result);
     }

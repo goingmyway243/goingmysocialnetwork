@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
@@ -17,11 +16,7 @@ public class DeleteChatroomCommandHandler : IRequestHandler<DeleteChatroomComman
 
     public async Task<CommandResultDto<Guid>> Handle(DeleteChatroomCommand request, CancellationToken cancellationToken)
     {
-        var chatroom = await _chatroomRepository
-            .GetAll()
-            .Where(cr => cr.Id == request.Id)
-            .Include(cr => cr.Participants)
-            .FirstOrDefaultAsync(cancellationToken);
+        var chatroom = await _chatroomRepository.GetByIdAsync(request.Id);
         if (chatroom == null)
         {
             return CommandResultDto<Guid>.Failure("Chatroom not found.");

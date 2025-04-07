@@ -1,6 +1,6 @@
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using SocialNetworkApi.Application.Common.DTOs;
 using SocialNetworkApi.Domain.Entities;
 using SocialNetworkApi.Domain.Interfaces;
@@ -26,25 +26,30 @@ public class SearchFriendshipsQueryHandler : IRequestHandler<SearchFriendshipsQu
     public async Task<PagedResultDto<FriendshipDto>> Handle(SearchFriendshipsQuery request, CancellationToken cancellationToken)
     {
         var pagedRequest = request.PagedRequest;
-        var searchFriendshipQuery = _friendshipRepository.GetAll();
-        searchFriendshipQuery = request.ExcludeFriendshipMakeByUser
-            ? searchFriendshipQuery.Where(p => p.FriendId == request.UserId)
-            : searchFriendshipQuery.Where(p => p.UserId == request.UserId || p.FriendId == request.UserId);
+        var builder = Builders<FriendshipEntity>.Filter;
+        var filter = request.ExcludeFriendshipMakeByUser 
+            ? builder.Eq(p => p.FriendId, request.UserId)
+            : builder.Or(
+                builder.Eq(p => p.UserId, request.UserId),
+                builder.Eq(p => p.FriendId, request.UserId)
+            );
 
         if (request.FilterStatus.Count > 0)
         {
-            searchFriendshipQuery = searchFriendshipQuery.Where(p => request.FilterStatus.Contains(p.Status));
+            filter &= builder.In(p => p.Status, request.FilterStatus);
         }
 
-        var totalCount = await searchFriendshipQuery.CountAsync(cancellationToken);
+        var totalCount = await _friendshipRepository.GetAll().CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 
-        var friendships = await searchFriendshipQuery.OrderByDescending(p => p.CreatedAt)
+        var friendships = await _friendshipRepository.GetAll()
+            .Find(filter)
+            .SortByDescending(p => p.CreatedAt)
             .Skip(pagedRequest.SkipCount)
-            .Take(pagedRequest.PageSize)
+            .Limit(pagedRequest.PageSize)
             .ToListAsync(cancellationToken);
 
         var userIds = friendships.Select(p => p.UserId == request.UserId ? p.FriendId : p.UserId);
-        var users = await _userRepository.GetAll().Where(u => userIds.Contains(u.Id)).ToListAsync();
+        var users = await _userRepository.FindAsync(u => userIds.Contains(u.Id));
 
         var result = friendships.Select(_mapper.Map<FriendshipDto>).ToList();
         result.ForEach(fs =>
@@ -54,6 +59,6 @@ public class SearchFriendshipsQueryHandler : IRequestHandler<SearchFriendshipsQu
         });
 
         return PagedResultDto<FriendshipDto>.Success(result)
-            .WithPage(pagedRequest.PageIndex, totalCount);
+            .WithPage(pagedRequest.PageIndex, (int)totalCount);
     }
 }
