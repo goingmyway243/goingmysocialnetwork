@@ -46,6 +46,8 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, Comma
         for (int i = 0; i < contents.Count; i++)
         {
             var p = contents[i];
+            p.Id = Guid.NewGuid();
+            
             if (p.FormFile != null)
             {
                 var file = p.FormFile;

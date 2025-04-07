@@ -38,7 +38,7 @@ public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery,
             filter &= builder.Regex(cr => cr.ChatroomName, new BsonRegularExpression(request.SearchText, "i"));
         }
 
-        var totalCount = await _chatroomRepository.GetAll().CountDocumentsAsync(filter, cancellationToken: cancellationToken);            
+        var totalCount = await _chatroomRepository.GetAll().CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 
         var chatrooms = await _chatroomRepository.GetAll()
             .Find(filter)
@@ -52,7 +52,7 @@ public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery,
             .Aggregate()
             .Match(m => chatroomIds.Contains(m.ChatroomId))
             .SortByDescending(m => m.CreatedAt)
-            .Group(m => m.ChatroomId, g => new { ChatroomId = g.Key, LatestMessage = g.First() })
+            .Group(m => m.ChatroomId, g => g.First())
             .ToListAsync(cancellationToken);
 
 
@@ -73,7 +73,7 @@ public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery,
                     .Where(p => distinctUsers.ContainsKey(p))
                     .Select(p => _mapper.Map<UserDto>(distinctUsers[p]))
                     .ToList(),
-                LatestMessage = _mapper.Map<ChatMessageDto>(latestMessages.FirstOrDefault(m => m?.ChatroomId == chatroom.Id))
+                LatestMessage = _mapper.Map<ChatMessageDto>(latestMessages.FirstOrDefault(m => m.ChatroomId == chatroom.Id))
             }
         )
         .OrderByDescending(cr => cr?.LatestMessage?.CreatedAt)
