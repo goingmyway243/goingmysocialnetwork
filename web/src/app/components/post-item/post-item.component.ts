@@ -38,7 +38,7 @@ export class PostItemComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.authSvc.getCurrentUser();
     this.liked = !!this.postData.isLikedByUser;
-    this.timeDiff = this.getTimeDiff(this.postData.modifiedAt ?? this.postData.createdAt);
+    this.timeDiff = this.getTimeDiff(this.postData.createdAt);
   }
 
   likePost(): void {
