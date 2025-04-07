@@ -4,6 +4,6 @@
   </div>
   <div class="user-info" *ngIf="showInfo && user">
     <span class="user-name">{{ user.fullName }}</span>
-    <span class="description">{{ user.email }}</span>
+    <span class="description">{{ description || user.email }}</span>
   </div>
 </div>

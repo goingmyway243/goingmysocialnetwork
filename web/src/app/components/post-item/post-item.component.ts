@@ -8,6 +8,7 @@ import { LikeApiService } from '../../common/services/like.service';
 import { CommentApiService } from '../../common/services/comment-api.service';
 import { Comment } from '../../common/models/comment.model';
 import { FormsModule } from '@angular/forms';
+import { Util } from '../../common/helpers/util';
 
 @Component({
   selector: 'post-item',
@@ -26,6 +27,7 @@ export class PostItemComponent implements OnInit {
   commentInputText: string = '';
   liked: boolean = false;
   showComments: boolean = false;
+  timeDiff: string = '';
 
   constructor(
     private authSvc: AuthService,
@@ -36,6 +38,7 @@ export class PostItemComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.authSvc.getCurrentUser();
     this.liked = !!this.postData.isLikedByUser;
+    this.timeDiff = this.getTimeDiff(this.postData.modifiedAt ?? this.postData.createdAt);
   }
 
   likePost(): void {
@@ -65,6 +68,7 @@ export class PostItemComponent implements OnInit {
         result.user = this.currentUser!;
         this.postComments.update(m => [result, ...m]);
         this.commentInputText = '';
+        this.postData.commentCount++;
         sub.unsubscribe();
       });
     }
@@ -91,5 +95,9 @@ export class PostItemComponent implements OnInit {
     setTimeout(() => {
       this.commentInput?.nativeElement.focus();
     }, 200);
+  }
+
+  getTimeDiff(value: Date): string {
+    return Util.getTimeDiff(Util.getLocalDate(value));
   }
 }
