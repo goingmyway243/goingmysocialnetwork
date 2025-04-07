@@ -29,6 +29,8 @@ export class Util {
         let date = new Date(time.valueOf());
         let diff = Math.round((now.getTime() - date.getTime()) / 60000);
 
+        console.log(diff);
+
         if (diff < 1) {
             return 'Just now';
         } else if (diff < 60) {
@@ -37,7 +39,7 @@ export class Util {
             let hour = diff < 120 ? 'hour' : 'hours';
             return Math.floor(diff / 60) + ' ' + hour + ' ago';
         }
-        else if (diff < 10080) {
+        else if (diff < 43200) {
             let day = diff < 2880 ? 'day' : 'days';
             return Math.floor(diff / 1440) + ' ' + day + ' ago';
         }
