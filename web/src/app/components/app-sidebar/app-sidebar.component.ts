@@ -31,6 +31,7 @@ export class SidebarComponent extends AppCommonComponent {
         this.router.events
             .pipe(filter(event => event instanceof NavigationEnd))
             .subscribe((event: NavigationEnd) => {
+                console.log(event.url.split('/'));
                 this.activeMenu = event.url.split('/')[1] || 'home';
             });
     }
