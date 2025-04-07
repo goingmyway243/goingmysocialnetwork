@@ -6,7 +6,7 @@ export interface IComment {
     postId: string;
     userId: string;
     createdAt: Date;
-    updatedAt?: Date;
+    modifiedAt?: Date;
 }
 
 export class Comment implements IComment {
@@ -15,7 +15,7 @@ export class Comment implements IComment {
     postId: string;
     userId: string;
     createdAt: Date;
-    updatedAt?: Date;
+    modifiedAt?: Date;
 
     user?: User;
 
@@ -25,7 +25,7 @@ export class Comment implements IComment {
         this.postId = comment.postId;
         this.userId = comment.userId;
         this.createdAt = comment.createdAt;
-        this.updatedAt = comment.updatedAt;
+        this.modifiedAt = comment.modifiedAt;
     }
     
 }

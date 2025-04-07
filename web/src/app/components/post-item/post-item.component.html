@@ -1,6 +1,6 @@
 <div class="post-item">
   <div class="post-header">
-    <user-avatar [user]="postData.user"></user-avatar>
+    <user-avatar [user]="postData.user" [description]="timeDiff"></user-avatar>
     <i class="fa-solid fa-ellipsis"></i>
   </div>
 
@@ -18,10 +18,15 @@
       <div class="like">
         <i [class.fa-regular]="!liked" [class.fa-solid]="liked" class="fa-heart" (click)="likePost()"></i>
         @if (postData.likeCount > 0) {
-          <span class="like-count">{{ postData.likeCount }}</span>
+          <span class="count">{{ postData.likeCount }}</span>
         }
       </div>
-      <i class="fa-regular fa-comment-dots" (click)="onCommentButtonClick()"></i>
+      <div class="comment">
+        <i class="fa-regular fa-comment-dots" (click)="onCommentButtonClick()"></i>
+        @if (postData.commentCount > 0) {
+          <span class="count">{{ postData.commentCount }}</span>
+        }
+      </div>
       <i class="fa-regular fa-share-from-square"></i>
     </div>
 
@@ -36,9 +41,12 @@
         @for (item of postComments(); track $index) {
           <div class="comment-item">
             <user-avatar [user]="item.user" [showInfo]="false"></user-avatar>
-            <div class="comment">
-              <div class="user-name">{{ item.user?.fullName }}</div>
-              <div class="text">{{ item.comment }}</div>
+            <div class="comment-content">
+              <div class="comment">
+                <div class="user-name">{{ item.user?.fullName }}</div>
+                <div class="text">{{ item.comment }}</div>
+              </div>
+              <div class="time-diff">{{ getTimeDiff(item.modifiedAt ?? item.createdAt) }}</div>
             </div>
           </div>
         }  
