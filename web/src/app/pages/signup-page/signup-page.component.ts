@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { IdentityApiService } from '../../common/services/identity-api.service';
 import { catchError, throwError } from 'rxjs';
+import { AppLoaderComponent } from "../../components/app-loader/app-loader.component";
 
 @Component({
   selector: 'app-signup-page',
@@ -22,7 +23,8 @@ import { catchError, throwError } from 'rxjs';
     MatInputModule,
     MatDatepickerModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    AppLoaderComponent
   ],
   templateUrl: './signup-page.component.html',
   styleUrl: './signup-page.component.scss'
@@ -64,6 +66,10 @@ export class SignupPageComponent {
   }
 
   onSubmit(stepper: MatStepper) {
+    if (this.isLoading()) {
+      return;
+    }
+
     this.isLoading.set(true);
     this.error.set(null);
 

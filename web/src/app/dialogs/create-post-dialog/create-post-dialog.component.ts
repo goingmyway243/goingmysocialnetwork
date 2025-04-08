@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../common/services/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { AppLoaderComponent } from "../../components/app-loader/app-loader.component";
+import { catchError, throwError } from 'rxjs';
 
 @Component({
   selector: 'create-post-dialog',
@@ -43,7 +44,7 @@ export class CreatePostDialogComponent extends AppCommonComponent implements OnD
   }
 
   createPost(): void {
-    if (!this.caption) {
+    if (!this.caption || this.isLoading()) {
       return;
     }
 
@@ -54,10 +55,14 @@ export class CreatePostDialogComponent extends AppCommonComponent implements OnD
       userId: this.authSvc.getCurrentUserId()
     };
 
-    this.postApiSvc.createPost(postRequest, this.uploadFiles).subscribe(result => {
-      this.isLoading.set(false);
-      this.dialogRef.close(result);
-    });
+    this.postApiSvc.createPost(postRequest, this.uploadFiles)
+      .pipe(catchError(err => {
+        this.isLoading.set(false);
+        return throwError(() => new Error("Something went wrong: " + err.error));
+      }))
+      .subscribe(result => {
+        this.dialogRef.close(result);
+      });
   }
 
   closeDialog(): void {

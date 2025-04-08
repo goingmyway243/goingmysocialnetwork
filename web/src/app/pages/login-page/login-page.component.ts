@@ -42,7 +42,7 @@ export class LoginPageComponent {
   public login(evt: MouseEvent) {
     evt.preventDefault();
 
-    if (this.loginForm.invalid) {
+    if (this.loginForm.invalid || this.isLoading()) {
       return;
     }
 
