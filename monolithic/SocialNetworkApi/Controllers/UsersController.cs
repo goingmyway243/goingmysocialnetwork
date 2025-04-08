@@ -81,6 +81,23 @@ namespace SocialNetworkApi.Api.Controllers
             return Ok(result.Data);
         }
 
+        [HttpPut("{id}/avatar")]
+        public async Task<IActionResult> UpdateAvatar(Guid id, IFormFile file)
+        {
+            if (id == Guid.Empty || file == null)
+            {
+                return BadRequest("Your request is invalid!");
+            }
+
+            var result = await _mediator.Send(new UpdateAvatarCommand { UserId = id, FormFile = file });
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Error);
+            }
+
+            return Ok(new { Url = result.Data});
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

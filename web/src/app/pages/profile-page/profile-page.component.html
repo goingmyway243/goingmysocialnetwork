@@ -1,27 +1,66 @@
 <div class="flex flex-col align-center justify-center">
-  <div class="flex gap-4 bg-blue-500 w-full h-64 justify-end items-end p-4">
+  <div class="cover flex gap-4 w-full h-64 justify-end items-end p-4 rounded-md bg-gradient-to-b from-blue-500 to-pink-300">
     <button mat-raised-button>
       <mat-icon matSuffix>photo_camera</mat-icon>
       Upload image
     </button>
   </div>
 
-  <div class="flex items-center gap-4 border-b-2 border-gray-200 pb-4 mt-2 xl:-mt-6 xl:items-end">
-    <img class="w-32 h-32 rounded-full" src="/imgs/default-avatar.png"/>
-    <div class="flex flex-col gap-2 py-2">
-      <div class="text-black text-2xl font-bold">Light</div>
-      <div class="text-black text-sm">Software Engineer</div>
+  <div class="flex flex-col border-b-2 border-gray-200 pb-4 mt-2 xl:-mt-6">
+    <div class="flex items-center gap-4 xl:items-end">
+      <div class="relative group">
+        @if (uploadedAvatar()) {
+          <img class="w-32 h-32 rounded-full border-[4px] object-cover" [src]="uploadedAvatar()"/>
+        }
+        @else {
+          <img class="w-32 h-32 rounded-full border-[4px] object-cover" [src]="avatar()"/>
+        }
+        <label for="avatar-input" class="cursor-pointer absolute inset-0 flex items-center justify-center rounded-[50%] bg-white bg-opacity-30 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+          <mat-icon class="text-gray-500">photo_camera</mat-icon>
+        </label>
+        <input id="avatar-input" type="file" accept="image/*" hidden (change)="onFileSelected($event)">
+      </div>
+      <div class="flex flex-col gap-2 py-2">
+        <div class="text-black text-3xl font-bold">{{ currentUser()?.fullName }}</div>
+        <div class="text-black text-lg">{{ currentUser()?.email }}</div>
+      </div>
     </div>
+
+    @if (uploadedAvatar()) {
+      <div class="flex w-[128px] gap-2 justify-center">
+        <button mat-icon-button color="primary" (click)="uploadAvatar()">
+          <mat-icon>check</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="revokeUploadedAvatar()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    }
   </div>
 
   <mat-tab-group class="mt-2">
     <mat-tab label="Posts">
       <div class="flex flex-col gap-4 py-4">
-        <create-post [fullSize]="true" [placeholder]="'What\'s on your mind?'"></create-post>
+        <create-post [fullSize]="true" [placeholder]="placeholderText()"></create-post>
+        @if (postLoaded) {
+          @if (postItems().length === 0) {
+            <div class="flex flex-col gap-4 self-center w-[50%] max-w-lg">
+              <img src="/imgs/empty/undraw_hello_ccwj.svg">
+              <div class="empty-message text-center text-xl">Nothing to see here yet! Try to share something awesome!</div>
+            </div>
+          }
+          @else {
+            <div class="post-container flex flex-col gap-4">
+              @for (item of postItems(); track $index) {
+                <post-item [postData]="item"></post-item>
+              }
+            </div>
+          }
+        }
       </div>
     </mat-tab>
     <mat-tab label="About"></mat-tab>
     <mat-tab label="Friends"></mat-tab>
-    <mat-tab label="Photos"></mat-tab>
+    <!-- <mat-tab label="Photos"></mat-tab> -->
   </mat-tab-group>
 </div>

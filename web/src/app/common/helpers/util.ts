@@ -1,7 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Content } from "../models/content.model";
-import { environment } from "../../../environments/environment";
-import * as moment from 'moment';
+import moment from 'moment';
 
 export class Util {
     static getHttpErrorMessage(httpError: HttpErrorResponse): string {
@@ -44,9 +42,5 @@ export class Util {
         else {
             return Util.formatDate(date);
         }
-    }
-
-    static getFullLinkContent(content: Content): string {
-        return environment.baseUrl + 'app-images/' + content.postId + '/' + content.linkContent;
     }
 }

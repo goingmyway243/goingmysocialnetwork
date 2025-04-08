@@ -1,7 +1,7 @@
 <div class="signup-page">
   <div class="signup-form-container">
     <div class="form-title">Sign up</div>
-    <mat-stepper #stepper [linear]="true" class="stepper-container">
+    <mat-stepper #stepper [linear]="true" class="stepper-container" (selectedIndexChange)="onStepperSelectionIndexChange()">
       <mat-step [stepControl]="firstForm" label="Create your account">
         <div class="first-step-wrapper">
           <form [formGroup]="firstForm" class="first-form">
@@ -52,6 +52,13 @@
               </mat-error>
             </mat-form-field>
           </form>
+
+          @if (error()) {
+            <div class="err-msg px-4 text-center text-red-700">
+              {{ error() }}
+            </div>
+          }
+
           <button mat-flat-button color="primary" (click)="onSubmit(stepper)">
             <app-loader [hidden]="!isLoading()"></app-loader>
             <span [hidden]="isLoading()">Register</span>

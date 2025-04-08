@@ -12,6 +12,12 @@ import { ISearchUserRequest } from "../dtos/user-api.dto";
 export class UserApiService extends BaseApiService {
     protected override apiUrl: string = `${environment.baseUrl}/api/users`;
 
+    updateUserAvatar(userId: string, avatarFile: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', avatarFile);
+        return this.put(`${userId}/avatar`, formData);
+    }
+
     searchUsers(request: ISearchUserRequest): Observable<IPagedResponse<User>> {
         return this.post('search', request);
     }
