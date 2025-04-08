@@ -1,7 +1,7 @@
 <div class="user-item">
     <user-avatar [user]="userData"></user-avatar>
     @if (userData.id === currentUserId) {
-        <button class="action-button" mat-flat-button>
+        <button class="action-button" mat-flat-button (click)="navigateToProfile()">
             <mat-icon>person</mat-icon>
             View Profile
         </button>

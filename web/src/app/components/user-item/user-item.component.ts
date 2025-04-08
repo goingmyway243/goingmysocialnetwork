@@ -6,6 +6,7 @@ import { User } from '../../common/models/user.model';
 import { FriendshipStatus } from '../../common/enums/friendship-status.enum';
 import { AuthService } from '../../common/services/auth.service';
 import { FriendshipApiService } from '../../common/services/friendship-api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'user-item',
@@ -21,6 +22,7 @@ export class UserItemComponent implements OnInit {
   currentUserId: string = '';
 
   constructor(
+    private router: Router,
     private authSvc: AuthService,
     private friendshipApiSvc: FriendshipApiService
   ) { }
@@ -33,8 +35,20 @@ export class UserItemComponent implements OnInit {
     this.friendshipApiSvc.sendFriendRequest({
       userId: this.currentUserId,
       friendId: friend.id
-    }).subscribe(fs =>{
+    }).subscribe(fs => {
       friend.friendship = fs;
     })
+  }
+
+  unFriend(friend: User): void {
+    this.removeFriendRequest(friend);
+  }
+
+  removeFriendRequest(friend: User): void {
+    this.friendshipApiSvc.removeFriend(friend.friendship!.id).subscribe(() => friend.friendship = undefined);
+  }
+
+  public navigateToProfile(): void {
+    this.router.navigate(['/profile']);
   }
 }

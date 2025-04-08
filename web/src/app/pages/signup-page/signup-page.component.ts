@@ -65,8 +65,12 @@ export class SignupPageComponent {
     this.router.navigate(['/login']);
   }
 
+  onStepperSelectionIndexChange(): void {
+    this.error.set('');
+  }
+
   onSubmit(stepper: MatStepper) {
-    if (this.isLoading()) {
+    if (this.firstForm.invalid || this.secondForm.invalid || this.isLoading()) {
       return;
     }
 

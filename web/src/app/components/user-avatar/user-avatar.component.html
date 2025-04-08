@@ -1,9 +1,9 @@
 <div class="user-avatar">
   <div class="avatar">
-    <img src="imgs/default-avatar.png" />
+    <img [src]="avatar()" />
   </div>
-  <div class="user-info" *ngIf="showInfo && user">
-    <span class="user-name">{{ user.fullName }}</span>
-    <span class="description">{{ description || user.email }}</span>
+  <div class="user-info" *ngIf="showInfo && user()">
+    <span class="user-name">{{ user()!.fullName }}</span>
+    <span class="description">{{ description || user()!.email }}</span>
   </div>
 </div>
