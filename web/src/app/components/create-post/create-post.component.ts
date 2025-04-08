@@ -22,7 +22,7 @@ export class CreatePostComponent extends AppCommonComponent {
   @Output() onCreatePost = new EventEmitter<Post>();
 
 
-  constructor(public dialog: MatDialog, authSvc: AuthService) {
+  constructor(private dialog: MatDialog, authSvc: AuthService) {
     super(authSvc);
 
     this.currentUser = authSvc.getCurrentUser();
