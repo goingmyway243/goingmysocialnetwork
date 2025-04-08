@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 import { PostApiService } from '../../common/services/post-api.service';
 import { environment } from '../../../environments/environment';
 import { UserApiService } from '../../common/services/user-api.service';
+import { MatDialog } from '@angular/material/dialog';
+import { NotificationDialogComponent } from '../../dialogs/notification-dialog/notification-dialog.component';
 
 
 @Component({
@@ -40,7 +42,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     private router: Router,
     private authSvc: AuthService,
     private userApiSvc: UserApiService,
-    private postApiSvc: PostApiService
+    private postApiSvc: PostApiService,
+    private dialog: MatDialog
   ) {
     effect(() => {
       if (this.currentUser() && !this.postLoaded) {
@@ -94,6 +97,19 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
           this.revokeUploadedAvatar();
           this.avatar.set(cacheBustedUrl);
+
+          this.dialog.open(NotificationDialogComponent, {
+            data: {
+              message: 'Avatar uploaded! Reload the page to see the changes fully.',
+              durationMs: 3000
+            },
+            position: {
+              top: '84px',
+              right: '12px'
+            },
+            maxWidth: '320px',
+            panelClass: 'custom-panel-dialog'
+          });
         }
       });
   }
