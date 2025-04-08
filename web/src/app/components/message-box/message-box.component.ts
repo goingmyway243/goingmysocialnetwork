@@ -25,7 +25,7 @@ export class MessageBoxComponent implements OnInit {
 
   ngOnInit(): void {
     this.authSvc.currentUser$.subscribe(user => {
-      if (user) {
+      if (user && this.authSvc.isAuthenticated()) {
         this.chatroomApiSvc.searchChatrooms({
           searchText: '',
           userId: user.id,

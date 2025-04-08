@@ -52,7 +52,10 @@
               </mat-error>
             </mat-form-field>
           </form>
-          <button mat-flat-button color="primary" (click)="onSubmit(stepper)">Register</button>
+          <button mat-flat-button color="primary" (click)="onSubmit(stepper)">
+            <app-loader [hidden]="!isLoading()"></app-loader>
+            <span [hidden]="isLoading()">Register</span>
+          </button>
         </div>
       </mat-step>
 
