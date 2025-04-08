@@ -81,7 +81,6 @@ export class SignupPageComponent {
         return throwError(() => new Error("Something went wrong: " + err.error));
       }))
       .subscribe(result => {
-        console.log(result);
         stepper.next();
       });
   }

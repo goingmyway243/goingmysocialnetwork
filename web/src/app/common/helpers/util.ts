@@ -29,8 +29,6 @@ export class Util {
         let date = new Date(time.valueOf());
         let diff = Math.round((now.getTime() - date.getTime()) / 60000);
 
-        console.log(diff);
-
         if (diff < 1) {
             return 'Just now';
         } else if (diff < 60) {
