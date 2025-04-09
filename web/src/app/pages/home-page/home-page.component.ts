@@ -34,7 +34,7 @@ export class HomePageComponent implements OnInit {
       if (this.currentUser()) {
         this.postApiSvc.searchPosts({
           pagedRequest: {
-            pageIndex: 0,
+            cursorTimestamp: new Date(Date.now()),
             pageSize: 10
           },
           currentUserId: this.currentUser()!.id

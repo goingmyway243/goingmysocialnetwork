@@ -26,9 +26,10 @@ public class SearchCommentsQueryHandler : IRequestHandler<SearchCommentsQuery, P
         var totalCount = await searchQuery.CountAsync(cancellationToken);
 
         var listComments = await searchQuery
+            .Where(c => c.CreatedAt < pagedRequest.CursorTimestamp)
+            .OrderByDescending(c => c.CreatedAt)
             .Skip(pagedRequest.SkipCount)
             .Take(pagedRequest.PageSize)
-            .OrderByDescending(c => c.CreatedAt)
             .Include(c => c.User)
             .ToListAsync(cancellationToken);
 

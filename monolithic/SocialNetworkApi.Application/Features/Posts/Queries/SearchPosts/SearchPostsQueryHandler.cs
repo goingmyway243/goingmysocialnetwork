@@ -40,7 +40,8 @@ public class SearchPostsQueryHandler : IRequestHandler<SearchPostsQuery, PagedRe
 
         var totalCount = await query.CountAsync();
 
-        query = query.OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt)
+        query = query.Where(p => (p.ModifiedAt ?? p.CreatedAt) < pagedRequest.CursorTimestamp)
+            .OrderByDescending(p => p.ModifiedAt ?? p.CreatedAt)
             .Skip(pagedRequest.SkipCount)
             .Take(pagedRequest.PageSize);
 

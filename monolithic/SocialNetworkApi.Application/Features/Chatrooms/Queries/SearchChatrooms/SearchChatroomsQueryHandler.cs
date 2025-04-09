@@ -37,23 +37,21 @@ public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery,
 
         var totalCount = await searchQuery.CountAsync(cancellationToken);
 
-        searchQuery = searchQuery
+        var aggreatedSearchQuery = searchQuery
+            .Include(cr => cr.Participants)
+            .Select(cr => new
+            {
+                Chatroom = cr,
+                LatestMessage = cr.ChatMessages.OrderByDescending(m => m.CreatedAt).FirstOrDefault()
+            })
+            .OrderByDescending(p => p.LatestMessage != null ? p.LatestMessage.CreatedAt : DateTime.UtcNow.AddYears(-39))
             .Skip(pagedRequest.SkipCount)
             .Take(pagedRequest.PageSize);
 
-        var chatrooms = await searchQuery
-            .Include(cr => cr.Participants)
-            .ToListAsync(cancellationToken);
-
-        var latestMessages = await searchQuery.Select(cr =>
-            cr.ChatMessages.OrderByDescending(m => m.CreatedAt)
-                .FirstOrDefault()
-        )
-        .ToListAsync(cancellationToken);
-
+        var chatrooms = await aggreatedSearchQuery.ToListAsync(cancellationToken);
 
         var chatroomParticipantIds = chatrooms
-            .SelectMany(cr => cr.Participants.Select(p => p.UserId))
+            .SelectMany(cr => cr.Chatroom.Participants.Select(p => p.UserId))
             .Distinct()
             .ToList();
 
@@ -64,13 +62,13 @@ public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery,
         var chatroomDtos = chatrooms.Select(chatroom =>
             new ChatroomDto
             {
-                Id = chatroom.Id,
-                ChatroomName = chatroom.ChatroomName,
-                Participants = chatroom.Participants
+                Id = chatroom.Chatroom.Id,
+                ChatroomName = chatroom.Chatroom.ChatroomName,
+                Participants = chatroom.Chatroom.Participants
                     .Where(p => distinctUsers.ContainsKey(p.UserId))
                     .Select(p => _mapper.Map<UserDto>(distinctUsers[p.UserId]))
                     .ToList(),
-                LatestMessage = _mapper.Map<ChatMessageDto>(latestMessages.FirstOrDefault(m => m?.ChatroomId == chatroom.Id))
+                LatestMessage = _mapper.Map<ChatMessageDto>(chatroom.LatestMessage)
             }
         )
         .OrderByDescending(cr => cr?.LatestMessage?.CreatedAt)

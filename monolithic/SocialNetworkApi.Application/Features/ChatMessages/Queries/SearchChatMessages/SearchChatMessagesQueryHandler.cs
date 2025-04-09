@@ -33,6 +33,7 @@ public class SearchChatMessagesQueryHandler : IRequestHandler<SearchChatMessages
         var totalCount = await searchQuery.CountAsync(cancellationToken);
 
         var messages = await searchQuery
+            .Where(m => m.CreatedAt < pagedRequest.CursorTimestamp)
             .OrderByDescending(m => m.CreatedAt)
             .Skip(pagedRequest.SkipCount)
             .Take(pagedRequest.PageSize)
