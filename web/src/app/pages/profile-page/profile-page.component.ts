@@ -13,6 +13,7 @@ import { environment } from '../../../environments/environment';
 import { UserApiService } from '../../common/services/user-api.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NotificationDialogComponent } from '../../dialogs/notification-dialog/notification-dialog.component';
+import { Util } from '../../common/helpers/util';
 
 
 @Component({
@@ -49,7 +50,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       if (this.currentUser() && !this.postLoaded) {
         this.postApiSvc.searchPosts({
           pagedRequest: {
-            pageIndex: 0,
+            cursorTimestamp: Util.getUtcNow(),
             pageSize: 10
           },
           currentUserId: this.currentUser()!.id,
