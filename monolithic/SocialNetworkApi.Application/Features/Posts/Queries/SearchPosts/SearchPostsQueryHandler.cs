@@ -53,6 +53,7 @@ public class SearchPostsQueryHandler : IRequestHandler<SearchPostsQuery, PagedRe
                         Document = p,
                         SortDate = p.ModifiedAt ?? p.CreatedAt
                     })
+                    .Match(p => p.SortDate < pagedRequest.CursorTimestamp)
                     .SortByDescending(p => p.SortDate)
                     .Project(p => p.Document)
                     .Skip(pagedRequest.SkipCount)
@@ -65,7 +66,8 @@ public class SearchPostsQueryHandler : IRequestHandler<SearchPostsQuery, PagedRe
         var existingLikeByUser = await _likeRepository.FindAsync(l => l.UserId == request.CurrentUserId && posts.Select(p => p.Id).Contains(l.PostId));
 
         var result = posts.Select(_mapper.Map<PostDto>).ToList();
-        result.ForEach(p => {
+        result.ForEach(p =>
+        {
             p.IsLikedByUser = existingLikeByUser.FirstOrDefault(l => l.PostId == p.Id) != null;
 
             var userInfo = distincUsers.FirstOrDefault(u => u.Id == p.UserId);

@@ -23,6 +23,7 @@
                         @for (item of postItems(); track $index) {
                             <post-item [postData]="item"></post-item>
                         }
+                        <app-loader class="self-center" [hidden]="!isLoading()"></app-loader>
                     }
                 }
             </div>
@@ -50,6 +51,7 @@
                         @for (item of userItems(); track $index) {
                             <user-item [userData]="item"></user-item>
                         }
+                        <app-loader class="self-center" [hidden]="!isLoading()"></app-loader>
                     }
                 }
             </div>

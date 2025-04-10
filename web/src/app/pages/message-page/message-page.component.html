@@ -14,13 +14,14 @@
                 <div class="chat-header">
                     <user-avatar [user]="chatUser()"></user-avatar>
                 </div>
-                <div class="chat-messages">
+                <div class="chat-messages" #messageScrollDiv (scroll)="onMesasageContainerScroll()">
                     @for (item of chatMessages(); track $index) {
                         <div class="message"
                             [class.mine]="item.userId === chatUser()?.id">
                             <p>{{ item.message }}</p>
                         </div>
                     }
+                    <app-loader class="self-center" [hidden]="!isMessageLoading()"></app-loader>
                 </div>
                 <div class="chat-input">
                     <input type="text" placeholder="Aa" [(ngModel)]="inputMessage" (keydown)="onKeyPress($event)">
@@ -30,7 +31,7 @@
         
             <!-- Sidebar -->
             <div class="side-bar">
-                <div class="chat-list">
+                <div class="chat-list" #chatroomScrollDiv (scroll)="onChatroomContainerScroll()">
                     @for (item of chatrooms(); track $index) {
                         <div class="chat-item" [class.active]="item.id === selectedChatroom()?.id" (click)="changeChatroom(item)">
                             <message-item class="chatroom" [chatroomData]="item"></message-item>

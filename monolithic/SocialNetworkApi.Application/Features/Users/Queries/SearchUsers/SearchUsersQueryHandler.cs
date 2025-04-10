@@ -44,6 +44,7 @@ public class SearchUsersQueryHandler : IRequestHandler<SearchUsersQuery, PagedRe
                         Document = p,
                         SortDate = p.ModifiedAt ?? p.CreatedAt
                     })
+                    .Match(p => p.SortDate < pagedRequest.CursorTimestamp)
                     .SortByDescending(p => p.SortDate)
                     .Project(p => p.Document)
                     .Skip(pagedRequest.SkipCount)

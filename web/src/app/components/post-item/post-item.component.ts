@@ -86,7 +86,7 @@ export class PostItemComponent implements OnInit {
       this.commentApiSvc.searchComments({
         postId: this.postData.id,
         pagedRequest: {
-          pageIndex: 0,
+          cursorTimestamp: Util.getUtcNow(),
           pageSize: 10
         }
       }).subscribe(result => this.postComments.set(result.items));

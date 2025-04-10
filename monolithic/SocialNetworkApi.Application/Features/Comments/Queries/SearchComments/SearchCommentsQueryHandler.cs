@@ -28,6 +28,8 @@ public class SearchCommentsQueryHandler : IRequestHandler<SearchCommentsQuery, P
 
         var totalCount = await _commentRepository.GetAll().CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 
+        filter &= builder.Lt(c => c.CreatedAt, pagedRequest.CursorTimestamp);
+        
         var listComments = await _commentRepository.GetAll()
             .Find(filter)
             .Skip(pagedRequest.SkipCount)

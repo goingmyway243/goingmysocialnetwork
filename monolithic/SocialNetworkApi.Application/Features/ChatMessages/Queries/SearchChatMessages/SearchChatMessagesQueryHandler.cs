@@ -37,6 +37,8 @@ public class SearchChatMessagesQueryHandler : IRequestHandler<SearchChatMessages
 
         var totalCount = await _chatMessageRepository.GetAll().CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 
+        filter &= builder.Lt(m => m.CreatedAt, pagedRequest.CursorTimestamp);
+        
         var messages = await _chatMessageRepository.GetAll()
             .Find(filter)
             .SortByDescending(m => m.CreatedAt)

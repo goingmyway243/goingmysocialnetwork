@@ -17,6 +17,7 @@
         @for (item of postItems(); track $index) {
           <post-item [postData]="item"></post-item>
         }
+        <app-loader class="self-center" [hidden]="!isLoading()"></app-loader>
       </div>
     }
   }

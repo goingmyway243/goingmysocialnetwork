@@ -8,6 +8,11 @@ using SocialNetworkApi.Domain.Interfaces;
 
 namespace SocialNetworkApi.Application.Features.Chatrooms.Queries;
 
+internal class ChatroomWithMessages : ChatroomEntity
+{
+    public IEnumerable<ChatMessageEntity> ChatMessages { get; set; } = new List<ChatMessageEntity>();
+}
+
 public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery, PagedResultDto<ChatroomDto>>
 {
     private readonly IRepository<ChatroomEntity> _chatroomRepository;
@@ -41,23 +46,32 @@ public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery,
         var totalCount = await _chatroomRepository.GetAll().CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 
         var chatrooms = await _chatroomRepository.GetAll()
-            .Find(filter)
+            .Aggregate()
+            .Match(filter)
+            .Lookup<ChatroomEntity, ChatMessageEntity, ChatroomWithMessages>(
+                _chatMessageRepository.GetAll(),
+                cr => cr.Id,
+                cm => cm.ChatroomId,
+                cr => cr.ChatMessages
+            )
+            .Project(cr => new
+            {
+                Chatroom = new ChatroomEntity
+                {
+                    Id = cr.Id,
+                    ChatroomName = cr.ChatroomName,
+                    ParticipantIds = cr.ParticipantIds
+                },
+                LatestMessage = cr.ChatMessages.OrderByDescending(m => m.CreatedAt).FirstOrDefault(),
+                SortDate = cr.ChatMessages.Any() ? cr.ChatMessages.Max(m => m.CreatedAt) : DateTime.UtcNow.AddYears(-39)
+            })
+            .SortByDescending(cr => cr.SortDate)
             .Skip(pagedRequest.SkipCount)
             .Limit(pagedRequest.PageSize)
             .ToListAsync(cancellationToken);
 
-        var chatroomIds = chatrooms.Select(cr => cr.Id).ToList();
-
-        var latestMessages = await _chatMessageRepository.GetAll()
-            .Aggregate()
-            .Match(m => chatroomIds.Contains(m.ChatroomId))
-            .SortByDescending(m => m.CreatedAt)
-            .Group(m => m.ChatroomId, g => g.First())
-            .ToListAsync(cancellationToken);
-
-
         var chatroomParticipantIds = chatrooms
-            .SelectMany(cr => cr.ParticipantIds)
+            .SelectMany(cr => cr.Chatroom.ParticipantIds)
             .Distinct()
             .ToList();
 
@@ -67,13 +81,13 @@ public class SearchChatroomsQueryHandler : IRequestHandler<SearchChatroomsQuery,
         var chatroomDtos = chatrooms.Select(chatroom =>
             new ChatroomDto
             {
-                Id = chatroom.Id,
-                ChatroomName = chatroom.ChatroomName,
-                Participants = chatroom.ParticipantIds
+                Id = chatroom.Chatroom.Id,
+                ChatroomName = chatroom.Chatroom.ChatroomName,
+                Participants = chatroom.Chatroom.ParticipantIds
                     .Where(p => distinctUsers.ContainsKey(p))
                     .Select(p => _mapper.Map<UserDto>(distinctUsers[p]))
                     .ToList(),
-                LatestMessage = _mapper.Map<ChatMessageDto>(latestMessages.FirstOrDefault(m => m.ChatroomId == chatroom.Id))
+                LatestMessage = _mapper.Map<ChatMessageDto>(chatroom.LatestMessage)
             }
         )
         .OrderByDescending(cr => cr?.LatestMessage?.CreatedAt)

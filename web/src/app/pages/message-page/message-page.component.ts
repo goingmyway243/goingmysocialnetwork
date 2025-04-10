@@ -1,4 +1,4 @@
-import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, ElementRef, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { UserAvatarComponent } from "../../components/user-avatar/user-avatar.component";
 import { MessageItemComponent } from "../../components/message-item/message-item.component";
@@ -11,24 +11,35 @@ import { ChatMessage } from '../../common/models/chat-message.model';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../common/services/chat.service';
 import { ActivatedRoute } from '@angular/router';
+import { Util } from '../../common/helpers/util';
+import { AppLoaderComponent } from "../../components/app-loader/app-loader.component";
 
 @Component({
   selector: 'app-message-page',
   standalone: true,
-  imports: [FormsModule, MatIconModule, UserAvatarComponent, MessageItemComponent],
+  imports: [FormsModule, MatIconModule, UserAvatarComponent, MessageItemComponent, AppLoaderComponent],
   templateUrl: './message-page.component.html',
   styleUrl: './message-page.component.scss'
 })
 export class MessagePageComponent implements OnInit, OnDestroy {
+  @ViewChild('messageScrollDiv') messageScrollDiv!: ElementRef;
+  @ViewChild('chatroomScrollDiv') chatroomScrollDiv!: ElementRef;
+
   currentUser = signal<User | null>(null);
   chatrooms = signal<Chatroom[]>([]);
   selectedChatroom = signal<Chatroom | null>(null);
   chatMessages = signal<ChatMessage[]>([]);
   chatUser = computed(() => this.selectedChatroom()?.participants?.filter(p => p.id !== this.currentUser()?.id)[0] ?? null);
+  isMessageLoading = signal(false);
+  isChatroomLoading = signal(false);
 
   initiated: boolean = false;
   inputMessage: string = '';
   chatroomIdParam: string = '';
+  lastMessageTimestamp: Date = Util.getUtcNow();
+  gotLastMessage: boolean = false;
+  searchChatroomIndex: number = 0;
+  gotLastChatroom: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -54,7 +65,7 @@ export class MessagePageComponent implements OnInit, OnDestroy {
           userId: user.id,
           searchText: '',
           pagedRequest: {
-            pageIndex: 0,
+            pageIndex: this.searchChatroomIndex,
             pageSize: 20
           }
         }).subscribe(result => {
@@ -64,7 +75,7 @@ export class MessagePageComponent implements OnInit, OnDestroy {
           const selectedChatroom = this.chatroomIdParam
             ? this.chatrooms().find(c => c.id === this.chatroomIdParam)
             : this.chatrooms()[0];
-            
+
           if (selectedChatroom) {
             this.changeChatroom(selectedChatroom);
           }
@@ -99,15 +110,34 @@ export class MessagePageComponent implements OnInit, OnDestroy {
 
     this.selectedChatroom.set(chatroom);
 
+    // Reset message's values
+    this.chatMessages.set([]);
+    this.lastMessageTimestamp = Util.getUtcNow();
+
+    this.loadMessages(chatroom);
+  }
+
+  private loadMessages(chatroom: Chatroom) {
+    this.isMessageLoading.set(true);
+
     this.chatMessageApiSvc.searchChatMessages({
       searchText: '',
       chatroomId: chatroom.id,
       pagedRequest: {
-        pageIndex: 1,
-        pageSize: 11
+        cursorTimestamp: this.lastMessageTimestamp,
+        pageSize: 20
       }
     }).subscribe(result => {
-      this.chatMessages.set(result.items);
+      this.chatMessages.update(m => [...m, ...result.items]);
+
+      const lastItem = result.items[result.items.length - 1];
+      if (lastItem) {
+        this.lastMessageTimestamp = lastItem.createdAt;
+      }
+
+      this.gotLastMessage = result.totalCount <= this.chatMessages().length;
+
+      this.isMessageLoading.set(false);
     });
   }
 
@@ -129,5 +159,46 @@ export class MessagePageComponent implements OnInit, OnDestroy {
     });
 
     this.inputMessage = '';
+  }
+
+  onChatroomContainerScroll() {
+    if (this.gotLastChatroom) {
+      return;
+    }
+
+    const element = this.chatroomScrollDiv.nativeElement;
+    const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
+
+    // load more chatrooms
+    if (this.currentUser() && atBottom && !this.isChatroomLoading()) {
+      this.isChatroomLoading.set(true);
+      
+      this.chatroomApiSvc.searchChatrooms({
+        userId: this.currentUser()!.id,
+        searchText: '',
+        pagedRequest: {
+          pageIndex: ++this.searchChatroomIndex,
+          pageSize: 20
+        }
+      }).subscribe(result => {
+        this.chatrooms.update(cr => [...cr, ...result.items]);
+        this.isChatroomLoading.set(false);
+        this.gotLastChatroom = result.totalCount <= this.chatrooms().length;
+      });
+    }
+  }
+
+  onMesasageContainerScroll() {
+    if (this.gotLastMessage) {
+      return;
+    }
+
+    const element = this.messageScrollDiv.nativeElement;
+    const atTop = element.scrollHeight + element.scrollTop === element.clientHeight;
+
+    // load more messages
+    if (this.selectedChatroom() && atTop && !this.isMessageLoading()) {
+      this.loadMessages(this.selectedChatroom()!);
+    }
   }
 }

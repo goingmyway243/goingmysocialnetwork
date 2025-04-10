@@ -22,6 +22,10 @@ export class Util {
         return moment.utc(utcDate).local().toDate();
     }
 
+    static getUtcNow(): Date {
+        return new Date(Date.now());
+    }
+
     static getTimeDiff(time: Date): string {
         let now = new Date();
         let date = new Date(time.valueOf());

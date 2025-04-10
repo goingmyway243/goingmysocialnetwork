@@ -14,6 +14,8 @@ export interface IUser {
     gender?: string;
     address?: string;
     city?: string;
+    createdAt: Date;
+    modifiedAt?: Date;
 }
 
 export class User implements IUser {
@@ -26,6 +28,8 @@ export class User implements IUser {
     bio?: string;
     location?: string;
     website?: string;
+    createdAt: Date;
+    modifiedAt?: Date;
 
     friendship?: Friendship;
 
@@ -39,5 +43,7 @@ export class User implements IUser {
         this.bio = user.bio;
         this.location = user.location;
         this.website = user.website;
+        this.createdAt = user.createdAt;
+        this.modifiedAt = user.modifiedAt
     }
 }
