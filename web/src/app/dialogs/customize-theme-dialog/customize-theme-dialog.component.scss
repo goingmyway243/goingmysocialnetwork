@@ -22,48 +22,12 @@
     width: 100%;
     gap: 20px;
 
-    .font-size,
     .color,
     .background {
       display: flex;
       flex-direction: column;
       width: 100%;
       gap: 4px;
-    }
-
-    .font-size {
-      >div {
-        display: flex;
-        gap: 16px;
-        padding: var(--common-padding);
-        background-color: var(--tertiary-color);
-        align-items: center;
-        border-radius: var(--common-border-radius);
-      }
-
-      .choose-size {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 4px;
-        flex: 1;
-        background-color: var(--secondary-color);
-
-        .font-size-1,
-        .font-size-2,
-        .font-size-3,
-        .font-size-4,
-        .font-size-5 {
-          width: 16px;
-          height: 16px;
-          background-color: var(--secondary-color);
-          border-radius: 50%;
-        }
-
-        .active {
-          background-color: var(--primary-color);
-        }
-      }
     }
 
     .color {
@@ -73,7 +37,7 @@
         justify-content: space-between;
         padding: var(--common-padding);
         border-radius: var(--common-border-radius);
-        background-color: var(--tertiary-color);
+        background-color: var(--light-color);
 
         .color-1,
         .color-2,
@@ -84,26 +48,27 @@
           height: 32px;
           border-radius: 50%;
           box-sizing: border-box;
+          cursor: pointer;
         }
 
         .color-1 {
-          background-color: hsl(252, 75%, 60%);
+          background-color: hsl(252, 100%, 60%);
         }
 
         .color-2 {
-          background-color: hsl(52, 75%, 60%);
+          background-color: hsl(42, 100%, 60%);
         }
 
         .color-3 {
-          background-color: hsl(352, 75%, 60%);
+          background-color: hsl(352, 100%, 60%);
         }
 
         .color-4 {
-          background-color: hsl(152, 75%, 60%);
+          background-color: hsl(120, 100%, 60%);
         }
 
         .color-5 {
-          background-color: hsl(202, 75%, 60%);
+          background-color: hsl(210, 100%, 60%);
         }
 
         .active {
@@ -126,6 +91,8 @@
           padding: var(--common-padding);
           border-radius: var(--common-border-radius);
           gap: 16px;
+          box-sizing: border-box;
+          cursor: pointer;
 
           >span {
             width: 32px;
@@ -136,22 +103,26 @@
         }
 
         .bg-1 {
-          background-color: white;
+          background-color: whitesmoke;
           color: black;
+
+          >span {
+            border-color: black;
+          }
         }
 
         .bg-2 {
-          background-color: hsl(252, 30%, 17%);
-          color: white;
+          background-color: hsl(252, 50%, 17%);
+          color: lightgray;
         }
 
         .bg-3 {
-          background-color: hsl(252, 30%, 10%);
+          background-color: hsl(252, 70%, 5%);
           color: white;
         }
 
         .active {
-          border: 2px solid var(--secondary-color);
+          border: 2px solid var(--primary-color);
         }
       }
     }

@@ -10,7 +10,7 @@
         flex-direction: column;
         border-top-left-radius: 12px;
         border-bottom-left-radius: 12px;
-        background-color: var(--theme-color);
+        background-color: var(--white-color);
 
         .chat-header {
             padding: 10px;
@@ -31,14 +31,14 @@
                 padding: 8px;
                 border-radius: 16px;
                 display: inline-block;
-                align-self: flex-end;
-                background-color: var(--secondary-color);
-                color: #fff;
-
+                background-color: var(--light-color);
+                color: var(--dark-color);
+                align-self: flex-start;
+                
                 &.mine {
-                    align-self: flex-start;
-                    background-color: var(--tertiary-color);
-                    color: #000;
+                    background-color: var(--primary-color);
+                    color: white;
+                    align-self: flex-end;
                 }
             }
         }
@@ -53,7 +53,7 @@
             input {
                 flex: 1;
                 padding: 8px 16px;
-                background: var(--tertiary-color);
+                background: var(--light-color);
                 border-radius: 16px;
                 border: none;
 
@@ -66,7 +66,7 @@
 
     .side-bar {
         flex: 3;
-        background-color: var(--theme-color);
+        background-color: var(--white-color);
         display: flex;
         flex-direction: column;
         border-top-right-radius: 12px;
@@ -86,11 +86,11 @@
                 transition: background-color 0.3s;
 
                 &.active {
-                    background-color: var(--secondary-color);
+                    background-color: var(--primary-color);
                 }
 
                 &:hover {
-                    background-color: var(--disabled-color);
+                    background-color: var(--secondary-color);
                 }
 
                 .chatroom {

@@ -11,7 +11,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid var(--tertiary-color);
+    border: 2px solid var(--light-color);
     border-radius: 64px;
     width: 75%;
     height: 80%;
@@ -87,14 +87,14 @@
       .welcome-text {
         text-align: center;
         opacity: 0.8;
-        color: var(--theme-color);
+        color: white;
         
         div {
           font-size: 20px;
         }
 
         .brand-name {
-          color: var(--reverse-theme-color);
+          color: black;
           font-size: 20px;
         }
       }
@@ -117,7 +117,7 @@
 
         .form-title {
           font-size: 40px;
-          color: var(--theme-color);
+          color: white;
         }
 
         .login-form {
@@ -136,7 +136,7 @@
           
           .forgot-password {
             align-self: flex-end;
-            color: var(--theme-color);
+            color: white;
             cursor: pointer;
 
             &:hover {
@@ -146,7 +146,7 @@
 
           .btn-signin {
             background-color: #21264D;
-            color: var(--theme-color);
+            color: white;
             border-radius: 12px;
             padding: 12px 24px;
             font-size: 16px;
@@ -166,7 +166,7 @@
 
           .fa-brands {
             background-color: #21264D;
-            color: var(--theme-color);
+            color: white;
             border-radius: 50%;
             padding: 12px;
             font-size: 16px;
@@ -185,11 +185,11 @@
 
         .signup-link  {
           text-align: center;
-          color: var(--theme-color);
+          color: white;
           cursor: pointer;
           
           .signup-link-text {
-            color: var(--reverse-theme-color);
+            color: black;
             cursor: pointer;
             
             &:hover {
