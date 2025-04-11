@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { CreatePostComponent } from "../create-post/create-post.component";
 import { UserAvatarComponent } from "../user-avatar/user-avatar.component";
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { AppCommonComponent } from '../app-common/app-common.component';
 import { AuthService } from '../../common/services/auth.service';
 import { filter } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { CustomizeThemeDialogComponent } from '../../dialogs/customize-theme-dialog/customize-theme-dialog.component';
 
 @Component({
     selector: 'app-sidebar',
@@ -17,8 +19,7 @@ export class SidebarComponent extends AppCommonComponent {
     activeMenu: string = 'home'; // Default active menu
     isSmallScreen: boolean = false;
 
-
-    constructor(public router: Router, private route: ActivatedRoute, authSvc: AuthService) {
+    constructor(private router: Router, private dialog: MatDialog, authSvc: AuthService) {
         super(authSvc);
         this.isSmallScreen = window.innerWidth < 768;
         window.addEventListener('resize', () => {
@@ -42,5 +43,18 @@ export class SidebarComponent extends AppCommonComponent {
 
     navigateTo(path: string): void {
         this.router.navigate([path]);
+    }
+
+    openCustomizeThemeDialog(): void {
+      const previousMenu = this.activeMenu;
+      this.activeMenu = 'customize-theme';
+      
+      this.dialog.open(CustomizeThemeDialogComponent, {
+        width: '50vw',
+        maxWidth: '50vw',
+        panelClass: ['custom-panel-dialog', '--with-shadow'],
+      }).afterClosed().subscribe(() =>{
+        this.activeMenu = previousMenu;
+      });
     }
 }

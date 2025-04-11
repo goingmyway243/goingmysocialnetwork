@@ -109,7 +109,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
               right: '12px'
             },
             maxWidth: '320px',
-            panelClass: 'custom-panel-dialog'
+            panelClass: 'custom-panel-dialog',
+            hasBackdrop: false
           });
         }
       });

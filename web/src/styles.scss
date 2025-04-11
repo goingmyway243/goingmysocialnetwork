@@ -9,6 +9,7 @@
   --common-padding: 12px 16px;
   --common-padding-vertical: 16px 12px;
   --small-padding: 8px 12px;
+  --common-border-radius: 12px;
   --theme-color: #ffffff;
   --reverse-theme-color: #000000;
   --primary-color: #0052FF;
@@ -92,8 +93,16 @@ button {
   }
 }
 
-.custom-panel-dialog .mat-mdc-dialog-surface {
-  border-radius: 12px;
+.custom-panel-dialog {
+  .mat-mdc-dialog-surface {
+    border-radius: 12px;
+  }
+
+  &.--with-shadow {
+    .mat-mdc-dialog-surface {
+      box-shadow: 0 0 16px var(--secondary-color);
+    }
+  }
 }
 
 .custom-menu {
