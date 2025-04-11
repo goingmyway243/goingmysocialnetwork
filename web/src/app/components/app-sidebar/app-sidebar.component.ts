@@ -50,8 +50,7 @@ export class SidebarComponent extends AppCommonComponent {
       this.activeMenu = 'customize-theme';
       
       this.dialog.open(CustomizeThemeDialogComponent, {
-        width: '50vw',
-        maxWidth: '50vw',
+        minWidth: '50vw',
         panelClass: ['custom-panel-dialog', '--with-shadow'],
       }).afterClosed().subscribe(() =>{
         this.activeMenu = previousMenu;

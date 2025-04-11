@@ -10,11 +10,11 @@
     <user-avatar [user]="currentUser" [mat-menu-trigger-for]="menu" [showInfo]="false"></user-avatar>
     <mat-menu #menu="matMenu" class="custom-menu">
       <ng-template matMenuContent>
-        <div mat-menu-item (click)="navigateToProfile()">
+        <div class="menu-item" mat-menu-item (click)="navigateToProfile()">
           <i class="fa-solid fa-user"></i>
           <span>Profile</span>
         </div>
-        <div mat-menu-item (click)="logout()">
+        <div class="menu-item" mat-menu-item (click)="logout()">
           <i class="fa-solid fa-right-from-bracket"></i>
           <span>Logout</span>
         </div>

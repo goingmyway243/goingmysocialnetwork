@@ -52,6 +52,7 @@
   font-weight: 600;
   margin: 0;
   padding: 0;
+  transition: 0.2s ease-in;
 }
 
 html,
@@ -82,7 +83,6 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: var(--light-color);
   border-radius: 4px;
 }
 
@@ -142,12 +142,19 @@ button {
 }
 
 .custom-menu {
+  min-width: 150px !important;
+
   .mat-mdc-menu-item {
     padding: var(--common-padding);
+
+    &:hover {
+      background-color: var(--light-color) !important;
+    }
 
     .mat-mdc-menu-item-text {
       display: flex;
       gap: 12px;
+      color: var(--dark-color);
     }
   }
 }
@@ -168,5 +175,10 @@ button {
 @media screen and (max-width: 768px) {
   .mat-step-label {
     display: none !important;
+  }
+
+  .custom-panel-dialog {
+    max-width: none;
+    width: unset;
   }
 }

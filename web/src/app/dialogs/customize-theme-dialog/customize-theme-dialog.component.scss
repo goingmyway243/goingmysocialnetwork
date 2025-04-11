@@ -80,13 +80,14 @@
     .background {
       .choose-bg {
         display: flex;
-        gap: 32px;
+        gap: 16px;
 
         .bg-1,
         .bg-2,
         .bg-3 {
           display: flex;
           flex: 1;
+          min-width: 160px;
           align-items: center;
           padding: var(--common-padding);
           border-radius: var(--common-border-radius);
@@ -125,6 +126,14 @@
           border: 2px solid var(--primary-color);
         }
       }
+    }
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .customize-theme{
+    .background .choose-bg {
+      flex-direction: column;
     }
   }
 }

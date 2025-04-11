@@ -1,3 +1,7 @@
+* {
+  transition: none;
+}
+
 .login-page {
   display: flex;
   justify-content: center;
@@ -43,18 +47,20 @@
           position: absolute;
         }
 
-        .coin, .spring {
+        .coin,
+        .spring {
           animation: scale-down 3s ease-in-out alternate infinite;
         }
 
-        .dots, .stars {
+        .dots,
+        .stars {
           animation: scale-up 3s ease-in-out alternate infinite;
         }
 
         .rocket {
           animation: up-down 3s ease-in-out alternate infinite;
         }
-        
+
         .cloud {
           animation: left-right 3s ease-in-out alternate infinite;
         }
@@ -70,13 +76,13 @@
             transform: scale(1.05);
           }
         }
-        
+
         @keyframes up-down {
           to {
             transform: translateY(10px);
           }
         }
-        
+
         @keyframes left-right {
           to {
             transform: translateX(10px);
@@ -88,7 +94,7 @@
         text-align: center;
         opacity: 0.8;
         color: white;
-        
+
         div {
           font-size: 20px;
         }
@@ -133,7 +139,7 @@
             margin-top: -12px;
             width: 250px;
           }
-          
+
           .forgot-password {
             align-self: flex-end;
             color: white;
@@ -173,7 +179,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.3s ease, transform 0.3s ease;
             cursor: pointer;
 
             &:hover {
@@ -183,15 +188,15 @@
           }
         }
 
-        .signup-link  {
+        .signup-link {
           text-align: center;
           color: white;
           cursor: pointer;
-          
+
           .signup-link-text {
             color: black;
             cursor: pointer;
-            
+
             &:hover {
               text-decoration: underline;
             }
@@ -219,5 +224,5 @@
       }
     }
   }
-  
+
 }

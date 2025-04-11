@@ -25,6 +25,7 @@
       width: 100%;
       min-height: 100px;
       outline: none;
+      background: transparent;
     }
 
     .images-container {
@@ -74,7 +75,7 @@
     right: 12px;
     top: 12px;
     border-radius: 50%;
-    background: var(--disabled-color);
+    background: var(--light-color);
     width: 28px;
     height: 28px;
     cursor: pointer;
@@ -88,5 +89,11 @@
       top: 2.5px;
       left: 2.5px;
     }
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .create-post-dialog{
+    width: 85vw;
   }
 }
