@@ -1,0 +1,139 @@
+.customize-theme {
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  align-items: center;
+  text-align: center;
+  gap: 32px;
+
+  .title {
+    h2 {
+      font-size: 20px;
+    }
+
+    .text-muted {
+      color: gray;
+    }
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+
+    .color,
+    .background {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 4px;
+    }
+
+    .color {
+      .choose-color {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--common-padding);
+        border-radius: var(--common-border-radius);
+        background-color: var(--light-color);
+
+        .color-1,
+        .color-2,
+        .color-3,
+        .color-4,
+        .color-5 {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          box-sizing: border-box;
+          cursor: pointer;
+        }
+
+        .color-1 {
+          background-color: hsl(252, 100%, 60%);
+        }
+
+        .color-2 {
+          background-color: hsl(42, 100%, 60%);
+        }
+
+        .color-3 {
+          background-color: hsl(352, 100%, 60%);
+        }
+
+        .color-4 {
+          background-color: hsl(120, 100%, 60%);
+        }
+
+        .color-5 {
+          background-color: hsl(210, 100%, 60%);
+        }
+
+        .active {
+          border: 6px solid white;
+        }
+      }
+    }
+
+    .background {
+      .choose-bg {
+        display: flex;
+        gap: 16px;
+
+        .bg-1,
+        .bg-2,
+        .bg-3 {
+          display: flex;
+          flex: 1;
+          min-width: 160px;
+          align-items: center;
+          padding: var(--common-padding);
+          border-radius: var(--common-border-radius);
+          gap: 16px;
+          box-sizing: border-box;
+          cursor: pointer;
+
+          >span {
+            width: 32px;
+            height: 32px;
+            border: 4px solid lightgray;
+            border-radius: 50%;
+          }
+        }
+
+        .bg-1 {
+          background-color: whitesmoke;
+          color: black;
+
+          >span {
+            border-color: black;
+          }
+        }
+
+        .bg-2 {
+          background-color: hsl(252, 50%, 17%);
+          color: lightgray;
+        }
+
+        .bg-3 {
+          background-color: hsl(252, 70%, 5%);
+          color: white;
+        }
+
+        .active {
+          border: 2px solid var(--primary-color);
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .customize-theme{
+    .background .choose-bg {
+      flex-direction: column;
+    }
+  }
+}

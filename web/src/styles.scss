@@ -6,29 +6,44 @@
 @import "tailwindcss/utilities";
 
 :root {
+  --primary-hue: 252;
+  --dark-color-lightness: 17%;
+  --light-color-lightness: 95%;
+  --white-color-lightness: 100%;
+
+  --primary-color: hsl(var(--primary-hue), 100%, 60%);
+  --secondary-color: hsl(var(--primary-hue), 50%, 80%);
+  --tertiary-color: hsl(var(--primary-hue), 50%, 97%);
+  --info-color: hsl(var(--primary-hue), 100%, 85%);
+  --white-color: hsl(252, 30%, var(--white-color-lightness));
+  --light-color: hsl(252, 30%, var(--light-color-lightness));
+  --dark-color: hsl(252, 30%, var(--dark-color-lightness));
+
   --common-padding: 12px 16px;
   --common-padding-vertical: 16px 12px;
   --small-padding: 8px 12px;
-  --theme-color: #ffffff;
-  --reverse-theme-color: #000000;
-  --primary-color: #0052FF;
-  --secondary-color: #4D8FFF;
-  --tertiary-color: #F0F5FF;
+  --common-border-radius: 12px;
+
+  // override angular material variables
+  --mdc-filled-button-container-color: var(--primary-color);
+
   --disabled-color: #E8E8E8;
   --disabled-dark-color: #CCCCCC;
   --error-color: #FFB3B3;
   --success-color: #90EE90;
   --warning-color: #FFD1A1;
-  --info-color: #B3B3FF;
   --text-color-primary: #ffffff;
-  --text-color-secondary: #666666;
+  --text-color-secondary: #575757;
   --text-color-tertiary: #888888;
   --text-color-disabled: #CCCCCC;
   --text-color-error: #f02849;
   --text-color-success: #008000;
   --text-color-warning: #FFA500;
 
-  @include mat.menu-overrides((container-color: var(--theme-color)));
+  @include mat.menu-overrides((container-color: var(--white-color)));
+  @include mat.tabs-overrides((active-indicator-color: var(--primary-color),
+      active-focus-indicator-color: var(--primary-color),
+      active-hover-indicator-color: var(--primary-color)));
 }
 
 * {
@@ -37,6 +52,7 @@
   font-weight: 600;
   margin: 0;
   padding: 0;
+  transition: 0.2s ease-in;
 }
 
 html,
@@ -45,9 +61,29 @@ body {
 }
 
 body {
-  background: var(--tertiary-color);
+  background: var(--light-color);
+  color: var(--dark-color);
   padding: 0;
   margin: 0;
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--secondary-color);
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 4px;
 }
 
 input {
@@ -92,17 +128,33 @@ button {
   }
 }
 
-.custom-panel-dialog .mat-mdc-dialog-surface {
-  border-radius: 12px;
+.custom-panel-dialog {
+  .mat-mdc-dialog-surface {
+    border-radius: 12px;
+    background-color: var(--white-color);
+  }
+
+  &.--with-shadow {
+    .mat-mdc-dialog-surface {
+      box-shadow: 0 0 16px var(--secondary-color);
+    }
+  }
 }
 
 .custom-menu {
+  min-width: 150px !important;
+
   .mat-mdc-menu-item {
     padding: var(--common-padding);
+
+    &:hover {
+      background-color: var(--light-color) !important;
+    }
 
     .mat-mdc-menu-item-text {
       display: flex;
       gap: 12px;
+      color: var(--dark-color);
     }
   }
 }
@@ -123,5 +175,10 @@ button {
 @media screen and (max-width: 768px) {
   .mat-step-label {
     display: none !important;
+  }
+
+  .custom-panel-dialog {
+    max-width: none;
+    width: unset;
   }
 }

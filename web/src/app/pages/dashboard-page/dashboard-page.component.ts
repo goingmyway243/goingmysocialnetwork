@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { IdentityApiService } from '../../common/services/identity-api.service';
+import { ThemeManagerService } from '../../common/services/theme-manager.service';
 
 @Component({
   selector: 'dashboard-page',
@@ -31,7 +32,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   constructor
     (
       private router: Router,
-      private identityApiService: IdentityApiService
+      private identityApiService: IdentityApiService,
+      private themeManagerSvc: ThemeManagerService
     ) { }
 
   ngOnInit(): void {
@@ -42,6 +44,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     // Subscribe to router events
     this.subscribeRouterEvents();
+
+    // Load theme customization
+    this.themeManagerSvc.laodThemeCustomization();
   }
 
   private subscribeRouterEvents() {

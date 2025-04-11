@@ -1,5 +1,5 @@
 .message-box {
-  background: var(--theme-color);
+  background: var(--white-color);
   padding: var(--common-padding-vertical);
   display: flex;
   flex-direction: column;
@@ -36,7 +36,7 @@
       border-radius: 12px;
 
       &:hover {
-        background-color: var(--disabled-color);
+        background-color: var(--light-color);
       }
     }
   }

@@ -1,11 +1,16 @@
 .user-item {
     display: flex;
     justify-content: space-between;
-    background: var(--theme-color);
+    background: var(--white-color);
     border-radius: 16px;
     padding: var(--common-padding);
 
     .action-button {
+        // display: flex;
+        // align-items: center;
+        // gap: 8px;
+        // padding: 0 12px;
+        // background-color: var(--primary-color);
         border-radius: 8px;
     }
 }

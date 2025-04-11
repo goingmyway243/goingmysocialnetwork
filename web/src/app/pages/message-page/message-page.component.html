@@ -17,7 +17,7 @@
                 <div class="chat-messages" #messageScrollDiv (scroll)="onMesasageContainerScroll()">
                     @for (item of chatMessages(); track $index) {
                         <div class="message"
-                            [class.mine]="item.userId === chatUser()?.id">
+                            [class.mine]="item.userId === currentUser()?.id">
                             <p>{{ item.message }}</p>
                         </div>
                     }

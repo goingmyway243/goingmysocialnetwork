@@ -36,10 +36,10 @@
       <i class="fa-solid fa-chart-line"></i>
       <span>Analytics</span>
     </div> -->
-    <!-- <div class="menu-item">
+    <div class="menu-item" [class.--active]="activeMenu === 'customize-theme'" (click)="openCustomizeThemeDialog()">
       <i class="fa-solid fa-palette"></i>
       <span>Theme</span>
-    </div> -->
+    </div>
     <!-- <div class="menu-item">
       <i class="fa-solid fa-gear"></i>
       <span>Settings</span>

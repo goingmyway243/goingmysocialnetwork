@@ -38,8 +38,12 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit(): void {
     window.addEventListener('scroll', this.onScroll.bind(this));
-    
+
     this.authSvc.currentUser$.subscribe(user => {
+      if (!user) {
+        return;
+      }
+
       this.currentUser.set(user);
 
       this.postApiSvc.searchPosts({
@@ -73,10 +77,10 @@ export class HomePageComponent implements OnInit {
     if (this.gotLastPost) {
       return;
     }
-    
+
     const element = document.documentElement;
     const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
-    
+
     // load more items
     if (atBottom && !this.isLoading()) {
       this.postApiSvc.searchPosts({
