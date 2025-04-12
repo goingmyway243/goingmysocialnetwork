@@ -27,7 +27,7 @@
               </mat-error>
             </mat-form-field>
           </form>
-          <button mat-flat-button color="primary" matStepperNext>Next</button>
+          <button class="action-btn" mat-flat-button color="primary" matStepperNext>Next</button>
         </div>
       </mat-step>
 
@@ -59,7 +59,7 @@
             </div>
           }
 
-          <button mat-flat-button color="primary" (click)="onSubmit(stepper)">
+          <button class="action-btn" mat-flat-button color="primary" (click)="onSubmit(stepper)">
             <app-loader [hidden]="!isLoading()"></app-loader>
             <span [hidden]="isLoading()">Register</span>
           </button>
@@ -71,7 +71,7 @@
           <div>Congratulation</div>
           <mat-icon class="check-icon">check_circle</mat-icon>
           <div>Your account has been created successfully</div>
-          <button mat-flat-button color="primary" (click)="navigateToLogin()">
+          <button class="action-btn" mat-flat-button color="primary" (click)="navigateToLogin()">
             <mat-icon>arrow_back_ios</mat-icon>
             Go back to login
           </button>
