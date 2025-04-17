@@ -1,0 +1,6 @@
+@SocialNetworkMicroservices.Identity_HostAddress = http://localhost:5280
+
+GET {{SocialNetworkMicroservices.Identity_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

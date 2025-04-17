@@ -12,12 +12,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SocialNetworkMicroservices.ApiService\SocialNetworkMicroservices.ApiService.csproj" />
-    <ProjectReference Include="..\SocialNetworkMicroservices.Web\SocialNetworkMicroservices.Web.csproj" />
+    <ProjectReference Include="..\SocialNetworkMicroservices.Identity\SocialNetworkMicroservices.Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.0.0" />
     <PackageReference Include="Aspire.Hosting.Redis" Version="9.0.0" />
   </ItemGroup>
 
