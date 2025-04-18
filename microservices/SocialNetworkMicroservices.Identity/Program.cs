@@ -1,7 +1,6 @@
-using SocialNetworkMicroservices.Identity.Entities;
-using Microsoft.AspNetCore.Identity;
-using SocialNetworkMicroservices.Identity.Database;
 using Microsoft.EntityFrameworkCore;
+using SocialNetworkMicroservices.Identity.Database;
+using SocialNetworkMicroservices.Identity.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,11 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.AddIdentityCore<User>()
-    .AddUserStore<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("postgresql")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("goingmysocial-identity-db")));
 
 var app = builder.Build();
 
@@ -22,6 +20,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
 }
 
 app.UseHttpsRedirection();
