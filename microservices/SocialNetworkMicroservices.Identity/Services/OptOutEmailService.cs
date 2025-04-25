@@ -3,7 +3,7 @@ using SocialNetworkMicroservices.Identity.Entities;
 
 namespace SocialNetworkMicroservices.Identity.Services;
 
-public class OpOutEmailService : IEmailSender<User>
+public class OptOutEmailService : IEmailSender<User>
 {
     public Task SendConfirmationLinkAsync(User user, string email, string confirmationLink)
     {

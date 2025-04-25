@@ -15,15 +15,16 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new() { Title = "Identity API", Version = "v1" });
 });
 
+builder.Services.AddDataProtection();
+
 builder.Services.AddIdentityCore<User>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("goingmysocial-identity-db")));
 
-builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
-builder.Services.AddScoped<IEmailSender<User>, OpOutEmailService>();
-
+builder.Services.AddScoped<IEmailSender<User>, OptOutEmailService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -36,7 +37,7 @@ if (app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();
+    dbContext.Database.EnsureCreated();
 }
 
 app.UseHttpsRedirection();
