@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SocialNetworkMicroservices.Identity;
 using SocialNetworkMicroservices.Identity.Database;
 using SocialNetworkMicroservices.Identity.Entities;
 using SocialNetworkMicroservices.Identity.Services;
@@ -20,6 +21,13 @@ builder.Services.AddDataProtection();
 builder.Services.AddIdentityCore<User>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddIdentityServer()
+    .AddDeveloperSigningCredential()
+    .AddInMemoryIdentityResources(Config.IdentityResources)
+    .AddInMemoryApiResources(Config.ApiResources)
+    .AddInMemoryClients(Config.Clients)
+    .AddInMemoryApiScopes(Config.ApiScopes);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("goingmysocial-identity-db")));
