@@ -1,0 +1,6 @@
+@SocialNetworkMicroservices.Post_HostAddress = http://localhost:5286
+
+GET {{SocialNetworkMicroservices.Post_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

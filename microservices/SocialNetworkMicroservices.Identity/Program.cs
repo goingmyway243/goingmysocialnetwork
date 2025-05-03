@@ -50,6 +50,8 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
+app.UseIdentityServer();
+
 app.MapControllers();
 
 app.Run();
