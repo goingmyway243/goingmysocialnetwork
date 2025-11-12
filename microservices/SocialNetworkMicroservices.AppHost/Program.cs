@@ -9,14 +9,9 @@ var postgresql = builder.AddPostgres("postgresql")
 
 var database = postgresql.AddDatabase("goingmysocial-identity-db");
 
-var identity = builder.AddProject<Projects.SocialNetworkMicroservices_Identity>("identity")
-    .WithReference(database)
-    .WaitFor(database);
 
 builder.AddProject<Projects.SocialNetworkMicroservices_Post>("post")
     .WithReference(database)
-    .WithReference(cache)
-    .WithReference(identity)
-    .WaitFor(identity);
+    .WithReference(cache);
 
 builder.Build().Run();

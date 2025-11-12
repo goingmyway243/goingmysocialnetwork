@@ -12,7 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SocialNetworkMicroservices.Identity\SocialNetworkMicroservices.Identity.csproj" />
     <ProjectReference Include="..\SocialNetworkMicroservices.Post\SocialNetworkMicroservices.Post.csproj" />
   </ItemGroup>
 

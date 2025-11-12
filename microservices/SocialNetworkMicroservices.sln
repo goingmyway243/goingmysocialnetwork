@@ -9,11 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.Tests", "SocialNetworkMicroservices.Tests\SocialNetworkMicroservices.Tests.csproj", "{C3F78585-C75F-4D2B-BC66-11C120EE6A30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.Identity", "SocialNetworkMicroservices.Identity\SocialNetworkMicroservices.Identity.csproj", "{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.Share", "SocialNetworkMicroservices.Share\SocialNetworkMicroservices.Share.csproj", "{20CA3038-D5C0-4A90-BF7A-FAE939AE29A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.Post", "SocialNetworkMicroservices.Post\SocialNetworkMicroservices.Post.csproj", "{3977D4C2-3F09-4424-BCB1-928D26D898E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.Identity", "SocialNetworkMicroservices.Identity\SocialNetworkMicroservices.Identity.csproj", "{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,18 +61,6 @@ Global
 		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Release|x64.Build.0 = Release|Any CPU
 		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Release|x86.ActiveCfg = Release|Any CPU
 		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Release|x86.Build.0 = Release|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Debug|x64.Build.0 = Debug|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Debug|x86.Build.0 = Debug|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Release|x64.ActiveCfg = Release|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Release|x64.Build.0 = Release|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Release|x86.ActiveCfg = Release|Any CPU
-		{E2247C74-AA0F-4AB6-8BC6-79E842EBED6F}.Release|x86.Build.0 = Release|Any CPU
 		{20CA3038-D5C0-4A90-BF7A-FAE939AE29A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{20CA3038-D5C0-4A90-BF7A-FAE939AE29A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20CA3038-D5C0-4A90-BF7A-FAE939AE29A8}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -97,6 +85,18 @@ Global
 		{3977D4C2-3F09-4424-BCB1-928D26D898E2}.Release|x64.Build.0 = Release|Any CPU
 		{3977D4C2-3F09-4424-BCB1-928D26D898E2}.Release|x86.ActiveCfg = Release|Any CPU
 		{3977D4C2-3F09-4424-BCB1-928D26D898E2}.Release|x86.Build.0 = Release|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Debug|x64.Build.0 = Debug|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Debug|x86.Build.0 = Debug|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Release|x64.ActiveCfg = Release|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Release|x64.Build.0 = Release|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Release|x86.ActiveCfg = Release|Any CPU
+		{8B433FD6-42B5-4071-ACA1-0E9C0793DA20}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
