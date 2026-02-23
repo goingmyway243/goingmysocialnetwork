@@ -12,7 +12,6 @@ import { CustomizeThemeDialogComponent } from '../../dialogs/customize-theme-dia
     selector: 'app-sidebar',
     templateUrl: './app-sidebar.component.html',
     styleUrl: './app-sidebar.component.scss',
-    standalone: true,
     imports: [CreatePostComponent, UserAvatarComponent]
 })
 export class SidebarComponent extends AppCommonComponent {

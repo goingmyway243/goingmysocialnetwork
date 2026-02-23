@@ -10,11 +10,10 @@ import { AppLoaderComponent } from "../../components/app-loader/app-loader.compo
 import { catchError, throwError } from 'rxjs';
 
 @Component({
-  selector: 'create-post-dialog',
-  standalone: true,
-  imports: [UserAvatarComponent, FormsModule, MatIconModule, AppLoaderComponent],
-  templateUrl: './create-post-dialog.component.html',
-  styleUrl: './create-post-dialog.component.scss'
+    selector: 'create-post-dialog',
+    imports: [UserAvatarComponent, FormsModule, MatIconModule, AppLoaderComponent],
+    templateUrl: './create-post-dialog.component.html',
+    styleUrl: './create-post-dialog.component.scss'
 })
 export class CreatePostDialogComponent extends AppCommonComponent implements OnDestroy {
   isLoading = signal(false);

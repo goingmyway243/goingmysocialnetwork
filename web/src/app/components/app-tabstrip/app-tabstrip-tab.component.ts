@@ -2,10 +2,9 @@ import { CommonModule, NgTemplateOutlet } from '@angular/common';
 import { Component, Input, TemplateRef } from '@angular/core';
 
 @Component({
-  selector: 'app-tabstrip-tab',
-  standalone: true,
-  imports: [CommonModule, NgTemplateOutlet],
-  template: `
+    selector: 'app-tabstrip-tab',
+    imports: [CommonModule, NgTemplateOutlet],
+    template: `
   <div *ngIf="canLoaded" 
         class="opal-tab-content"
         [hidden]="shouldHide" 

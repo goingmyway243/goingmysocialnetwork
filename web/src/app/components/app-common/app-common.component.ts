@@ -3,10 +3,9 @@ import { User } from '../../common/models/user.model';
 import { AuthService } from '../../common/services/auth.service';
 
 @Component({
-  selector: 'app-common',
-  standalone: true,
-  imports: [],
-  template: ''
+    selector: 'app-common',
+    imports: [],
+    template: ''
 })
 export class AppCommonComponent implements OnInit {
   currentUser!: User | null;

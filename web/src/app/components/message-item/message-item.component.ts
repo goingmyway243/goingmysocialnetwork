@@ -7,11 +7,10 @@ import { CommonModule } from '@angular/common';
 import { Util } from '../../common/helpers/util';
 
 @Component({
-  selector: 'message-item',
-  standalone: true,
-  imports: [UserAvatarComponent, CommonModule],
-  templateUrl: './message-item.component.html',
-  styleUrl: './message-item.component.scss'
+    selector: 'message-item',
+    imports: [UserAvatarComponent, CommonModule],
+    templateUrl: './message-item.component.html',
+    styleUrl: './message-item.component.scss'
 })
 export class MessageItemComponent implements OnInit {
   @Input() chatroomData!: Chatroom;

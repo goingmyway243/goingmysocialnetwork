@@ -11,18 +11,17 @@ import { IdentityApiService } from '../../common/services/identity-api.service';
 import { ThemeManagerService } from '../../common/services/theme-manager.service';
 
 @Component({
-  selector: 'dashboard-page',
-  templateUrl: './dashboard-page.component.html',
-  styleUrl: './dashboard-page.component.scss',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    RequestBoxComponent,
-    MessageBoxComponent,
-    SidebarComponent,
-    AppHeaderComponent
-  ]
+    selector: 'dashboard-page',
+    templateUrl: './dashboard-page.component.html',
+    styleUrl: './dashboard-page.component.scss',
+    imports: [
+        CommonModule,
+        RouterOutlet,
+        RequestBoxComponent,
+        MessageBoxComponent,
+        SidebarComponent,
+        AppHeaderComponent
+    ]
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
   showOptionalSidebar = signal(false);

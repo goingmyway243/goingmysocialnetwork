@@ -5,11 +5,10 @@ import { FriendshipApiService } from '../../common/services/friendship-api.servi
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'request-item',
-  standalone: true,
-  imports: [UserAvatarComponent, MatIconModule],
-  templateUrl: './request-item.component.html',
-  styleUrl: './request-item.component.scss'
+    selector: 'request-item',
+    imports: [UserAvatarComponent, MatIconModule],
+    templateUrl: './request-item.component.html',
+    styleUrl: './request-item.component.scss'
 })
 export class RequestItemComponent {
   @Input() requestData!: Friendship;

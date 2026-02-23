@@ -13,21 +13,20 @@ import { catchError, throwError } from 'rxjs';
 import { AppLoaderComponent } from "../../components/app-loader/app-loader.component";
 
 @Component({
-  selector: 'app-signup-page',
-  standalone: true,
-  imports: [
-    MatStepperModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatDatepickerModule,
-    ReactiveFormsModule,
-    CommonModule,
-    AppLoaderComponent
-  ],
-  templateUrl: './signup-page.component.html',
-  styleUrl: './signup-page.component.scss'
+    selector: 'app-signup-page',
+    imports: [
+        MatStepperModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatDatepickerModule,
+        ReactiveFormsModule,
+        CommonModule,
+        AppLoaderComponent
+    ],
+    templateUrl: './signup-page.component.html',
+    styleUrl: './signup-page.component.scss'
 })
 export class SignupPageComponent {
   @ViewChild('stepper') stepper!: MatStepper;

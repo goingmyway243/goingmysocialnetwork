@@ -11,11 +11,10 @@ import { FormsModule } from '@angular/forms';
 import { Util } from '../../common/helpers/util';
 
 @Component({
-  selector: 'post-item',
-  standalone: true,
-  imports: [UserAvatarComponent, MatIconModule, FormsModule],
-  templateUrl: './post-item.component.html',
-  styleUrl: './post-item.component.scss'
+    selector: 'post-item',
+    imports: [UserAvatarComponent, MatIconModule, FormsModule],
+    templateUrl: './post-item.component.html',
+    styleUrl: './post-item.component.scss'
 })
 export class PostItemComponent implements OnInit {
   @ViewChild('commentInput') commentInput?: ElementRef;

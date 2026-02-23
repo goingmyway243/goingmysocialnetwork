@@ -7,12 +7,11 @@ import { ChatroomApiService } from '../../common/services/chatroom-api.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'message-box',
-  standalone: true,
-  imports: [SearchBarComponent, MessageItemComponent],
-  templateUrl: './message-box.component.html',
-  styleUrl: './message-box.component.scss',
-  encapsulation: ViewEncapsulation.None
+    selector: 'message-box',
+    imports: [SearchBarComponent, MessageItemComponent],
+    templateUrl: './message-box.component.html',
+    styleUrl: './message-box.component.scss',
+    encapsulation: ViewEncapsulation.None
 })
 export class MessageBoxComponent implements OnInit {
   chatrooms = signal<Chatroom[]>([]);

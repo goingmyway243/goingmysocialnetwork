@@ -13,11 +13,10 @@ import { Util } from '../../common/helpers/util';
 import { AppLoaderComponent } from "../../components/app-loader/app-loader.component";
 
 @Component({
-  selector: 'app-explore-page',
-  standalone: true,
-  imports: [MatTabsModule, MatIconModule, PostItemComponent, UserItemComponent, AppLoaderComponent],
-  templateUrl: './explore-page.component.html',
-  styleUrl: './explore-page.component.scss'
+    selector: 'app-explore-page',
+    imports: [MatTabsModule, MatIconModule, PostItemComponent, UserItemComponent, AppLoaderComponent],
+    templateUrl: './explore-page.component.html',
+    styleUrl: './explore-page.component.scss'
 })
 export class ExplorePageComponent implements OnInit {
   searchText = signal<string | null>(null);

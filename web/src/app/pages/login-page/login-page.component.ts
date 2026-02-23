@@ -11,18 +11,17 @@ import { catchError, throwError } from 'rxjs';
 import { AppLoaderComponent } from "../../components/app-loader/app-loader.component";
 
 @Component({
-  selector: 'app-login-page',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    CommonModule,
-    AppLoaderComponent
-  ],
-  templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.scss'
+    selector: 'app-login-page',
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        ReactiveFormsModule,
+        CommonModule,
+        AppLoaderComponent
+    ],
+    templateUrl: './login-page.component.html',
+    styleUrl: './login-page.component.scss'
 })
 export class LoginPageComponent {
   public errorMsg = signal('');

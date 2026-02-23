@@ -4,11 +4,10 @@ import { User } from '../../common/models/user.model';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'user-avatar',
-  standalone: true,
-  imports: [NgIf],
-  templateUrl: './user-avatar.component.html',
-  styleUrl: './user-avatar.component.scss'
+    selector: 'user-avatar',
+    imports: [NgIf],
+    templateUrl: './user-avatar.component.html',
+    styleUrl: './user-avatar.component.scss'
 })
 export class UserAvatarComponent {
   @Input() showInfo: boolean = true;

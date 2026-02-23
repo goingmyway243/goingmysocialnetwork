@@ -3,11 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'search-bar',
-  standalone: true,
-  imports: [FormsModule],
-  templateUrl: './search-bar.component.html',
-  styleUrl: './search-bar.component.scss'
+    selector: 'search-bar',
+    imports: [FormsModule],
+    templateUrl: './search-bar.component.html',
+    styleUrl: './search-bar.component.scss'
 })
 export class SearchBarComponent implements OnInit {
   @Input() placeholder: string = '';

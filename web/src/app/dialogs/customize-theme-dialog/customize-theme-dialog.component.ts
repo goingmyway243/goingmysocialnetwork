@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ThemeManagerService } from '../../common/services/theme-manager.service';
 
 @Component({
-  selector: 'app-customize-theme-dialog',
-  standalone: true,
-  imports: [],
-  templateUrl: './customize-theme-dialog.component.html',
-  styleUrl: './customize-theme-dialog.component.scss'
+    selector: 'app-customize-theme-dialog',
+    imports: [],
+    templateUrl: './customize-theme-dialog.component.html',
+    styleUrl: './customize-theme-dialog.component.scss'
 })
 export class CustomizeThemeDialogComponent implements OnInit {
   constructor(private themeManagerSvc: ThemeManagerService) { }

@@ -15,11 +15,10 @@ import { Util } from '../../common/helpers/util';
 import { AppLoaderComponent } from "../../components/app-loader/app-loader.component";
 
 @Component({
-  selector: 'app-message-page',
-  standalone: true,
-  imports: [FormsModule, MatIconModule, UserAvatarComponent, MessageItemComponent, AppLoaderComponent],
-  templateUrl: './message-page.component.html',
-  styleUrl: './message-page.component.scss'
+    selector: 'app-message-page',
+    imports: [FormsModule, MatIconModule, UserAvatarComponent, MessageItemComponent, AppLoaderComponent],
+    templateUrl: './message-page.component.html',
+    styleUrl: './message-page.component.scss'
 })
 export class MessagePageComponent implements OnInit, OnDestroy {
   @ViewChild('messageScrollDiv') messageScrollDiv!: ElementRef;

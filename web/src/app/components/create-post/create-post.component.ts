@@ -8,11 +8,10 @@ import { AuthService } from '../../common/services/auth.service';
 import { Post } from '../../common/models/post.model';
 
 @Component({
-  selector: 'create-post',
-  standalone: true,
-  imports: [NgIf, UserAvatarComponent],
-  templateUrl: './create-post.component.html',
-  styleUrl: './create-post.component.scss'
+    selector: 'create-post',
+    imports: [NgIf, UserAvatarComponent],
+    templateUrl: './create-post.component.html',
+    styleUrl: './create-post.component.scss'
 })
 export class CreatePostComponent extends AppCommonComponent {
   @Input() placeholder: string = '';

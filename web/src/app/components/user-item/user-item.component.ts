@@ -9,11 +9,10 @@ import { FriendshipApiService } from '../../common/services/friendship-api.servi
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'user-item',
-  standalone: true,
-  imports: [UserAvatarComponent, MatButtonModule, MatIconModule],
-  templateUrl: './user-item.component.html',
-  styleUrl: './user-item.component.scss'
+    selector: 'user-item',
+    imports: [UserAvatarComponent, MatButtonModule, MatIconModule],
+    templateUrl: './user-item.component.html',
+    styleUrl: './user-item.component.scss'
 })
 export class UserItemComponent implements OnInit {
   @Input() userData!: User;

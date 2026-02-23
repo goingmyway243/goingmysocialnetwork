@@ -10,11 +10,10 @@ import { Util } from '../../common/helpers/util';
 import { AppLoaderComponent } from "../../components/app-loader/app-loader.component";
 
 @Component({
-  selector: 'app-home-page',
-  standalone: true,
-  imports: [PostItemComponent, CreatePostComponent, AppLoaderComponent],
-  templateUrl: './home-page.component.html',
-  styleUrl: './home-page.component.scss'
+    selector: 'app-home-page',
+    imports: [PostItemComponent, CreatePostComponent, AppLoaderComponent],
+    templateUrl: './home-page.component.html',
+    styleUrl: './home-page.component.scss'
 })
 export class HomePageComponent implements OnInit {
   currentUser = signal<User | null>(null);

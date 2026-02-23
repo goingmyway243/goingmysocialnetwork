@@ -5,11 +5,10 @@ import { FriendshipApiService } from '../../common/services/friendship-api.servi
 import { Friendship } from '../../common/models/friendship.model';
 
 @Component({
-  selector: 'request-box',
-  standalone: true,
-  imports: [RequestItemComponent],
-  templateUrl: './request-box.component.html',
-  styleUrl: './request-box.component.scss'
+    selector: 'request-box',
+    imports: [RequestItemComponent],
+    templateUrl: './request-box.component.html',
+    styleUrl: './request-box.component.scss'
 })
 export class RequestBoxComponent implements OnInit {
   pendingRequests = signal<Friendship[]>([]);

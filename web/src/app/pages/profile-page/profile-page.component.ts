@@ -17,11 +17,10 @@ import { Util } from '../../common/helpers/util';
 
 
 @Component({
-  selector: 'app-profile-page',
-  standalone: true,
-  imports: [MatTabsModule, MatButtonModule, MatIconModule, CreatePostComponent, PostItemComponent],
-  templateUrl: './profile-page.component.html',
-  styleUrl: './profile-page.component.scss'
+    selector: 'app-profile-page',
+    imports: [MatTabsModule, MatButtonModule, MatIconModule, CreatePostComponent, PostItemComponent],
+    templateUrl: './profile-page.component.html',
+    styleUrl: './profile-page.component.scss'
 })
 export class ProfilePageComponent implements OnInit, OnDestroy {
   currentUser = signal<User | null>(null);

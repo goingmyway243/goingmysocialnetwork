@@ -4,11 +4,10 @@ import { AppTabstripTabComponent } from './app-tabstrip-tab.component';
 
 
 @Component({
-  selector: 'app-tabstrip',
-  standalone: true,
-  imports: [CommonModule],
-  styleUrl: './app-tabstrip.component.scss',
-  template: `
+    selector: 'app-tabstrip',
+    imports: [CommonModule],
+    styleUrl: './app-tabstrip.component.scss',
+    template: `
   <ul #headers class="opal-tabstrip-headers" [ngClass]="{ 'end': tabAlignment === 'end'}">
     <li *ngFor="let tab of tabs" 
         class="opal-tabstrip-title"

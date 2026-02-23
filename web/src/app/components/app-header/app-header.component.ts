@@ -8,11 +8,10 @@ import { AppCommonComponent } from '../app-common/app-common.component';
 import { AuthService } from '../../common/services/auth.service';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './app-header.component.html',
-  styleUrl: './app-header.component.scss',
-  standalone: true,
-  imports: [MatMenuModule, SearchBarComponent, CreatePostComponent, UserAvatarComponent]
+    selector: 'app-header',
+    templateUrl: './app-header.component.html',
+    styleUrl: './app-header.component.scss',
+    imports: [MatMenuModule, SearchBarComponent, CreatePostComponent, UserAvatarComponent]
 })
 export class AppHeaderComponent extends AppCommonComponent {
   constructor(public router: Router, authSvc: AuthService) {
