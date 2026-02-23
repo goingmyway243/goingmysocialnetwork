@@ -18,11 +18,11 @@ public class WebTests
         await app.StartAsync();
 
         // Act
-        var httpClient = app.CreateHttpClient("webfrontend");
-        await resourceNotificationService.WaitForResourceAsync("webfrontend", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30.0));
-        var response = await httpClient.GetAsync("/");
+        var httpClient = app.CreateHttpClient("post");
+        await resourceNotificationService.WaitForResourceAsync("post", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30.0));
+        var response = await httpClient.GetAsync("/weatherforecast");
 
         // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode); // Endpoint requires auth
     }
 }
