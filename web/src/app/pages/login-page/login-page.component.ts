@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { IdentityApiService } from '../../common/services/identity-api.service';
@@ -13,13 +13,12 @@ import { AppLoaderComponent } from "../../components/app-loader/app-loader.compo
 @Component({
     selector: 'app-login-page',
     imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        ReactiveFormsModule,
-        CommonModule,
-        AppLoaderComponent
-    ],
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    ReactiveFormsModule,
+    AppLoaderComponent
+],
     templateUrl: './login-page.component.html',
     styleUrl: './login-page.component.scss'
 })

@@ -1,9 +1,13 @@
-<div class="create-post-bar" *ngIf="fullSize" (click)="openDialog()">
-  <user-avatar [user]="currentUser" [showInfo]="false"></user-avatar>
-  <div class="placeholder">
-    {{ placeholder }}
+@if (fullSize) {
+  <div class="create-post-bar" (click)="openDialog()">
+    <user-avatar [user]="currentUser" [showInfo]="false"></user-avatar>
+    <div class="placeholder">
+      {{ placeholder }}
+    </div>
   </div>
-</div>
-<button class="primary create-post-button" *ngIf="!fullSize" (click)="openDialog()">
-  {{ buttonText }}
-</button>
+}
+@if (!fullSize) {
+  <button class="primary create-post-button" (click)="openDialog()">
+    {{ buttonText }}
+  </button>
+}

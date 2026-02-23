@@ -6,7 +6,7 @@ import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { IdentityApiService } from '../../common/services/identity-api.service';
 import { catchError, throwError } from 'rxjs';
@@ -15,16 +15,15 @@ import { AppLoaderComponent } from "../../components/app-loader/app-loader.compo
 @Component({
     selector: 'app-signup-page',
     imports: [
-        MatStepperModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatDatepickerModule,
-        ReactiveFormsModule,
-        CommonModule,
-        AppLoaderComponent
-    ],
+    MatStepperModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatDatepickerModule,
+    ReactiveFormsModule,
+    AppLoaderComponent
+],
     templateUrl: './signup-page.component.html',
     styleUrl: './signup-page.component.scss'
 })

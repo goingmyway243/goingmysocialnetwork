@@ -4,7 +4,7 @@ import { MessageBoxComponent } from "../../components/message-box/message-box.co
 import { SidebarComponent } from "../../components/app-sidebar/app-sidebar.component";
 import { AppHeaderComponent } from "../../components/app-header/app-header.component";
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { IdentityApiService } from '../../common/services/identity-api.service';
@@ -15,13 +15,12 @@ import { ThemeManagerService } from '../../common/services/theme-manager.service
     templateUrl: './dashboard-page.component.html',
     styleUrl: './dashboard-page.component.scss',
     imports: [
-        CommonModule,
-        RouterOutlet,
-        RequestBoxComponent,
-        MessageBoxComponent,
-        SidebarComponent,
-        AppHeaderComponent
-    ]
+    RouterOutlet,
+    RequestBoxComponent,
+    MessageBoxComponent,
+    SidebarComponent,
+    AppHeaderComponent
+]
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
   showOptionalSidebar = signal(false);

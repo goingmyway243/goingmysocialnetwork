@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UserAvatarComponent } from "../user-avatar/user-avatar.component";
 import { MatDialog } from '@angular/material/dialog';
@@ -9,7 +9,7 @@ import { Post } from '../../common/models/post.model';
 
 @Component({
     selector: 'create-post',
-    imports: [NgIf, UserAvatarComponent],
+    imports: [UserAvatarComponent],
     templateUrl: './create-post.component.html',
     styleUrl: './create-post.component.scss'
 })

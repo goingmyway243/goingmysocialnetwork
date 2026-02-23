@@ -9,14 +9,16 @@ import { AppTabstripTabComponent } from './app-tabstrip-tab.component';
     styleUrl: './app-tabstrip.component.scss',
     template: `
   <ul #headers class="opal-tabstrip-headers" [ngClass]="{ 'end': tabAlignment === 'end'}">
-    <li *ngFor="let tab of tabs" 
+    @for (tab of tabs; track tab) {
+      <li
         class="opal-tabstrip-title"
-        (click)="selectTab(tab)" 
+        (click)="selectTab(tab)"
         [class.active]="tab.selected"
         [class.disabled]="tab.disabled"
         [ngClass]="tab.cssHeader">
-      <ng-container *ngTemplateOutlet="tab.tabTitle"></ng-container>
-    </li>
+        <ng-container *ngTemplateOutlet="tab.tabTitle"></ng-container>
+      </li>
+    }
   </ul>
   <div class="opal-tabstrip-container">
     <ng-content></ng-content>

@@ -5,13 +5,15 @@ import { Component, Input, TemplateRef } from '@angular/core';
     selector: 'app-tabstrip-tab',
     imports: [CommonModule, NgTemplateOutlet],
     template: `
-  <div *ngIf="canLoaded" 
-        class="opal-tab-content"
-        [hidden]="shouldHide" 
-        [ngClass]="cssClass">
-    <ng-container *ngTemplateOutlet="tabContent"></ng-container>
-  </div>
-`
+  @if (canLoaded) {
+    <div
+      class="opal-tab-content"
+      [hidden]="shouldHide"
+      [ngClass]="cssClass">
+      <ng-container *ngTemplateOutlet="tabContent"></ng-container>
+    </div>
+  }
+  `
 })
 export class AppTabstripTabComponent {
   @Input() tabTitle: TemplateRef<any> | null = null;
