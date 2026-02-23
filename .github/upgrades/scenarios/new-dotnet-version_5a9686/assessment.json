@@ -1,0 +1,1368 @@
+{
+  "settings": {
+    "components": {
+      "code": true,
+      "binaries": false
+    },
+    "targetId": "net10.0",
+    "targetDisplayName": ".NETCoreApp,Version=v10.0"
+  },
+  "analysisStartTime": "2026-02-23T09:00:57.5303744Z",
+  "analysisEndTime": "2026-02-23T09:01:03.719522Z",
+  "privacyModeHelpUrl": "https://go.microsoft.com/fwlink/?linkid=2270980",
+  "stats": {
+    "summary": {
+      "projects": 6,
+      "issues": 6,
+      "incidents": 47,
+      "effort": 47
+    },
+    "charts": {
+      "severity": {
+        "Mandatory": 19,
+        "Optional": 5,
+        "Potential": 23,
+        "Information": 0
+      },
+      "category": {
+        "NuGet": 17,
+        "Project": 6,
+        "Api": 24
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 7,
+      "properties": {
+        "appName": "SocialNetworkMicroservices.AppHost",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 17,
+        "linesOfCode": 17,
+        "totalApiScanned": 46,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "b770e90d-a653-4f78-b2f7-607170d19c53",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.AppHost, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.AppHost, and replace with new package Aspire.Hosting.AppHost 13.1.1",
+              "protected": "Aspire.Hosting.AppHost, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.AppHost, and replace with new package Aspire.Hosting.AppHost 13.1.1"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+            "snippet": "Aspire.Hosting.AppHost, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.AppHost, and replace with new package Aspire.Hosting.AppHost 13.1.1",
+            "protectedSnippet": "Aspire.Hosting.AppHost, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.AppHost, and replace with new package Aspire.Hosting.AppHost 13.1.1",
+            "label": "Aspire.Hosting.AppHost 9.0.0",
+            "properties": {
+              "PackageId": "Aspire.Hosting.AppHost",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": "13.1.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "dd980f86-4d4d-4208-a9b5-be446200c441",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.PostgreSQL, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL 13.1.1",
+              "protected": "Aspire.Hosting.PostgreSQL, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL 13.1.1"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+            "snippet": "Aspire.Hosting.PostgreSQL, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL 13.1.1",
+            "protectedSnippet": "Aspire.Hosting.PostgreSQL, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL 13.1.1",
+            "label": "Aspire.Hosting.PostgreSQL 9.0.0",
+            "properties": {
+              "PackageId": "Aspire.Hosting.PostgreSQL",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": "13.1.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "d92e962f-713a-486a-8ad3-68f18ab2a8b2",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.Redis, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.Redis, and replace with new package Aspire.Hosting.Redis 13.1.1",
+              "protected": "Aspire.Hosting.Redis, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.Redis, and replace with new package Aspire.Hosting.Redis 13.1.1"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+            "snippet": "Aspire.Hosting.Redis, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.Redis, and replace with new package Aspire.Hosting.Redis 13.1.1",
+            "protectedSnippet": "Aspire.Hosting.Redis, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.Redis, and replace with new package Aspire.Hosting.Redis 13.1.1",
+            "label": "Aspire.Hosting.Redis 9.0.0",
+            "properties": {
+              "PackageId": "Aspire.Hosting.Redis",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": "13.1.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "1cdda80d-f588-4a41-94b1-1975c2d829e6",
+          "ruleId": "NuGet.0005",
+          "projectPath": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.AppHost, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.AppHost, and replace with new package Aspire.Hosting.AppHost, 13.1.1",
+              "protected": "Aspire.Hosting.AppHost, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.AppHost, and replace with new package Aspire.Hosting.AppHost, 13.1.1"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+            "snippet": "Aspire.Hosting.AppHost, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.AppHost, and replace with new package Aspire.Hosting.AppHost, 13.1.1",
+            "protectedSnippet": "Aspire.Hosting.AppHost, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.AppHost, and replace with new package Aspire.Hosting.AppHost, 13.1.1",
+            "label": "Aspire.Hosting.AppHost 9.0.0",
+            "properties": {
+              "PackageId": "Aspire.Hosting.AppHost",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "5949f56f-5712-4b60-a7fc-79a4b763872b",
+          "ruleId": "NuGet.0005",
+          "projectPath": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.PostgreSQL, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL, 13.1.1",
+              "protected": "Aspire.Hosting.PostgreSQL, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL, 13.1.1"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+            "snippet": "Aspire.Hosting.PostgreSQL, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL, 13.1.1",
+            "protectedSnippet": "Aspire.Hosting.PostgreSQL, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.PostgreSQL, and replace with new package Aspire.Hosting.PostgreSQL, 13.1.1",
+            "label": "Aspire.Hosting.PostgreSQL 9.0.0",
+            "properties": {
+              "PackageId": "Aspire.Hosting.PostgreSQL",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "0f97fd66-6e7b-4c56-a769-aee593f56552",
+          "ruleId": "NuGet.0005",
+          "projectPath": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.Redis, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.Redis, and replace with new package Aspire.Hosting.Redis, 13.1.1",
+              "protected": "Aspire.Hosting.Redis, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.Redis, and replace with new package Aspire.Hosting.Redis, 13.1.1"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+            "snippet": "Aspire.Hosting.Redis, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.Redis, and replace with new package Aspire.Hosting.Redis, 13.1.1",
+            "protectedSnippet": "Aspire.Hosting.Redis, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.Redis, and replace with new package Aspire.Hosting.Redis, 13.1.1",
+            "label": "Aspire.Hosting.Redis 9.0.0",
+            "properties": {
+              "PackageId": "Aspire.Hosting.Redis",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "677a5cda-757b-4db4-9368-480656c767f8",
+          "ruleId": "Project.0002",
+          "projectPath": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.AppHost\\SocialNetworkMicroservices.AppHost.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+      "startingProject": true,
+      "issues": 4,
+      "storyPoints": 21,
+      "properties": {
+        "appName": "SocialNetworkMicroservices.Identity",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 4,
+        "numberOfCodeFiles": 2,
+        "linesTotal": 198,
+        "linesOfCode": 175,
+        "totalApiScanned": 339,
+        "minLinesOfCodeToChange": 18,
+        "maxLinesOfCodeToChange": 18
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "8c521afa-a974-405f-8bfc-399b630ba5a9",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.3",
+              "protected": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.3"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+            "snippet": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.3",
+            "protectedSnippet": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.3",
+            "label": "Microsoft.AspNetCore.Authentication.JwtBearer 9.0.2",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageVersion": "9.0.2",
+              "PackageNewVersion": "10.0.3",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "23e2540c-65f1-4111-b809-eb34b5745cb0",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.OpenApi, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.3",
+              "protected": "Microsoft.AspNetCore.OpenApi, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.3"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+            "snippet": "Microsoft.AspNetCore.OpenApi, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.3",
+            "protectedSnippet": "Microsoft.AspNetCore.OpenApi, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.3",
+            "label": "Microsoft.AspNetCore.OpenApi 9.0.2",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.OpenApi",
+              "PackageVersion": "9.0.2",
+              "PackageNewVersion": "10.0.3",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "29c9e055-7c77-48f5-968f-916f4d68ded1",
+          "ruleId": "Project.0002",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "0824f5c0-0729-4234-9cb1-ec0261366eac",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022cookie_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+              "protected": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022cookie_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+            "protectedSnippet": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "label": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "line": 136,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "a3c32c36-ec76-411b-bd66-f1199847dd9e",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022cookie_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+              "protected": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022cookie_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+            "protectedSnippet": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti",
+            "label": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti",
+            "line": 136,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "3754644a-7e5a-44c0-9a7f-1b6183363c07",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022cookie_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+              "protected": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022cookie_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+            "protectedSnippet": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "label": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "line": 136,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "7d7b6f66-9f7d-4f7b-aab4-15b37150ca9d",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022cookie_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+              "protected": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022cookie_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+            "protectedSnippet": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub",
+            "label": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub",
+            "line": 136,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "baeba9a9-6ec2-4939-a249-a145cda7aba9",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var tokenString = new JwtSecurityTokenHandler().WriteToken(token);",
+              "protected": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var tokenString = new JwtSecurityTokenHandler().WriteToken(token);",
+            "protectedSnippet": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler",
+            "label": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler",
+            "line": 116,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "d3d3045c-c39b-43f9-bd50-9cf55819f50f",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var tokenString = new JwtSecurityTokenHandler().WriteToken(token);",
+              "protected": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.#ctor"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var tokenString = new JwtSecurityTokenHandler().WriteToken(token);",
+            "protectedSnippet": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.#ctor",
+            "label": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.#ctor",
+            "line": 116,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "e43c48ed-c45b-4952-bef8-345ca19d357c",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var tokenString = new JwtSecurityTokenHandler().WriteToken(token);",
+              "protected": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.WriteToken(Microsoft.IdentityModel.Tokens.SecurityToken)"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var tokenString = new JwtSecurityTokenHandler().WriteToken(token);",
+            "protectedSnippet": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.WriteToken(Microsoft.IdentityModel.Tokens.SecurityToken)",
+            "label": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.WriteToken(Microsoft.IdentityModel.Tokens.SecurityToken)",
+            "line": 116,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "eb43e684-c306-4386-bd66-60f3cfbc12ce",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var token = new JwtSecurityToken(\r\n        issuer: jwtSettings[\u0022Issuer\u0022],\r\n        audience: jwtSettings[\u0022Audience\u0022],\r\n        claims: claims,\r\n        expires: expiresTime.DateTime,\r\n        signingCredentials: creds\r\n    );",
+              "protected": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var token = new JwtSecurityToken(\r\n        issuer: jwtSettings[\u0022Issuer\u0022],\r\n        audience: jwtSettings[\u0022Audience\u0022],\r\n        claims: claims,\r\n        expires: expiresTime.DateTime,\r\n        signingCredentials: creds\r\n    );",
+            "protectedSnippet": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken",
+            "label": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken",
+            "line": 108,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "891aef61-c163-4db3-bd88-8d0f390b268b",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var token = new JwtSecurityToken(\r\n        issuer: jwtSettings[\u0022Issuer\u0022],\r\n        audience: jwtSettings[\u0022Audience\u0022],\r\n        claims: claims,\r\n        expires: expiresTime.DateTime,\r\n        signingCredentials: creds\r\n    );",
+              "protected": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityToken.#ctor(System.String,System.String,System.Collections.Generic.IEnumerable{System.Security.Claims.Claim},System.Nullable{System.DateTime},System.Nullable{System.DateTime},Microsoft.IdentityModel.Tokens.SigningCredentials)"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var token = new JwtSecurityToken(\r\n        issuer: jwtSettings[\u0022Issuer\u0022],\r\n        audience: jwtSettings[\u0022Audience\u0022],\r\n        claims: claims,\r\n        expires: expiresTime.DateTime,\r\n        signingCredentials: creds\r\n    );",
+            "protectedSnippet": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityToken.#ctor(System.String,System.String,System.Collections.Generic.IEnumerable{System.Security.Claims.Claim},System.Nullable{System.DateTime},System.Nullable{System.DateTime},Microsoft.IdentityModel.Tokens.SigningCredentials)",
+            "label": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityToken.#ctor(System.String,System.String,System.Collections.Generic.IEnumerable{System.Security.Claims.Claim},System.Nullable{System.DateTime},System.Nullable{System.DateTime},Microsoft.IdentityModel.Tokens.SigningCredentials)",
+            "line": 108,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "7e765b87-9f9d-4d31-854a-ee2ae3643916",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022user_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+              "protected": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022user_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+            "protectedSnippet": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "label": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "line": 101,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "3e67ff40-3543-4cf7-8fda-6ab1c8fff1ec",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022user_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+              "protected": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022user_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+            "protectedSnippet": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti",
+            "label": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti",
+            "line": 101,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "906037b4-d315-4625-8b23-83e147947f76",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022user_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+              "protected": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022user_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+            "protectedSnippet": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "label": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "line": 101,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "9224a45c-081b-41be-a042-583fbb961ea1",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net8.0 ",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022user_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+              "protected": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "var claims = new[]\r\n    {\r\n        new Claim(JwtRegisteredClaimNames.Sub, \u0022user_id_123\u0022),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())\r\n    };",
+            "protectedSnippet": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub",
+            "label": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub",
+            "line": 101,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "12995003-0277-4204-b7f8-60d2a5439dc6",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidateAudience = true,\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        ValidIssuer = jwtSettings[\u0022Issuer\u0022],\r\n        ValidAudience = jwtSettings[\u0022Audience\u0022],\r\n        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings[\u0022Key\u0022]!))\r\n    };",
+              "protected": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.TokenValidationParameters"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidateAudience = true,\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        ValidIssuer = jwtSettings[\u0022Issuer\u0022],\r\n        ValidAudience = jwtSettings[\u0022Audience\u0022],\r\n        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings[\u0022Key\u0022]!))\r\n    };",
+            "protectedSnippet": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.TokenValidationParameters",
+            "label": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.TokenValidationParameters",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 40,
+            "column": 4
+          }
+        },
+        {
+          "incidentId": "4ce5d852-a937-4d08-9baf-1207f21eacd9",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return JwtBearerDefaults.AuthenticationScheme;",
+              "protected": "T:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "return JwtBearerDefaults.AuthenticationScheme;",
+            "protectedSnippet": "T:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults",
+            "label": "T:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 32,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "6a0c8e3a-7a87-424c-bd94-229f644e6ed8",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return JwtBearerDefaults.AuthenticationScheme;",
+              "protected": "F:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "return JwtBearerDefaults.AuthenticationScheme;",
+            "protectedSnippet": "F:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme",
+            "label": "F:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 32,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "b64ea736-5b88-44f6-93af-93f7db84d515",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddAuthentication(options =\u003E\r\n{\r\n    options.DefaultAuthenticateScheme = policyScheme;\r\n    options.DefaultChallengeScheme = policyScheme;\r\n})\r\n.AddPolicyScheme(policyScheme, \u0022JWT or Cookie\u0022, options =\u003E\r\n{\r\n    options.ForwardDefaultSelector = context =\u003E\r\n    {\r\n        string? authHeader = context.Request.Headers[\u0022Authorization\u0022];\r\n        if (!string.IsNullOrEmpty(authHeader) \u0026\u0026 authHeader.StartsWith(\u0022Bearer \u0022, StringComparison.OrdinalIgnoreCase))\r\n        {\r\n            return JwtBearerDefaults.AuthenticationScheme;\r\n        }\r\n\r\n        return CookieAuthenticationDefaults.AuthenticationScheme;\r\n    };\r\n})\r\n.AddJwtBearer(options =\u003E\r\n{\r\n    options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidateAudience = true,\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        ValidIssuer = jwtSettings[\u0022Issuer\u0022],\r\n        ValidAudience = jwtSettings[\u0022Audience\u0022],\r\n        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings[\u0022Key\u0022]!))\r\n    };\r\n})\r\n.AddCookie(options =\u003E\r\n{\r\n    options.LoginPath = \u0022/cookie/login\u0022;\r\n    options.LogoutPath = \u0022/cookie/logout\u0022;\r\n    options.Cookie.Name = \u0022identity_cookie\u0022;\r\n    // options.Cookie.HttpOnly = true;\r\n    // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;\r\n});",
+              "protected": "T:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "builder.Services.AddAuthentication(options =\u003E\r\n{\r\n    options.DefaultAuthenticateScheme = policyScheme;\r\n    options.DefaultChallengeScheme = policyScheme;\r\n})\r\n.AddPolicyScheme(policyScheme, \u0022JWT or Cookie\u0022, options =\u003E\r\n{\r\n    options.ForwardDefaultSelector = context =\u003E\r\n    {\r\n        string? authHeader = context.Request.Headers[\u0022Authorization\u0022];\r\n        if (!string.IsNullOrEmpty(authHeader) \u0026\u0026 authHeader.StartsWith(\u0022Bearer \u0022, StringComparison.OrdinalIgnoreCase))\r\n        {\r\n            return JwtBearerDefaults.AuthenticationScheme;\r\n        }\r\n\r\n        return CookieAuthenticationDefaults.AuthenticationScheme;\r\n    };\r\n})\r\n.AddJwtBearer(options =\u003E\r\n{\r\n    options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidateAudience = true,\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        ValidIssuer = jwtSettings[\u0022Issuer\u0022],\r\n        ValidAudience = jwtSettings[\u0022Audience\u0022],\r\n        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings[\u0022Key\u0022]!))\r\n    };\r\n})\r\n.AddCookie(options =\u003E\r\n{\r\n    options.LoginPath = \u0022/cookie/login\u0022;\r\n    options.LogoutPath = \u0022/cookie/logout\u0022;\r\n    options.Cookie.Name = \u0022identity_cookie\u0022;\r\n    // options.Cookie.HttpOnly = true;\r\n    // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;\r\n});",
+            "protectedSnippet": "T:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions",
+            "label": "T:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 20,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "17258b50-b4d5-4ff1-a5ac-431dbbb70810",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "SocialNetworkMicroservices.Identity\\SocialNetworkMicroservices.Identity.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddAuthentication(options =\u003E\r\n{\r\n    options.DefaultAuthenticateScheme = policyScheme;\r\n    options.DefaultChallengeScheme = policyScheme;\r\n})\r\n.AddPolicyScheme(policyScheme, \u0022JWT or Cookie\u0022, options =\u003E\r\n{\r\n    options.ForwardDefaultSelector = context =\u003E\r\n    {\r\n        string? authHeader = context.Request.Headers[\u0022Authorization\u0022];\r\n        if (!string.IsNullOrEmpty(authHeader) \u0026\u0026 authHeader.StartsWith(\u0022Bearer \u0022, StringComparison.OrdinalIgnoreCase))\r\n        {\r\n            return JwtBearerDefaults.AuthenticationScheme;\r\n        }\r\n\r\n        return CookieAuthenticationDefaults.AuthenticationScheme;\r\n    };\r\n})\r\n.AddJwtBearer(options =\u003E\r\n{\r\n    options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidateAudience = true,\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        ValidIssuer = jwtSettings[\u0022Issuer\u0022],\r\n        ValidAudience = jwtSettings[\u0022Audience\u0022],\r\n        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings[\u0022Key\u0022]!))\r\n    };\r\n})\r\n.AddCookie(options =\u003E\r\n{\r\n    options.LoginPath = \u0022/cookie/login\u0022;\r\n    options.LogoutPath = \u0022/cookie/logout\u0022;\r\n    options.Cookie.Name = \u0022identity_cookie\u0022;\r\n    // options.Cookie.HttpOnly = true;\r\n    // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;\r\n});",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions.AddJwtBearer(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.Action{Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions})"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Identity\\Program.cs",
+            "snippet": "builder.Services.AddAuthentication(options =\u003E\r\n{\r\n    options.DefaultAuthenticateScheme = policyScheme;\r\n    options.DefaultChallengeScheme = policyScheme;\r\n})\r\n.AddPolicyScheme(policyScheme, \u0022JWT or Cookie\u0022, options =\u003E\r\n{\r\n    options.ForwardDefaultSelector = context =\u003E\r\n    {\r\n        string? authHeader = context.Request.Headers[\u0022Authorization\u0022];\r\n        if (!string.IsNullOrEmpty(authHeader) \u0026\u0026 authHeader.StartsWith(\u0022Bearer \u0022, StringComparison.OrdinalIgnoreCase))\r\n        {\r\n            return JwtBearerDefaults.AuthenticationScheme;\r\n        }\r\n\r\n        return CookieAuthenticationDefaults.AuthenticationScheme;\r\n    };\r\n})\r\n.AddJwtBearer(options =\u003E\r\n{\r\n    options.TokenValidationParameters = new TokenValidationParameters\r\n    {\r\n        ValidateIssuer = true,\r\n        ValidateAudience = true,\r\n        ValidateLifetime = true,\r\n        ValidateIssuerSigningKey = true,\r\n        ValidIssuer = jwtSettings[\u0022Issuer\u0022],\r\n        ValidAudience = jwtSettings[\u0022Audience\u0022],\r\n        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings[\u0022Key\u0022]!))\r\n    };\r\n})\r\n.AddCookie(options =\u003E\r\n{\r\n    options.LoginPath = \u0022/cookie/login\u0022;\r\n    options.LogoutPath = \u0022/cookie/logout\u0022;\r\n    options.Cookie.Name = \u0022identity_cookie\u0022;\r\n    // options.Cookie.HttpOnly = true;\r\n    // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;\r\n});",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions.AddJwtBearer(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.Action{Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions})",
+            "label": "M:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions.AddJwtBearer(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.Action{Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions})",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 20,
+            "column": 0
+          }
+        }
+      ],
+      "features": [
+        {
+          "featureId": "IdentityModel",
+          "incidents": [
+            "9224a45c-081b-41be-a042-583fbb961ea1",
+            "906037b4-d315-4625-8b23-83e147947f76",
+            "3e67ff40-3543-4cf7-8fda-6ab1c8fff1ec",
+            "7e765b87-9f9d-4d31-854a-ee2ae3643916",
+            "891aef61-c163-4db3-bd88-8d0f390b268b",
+            "eb43e684-c306-4386-bd66-60f3cfbc12ce",
+            "e43c48ed-c45b-4952-bef8-345ca19d357c",
+            "d3d3045c-c39b-43f9-bd50-9cf55819f50f",
+            "baeba9a9-6ec2-4939-a249-a145cda7aba9",
+            "7d7b6f66-9f7d-4f7b-aab4-15b37150ca9d",
+            "3754644a-7e5a-44c0-9a7f-1b6183363c07",
+            "a3c32c36-ec76-411b-bd66-f1199847dd9e",
+            "0824f5c0-0729-4234-9cb1-ec0261366eac"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 8,
+      "properties": {
+        "appName": "SocialNetworkMicroservices.Post",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 4,
+        "numberOfCodeFiles": 2,
+        "linesTotal": 89,
+        "linesOfCode": 72,
+        "totalApiScanned": 133,
+        "minLinesOfCodeToChange": 5,
+        "maxLinesOfCodeToChange": 5
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "c4a5237c-695c-421f-be2e-f309ae316de8",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.3",
+              "protected": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.3"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+            "snippet": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.3",
+            "protectedSnippet": "Microsoft.AspNetCore.Authentication.JwtBearer, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.3",
+            "label": "Microsoft.AspNetCore.Authentication.JwtBearer 9.0.2",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageVersion": "9.0.2",
+              "PackageNewVersion": "10.0.3",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "fc9a38d6-b8e0-4f71-9dea-3f2d3c635a32",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.OpenApi, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.3",
+              "protected": "Microsoft.AspNetCore.OpenApi, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.3"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+            "snippet": "Microsoft.AspNetCore.OpenApi, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.3",
+            "protectedSnippet": "Microsoft.AspNetCore.OpenApi, 9.0.2\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.3",
+            "label": "Microsoft.AspNetCore.OpenApi 9.0.2",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.OpenApi",
+              "PackageVersion": "9.0.2",
+              "PackageNewVersion": "10.0.3",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "72421b34-8891-4acb-a589-63ff7d4dbca5",
+          "ruleId": "Project.0002",
+          "projectPath": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "8cfd5ecb-8714-4808-86b7-6e2ea9936464",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.TokenValidationParameters = new TokenValidationParameters\r\n        {\r\n            ValidateIssuer = true\r\n        };",
+              "protected": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.TokenValidationParameters"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Post\\Program.cs",
+            "snippet": "options.TokenValidationParameters = new TokenValidationParameters\r\n        {\r\n            ValidateIssuer = true\r\n        };",
+            "protectedSnippet": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.TokenValidationParameters",
+            "label": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.TokenValidationParameters",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 15,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "c0110cbe-1984-49ab-a70b-718bae618fad",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.RequireHttpsMetadata = true;",
+              "protected": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.RequireHttpsMetadata"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Post\\Program.cs",
+            "snippet": "options.RequireHttpsMetadata = true;",
+            "protectedSnippet": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.RequireHttpsMetadata",
+            "label": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.RequireHttpsMetadata",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 14,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "862d8d71-ba80-421b-af0a-d8afc8af0005",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.Authority = builder.Configuration.GetServiceUri(\u0022identity\u0022);",
+              "protected": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.Authority"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Post\\Program.cs",
+            "snippet": "options.Authority = builder.Configuration.GetServiceUri(\u0022identity\u0022);",
+            "protectedSnippet": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.Authority",
+            "label": "P:Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions.Authority",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 13,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "e04a60d5-9f7f-486e-8ff7-8823ef33b336",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddAuthentication(\u0022Bearer\u0022)\r\n    .AddJwtBearer(\u0022Bearer\u0022, options =\u003E\r\n    {\r\n        options.Authority = builder.Configuration.GetServiceUri(\u0022identity\u0022);\r\n        options.RequireHttpsMetadata = true;\r\n        options.TokenValidationParameters = new TokenValidationParameters\r\n        {\r\n            ValidateIssuer = true\r\n        };\r\n        // options.Audience = \u0022goingmysocial_api\u0022;\r\n    });",
+              "protected": "T:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Post\\Program.cs",
+            "snippet": "builder.Services.AddAuthentication(\u0022Bearer\u0022)\r\n    .AddJwtBearer(\u0022Bearer\u0022, options =\u003E\r\n    {\r\n        options.Authority = builder.Configuration.GetServiceUri(\u0022identity\u0022);\r\n        options.RequireHttpsMetadata = true;\r\n        options.TokenValidationParameters = new TokenValidationParameters\r\n        {\r\n            ValidateIssuer = true\r\n        };\r\n        // options.Audience = \u0022goingmysocial_api\u0022;\r\n    });",
+            "protectedSnippet": "T:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions",
+            "label": "T:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 10,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "75a32d96-e16e-4a67-87d8-515656f80e30",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6. Add package reference to Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.6",
+          "projectPath": "SocialNetworkMicroservices.Post\\SocialNetworkMicroservices.Post.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.AddAuthentication(\u0022Bearer\u0022)\r\n    .AddJwtBearer(\u0022Bearer\u0022, options =\u003E\r\n    {\r\n        options.Authority = builder.Configuration.GetServiceUri(\u0022identity\u0022);\r\n        options.RequireHttpsMetadata = true;\r\n        options.TokenValidationParameters = new TokenValidationParameters\r\n        {\r\n            ValidateIssuer = true\r\n        };\r\n        // options.Audience = \u0022goingmysocial_api\u0022;\r\n    });",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions.AddJwtBearer(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.String,System.Action{Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions})"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Post\\Program.cs",
+            "snippet": "builder.Services.AddAuthentication(\u0022Bearer\u0022)\r\n    .AddJwtBearer(\u0022Bearer\u0022, options =\u003E\r\n    {\r\n        options.Authority = builder.Configuration.GetServiceUri(\u0022identity\u0022);\r\n        options.RequireHttpsMetadata = true;\r\n        options.TokenValidationParameters = new TokenValidationParameters\r\n        {\r\n            ValidateIssuer = true\r\n        };\r\n        // options.Audience = \u0022goingmysocial_api\u0022;\r\n    });",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions.AddJwtBearer(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.String,System.Action{Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions})",
+            "label": "M:Microsoft.Extensions.DependencyInjection.JwtBearerExtensions.AddJwtBearer(Microsoft.AspNetCore.Authentication.AuthenticationBuilder,System.String,System.Action{Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions})",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 10,
+            "column": 0
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 6,
+      "properties": {
+        "appName": "SocialNetworkMicroservices.ServiceDefaults",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 119,
+        "linesOfCode": 119,
+        "totalApiScanned": 102,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "47ca6749-7094-455f-b2b3-485675bffeb0",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Http.Resilience, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Http.Resilience, and replace with new package Microsoft.Extensions.Http.Resilience 10.3.0",
+              "protected": "Microsoft.Extensions.Http.Resilience, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Http.Resilience, and replace with new package Microsoft.Extensions.Http.Resilience 10.3.0"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+            "snippet": "Microsoft.Extensions.Http.Resilience, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Http.Resilience, and replace with new package Microsoft.Extensions.Http.Resilience 10.3.0",
+            "protectedSnippet": "Microsoft.Extensions.Http.Resilience, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Http.Resilience, and replace with new package Microsoft.Extensions.Http.Resilience 10.3.0",
+            "label": "Microsoft.Extensions.Http.Resilience 9.0.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Http.Resilience",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": "10.3.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "cba7a1fa-e46b-4391-ba75-75b8eb0fa040",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.ServiceDiscovery, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.ServiceDiscovery, and replace with new package Microsoft.Extensions.ServiceDiscovery 10.3.0",
+              "protected": "Microsoft.Extensions.ServiceDiscovery, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.ServiceDiscovery, and replace with new package Microsoft.Extensions.ServiceDiscovery 10.3.0"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+            "snippet": "Microsoft.Extensions.ServiceDiscovery, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.ServiceDiscovery, and replace with new package Microsoft.Extensions.ServiceDiscovery 10.3.0",
+            "protectedSnippet": "Microsoft.Extensions.ServiceDiscovery, 9.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.ServiceDiscovery, and replace with new package Microsoft.Extensions.ServiceDiscovery 10.3.0",
+            "label": "Microsoft.Extensions.ServiceDiscovery 9.0.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.ServiceDiscovery",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": "10.3.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "d3de2656-bbad-483c-abc6-f37453446998",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "OpenTelemetry.Instrumentation.AspNetCore, 1.9.0\n\nRecommendation:\n\nRemove OpenTelemetry.Instrumentation.AspNetCore, and replace with new package OpenTelemetry.Instrumentation.AspNetCore 1.15.0",
+              "protected": "OpenTelemetry.Instrumentation.AspNetCore, 1.9.0\n\nRecommendation:\n\nRemove OpenTelemetry.Instrumentation.AspNetCore, and replace with new package OpenTelemetry.Instrumentation.AspNetCore 1.15.0"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+            "snippet": "OpenTelemetry.Instrumentation.AspNetCore, 1.9.0\n\nRecommendation:\n\nRemove OpenTelemetry.Instrumentation.AspNetCore, and replace with new package OpenTelemetry.Instrumentation.AspNetCore 1.15.0",
+            "protectedSnippet": "OpenTelemetry.Instrumentation.AspNetCore, 1.9.0\n\nRecommendation:\n\nRemove OpenTelemetry.Instrumentation.AspNetCore, and replace with new package OpenTelemetry.Instrumentation.AspNetCore 1.15.0",
+            "label": "OpenTelemetry.Instrumentation.AspNetCore 1.9.0",
+            "properties": {
+              "PackageId": "OpenTelemetry.Instrumentation.AspNetCore",
+              "PackageVersion": "1.9.0",
+              "PackageNewVersion": "1.15.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "1d8d2cc1-20cc-4f88-95cf-223ab4a8e01f",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "OpenTelemetry.Instrumentation.Http, 1.9.0\n\nRecommendation:\n\nRemove OpenTelemetry.Instrumentation.Http, and replace with new package OpenTelemetry.Instrumentation.Http 1.15.0",
+              "protected": "OpenTelemetry.Instrumentation.Http, 1.9.0\n\nRecommendation:\n\nRemove OpenTelemetry.Instrumentation.Http, and replace with new package OpenTelemetry.Instrumentation.Http 1.15.0"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+            "snippet": "OpenTelemetry.Instrumentation.Http, 1.9.0\n\nRecommendation:\n\nRemove OpenTelemetry.Instrumentation.Http, and replace with new package OpenTelemetry.Instrumentation.Http 1.15.0",
+            "protectedSnippet": "OpenTelemetry.Instrumentation.Http, 1.9.0\n\nRecommendation:\n\nRemove OpenTelemetry.Instrumentation.Http, and replace with new package OpenTelemetry.Instrumentation.Http 1.15.0",
+            "label": "OpenTelemetry.Instrumentation.Http 1.9.0",
+            "properties": {
+              "PackageId": "OpenTelemetry.Instrumentation.Http",
+              "PackageVersion": "1.9.0",
+              "PackageNewVersion": "1.15.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "b68d9d98-4b70-40ae-b66a-aa975e354823",
+          "ruleId": "NuGet.0005",
+          "projectPath": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.ServiceDiscovery, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Microsoft.Extensions.ServiceDiscovery, and replace with new package Microsoft.Extensions.ServiceDiscovery, 10.3.0",
+              "protected": "Microsoft.Extensions.ServiceDiscovery, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Microsoft.Extensions.ServiceDiscovery, and replace with new package Microsoft.Extensions.ServiceDiscovery, 10.3.0"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+            "snippet": "Microsoft.Extensions.ServiceDiscovery, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Microsoft.Extensions.ServiceDiscovery, and replace with new package Microsoft.Extensions.ServiceDiscovery, 10.3.0",
+            "protectedSnippet": "Microsoft.Extensions.ServiceDiscovery, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Microsoft.Extensions.ServiceDiscovery, and replace with new package Microsoft.Extensions.ServiceDiscovery, 10.3.0",
+            "label": "Microsoft.Extensions.ServiceDiscovery 9.0.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.ServiceDiscovery",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "b35cbf22-426e-440e-ba38-993d42b116e6",
+          "ruleId": "Project.0002",
+          "projectPath": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.ServiceDefaults\\SocialNetworkMicroservices.ServiceDefaults.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "SocialNetworkMicroservices.Share\\SocialNetworkMicroservices.Share.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "SocialNetworkMicroservices.Share",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 5,
+        "numberOfCodeFiles": 5,
+        "linesTotal": 52,
+        "linesOfCode": 52,
+        "totalApiScanned": 59,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "1433f9a8-3b57-47ed-a929-60157ff67a9a",
+          "ruleId": "Project.0002",
+          "projectPath": "SocialNetworkMicroservices.Share\\SocialNetworkMicroservices.Share.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Share\\SocialNetworkMicroservices.Share.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "SocialNetworkMicroservices.Tests\\SocialNetworkMicroservices.Tests.csproj",
+      "startingProject": true,
+      "issues": 4,
+      "storyPoints": 4,
+      "properties": {
+        "appName": "SocialNetworkMicroservices.Tests",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net9.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 3,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 1813,
+        "linesOfCode": 28,
+        "totalApiScanned": 47,
+        "minLinesOfCodeToChange": 1,
+        "maxLinesOfCodeToChange": 1
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "fc6faf0d-b04e-44b7-ae1a-f83eebd2a814",
+          "ruleId": "NuGet.0002",
+          "projectPath": "SocialNetworkMicroservices.Tests\\SocialNetworkMicroservices.Tests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.Testing, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.Testing, and replace with new package Aspire.Hosting.Testing 13.1.1",
+              "protected": "Aspire.Hosting.Testing, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.Testing, and replace with new package Aspire.Hosting.Testing 13.1.1"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Tests\\SocialNetworkMicroservices.Tests.csproj",
+            "snippet": "Aspire.Hosting.Testing, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.Testing, and replace with new package Aspire.Hosting.Testing 13.1.1",
+            "protectedSnippet": "Aspire.Hosting.Testing, 9.0.0\n\nRecommendation:\n\nRemove Aspire.Hosting.Testing, and replace with new package Aspire.Hosting.Testing 13.1.1",
+            "label": "Aspire.Hosting.Testing 9.0.0",
+            "properties": {
+              "PackageId": "Aspire.Hosting.Testing",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": "13.1.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "7e0abd19-5ede-4306-b85d-4b838dbb7aa9",
+          "ruleId": "NuGet.0005",
+          "projectPath": "SocialNetworkMicroservices.Tests\\SocialNetworkMicroservices.Tests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aspire.Hosting.Testing, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.Testing, and replace with new package Aspire.Hosting.Testing, 13.1.1",
+              "protected": "Aspire.Hosting.Testing, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.Testing, and replace with new package Aspire.Hosting.Testing, 13.1.1"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Tests\\SocialNetworkMicroservices.Tests.csproj",
+            "snippet": "Aspire.Hosting.Testing, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.Testing, and replace with new package Aspire.Hosting.Testing, 13.1.1",
+            "protectedSnippet": "Aspire.Hosting.Testing, 9.0.0\n\nRecommendation:\n\nThis version is out of support and is no longer maintained. Please upgrade to the latest version. See our support policy for details: https://aka.ms/dotent/aspire/support\nRemove Aspire.Hosting.Testing, and replace with new package Aspire.Hosting.Testing, 13.1.1",
+            "label": "Aspire.Hosting.Testing 9.0.0",
+            "properties": {
+              "PackageId": "Aspire.Hosting.Testing",
+              "PackageVersion": "9.0.0",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "b0fe8386-cfc4-4c7c-ac5a-f9339097f98c",
+          "ruleId": "Project.0002",
+          "projectPath": "SocialNetworkMicroservices.Tests\\SocialNetworkMicroservices.Tests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net9.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net9.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Tests\\SocialNetworkMicroservices.Tests.csproj",
+            "snippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net9.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "77fb1139-49c2-493a-b250-9c941744ea54",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "SocialNetworkMicroservices.Tests\\SocialNetworkMicroservices.Tests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "await resourceNotificationService.WaitForResourceAsync(\u0022webfrontend\u0022, KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30));",
+              "protected": "M:System.TimeSpan.FromSeconds(System.Int64)"
+            },
+            "kind": "File",
+            "path": "SocialNetworkMicroservices.Tests\\WebTests.cs",
+            "snippet": "await resourceNotificationService.WaitForResourceAsync(\u0022webfrontend\u0022, KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30));",
+            "protectedSnippet": "M:System.TimeSpan.FromSeconds(System.Int64)",
+            "label": "M:System.TimeSpan.FromSeconds(System.Int64)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 21,
+            "column": 8
+          }
+        }
+      ],
+      "features": []
+    }
+  ],
+  "rules": {
+    "NuGet.0002": {
+      "id": "NuGet.0002",
+      "isFeature": false,
+      "description": "NuGet package upgrade is recommended for selected target framework.\n\nStandard .NET packages are recommended to have versions matching version of .NET that project targets.\n\nSome other packages also are known to work better for selected target frameworks.",
+      "label": "NuGet package upgrade is recommended",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262530",
+          "isCustom": false
+        }
+      ]
+    },
+    "Project.0002": {
+      "id": "Project.0002",
+      "isFeature": false,
+      "description": "Project\u0027s target framework(s) needs to be changed to the new target framework that you selected for this upgrade.\n\nDuring upgrade target framework will be adjusted to corresponding platform when applicable. In some cases project would result in multiple target frameworks after the upgrade if it was using features that now have their own platforms in modern .NET frameworks (windows, iOS, Android etc).",
+      "label": "Project\u0027s target framework(s) needs to be changed",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Overview of porting from .NET Framework to .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265227",
+          "isCustom": false
+        },
+        {
+          "title": ".NET project SDKs",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265226",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0002": {
+      "id": "Api.0002",
+      "isFeature": false,
+      "description": "API is source incompatible for selected .NET version: requires code changes to compile successfully when targeting a new version, such as removing obsolete APIs or changing method signatures.",
+      "label": "Source incompatible for selected .NET version",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Breaking changes in .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262679",
+          "isCustom": false
+        }
+      ]
+    },
+    "NuGet.0005": {
+      "id": "NuGet.0005",
+      "isFeature": false,
+      "description": "NuGet package is deprecated.\n\nGo to its documentation and if there is a guidance for replacement of functionality provided by this package.",
+      "label": "NuGet package is deprecated",
+      "severity": "Optional",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262531",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0001": {
+      "id": "Api.0001",
+      "isFeature": false,
+      "description": "API is binary incompatible for selected .NET version: affects existing binaries, often requiring recompilation, because the API has changed in a way that prevents older binaries from loading or executing.",
+      "label": "Binary incompatible for selected .NET version",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Breaking changes in .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262679",
+          "isCustom": false
+        }
+      ]
+    },
+    "IdentityModel": {
+      "id": "IdentityModel",
+      "isFeature": false,
+      "description": "Windows Identity Foundation (WIF), SAML, and claims-based authentication APIs that have been replaced by modern identity libraries. WIF was the original identity framework for .NET Framework. Migrate to Microsoft.IdentityModel.* packages (modern identity stack).",
+      "label": "IdentityModel \u0026 Claims-based Security",
+      "severity": "Mandatory",
+      "effort": 4,
+      "links": [
+        {
+          "title": "Microsoft.IdentityModel packages",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2341614",
+          "isCustom": false
+        }
+      ]
+    }
+  }
+}

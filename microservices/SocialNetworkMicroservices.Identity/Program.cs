@@ -101,8 +101,8 @@ app.MapGet("/token", (HttpContext http, IConfiguration config) =>
 
     var claims = new[]
     {
-        new Claim(JwtRegisteredClaimNames.Sub, "user_id_123"),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        new Claim("sub", "user_id_123"),
+        new Claim("jti", Guid.NewGuid().ToString())
     };
 
     var expiresTime = DateTimeOffset.Now.AddMinutes(double.Parse(jwtSettings["ExpiresInMinutes"]!));
@@ -136,8 +136,8 @@ app.MapGet("/cookie/login", async ([FromQuery] string username, [FromQuery] stri
 
     var claims = new[]
     {
-        new Claim(JwtRegisteredClaimNames.Sub, "cookie_id_123"),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        new Claim("sub", "cookie_id_123"),
+        new Claim("jti", Guid.NewGuid().ToString())
     };
 
     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
