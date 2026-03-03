@@ -1,0 +1,134 @@
+### Social Network Identity API - Test Login Endpoints
+### Base URL (update if different)
+@baseUrl = https://localhost:7001
+@identityUrl = https://localhost:7001
+
+### ===========================================
+### GET TEST USERS
+### Get list of available test users for login testing
+### ===========================================
+GET {{identityUrl}}/api/login/test-users
+Accept: application/json
+
+### ===========================================
+### HEALTH CHECK
+### Check if the login service is healthy
+### ===========================================
+GET {{identityUrl}}/api/login/health
+Accept: application/json
+
+### ===========================================
+### LOGIN - Admin User
+### Simple login endpoint that returns OAuth token
+### ===========================================
+POST {{identityUrl}}/api/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+### SAVE TOKEN from response
+# Use this in subsequent requests
+
+### ===========================================
+### LOGIN - Regular User (John Doe)
+### ===========================================
+POST {{identityUrl}}/api/login
+Content-Type: application/json
+
+{
+  "username": "john.doe",
+  "password": "password123"
+}
+
+### ===========================================
+### LOGIN - Test User (Legacy)
+### ===========================================
+POST {{identityUrl}}/api/login
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "password"
+}
+
+### ===========================================
+### LOGIN - Moderator User
+### ===========================================
+POST {{identityUrl}}/api/login
+Content-Type: application/json
+
+{
+  "username": "moderator",
+  "password": "mod123"
+}
+
+### ===========================================
+### LOGIN - Invalid Credentials (Should Fail)
+### ===========================================
+POST {{identityUrl}}/api/login
+Content-Type: application/json
+
+{
+  "username": "invalid",
+  "password": "wrong"
+}
+
+### ===========================================
+### OAUTH TOKEN ENDPOINT (Direct)
+### Get token using OAuth 2.0 password grant
+### ===========================================
+POST {{identityUrl}}/connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password
+&username=admin
+&password=admin123
+&scope=openid profile email
+
+### ===========================================
+### USER INFO ENDPOINT
+### Get user information using access token
+### Replace {access_token} with actual token from login response
+### ===========================================
+@accessToken = YOUR_ACCESS_TOKEN_HERE
+
+GET {{identityUrl}}/connect/userinfo
+Authorization: Bearer {{accessToken}}
+
+### ===========================================
+### CLIENT CREDENTIALS FLOW
+### For service-to-service authentication
+### ===========================================
+POST {{identityUrl}}/connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+&client_id=client_app
+&client_secret=client_secret
+&scope=openid profile
+
+### ===========================================
+### REFRESH TOKEN
+### Get new access token using refresh token
+### Replace {refresh_token} with actual refresh token from login response
+### ===========================================
+@refreshToken = YOUR_REFRESH_TOKEN_HERE
+
+POST {{identityUrl}}/connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token
+&refresh_token={{refreshToken}}
+
+### ===========================================
+### TEST USERS SUMMARY
+### ===========================================
+# Available test users:
+# 1. admin / admin123 - Admin user with full privileges
+# 2. john.doe / password123 - Regular user
+# 3. jane.smith / password123 - Regular user
+# 4. test / password - Legacy test user
+# 5. moderator / mod123 - Moderator with elevated privileges

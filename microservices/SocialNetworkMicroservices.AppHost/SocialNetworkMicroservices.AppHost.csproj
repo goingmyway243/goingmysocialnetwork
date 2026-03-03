@@ -12,13 +12,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SocialNetworkMicroservices.Post\SocialNetworkMicroservices.Post.csproj" />
+	  <ProjectReference Include="..\SocialNetworkMicroservices.Identity\SocialNetworkMicroservices.Identity.csproj" />
+	  <ProjectReference Include="..\SocialNetworkMicroservices.Post\SocialNetworkMicroservices.Post.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="13.1.1" />
-    <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.1.1" />
-    <PackageReference Include="Aspire.Hosting.Redis" Version="13.1.1" />
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.Redis" />
   </ItemGroup>
 
 </Project>
