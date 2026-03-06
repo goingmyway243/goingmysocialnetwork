@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
-using OpenIddict.Abstractions;
-using OpenIddict.Server.AspNetCore;
 using SocialNetworkMicroservices.Identity;
+using SocialNetworkMicroservices.Identity.Data;
 using SocialNetworkMicroservices.Identity.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,7 +42,8 @@ builder.Services.AddSwaggerGen(options =>
 // Register the DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseInMemoryDatabase("OpenIddictDb");
+    var connectionString = builder.Configuration.GetConnectionString("goingmysocial-identity-db");
+    options.UseNpgsql(connectionString);
     options.UseOpenIddict();
 });
 
@@ -76,9 +76,6 @@ builder.Services.AddOpenIddict()
                .EnableTokenEndpointPassthrough()
                .EnableAuthorizationEndpointPassthrough()
                .EnableUserinfoEndpointPassthrough();
-
-        // Register scopes
-        options.RegisterScopes("email", "profile", "roles", "admin");
     })
     .AddValidation(options =>
     {
@@ -94,6 +91,14 @@ builder.Services.AddHttpClient();
 
 // Build the app
 var app = builder.Build();
+
+// Initialize database
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.EnsureCreated();
+    await OpenIddictSeeder.SeedAsync(scope.ServiceProvider);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

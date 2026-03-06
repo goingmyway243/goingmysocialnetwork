@@ -13,11 +13,75 @@ public class AuthorizationController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IOpenIddictApplicationManager _applicationManager;
+    private readonly IOpenIddictAuthorizationManager _authorizationManager;
 
-    public AuthorizationController(IOpenIddictApplicationManager applicationManager, IUserService userService)
+    public AuthorizationController(
+        IOpenIddictApplicationManager applicationManager, 
+        IUserService userService,
+        IOpenIddictAuthorizationManager authorizationManager)
     {
         _userService = userService;
         _applicationManager = applicationManager;
+        _authorizationManager = authorizationManager;
+    }
+
+    [HttpGet("~/connect/authorize")]
+    [HttpPost("~/connect/authorize")]
+    [Produces("application/json")]
+    public async Task<IActionResult> Authorize()
+    {
+        var request = HttpContext.GetOpenIddictServerRequest() 
+            ?? throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
+
+        // Retrieve the username/password from the request (if provided)
+        var username = request.Username ?? HttpContext.Request.Query["username"].ToString();
+        var password = request.Password ?? HttpContext.Request.Query["password"].ToString();
+
+        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+        {
+            return BadRequest(new OpenIddictResponse
+            {
+                Error = Errors.InvalidRequest,
+                ErrorDescription = "Username and password are required for authorization."
+            });
+        }
+
+        // Validate the username/password
+        var user = _userService.ValidateCredentials(username, password);
+        if (user == null)
+        {
+            return BadRequest(new OpenIddictResponse
+            {
+                Error = Errors.InvalidGrant,
+                ErrorDescription = "The username or password is invalid."
+            });
+        }
+
+        // Create claims identity
+        var identity = new ClaimsIdentity(
+            authenticationType: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+            nameType: Claims.Name,
+            roleType: Claims.Role);
+
+        identity.AddClaim(Claims.Subject, user.Id);
+        identity.AddClaim(Claims.Name, user.Username);
+        identity.AddClaim(Claims.Email, user.Email);
+        identity.AddClaim("given_name", user.FirstName);
+        identity.AddClaim("family_name", user.LastName);
+
+        // Add roles
+        foreach (var role in user.Roles)
+        {
+            identity.AddClaim(Claims.Role, role);
+        }
+
+        // Set scopes
+        identity.SetScopes(request.GetScopes());
+        identity.SetResources(await GetResourcesAsync(request.GetScopes()));
+        identity.SetDestinations(GetDestinations);
+
+        return SignIn(new ClaimsPrincipal(identity), 
+            OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 
     [HttpPost("~/connect/token")]
@@ -82,6 +146,22 @@ public class AuthorizationController : ControllerBase
             identity.SetDestinations(GetDestinations);
 
             return SignIn(new ClaimsPrincipal(identity), 
+                OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        }
+        else if (request.IsAuthorizationCodeGrantType())
+        {
+            var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+            if (result.Principal == null)
+            {
+                return BadRequest(new OpenIddictResponse
+                {
+                    Error = Errors.InvalidGrant,
+                    ErrorDescription = "The authorization code is no longer valid."
+                });
+            }
+
+            return SignIn(result.Principal, 
                 OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
         else if (request.IsRefreshTokenGrantType())
@@ -151,5 +231,17 @@ public class AuthorizationController : ControllerBase
                 yield return Destinations.AccessToken;
                 break;
         }
+    }
+
+    private async Task<IEnumerable<string>> GetResourcesAsync(IEnumerable<string> scopes)
+    {
+        var resources = new List<string>();
+
+        if (scopes.Contains("admin") || scopes.Contains("profile") || scopes.Contains("email"))
+        {
+            resources.Add("identity-server");
+        }
+
+        return await Task.FromResult(resources);
     }
 }

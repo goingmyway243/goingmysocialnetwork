@@ -5,7 +5,8 @@ var cache = builder.AddRedis("cache");
 var postgresql = builder.AddPostgres("postgresql")
     .WithImage("postgres", "17-alpine")
     .WithDataVolume("postgresql")
-    .WithPgAdmin(containerName: "pgadmin");
+    .WithPgAdmin(containerName: "pgadmin")
+    .WithLifetime(ContainerLifetime.Persistent);
 
 var database = postgresql.AddDatabase("goingmysocial-identity-db");
 

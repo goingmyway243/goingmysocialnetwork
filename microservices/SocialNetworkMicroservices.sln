@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.12.35728.132
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11505.172 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.AppHost", "SocialNetworkMicroservices.AppHost\SocialNetworkMicroservices.AppHost.csproj", "{B216BEF5-2B68-4AA1-A064-44B300DB567D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.ServiceDefaults", "SocialNetworkMicroservices.ServiceDefaults\SocialNetworkMicroservices.ServiceDefaults.csproj", "{738151D0-371D-40CB-8F3B-B2083703CD66}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.Tests", "SocialNetworkMicroservices.Tests\SocialNetworkMicroservices.Tests.csproj", "{C3F78585-C75F-4D2B-BC66-11C120EE6A30}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetworkMicroservices.Share", "SocialNetworkMicroservices.Share\SocialNetworkMicroservices.Share.csproj", "{20CA3038-D5C0-4A90-BF7A-FAE939AE29A8}"
 EndProject
@@ -49,18 +47,6 @@ Global
 		{738151D0-371D-40CB-8F3B-B2083703CD66}.Release|x64.Build.0 = Release|Any CPU
 		{738151D0-371D-40CB-8F3B-B2083703CD66}.Release|x86.ActiveCfg = Release|Any CPU
 		{738151D0-371D-40CB-8F3B-B2083703CD66}.Release|x86.Build.0 = Release|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Debug|x64.Build.0 = Debug|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Debug|x86.Build.0 = Debug|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Release|x64.ActiveCfg = Release|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Release|x64.Build.0 = Release|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Release|x86.ActiveCfg = Release|Any CPU
-		{C3F78585-C75F-4D2B-BC66-11C120EE6A30}.Release|x86.Build.0 = Release|Any CPU
 		{20CA3038-D5C0-4A90-BF7A-FAE939AE29A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{20CA3038-D5C0-4A90-BF7A-FAE939AE29A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20CA3038-D5C0-4A90-BF7A-FAE939AE29A8}.Debug|x64.ActiveCfg = Debug|Any CPU
