@@ -1,7 +1,5 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var cache = builder.AddRedis("cache");
-
 var postgresql = builder.AddPostgres("postgresql")
     .WithImage("postgres", "17-alpine")
     .WithDataVolume("postgresql")
@@ -11,12 +9,11 @@ var postgresql = builder.AddPostgres("postgresql")
 var database = postgresql.AddDatabase("goingmysocial-identity-db");
 
 var identityService = builder.AddProject<Projects.SocialNetworkMicroservices_Identity>("identity")
-    .WithReference(database);
+    .WithReference(database)
+    .WaitFor(database);
 
 builder.AddProject<Projects.SocialNetworkMicroservices_Post>("post")
     .WithReference(identityService)
-    .WithReference(database)
-    .WithReference(cache);
-
+    .WithReference(database);
 
 builder.Build().Run();
