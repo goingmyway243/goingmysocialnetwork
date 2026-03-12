@@ -1,8 +1,8 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, BehaviorSubject, throwError } from 'rxjs';
-import { tap, catchError, map } from 'rxjs/operators';
-import { LoginRequest, LoginResponse, AuthState, UserInfo } from '../models/auth.models';
+import { Observable, BehaviorSubject, throwError, of } from 'rxjs';
+import { tap, catchError, map, switchMap } from 'rxjs/operators';
+import { LoginRequest, LoginResponse, AuthState, UserInfo, LoginPKCERequest } from '../models/auth.models';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -13,6 +13,8 @@ export class AuthService {
   private readonly TOKEN_KEY = 'access_token';
   private readonly REFRESH_TOKEN_KEY = 'refresh_token';
   private readonly USER_KEY = 'user_info';
+  private readonly DUMMY_PKCE_CODE_VERIFIER = 'nd4UlntdQhcgUQ8qZQwzwyZynmJkB1uxGVp2VemfeoM';
+  private readonly DUMMY_PKCE_CODE_CHALLENGE = 'B1CqTiukITWVn7XPTDVt_7arbyJo1P7zD5cyfng3PZw';
 
   // Using signals for reactive state management
   private authStateSignal = signal<AuthState>({
@@ -42,6 +44,39 @@ export class AuthService {
         if (response.success && response.accessToken) {
           this.handleSuccessfulLogin(response);
         }
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  loginPKCE(username: string, password: string): Observable<LoginResponse> {
+    const request: LoginPKCERequest = {
+      username,
+      password,
+      codeChallenge: this.DUMMY_PKCE_CODE_CHALLENGE,
+      codeChallengeMethod: 'S256',
+      clientId: 'web-client',
+      redirectUri: 'http://localhost:4200/signin-oidc',
+      scope: 'openid profile email'
+    };
+
+    return this.http.post<LoginResponse>(`${this.API_URL}/login/pkce`, request).pipe(
+      switchMap(response => {
+        if (response.success) {
+          if (response.accessToken) {
+            this.handleSuccessfulLogin(response);
+          }
+          else {
+            return this.http.post<LoginResponse>(`${this.API_URL}/login/pkce/token`, {
+              codeVerifier: this.DUMMY_PKCE_CODE_VERIFIER,
+              authorizationCode: response.authorizationCode,
+              redirectUri: response.redirectUri,
+              clientId: request.clientId
+            });
+          }
+        }
+        
+        return of(response);
       }),
       catchError(this.handleError)
     );

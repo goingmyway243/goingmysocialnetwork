@@ -6,7 +6,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +40,7 @@ export class LoginComponent {
       const email = this.loginForm.value.email;
       const password = this.loginForm.value.password;
       
-      this.authService.login(email, password).subscribe({
+      this.authService.loginPKCE(email, password).subscribe({
         next: (response) => {
           this.isLoading.set(false);
           
