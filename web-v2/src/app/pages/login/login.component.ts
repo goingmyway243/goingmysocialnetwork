@@ -40,24 +40,10 @@ export class LoginComponent {
       const email = this.loginForm.value.email;
       const password = this.loginForm.value.password;
       
-      this.authService.loginPKCE(email, password).subscribe({
-        next: (response) => {
-          this.isLoading.set(false);
-          
-          if (response.success) {
-            console.log('Login successful:', response.user);
-            // Navigate to dashboard or home page
-            this.router.navigate(['/']);
-          } else {
-            this.errorMessage.set(response.errorDescription || 'Login failed');
-          }
-        },
-        error: (error) => {
-          this.isLoading.set(false);
-          this.errorMessage.set(error.message || 'An error occurred during login');
-          console.error('Login error:', error);
-        }
-      });
+      // Use the OAuth2/OIDC authorization code flow with PKCE
+      // The library will handle state and PKCE automatically
+      this.authService.loginWithCredentials(email, password);
+      // Note: The page will redirect, so loading state will be reset
     } else {
       Object.keys(this.loginForm.controls).forEach(key => {
         const control = this.loginForm.get(key);

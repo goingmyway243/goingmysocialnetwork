@@ -9,8 +9,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getAccessToken();
 
-  // Skip adding token for login requests
-  if (req.url.includes('/login') || req.url.includes('/token')) {
+  // Skip adding token for auth-related requests
+  if (req.url.includes('/connect/') || req.url.includes('/signin-oidc')) {
     return next(req);
   }
 

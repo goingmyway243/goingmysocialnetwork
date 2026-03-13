@@ -1,12 +1,16 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:5133/api',
-  authCodeFlowConfig: {
+  auth: {
     issuer: 'http://localhost:5133',
+    clientId: 'web-client',
     redirectUri: window.location.origin + '/signin-oidc',
-    clientId: 'spa',
+    postLogoutRedirectUri: window.location.origin + '/',
     responseType: 'code',
-    scope: 'roles profile email',
+    scope: 'openid profile email roles',
     showDebugInformation: true,
+    requireHttps: false,
+    useSilentRefresh: false,
+    silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
   }
 };

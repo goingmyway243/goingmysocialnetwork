@@ -41,7 +41,6 @@ public static class OpenIddictSeeder
             await applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
             {
                 ClientId = "web-client",
-                ClientSecret = "web-client-secret",
                 DisplayName = "Web Application Client",
                 Permissions =
                 {
@@ -53,15 +52,22 @@ public static class OpenIddictSeeder
                     Permissions.ResponseTypes.Code,
                     Permissions.Prefixes.Scope + "email",
                     Permissions.Prefixes.Scope + "profile",
-                    Permissions.Prefixes.Scope + "roles"
+                    Permissions.Prefixes.Scope + "roles",
+                    Permissions.Prefixes.Scope + "openid"
                 },
                 RedirectUris =
                 {
-                    new Uri("http://localhost:4200/signin-oidc")
+                    new Uri("http://localhost:4200/signin-oidc"),
+                    new Uri("http://localhost:4200/")
                 },
                 PostLogoutRedirectUris =
                 {
-                    new Uri("http://localhost:4200/signout-callback-oidc")
+                    new Uri("http://localhost:4200/signout-callback-oidc"),
+                    new Uri("http://localhost:4200/")
+                },
+                Requirements =
+                {
+                    Requirements.Features.ProofKeyForCodeExchange
                 }
             });
         }
@@ -120,6 +126,21 @@ public static class OpenIddictSeeder
     private static async Task SeedScopesAsync(IServiceProvider serviceProvider)
     {
         var scopeManager = serviceProvider.GetRequiredService<IOpenIddictScopeManager>();
+
+        // OpenID scope (required for OIDC)
+        if (await scopeManager.FindByNameAsync("openid") is null)
+        {
+            await scopeManager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "openid",
+                DisplayName = "OpenID",
+                Description = "OpenID Connect scope",
+                Resources =
+                {
+                    "identity-server"
+                }
+            });
+        }
 
         // Email scope
         if (await scopeManager.FindByNameAsync("email") is null)
