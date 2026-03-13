@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -7,7 +8,12 @@ export const routes: Routes = [
   },
   {
     path: 'signin-oidc',
-    loadComponent: () => import('./pages/callback/callback.component').then(m => m.CallbackComponent)
+    loadComponent: () => import('./pages/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent)
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    canActivate: [authGuard]
   },
   {
     path: '',

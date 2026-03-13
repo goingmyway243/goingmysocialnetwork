@@ -1,7 +1,7 @@
 <div class="login-container">
   <!-- Animated gradient background -->
   <div class="gradient-bg"></div>
-  <div class="gradient-bg-2"></div>
+  <div class="gradient-bg-overlay"></div>
 
   <!-- Glass card -->
   <div class="glass glass-card">
@@ -11,37 +11,26 @@
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <!-- Error message -->
-      @if (errorMessage()) {
-        <div class="error-message" style="margin-bottom: 1rem;">
-          <i class="pi pi-exclamation-circle" style="margin-right: 0.5rem;"></i>
-          {{ errorMessage() }}
-        </div>
-      }
-
-      <!-- Email field -->
+      <!-- Username field -->
       <div class="form-group">
-        <label for="email" class="form-label">Email Address</label>
+        <label for="username" class="form-label">Username</label>
         <div class="input-wrapper">
-          <i class="pi pi-envelope input-icon"></i>
+          <i class="pi pi-user input-icon"></i>
           <input
             pInputText
-            id="email"
-            type="email"
-            formControlName="email"
+            id="username"
+            type="text"
+            formControlName="username"
             class="form-input w-full"
-            placeholder="you@example.com"
-            [class.ng-invalid]="email?.invalid && email?.touched"
-            [class.ng-dirty]="email?.touched"
+            placeholder="Enter your username"
+            [class.ng-invalid]="username?.invalid && username?.touched"
+            [class.ng-dirty]="username?.touched"
           />
         </div>
-        @if (email?.invalid && email?.touched) {
+        @if (username?.invalid && username?.touched) {
           <span class="error-message">
-            @if (email?.errors?.['required']) {
-              <span>Email is required</span>
-            }
-            @if (email?.errors?.['email']) {
-              <span>Please enter a valid email</span>
+            @if (username?.errors?.['required']) {
+              <span>Username is required</span>
             }
           </span>
         }

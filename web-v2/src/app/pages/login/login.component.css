@@ -20,11 +20,10 @@
   animation: gradient-drift 20s ease infinite;
 }
 
-.gradient-bg-2 {
+.gradient-bg-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, #E0E8F0 0%, #F5EEF8 40%, #FDEBD0 70%, #E0E8F0 100%);
-  background-size: 300% 300%;
   animation: gradient-drift 20s ease infinite;
   z-index: 0;
   opacity: 0.2;
