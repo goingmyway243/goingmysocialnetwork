@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/GoingMy.Post.API/GoingMy.Post.API.csproj" />
+    <Project Path="src/GoingMy.Post.Application/GoingMy.Post.Application.csproj" />
+    <Project Path="src/GoingMy.Post.Domain/GoingMy.Post.Domain.csproj" />
+    <Project Path="src/GoingMy.Post.Infrastructure/GoingMy.Post.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GoingMy.Post.IntegrationTests/GoingMy.Post.IntegrationTests.csproj" />
+    <Project Path="tests/GoingMy.Post.Tests/GoingMy.Post.Tests.csproj" />
+  </Folder>
+</Solution>

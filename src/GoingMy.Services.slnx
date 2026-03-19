@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/GoingMy.AuthService/" />
+  <Folder Name="/GoingMy.AuthService/src/">
+    <Project Path="GoingMy.AuthService/src/GoingMy.Auth.API/GoingMy.Auth.API.csproj" />
+    <Project Path="GoingMy.AuthService/src/GoingMy.Auth.Application/GoingMy.Auth.Application.csproj" />
+    <Project Path="GoingMy.AuthService/src/GoingMy.Auth.Domain/GoingMy.Auth.Domain.csproj" />
+    <Project Path="GoingMy.AuthService/src/GoingMy.Auth.Infrastructure/GoingMy.Auth.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/GoingMy.AuthService/tests/">
+    <Project Path="GoingMy.AuthService/tests/GoingMy.Auth.IntegrationTests/GoingMy.Auth.IntegrationTests.csproj" />
+    <Project Path="GoingMy.AuthService/tests/GoingMy.Auth.Tests/GoingMy.Auth.Tests.csproj" />
+  </Folder>
+  <Folder Name="/GoingMy.PostService/" />
+  <Folder Name="/GoingMy.PostService/src/">
+    <Project Path="GoingMy.PostService/src/GoingMy.Post.API/GoingMy.Post.API.csproj" />
+    <Project Path="GoingMy.PostService/src/GoingMy.Post.Application/GoingMy.Post.Application.csproj" />
+    <Project Path="GoingMy.PostService/src/GoingMy.Post.Domain/GoingMy.Post.Domain.csproj" />
+    <Project Path="GoingMy.PostService/src/GoingMy.Post.Infrastructure/GoingMy.Post.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/GoingMy.PostService/tests/">
+    <Project Path="GoingMy.PostService/tests/GoingMy.Post.IntegrationTests/GoingMy.Post.IntegrationTests.csproj" />
+    <Project Path="GoingMy.PostService/tests/GoingMy.Post.Tests/GoingMy.Post.Tests.csproj" />
+  </Folder>
+  <Project Path="GoingMy.AppHost/GoingMy.AppHost.csproj" />
+  <Project Path="GoingMy.ServiceDefaults/GoingMy.ServiceDefaults.csproj" />
+</Solution>

@@ -1,20 +1,20 @@
 # SKILL: runbook-local-development-setup
 
 ## Purpose
-Provide step-by-step operational procedures for developers to set up complete GoingMy development environment locally, from cloning repository to running services.
+Provide step-by-step operational procedures for developers to set up complete GoingMy development environment locally using .NET Aspire orchestration.
 
 ## Use When
 - New team member joins
 - Setting up development machine
 - Troubleshooting environment setup issues
-- Documenting setup process
+- Documenting .NET Aspire-based local development
 
 ## Prerequisites
 - Git installed
-- .NET SDK 10.0+
+- .NET SDK 10.0+ (with .NET Aspire workload)
 - Node.js 22+
-- Docker and Docker Compose
-- PostgreSQL client tools (pgAdmin, psql, or DBeaver)
+- Docker Desktop (required for Aspire orchestration)
+- PostgreSQL client tools (pgAdmin, psql, or DBeaver) - optional
 - VS Code or Visual Studio 2022
 
 ## Step-by-Step Setup
@@ -95,39 +95,42 @@ SELECT * FROM users;
 \q
 ```
 
-### Phase 3: Backend Services
+### Phase 3: Backend Services via Aspire
 
-**Task 3.1: Start Redis Cache**
+**Task 3.1: Services Start Automatically**
 ```bash
-docker-compose up redis -d
+# When you run 'dotnet run' from AppHost directory,
+# all configured services start automatically:
+# - PostgreSQL database
+# - Redis cache
+# - User Service (typically http://localhost:5001)
+# - Post Service (typically http://localhost:5002)
+# - Other configured services
 
-# Verify
-docker-compose exec redis redis-cli ping
-# Should output: PONG
+# Aspire manages container orchestration for you!
 ```
 
-**Task 3.2: Run User Service**
+**Task 3.2: Monitor Services via Aspire Dashboard**
 ```bash
-cd services/GoingMy.UserService/src/GoingMy.User.API
+# Open browser to Aspire Dashboard
+# http://localhost:18888
 
-# Run with hot reload
-dotnet watch run
+# You can see:
+# - Service health status
+# - Resource consumption (CPU, Memory)
+# - Log streams from each service
+# - Trace details (if instrumented)
+```
 
-# Or without watch
-dotnet run
-
-# In another terminal, verify
+**Task 3.3: Verify Service Endpoints**
+```bash
+# User Service health check
 curl http://localhost:5001/api/v1/health
-```
 
-**Task 3.3: Run Post Service**
-```bash
-cd services/GoingMy.PostService/src/GoingMy.Post.API
-
-dotnet watch run
-
-# Verify
+# Post Service health check
 curl http://localhost:5002/api/v1/health
+
+# All endpoints visible in Aspire Dashboard under Resources
 ```
 
 ### Phase 4: Frontend Setup
@@ -141,23 +144,30 @@ npm install
 
 # Verify Angular CLI
 ng --version
+
+# Return to root
+cd ..
 ```
 
 **Task 4.2: Configure API Endpoints**
 ```bash
 # Edit environment.ts
+cd web
 nano src/environments/environment.ts
 
-# Set API_URL
+# Set API_URL (Aspire handles service discovery)
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000'
+  apiUrl: 'http://localhost:5000'  // Or gateway URL from Aspire
 };
+
+cd ..
 ```
 
-**Task 4.3: Start Angular Development Server**
+**Task 4.3: Start Angular Development Server (Separate Terminal)**
 ```bash
-# From web directory
+# From web directory (while Aspire is running in another terminal)
+cd web
 ng serve
 
 # Or with custom port
@@ -169,20 +179,22 @@ ng serve --port 4200
 
 ### Phase 5: Integration Testing
 
-**Task 5.1: Verify All Services Running**
+**Task 5.1: Verify All Services Running via Dashboard**
 ```bash
-# Check all containers
-docker-compose ps
+# Open Aspire Dashboard
+# http://localhost:18888
 
-# Expected output:
-# postgres    - Up (healthy)
-# redis       - Up (healthy)
-# API services - Up (healthy)
+# Expected to see:
+# postgres        - Running (healthy)
+# redis           - Running (healthy)
+# UserService     - Running (healthy)
+# PostService     - Running (healthy)
+# Frontend        - Running (if configured)
 ```
 
 **Task 5.2: Test API Endpoints**
 ```bash
-# Health checks
+# Health checks (from Aspire resource list)
 curl http://localhost:5001/api/v1/health    # User Service
 curl http://localhost:5002/api/v1/health    # Post Service
 
@@ -195,31 +207,67 @@ curl -X POST http://localhost:5001/api/v1/users \
   }'
 ```
 
-**Task 5.3: Test Frontend**
+**Task 5.3: Test Frontend Integration**
 ```bash
 # Navigate to http://localhost:4200
 # Should see login screen
 # Try creating account or logging in
+# Check Aspire Dashboard logs for backend activity
 ```
 
 ## Troubleshooting
 
+### Aspire-Related Issues
+
+**Problem: Aspire Dashboard Not Starting**
+```bash
+# Verify .NET Aspire is installed
+dotnet workload list | grep aspire
+
+# Reinstall if needed
+dotnet workload install aspire
+
+# Check port 18888 is available
+# Default Aspire Dashboard runs on http://localhost:18888
+```
+
+**Problem: Service Not Visible in Dashboard**
+```bash
+# Verify service is configured in AppHost Program.cs
+# Example:
+var userService = builder.AddProject<Projects.GoingMy_User_API>("user-service")
+    .WithReference(postgres)
+    .WithHttpEndpoint(port: 5001);
+
+# Restart Aspire host
+# Ctrl+C in AppHost terminal
+# Run: dotnet run again
+```
+
+**Problem: Container Port Conflicts**
+```bash
+# Aspire auto-manages ports, but if conflicts occur:
+# Check Docker status
+docker ps
+
+# Stop conflicting containers
+docker stop {container_id}
+
+# Restart Aspire
+cd AppHost && dotnet run
+```
+
 ### Database Issues
 
-**Problem: PostgreSQL Connection Refused**
+**Problem: PostgreSQL Not Starting via Aspire**
 ```bash
-# Solution 1: Check container is running
-docker-compose ps postgres
+# Check AppHost configuration includes PostgreSQL
+# In AppHost Program.cs, ensure:
+var postgres = builder.AddPostgres("postgres")
+    .WithVolume("postgres-data", "/var/lib/postgresql/data");
 
-# Solution 2: Check logs
-docker-compose logs postgres
-
-# Solution 3: Restart
-docker-compose restart postgres
-
-# Solution 4: Reset (WARNING: deletes data)
-docker-compose down -v
-docker-compose up postgres -d
+# Check Aspire logs for database errors
+# View in Dashboard under postgres resource logs
 ```
 
 **Problem: Migrations Failed**
@@ -237,15 +285,23 @@ dotnet ef migrations remove
 
 ### Backend Issues
 
-**Problem: Service Won't Start (Port in Use)**
+**Problem: Service Health Check Failing**
 ```bash
-# Find process using port
-lsof -i :5001  # Linux/Mac
-netstat -ano | findstr :5001  # Windows
+# View service logs in Aspire Dashboard
+# Click service resource → View logs
 
-# Kill process
-kill -9 {PID}  # Linux/Mac
-taskkill /PID {PID} /F  # Windows
+# Or check via API
+curl http://localhost:5001/api/v1/health
+
+# Check dependencies in AppHost configuration
+```
+
+**Problem: Service-to-Service Communication Issues**
+```bash
+# Aspire provides automatic service discovery
+# Ensure service references configured in AppHost:
+var userService = builder.AddProject<Projects.GoingMy_User_API>("user-service")
+    .WithReference(postgres);  // Add all dependencies
 ```
 
 **Problem: Dependency Errors**
@@ -254,15 +310,6 @@ taskkill /PID {PID} /F  # Windows
 cd services/GoingMy.UserService
 dotnet clean
 dotnet build
-```
-
-**Problem: Runtime Errors**
-```bash
-# Check logs
-dotnet run 2>&1 | tee app.log
-
-# Debug with detailed messages
-ASPNETCORE_ENVIRONMENT=Development dotnet run --verbose
 ```
 
 ### Frontend Issues
@@ -280,40 +327,38 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
-**Problem: Compilation Errors**
+**Problem: API Connection Failures**
 ```bash
-# Clear cache and rebuild
-ng serve --poll 2000  # Enable polling
+# Verify services running in Aspire Dashboard
+# Ensure API_URL in environment.ts matches service port
+# Check CORS configuration in API services
 ```
 
 ## Quick Start Script
 
 ```bash
 #!/bin/bash
-# quick-setup.sh - One-command setup
+# quick-setup.sh - One-command Aspire-based setup
 
 set -e
 
-echo "🚀 Starting GoingMy Setup..."
+echo "🚀 Starting GoingMy Setup with .NET Aspire..."
 
 # Environment
 echo "📋 Setting up environment..."
 cp .env.example .env
 
-# Docker
-echo "🐳 Starting Docker services..."
-docker-compose up -d postgres redis
+# .NET Aspire
+echo "⚙️  Installing .NET Aspire workload..."
+dotnet workload install aspire
 
-# Wait for database
-echo "⏳ Waiting for PostgreSQL..."
-sleep 5
-
-# Backend
-echo "🔧 Running database migrations..."
+# Restore dependencies
+echo "📦 Restoring NuGet packages..."
+dotnet restore AppHost
 cd services/GoingMy.UserService
-dotnet ef database update -s src/GoingMy.User.API
+dotnet restore
 cd ../GoingMy.PostService
-dotnet ef database update -s src/GoingMy.Post.API
+dotnet restore
 cd ../..
 
 # Frontend
@@ -325,37 +370,44 @@ cd ..
 echo ""
 echo "✅ Setup complete!"
 echo ""
-echo "Starting services..."
+echo "Starting services via Aspire..."
 echo ""
 echo "To start development:"
-echo "  Terminal 1: cd services/GoingMy.UserService && dotnet watch run"
-echo "  Terminal 2: cd services/GoingMy.PostService && dotnet watch run"
-echo "  Terminal 3: cd web && ng serve"
+echo "  Terminal 1: cd AppHost && dotnet run"
+echo "  (This starts all services: PostgreSQL, Redis, APIs)"
 echo ""
-echo "Then open: http://localhost:4200"
+echo "  Terminal 2: cd web && ng serve"
+echo ""
+echo "Then open:"
+echo "  Frontend:  http://localhost:4200"
+echo "  Dashboard: http://localhost:18888"
 ```
 
 ## Daily Development Commands
 
 ```bash
-# Start development environment
-docker-compose up -d postgres redis
+# Start all services via Aspire (Terminal 1)
+cd AppHost
+dotnet run
 
-# Start backend services
-cd services/GoingMy.UserService && dotnet watch run &
-cd services/GoingMy.PostService && dotnet watch run &
+# In another terminal, start frontend (Terminal 2)
+cd web
+ng serve
 
-# Start frontend
-cd web && ng serve
+# Access services
+Frontend:       http://localhost:4200
+Dashboard:      http://localhost:18888
+User Service:   http://localhost:5001
+Post Service:   http://localhost:5002
+
+# View logs from Aspire Dashboard
+# Click on each service resource → View logs
 
 # Run tests
 dotnet test
 
-# View logs
-docker-compose logs -f
-
-# Stop everything
-docker-compose down
+# Stop everything (Ctrl+C in AppHost terminal)
+# Aspire automatically cleans up containers
 ```
 
 ## Quality Criteria
@@ -381,6 +433,48 @@ docker-compose down
 - Team Wiki (if available)
 - Architecture Documentation
 
+## Additional Resources
+
+### AppHost Project Structure
+```
+AppHost/
+├── Program.cs           # Service orchestration configuration
+├── AppHost.csproj       # Aspire host project
+└── Properties/
+    └── launchSettings.json
+```
+
+### Example AppHost Program.cs
+```csharp
+var builder = DistributedApplication.CreateBuilder(args);
+
+// Add infrastructure
+var postgres = builder.AddPostgres("postgres")
+    .WithVolume("postgres-data", "/var/lib/postgresql/data")
+    .AddDatabase("goingmy-db");
+
+var redis = builder.AddRedis("redis");
+
+// Add services
+builder.AddProject<Projects.GoingMy_User_API>("user-service")
+    .WithReference(postgres)
+    .WithReference(redis)
+    .WithHttpEndpoint(port: 5001);
+
+builder.AddProject<Projects.GoingMy_Post_API>("post-service")
+    .WithReference(postgres)
+    .WithReference(redis)
+    .WithHttpEndpoint(port: 5002);
+
+// Add frontend
+builder.AddNpmApp("web", projectDirectory: "../web")
+    .WithHttpEndpoint(port: 4200)
+    .WithEnvironment("API_URL", "http://localhost:5000");
+
+await builder.Build().RunAsync();
+```
+
 ## Changelog
-- v1.0: Initial development setup runbook
+- v2.0: Migrated to .NET Aspire orchestration
 - v1.1: Added quick-start script
+- v1.0: Initial development setup runbook

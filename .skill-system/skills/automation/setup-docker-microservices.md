@@ -48,7 +48,7 @@ RUN dotnet build "src/GoingMy.User.API/GoingMy.User.API.csproj" -c Release -o /a
 RUN dotnet publish "src/GoingMy.User.API/GoingMy.User.API.csproj" -c Release -o /app/publish
 
 # Stage 2: Runtime
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /app/publish .
 
@@ -67,7 +67,7 @@ ENTRYPOINT ["dotnet", "GoingMy.User.API.dll"]
 
 ```dockerfile
 # Stage 1: Build
-FROM node:18-alpine AS build
+FROM node:22-alpine AS build
 WORKDIR /app
 
 # Copy package files
