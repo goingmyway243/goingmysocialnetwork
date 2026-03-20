@@ -1,19 +1,21 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Add PostgreSQL resource (shared database for all services)
-var postgres = builder.AddPostgres("postgres")
-    .WithPgAdmin();
+var postgresql = builder.AddPostgres("postgresql")
+    .WithImage("postgres", "17-alpine")
+    .WithDataVolume("aspire_postgresql")
+    .WithPgAdmin(containerName: "pgadmin")
+    .WithLifetime(ContainerLifetime.Persistent);
 
-// Auth Service
-var authServiceDb = postgres.AddDatabase("AuthDb");
-var authService = builder.AddProject<Projects.GoingMy_Auth_API>("auth-api")
-    .WithReference(authServiceDb)
-    .WaitFor(authServiceDb);
+var database = postgresql.AddDatabase("goingmysocial-identity-db");
 
-// Post Service
-var postServiceDb = postgres.AddDatabase("PostDb");
-var postService = builder.AddProject<Projects.GoingMy_Post_API>("post-api")
-    .WithReference(postServiceDb)
-    .WaitFor(postServiceDb);
+var identityService = builder.AddProject<Projects.GoingMy_Auth_API>("identity")
+    .WithReference(database)
+    .WaitFor(database);
+
+builder.AddProject<Projects.GoingMy_Post_API>("post")
+    .WithReference(identityService)
+    .WithReference(database)
+    .WaitFor(identityService)
+    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 builder.Build().Run();
