@@ -237,17 +237,10 @@ dotnet list package --outdated
 - **Clean Architecture**: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
 - **Microservices Patterns**: https://microservices.io/patterns/
 
-## Team Standards
-
-All development should follow:
-- [Code Style Guidelines](../../.skill-system/skills/knowledge/dotnet-coding-standards.md)
-- [Architecture Decisions](../../.skill-system/skills/review/architecture-decisions.md)
-- [Verification Checklist](../../.skill-system/templates/VERIFICATION-CHECKLISTS.md)
-
 ## Support
 
 For questions or issues:
-1. Check the skill system documentation in `.skill-system/`
+1. Check the skill system documentation in `.instruction.md/`
 2. Review the relevant service's code and tests
 3. Consult the team lead or architecture team
 
