@@ -1,19 +1,20 @@
+using GoingMy.Shared;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
-var postgresql = builder.AddPostgres("postgresql")
+var postgresql = builder.AddPostgres(SharedServices.Postgresql)
     .WithImage("postgres", "17-alpine")
-    .WithDataVolume("aspire_postgresql")
+    .WithDataVolume("goingmysocial-postgresql")
     .WithPgAdmin(containerName: "pgadmin")
     .WithLifetime(ContainerLifetime.Persistent);
 
-var database = postgresql.AddDatabase("goingmysocial-identity-db");
+var database = postgresql.AddDatabase(SharedServices.IdentityDb);
 
-var identityService = builder.AddProject<Projects.GoingMy_Auth_API>("identity")
+var identityService = builder.AddProject<Projects.GoingMy_Auth_API>(SharedServices.IdentityApi)
     .WithReference(database)
     .WaitFor(database);
 
-builder.AddProject<Projects.GoingMy_Post_API>("post")
-    .WithReference(identityService)
+builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.PostApi)
     .WithReference(database)
     .WaitFor(identityService)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));

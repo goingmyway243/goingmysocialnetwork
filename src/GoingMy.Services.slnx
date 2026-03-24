@@ -2,9 +2,6 @@
   <Folder Name="/GoingMy.AuthService/" />
   <Folder Name="/GoingMy.AuthService/src/">
     <Project Path="GoingMy.AuthService/src/GoingMy.Auth.API/GoingMy.Auth.API.csproj" />
-    <Project Path="GoingMy.AuthService/src/GoingMy.Auth.Application/GoingMy.Auth.Application.csproj" />
-    <Project Path="GoingMy.AuthService/src/GoingMy.Auth.Domain/GoingMy.Auth.Domain.csproj" />
-    <Project Path="GoingMy.AuthService/src/GoingMy.Auth.Infrastructure/GoingMy.Auth.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/GoingMy.AuthService/tests/">
     <Project Path="GoingMy.AuthService/tests/GoingMy.Auth.IntegrationTests/GoingMy.Auth.IntegrationTests.csproj" />
@@ -23,4 +20,5 @@
   </Folder>
   <Project Path="GoingMy.AppHost/GoingMy.AppHost.csproj" />
   <Project Path="GoingMy.ServiceDefaults/GoingMy.ServiceDefaults.csproj" />
+  <Project Path="GoingMy.Shared/GoingMy.Shared.csproj" Id="96c540df-f207-4559-ad3b-016d3e76302e" />
 </Solution>

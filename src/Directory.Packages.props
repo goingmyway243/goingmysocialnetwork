@@ -4,10 +4,10 @@
   </PropertyGroup>
   <!--Aspire Packages-->
   <ItemGroup>
-    <PackageVersion Include="Aspire.AppHost.Sdk" Version="13.1.1" />
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.1.1" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.1.1" />
     <PackageVersion Include="Aspire.Hosting.Redis" Version="13.1.1" />
+    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.1.1" />
   </ItemGroup>
   <!--Microsoft.AspNetCore Packages-->
   <ItemGroup>
@@ -45,5 +45,12 @@
   <!--Swagger/OpenAPI Packages-->
   <ItemGroup>
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.1.4" />
+  </ItemGroup>
+  <!--Testing Packages-->
+  <ItemGroup>
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
   </ItemGroup>
 </Project>

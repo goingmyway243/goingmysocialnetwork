@@ -1,50 +1,126 @@
-using GoingMy.ServiceDefaults;
+using GoingMy.Auth.API.Data;
+using GoingMy.Auth.API.Models;
+using GoingMy.Auth.API.Services;
+using GoingMy.Shared;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
 builder.Services.AddOpenApi();
-builder.Services.AddHealthChecks();
+builder.Services.AddEndpointsApiExplorer();
 
-// Add service defaults (logging, tracing, resilience)
-builder.AddServiceDefaults();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(builder.Configuration["AllowedHosts"]!.Split(','))
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
+// Register the DbContext
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString(SharedServices.IdentityDb);
+    options.UseNpgsql(connectionString);
+    options.UseOpenIddict();
+});
+
+// Register OpenIddict services
+builder.Services.AddOpenIddict()
+    .AddCore(options =>
+    {
+        options.UseEntityFrameworkCore()
+               .UseDbContext<ApplicationDbContext>();
+    })
+    .AddServer(options =>
+    {
+        // Set the issuer
+        options.SetIssuer(new Uri(builder.Configuration["OpenIddict:Issuer"] ?? "https://localhost:7001"));
+
+        // Configure OpenIddict server options
+        /*var encryptionKey = builder.Configuration["OpenIddict:Key"] ?? throw new Exception("OpenIddict key is not configured.");
+        options.AddEncryptionKey(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(encryptionKey)));*/
+        options.SetAccessTokenLifetime(TimeSpan.FromMinutes(int.Parse(builder.Configuration["OpenIddict:AccessTokenLifetime"]!)));
+        options.SetRefreshTokenLifetime(TimeSpan.FromMinutes(int.Parse(builder.Configuration["OpenIddict:RefreshTokenLifetime"]!)));
+
+        // Enable the token endpoint
+        options.SetTokenEndpointUris("/connect/token");
+        options.SetAuthorizationEndpointUris("/connect/authorize");
+        options.SetUserinfoEndpointUris("/connect/userinfo");
+
+        // Enable the flows
+        options.AllowPasswordFlow();
+        options.AllowClientCredentialsFlow();
+        options.AllowRefreshTokenFlow();
+        options.AllowAuthorizationCodeFlow();
+
+        // Register the signing and encryption credentials
+        options.AddDevelopmentEncryptionCertificate()
+               .AddDevelopmentSigningCertificate();
+
+        // Register the ASP.NET Core host and configure the ASP.NET Core options
+        options.UseAspNetCore()
+               .EnableTokenEndpointPassthrough()
+               .EnableAuthorizationEndpointPassthrough()
+               .EnableUserinfoEndpointPassthrough();
+
+        options.DisableAccessTokenEncryption();
+
+        options.RegisterScopes("social_api", "email", "profile", "roles", "openid");
+    })
+    .AddValidation(options =>
+    {
+        options.UseLocalServer();
+        options.UseAspNetCore();
+    });
+
+builder.Services.AddControllers();
+
+// Register ASP.NET Core Identity services
+builder.Services.AddIdentityCore<ApplicationUser>(options =>
+{
+    // Password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+
+    // User settings
+    options.User.RequireUniqueEmail = true;
+
+    // SignIn settings (optional)
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
+})
+    .AddRoles<IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
+
+// Register custom services
+builder.Services.AddScoped<IUserService, UserService>();
+
+// Build the app
 var app = builder.Build();
 
-// Map service defaults (health checks, etc.)
-app.MapServiceDefaults();
-
-// Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
+// Initialize database
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.EnsureCreated();
+    await OpenIddictSeeder.SeedAsync(scope.ServiceProvider);
+    await UserSeeder.SeedUsersAsync(scope.ServiceProvider);
 }
 
+app.UseCors();
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
