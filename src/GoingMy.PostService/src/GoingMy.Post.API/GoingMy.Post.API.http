@@ -1,6 +1,35 @@
 @GoingMy.Post.API_HostAddress = http://localhost:5097
 
-GET {{GoingMy.Post.API_HostAddress}}/weatherforecast/
+### Get all posts
+GET {{GoingMy.Post.API_HostAddress}}/api/posts
 Accept: application/json
+Authorization: Bearer {token}
 
-###
+### Get post by ID
+GET {{GoingMy.Post.API_HostAddress}}/api/posts/1
+Accept: application/json
+Authorization: Bearer {token}
+
+### Create a new post
+POST {{GoingMy.Post.API_HostAddress}}/api/posts
+Content-Type: application/json
+Authorization: Bearer {token}
+
+{
+  "title": "My New Post",
+  "content": "This is the content of my new post"
+}
+
+### Update a post
+PUT {{GoingMy.Post.API_HostAddress}}/api/posts/1
+Content-Type: application/json
+Authorization: Bearer {token}
+
+{
+  "title": "Updated Post Title",
+  "content": "Updated post content"
+}
+
+### Delete a post
+DELETE {{GoingMy.Post.API_HostAddress}}/api/posts/1
+Authorization: Bearer {token}

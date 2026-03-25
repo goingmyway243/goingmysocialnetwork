@@ -2,6 +2,38 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.3.0] - 2026-03-25
+
+### Added
+- **Scalar API integration**: Added Scalar.AspNetCore package to AuthService and PostService for interactive API documentation
+- **CQRS pattern with MediatR**: Implemented complete Command Query Responsibility Segregation pattern in PostService
+  - Consolidated command and handler classes in single files (`CreatePostCommand.cs`, `UpdatePostCommand.cs`, `DeletePostCommand.cs`)
+  - Consolidated query and handler classes in single files (`GetPostsQuery.cs`, `GetPostByIdQuery.cs`)
+  - Created `PostsController` with RESTful endpoints dispatching through MediatR
+  - Applied exception handling patterns (UnauthorizedAccessException, InvalidOperationException) for proper HTTP status codes
+- **Domain-driven design**: Created Post domain entity with business logic methods
+- **Application DTOs**: Defined data transfer objects for API responses
+- **Repository pattern**: Implemented `IPostRepository` interface with in-memory implementation (ready for EF Core migration)
+- **Updated .instruction.md**: Comprehensive CQRS pattern documentation for AI agents including:
+  - Command/Query/Handler consolidation guidelines
+  - Controller pattern for REST endpoints
+  - DTO separation from domain entities
+  - Naming conventions and file organization
+  - Exception handling patterns
+
+### Changed
+- **PostService architecture**: Refactored from minimal APIs to controller-based architecture
+  - Replaced inline endpoint definitions with `PostsController` class
+  - Improved code organization following clean architecture principles
+  - Enhanced OpenAPI integration through controller attributes
+- **Scalar version**: Updated to `2.13.14` in Directory.Packages.props for better API documentation
+- **MediatR integration**: Added MediatR `12.4.1` package for CQRS pattern support
+- **Program.cs**: Updated to register controllers, MediatR services, and repositories
+
+### Fixed
+- **Naming conflicts**: Separated request DTOs (CreatePostRequest, UpdatePostRequest) from domain commands to avoid ambiguity
+- **Handler organization**: Removed separate Handlers directory, consolidating into command/query files for improved maintainability
+
 ## [0.2.0] - 2026-03-20
 
 ### Added

@@ -380,6 +380,6 @@ For questions or issues:
 
 **Created**: March 19, 2026  
 **Last Updated**: March 25, 2026  
-**Backend Technology**: .NET 10.0, PostgreSQL, xUnit  
+**Backend Technology**: .NET 10.0, PostgreSQL, xUnit, MediatR, Serilog, FluentValidation, Scalar.AspNetCore
 **Frontend Technology**: Angular 20, PrimeNG, TypeScript, CSS  
 **Architecture Pattern**: Clean Architecture with Microservices (Backend) + Signals & Code Flow Blocks (Frontend)

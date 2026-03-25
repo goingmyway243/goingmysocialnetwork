@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GoingMy.Post.Domain\GoingMy.Post.Domain.csproj" />
+    <ProjectReference Include="..\GoingMy.Post.Application\GoingMy.Post.Application.csproj" />
+  </ItemGroup>
+
 </Project>

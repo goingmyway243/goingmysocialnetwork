@@ -12,10 +12,13 @@
 	  <PackageReference Include="OpenIddict.Validation.AspNetCore" />
 	  <PackageReference Include="OpenIddict.Validation.SystemNetHttp" />
 	  <PackageReference Include="Scalar.AspNetCore" />
+	  <PackageReference Include="MediatR" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\GoingMy.ServiceDefaults\GoingMy.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\GoingMy.Post.Application\GoingMy.Post.Application.csproj" />
+    <ProjectReference Include="..\GoingMy.Post.Infrastructure\GoingMy.Post.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
