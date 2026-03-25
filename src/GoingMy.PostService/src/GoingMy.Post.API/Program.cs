@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using OpenIddict.Validation.AspNetCore;
+using Scalar.AspNetCore;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,12 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
 
 // Posts endpoints
 app.MapGet("/api/posts", [Authorize] (ClaimsPrincipal user) =>

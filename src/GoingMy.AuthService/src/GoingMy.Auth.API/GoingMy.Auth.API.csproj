@@ -17,6 +17,7 @@
 		<PackageReference Include="OpenIddict.AspNetCore" />
 		<PackageReference Include="OpenIddict.EntityFrameworkCore" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+		<PackageReference Include="Scalar.AspNetCore" />
 	</ItemGroup>
 
 	<ItemGroup>

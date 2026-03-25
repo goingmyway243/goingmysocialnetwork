@@ -44,6 +44,7 @@
   </ItemGroup>
   <!--Swagger/OpenAPI Packages-->
   <ItemGroup>
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.13.14" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.1.4" />
   </ItemGroup>
   <!--Testing Packages-->
