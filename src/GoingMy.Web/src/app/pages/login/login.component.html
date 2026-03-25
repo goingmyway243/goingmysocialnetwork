@@ -1,0 +1,102 @@
+<div class="login-container">
+  <!-- Animated gradient background -->
+  <div class="gradient-bg"></div>
+  <div class="gradient-bg-overlay"></div>
+
+  <!-- Glass card -->
+  <div class="glass glass-card">
+    <div class="card-header">
+      <h1 class="title">Welcome Back</h1>
+      <p class="subtitle">Sign in to continue to your account</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- Username field -->
+      <div class="form-group">
+        <label for="username" class="form-label">Username</label>
+        <div class="input-wrapper">
+          <i class="pi pi-user input-icon"></i>
+          <input
+            pInputText
+            id="username"
+            type="text"
+            formControlName="username"
+            class="form-input w-full"
+            placeholder="Enter your username"
+            [class.ng-invalid]="username?.invalid && username?.touched"
+            [class.ng-dirty]="username?.touched"
+          />
+        </div>
+        @if (username?.invalid && username?.touched) {
+          <span class="error-message">
+            @if (username?.errors?.['required']) {
+              <span>Username is required</span>
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Password field -->
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <div class="password-wrapper">
+          <i class="pi pi-lock input-icon"></i>
+          <p-password
+            icon="pi pi-lock"
+            id="password"
+            formControlName="password"
+            placeholder="Enter your password"
+            [toggleMask]="true"
+            [feedback]="false"
+            class="custom-password"
+            inputStyleClass="form-input"
+            [class.ng-invalid]="password?.invalid && password?.touched"
+            [class.ng-dirty]="password?.touched"
+          />
+        </div>
+        @if (password?.invalid && password?.touched) {
+          <span class="error-message">
+            @if (password?.errors?.['required']) {
+              <span>Password is required</span>
+            }
+            @if (password?.errors?.['minlength']) {
+              <span>Password must be at least 6 characters</span>
+            }
+          </span>
+        }
+      </div>
+
+      <!-- Remember me and Forgot password -->
+      <div class="form-options">
+        <div class="checkbox-wrapper">
+          <p-checkbox
+            formControlName="rememberMe"
+            [binary]="true"
+            inputId="rememberMe"
+            class="custom-checkbox"
+          />
+          <label for="rememberMe" class="checkbox-text">Remember me</label>
+        </div>
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+
+      <!-- Submit button -->
+      <p-button
+        type="submit"
+        [label]="isLoading() ? 'Signing in...' : 'Sign In'"
+        [loading]="isLoading()"
+        [disabled]="isLoading()"
+        styleClass="submit-btn"
+        icon="pi pi-sign-in"
+      />
+    </form>
+
+    <!-- Sign up link -->
+    <div class="card-footer">
+      <p class="signup-text">
+        Don't have an account?
+        <a (click)="navigateToSignup()" class="signup-link">Sign up</a>
+      </p>
+    </div>
+  </div>
+</div>

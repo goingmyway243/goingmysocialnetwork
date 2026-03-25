@@ -1,0 +1,45 @@
+<div class="dashboard-header">
+  <div class="header-left">
+    <div class="logo" (click)="navigateToHome()">
+      <i class="pi pi-globe"></i>
+      <span class="logo-text">GoingMySocial</span>
+    </div>
+  </div>
+
+  <div class="header-center">
+    <span class="p-input-icon-left search-container">
+      <i class="pi pi-search"></i>
+      <input 
+        type="text" 
+        pInputText 
+        [(ngModel)]="searchValue"
+        placeholder="Search for creators, inspirations, and projects"
+        class="search-input"
+        (keydown.enter)="onSearch()" />
+    </span>
+  </div>
+
+  <div class="header-right">
+    <p-button 
+      icon="pi pi-plus" 
+      label="Create" 
+      styleClass="create-btn"
+      [text]="true"
+      [rounded]="true"></p-button>
+    
+    <p-button 
+      icon="pi pi-bell" 
+      [text]="true" 
+      [rounded]="true"
+      styleClass="icon-btn"></p-button>
+    
+    <p-button 
+      icon="pi pi-user" 
+      [text]="true" 
+      [rounded]="true"
+      styleClass="icon-btn"
+      (onClick)="toggleUserMenu($event)"></p-button>
+    
+    <p-menu #userMenu [model]="userMenuItems" [popup]="true"></p-menu>
+  </div>
+</div>

@@ -1,13 +1,23 @@
-# GoingMy Microservices - Scaffolded Services
+# GoingMy Social Network - Full Stack Application
 
 ## Overview
 
-This directory contains the scaffolded .NET Core microservices for the GoingMy social network platform. The services are structured using a clean architecture pattern with clear separation of concerns.
+This directory contains the complete GoingMy social network platform with both backend microservices and frontend web application. The backend services are structured using a clean architecture pattern with clear separation of concerns, while the frontend is built with Angular 20 and PrimeNG for a modern, glassmorphic UI experience.
 
 ## Project Structure
 
 ```
 src/
+├── GoingMy.Web/                   # Angular 20 frontend application
+│   ├── src/
+│   │   ├── app/                  # Angular components and modules
+│   │   ├── assets/               # Static assets
+│   │   ├── styles.scss           # Global styles with glassmorphism theme
+│   │   └── main.ts               # Application entry point
+│   ├── package.json              # npm dependencies
+│   ├── angular.json              # Angular CLI configuration
+│   └── tsconfig.json             # TypeScript configuration
+│
 ├── GoingMy.AuthService/          # Authentication and authorization service
 │   ├── GoingMy.AuthService.slnx  # Solution file
 │   ├── src/
@@ -16,10 +26,10 @@ src/
 │   │   ├── GoingMy.Auth.Infrastructure/  # Data access and external services
 │   │   └── GoingMy.Auth.API/             # REST API controllers
 │   └── tests/
-│       ├── GoingMy.Auth.Tests/                    # Unit tests
-│       └── GoingMy.Auth.IntegrationTests/        # Integration tests
+│       ├── GoingMy.Auth.Tests/           # Unit tests
+│       └── GoingMy.Auth.IntegrationTests/# Integration tests
 │
-├── GoingMy.PostService/           # Post management service
+├── GoingMy.PostService/          # Post management service
 │   ├── GoingMy.PostService.slnx  # Solution file
 │   ├── src/
 │   │   ├── GoingMy.Post.Domain/          # Domain models and entities
@@ -27,10 +37,14 @@ src/
 │   │   ├── GoingMy.Post.Infrastructure/  # Data access and external services
 │   │   └── GoingMy.Post.API/             # REST API controllers
 │   └── tests/
-│       ├── GoingMy.Post.Tests/                    # Unit tests
-│       └── GoingMy.Post.IntegrationTests/        # Integration tests
+│       ├── GoingMy.Post.Tests/           # Unit tests
+│       └── GoingMy.Post.IntegrationTests/# Integration tests
 │
-└── GoingMy.ServiceDefaults/        # Shared service defaults (TBD)
+├── GoingMy.AppHost/              # .NET Aspire orchestration host
+├── GoingMy.ServiceDefaults/      # Shared service defaults and extensions
+├── GoingMy.Shared/               # Shared utilities and configurations
+│
+└── GoingMy.Social.slnx         # Main solution file (includes all projects)
 ```
 
 ## Architecture Layers
@@ -74,12 +88,69 @@ Each service follows the clean architecture pattern with four main layers:
   - Dockerfile
 - **Dependencies**: All other layers
 
+## Frontend Architecture
+
+### Web Application (`GoingMy.Web`)
+
+The frontend is built with **Angular 20** and **PrimeNG** components, following modern reactive programming patterns with Angular Signals.
+
+**Key Features:**
+- **Framework**: Angular 20 with standalone components
+- **UI Library**: PrimeNG for pre-built components
+- **State Management**: Angular Signals for reactive state
+- **Styling**: SCSS with glassmorphism design system
+- **Code Organization**: Code Flow Blocks pattern for maintainable, testable code
+- **HTTP Client**: Angular HttpClient for API communication
+
+**Directory Structure:**
+- `src/app/` - Angular components, services, and modules
+- `src/styles.scss` - Global styles with design tokens
+- `src/environments/` - Environment-specific configurations
+- `public/` - Static assets
+
+**Build & Serve:**
+```bash
+cd GoingMy.Web
+npm install
+npm start       # Development server at http://localhost:4200
+npm run build   # Production build
+npm run test    # Run unit tests
+```
+
 ## Getting Started
 
 ### Prerequisites
-- .NET 10.0 SDK or later
-- PostgreSQL (for database)
-- Docker (optional, for containerization)
+- **.NET 10.0 SDK** or later (for backend services)
+- **Node.js 22+** and **npm 11+** (for frontend)
+- **PostgreSQL** (for database)
+- **Docker** (optional, for containerization)
+
+### Quick Start
+
+**Run the entire application (Web + Services):**
+
+**Windows (PowerShell):**
+```powershell
+cd ..  # Go to workspace root
+.\run.ps1        # Runs both services and web app
+.\run.ps1 web    # Run only the web app
+.\run.ps1 services  # Run only the .NET services
+```
+
+**macOS/Linux (Bash):**
+```bash
+cd ..  # Go to workspace root
+chmod +x run.sh  # Make script executable (first time only)
+./run.sh         # Runs both services and web app
+./run.sh web     # Run only the web app
+./run.sh services   # Run only the .NET services
+```
+
+**Access the Application:**
+- **Web Application**: `http://localhost:4200`
+- **Auth Service API**: `http://localhost:5001`
+- **Post Service API**: `http://localhost:5002`
+- **Aspire Dashboard**: Displayed in AppHost output
 
 ### Build Instructions
 
@@ -205,6 +276,8 @@ dotnet add package Moq
 
 ## Common Commands
 
+### Backend Services
+
 ```powershell
 # Navigate to service
 cd src\GoingMy.AuthService
@@ -230,12 +303,71 @@ dotnet ef database update -s ../GoingMy.Auth.API
 dotnet list package --outdated
 ```
 
+### Frontend (Angular Web)
+
+```bash
+# Navigate to web project
+cd src/GoingMy.Web
+
+# Install dependencies
+npm install
+
+# Start development server (http://localhost:4200)
+npm start
+
+# Build for production
+npm run build
+
+# Run unit tests
+npm run test
+
+# Run end-to-end tests
+npm run e2e
+
+# Generate new component
+ng generate component components/MyComponent
+
+# Generate new service
+ng generate service services/my.service
+
+# Format code with Prettier
+npm run format
+
+# Lint TypeScript files
+npm run lint
+```
+
+### Full Stack Commands
+
+```bash
+# From workspace root - run everything
+./run.sh          # macOS/Linux
+.\run.ps1         # Windows
+
+# Run just web
+./run.sh web
+.\run.ps1 web
+
+# Run just services
+./run.sh services
+.\run.ps1 services
+```
+
 ## Resources
 
+### Backend
 - **.NET Documentation**: https://learn.microsoft.com/en-us/dotnet/
 - **Entity Framework Core**: https://learn.microsoft.com/en-us/ef/core/
 - **Clean Architecture**: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
 - **Microservices Patterns**: https://microservices.io/patterns/
+
+### Frontend
+- **Angular Documentation**: https://angular.io/docs
+- **Angular Signals**: https://angular.io/guide/signals
+- **PrimeNG Components**: https://primeng.org/
+- **TypeScript Handbook**: https://www.typescriptlang.org/docs/
+- **SCSS Documentation**: https://sass-lang.com/documentation
+- **Apple Human Interface Guidelines**: https://developer.apple.com/design/human-interface-guidelines/
 
 ## Support
 
@@ -246,6 +378,8 @@ For questions or issues:
 
 ---
 
-**Created**: March 19, 2026
-**Technology**: .NET 10.0, PostgreSQL, xUnit
-**Architecture Pattern**: Clean Architecture with Microservices
+**Created**: March 19, 2026  
+**Last Updated**: March 25, 2026  
+**Backend Technology**: .NET 10.0, PostgreSQL, xUnit  
+**Frontend Technology**: Angular 20, PrimeNG, TypeScript, SCSS  
+**Architecture Pattern**: Clean Architecture with Microservices (Backend) + Signals & Code Flow Blocks (Frontend)

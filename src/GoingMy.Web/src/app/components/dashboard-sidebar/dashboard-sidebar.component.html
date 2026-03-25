@@ -1,0 +1,23 @@
+<div class="dashboard-sidebar">
+  <div class="sidebar-content">
+    <nav class="menu-container">
+      @for (item of menuItems; track item.id) {
+        <div 
+          class="menu-item" 
+          [class.active]="isActive(item.id!)"
+          (click)="item.command && item.command({})">
+          <i [class]="item.icon"></i>
+          <span class="menu-label">{{ item.label }}</span>
+        </div>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <p-button 
+        icon="pi pi-plus" 
+        label="Create Post" 
+        styleClass="create-post-btn"
+        [rounded]="true"></p-button>
+    </div>
+  </div>
+</div>
