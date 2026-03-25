@@ -11,6 +11,7 @@ public static class OpenIddictSeeder
         await context.Database.EnsureCreatedAsync();
 
         await SeedApplicationsAsync(serviceProvider);
+        await SeedScopeAsync(serviceProvider);
     }
 
     private static async Task SeedApplicationsAsync(IServiceProvider serviceProvider)
@@ -51,6 +52,23 @@ public static class OpenIddictSeeder
                 Requirements =
                 {
                     Requirements.Features.ProofKeyForCodeExchange
+                }
+            });
+        }
+    }
+
+    private static async Task SeedScopeAsync(IServiceProvider serviceProvider)
+    {
+        var scopeManager = serviceProvider.GetRequiredService<IOpenIddictScopeManager>();
+        if (await scopeManager.FindByNameAsync("social_api") is null)
+        {
+            await scopeManager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "social_api",
+                DisplayName = "Access to the Social API",
+                Resources =
+                {
+                    "social-api"
                 }
             });
         }

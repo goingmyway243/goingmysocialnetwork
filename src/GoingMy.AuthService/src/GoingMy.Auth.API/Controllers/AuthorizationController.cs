@@ -242,9 +242,9 @@ public class AuthorizationController : ControllerBase
             resources.Add("identity-server");
         }
 
-        if (scopes.Contains("post_api"))
+        if (scopes.Contains("social_api"))
         {
-            resources.Add("post_api");
+            resources.Add("social-api");
         }
 
         return await Task.FromResult(resources);

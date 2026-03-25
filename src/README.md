@@ -169,7 +169,7 @@ dotnet test GoingMy.AuthService.slnx
 **Run the API:**
 ```powershell
 cd src\GoingMy.AuthService\src\GoingMy.Auth.API
-dotnet run
+dotnet watch run
 ```
 
 ### Add NuGet Dependencies

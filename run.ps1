@@ -7,7 +7,7 @@
 .DESCRIPTION
     Manages running the Angular web application and/or .NET services.
     - 'web': Runs Angular development server (npm start)
-    - 'services': Runs .NET Aspire AppHost (dotnet run)
+    - 'services': Runs .NET Aspire AppHost (dotnet watch run) in a new terminal window
     - No argument or 'all': Runs both web and services
 
 .PARAMETER Target
@@ -71,7 +71,7 @@ function Start-Services {
     $serviceScript = @"
     Set-Location "$appHostPath"
     Write-Host "Current directory: `$(Get-Location)" -ForegroundColor Yellow
-    Write-Host "Running: dotnet run`n" -ForegroundColor Yellow
+    Write-Host "Running: dotnet watch run`n" -ForegroundColor Yellow
     dotnet run
     Read-Host "Press Enter to close this window"
 "@

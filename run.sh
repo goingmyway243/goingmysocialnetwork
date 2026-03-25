@@ -73,20 +73,20 @@ start_services() {
     # Detect OS and use appropriate terminal command
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS
-        open -a Terminal "$(pwd)/$appHostPath" --args "dotnet run"
+        open -a Terminal "$(pwd)/$appHostPath" --args "dotnet watch run"
         # Create a script to run in the terminal
         osascript <<EOF
 tell application "Terminal"
     activate
-    do script "cd '$(pwd)/$appHostPath' && echo 'Current directory: '$(pwd)' && echo 'Running: dotnet run' && dotnet run && read -p 'Press Enter to close this window'"
+    do script "cd '$(pwd)/$appHostPath' && echo 'Current directory: '$(pwd)' && echo 'Running: dotnet watch run' && dotnet watch run && read -p 'Press Enter to close this window'"
 end tell
 EOF
     elif command -v gnome-terminal &> /dev/null; then
         # Linux with GNOME Terminal
-        gnome-terminal -- bash -c "cd '$appHostPath' && echo 'Current directory: \$(pwd)' && echo 'Running: dotnet run' && dotnet run && read -p 'Press Enter to close this window'"
+        gnome-terminal -- bash -c "cd '$appHostPath' && echo 'Current directory: \$(pwd)' && echo 'Running: dotnet watch run' && dotnet watch run && read -p 'Press Enter to close this window'"
     elif command -v xterm &> /dev/null; then
         # Linux with xterm
-        xterm -e "cd '$appHostPath' && dotnet run && read -p 'Press Enter to close this window'" &
+        xterm -e "cd '$appHostPath' && echo 'Current directory: \$(pwd)' && echo 'Running: dotnet watch run' && dotnet watch run && read -p 'Press Enter to close this window'" &
     else
         echo -e "${RED}ERROR: No suitable terminal found${NC}"
         return 1
