@@ -12,7 +12,7 @@ src/
 │   ├── src/
 │   │   ├── app/                  # Angular components and modules
 │   │   ├── assets/               # Static assets
-│   │   ├── styles.scss           # Global styles with glassmorphism theme
+│   │   ├── styles.css            # Global styles with glassmorphism theme
 │   │   └── main.ts               # Application entry point
 │   ├── package.json              # npm dependencies
 │   ├── angular.json              # Angular CLI configuration
@@ -98,13 +98,13 @@ The frontend is built with **Angular 20** and **PrimeNG** components, following 
 - **Framework**: Angular 20 with standalone components
 - **UI Library**: PrimeNG for pre-built components
 - **State Management**: Angular Signals for reactive state
-- **Styling**: SCSS with glassmorphism design system
+- **Styling**: CSS with glassmorphism design system
 - **Code Organization**: Code Flow Blocks pattern for maintainable, testable code
 - **HTTP Client**: Angular HttpClient for API communication
 
 **Directory Structure:**
 - `src/app/` - Angular components, services, and modules
-- `src/styles.scss` - Global styles with design tokens
+- `src/styles.css` - Global styles with design tokens
 - `src/environments/` - Environment-specific configurations
 - `public/` - Static assets
 
@@ -366,7 +366,7 @@ npm run lint
 - **Angular Signals**: https://angular.io/guide/signals
 - **PrimeNG Components**: https://primeng.org/
 - **TypeScript Handbook**: https://www.typescriptlang.org/docs/
-- **SCSS Documentation**: https://sass-lang.com/documentation
+- **CSS Documentation**: https://developer.mozilla.org/en-US/docs/Web/CSS
 - **Apple Human Interface Guidelines**: https://developer.apple.com/design/human-interface-guidelines/
 
 ## Support
@@ -381,5 +381,5 @@ For questions or issues:
 **Created**: March 19, 2026  
 **Last Updated**: March 25, 2026  
 **Backend Technology**: .NET 10.0, PostgreSQL, xUnit  
-**Frontend Technology**: Angular 20, PrimeNG, TypeScript, SCSS  
+**Frontend Technology**: Angular 20, PrimeNG, TypeScript, CSS  
 **Architecture Pattern**: Clean Architecture with Microservices (Backend) + Signals & Code Flow Blocks (Frontend)
