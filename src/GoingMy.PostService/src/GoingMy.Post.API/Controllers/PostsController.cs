@@ -3,7 +3,6 @@ using GoingMy.Post.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace GoingMy.Post.API.Controllers;
 
@@ -57,11 +56,11 @@ public class PostsController : ControllerBase
     /// </summary>
     /// <param name="id">The ID of the post to retrieve.</param>
     /// <returns>The requested post.</returns>
-    [HttpGet("{id:int}")]
+    [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult> GetPostById(int id)
+    public async Task<ActionResult> GetPostById(string id)
     {
         var post = await _mediator.Send(new GetPostByIdQuery(id));
 
@@ -99,12 +98,12 @@ public class PostsController : ControllerBase
     /// <param name="id">The ID of the post to update.</param>
     /// <param name="request">The request containing updated post title and content.</param>
     /// <returns>The updated post.</returns>
-    [HttpPut("{id:int}")]
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult> UpdatePost(int id, [FromBody] UpdatePostRequest request)
+    public async Task<ActionResult> UpdatePost(string id, [FromBody] UpdatePostRequest request)
     {
         try
         {
@@ -129,12 +128,12 @@ public class PostsController : ControllerBase
     /// </summary>
     /// <param name="id">The ID of the post to delete.</param>
     /// <returns>Success message.</returns>
-    [HttpDelete("{id:int}")]
+    [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult> DeletePost(int id)
+    public async Task<ActionResult> DeletePost(string id)
     {
         try
         {

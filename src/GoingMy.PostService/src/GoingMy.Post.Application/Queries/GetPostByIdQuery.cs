@@ -1,5 +1,5 @@
 using GoingMy.Post.Application.Dtos;
-using GoingMy.Post.Infrastructure.Repositories;
+using GoingMy.Post.Domain.Repositories;
 using MediatR;
 
 namespace GoingMy.Post.Application.Queries;
@@ -7,7 +7,7 @@ namespace GoingMy.Post.Application.Queries;
 /// <summary>
 /// Query to retrieve a specific post by ID.
 /// </summary>
-public record GetPostByIdQuery(int Id) : IRequest<PostDto?>;
+public record GetPostByIdQuery(string Id) : IRequest<PostDto?>;
 
 /// <summary>
 /// Handler for the GetPostByIdQuery.

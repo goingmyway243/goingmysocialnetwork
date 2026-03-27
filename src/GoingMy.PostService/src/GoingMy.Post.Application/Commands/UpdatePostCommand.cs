@@ -1,5 +1,5 @@
 using GoingMy.Post.Application.Dtos;
-using GoingMy.Post.Infrastructure.Repositories;
+using GoingMy.Post.Domain.Repositories;
 using MediatR;
 
 namespace GoingMy.Post.Application.Commands;
@@ -8,7 +8,7 @@ namespace GoingMy.Post.Application.Commands;
 /// Command to update an existing post.
 /// </summary>
 public record UpdatePostCommand(
-    int Id,
+    string Id,
     string Title,
     string Content,
     string UserId

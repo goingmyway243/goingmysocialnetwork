@@ -11,4 +11,8 @@
     <ProjectReference Include="..\GoingMy.Post.Application\GoingMy.Post.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" />
+  </ItemGroup>
+
 </Project>

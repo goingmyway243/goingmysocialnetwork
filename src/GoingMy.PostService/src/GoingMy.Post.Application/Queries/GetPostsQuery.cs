@@ -1,5 +1,5 @@
 using GoingMy.Post.Application.Dtos;
-using GoingMy.Post.Infrastructure.Repositories;
+using GoingMy.Post.Domain.Repositories;
 using MediatR;
 
 namespace GoingMy.Post.Application.Queries;

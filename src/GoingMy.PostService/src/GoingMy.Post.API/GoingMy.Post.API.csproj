@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\GoingMy.ServiceDefaults\GoingMy.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\..\GoingMy.Shared\GoingMy.Shared.csproj" />
     <ProjectReference Include="..\GoingMy.Post.Application\GoingMy.Post.Application.csproj" />
     <ProjectReference Include="..\GoingMy.Post.Infrastructure\GoingMy.Post.Infrastructure.csproj" />
   </ItemGroup>

@@ -1,4 +1,4 @@
-using GoingMy.Post.Infrastructure.Repositories;
+using GoingMy.Post.Domain.Repositories;
 using MediatR;
 
 namespace GoingMy.Post.Application.Commands;
@@ -7,7 +7,7 @@ namespace GoingMy.Post.Application.Commands;
 /// Command to delete a post.
 /// </summary>
 public record DeletePostCommand(
-    int Id,
+    string Id,
     string UserId
 ) : IRequest<bool>;
 

@@ -5,7 +5,7 @@ namespace GoingMy.Post.Domain;
 /// </summary>
 public class Post
 {
-    public int Id { get; set; }
+    public string Id { get; set; } = null!;
     public string Title { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string UserId { get; set; } = null!;
@@ -16,7 +16,7 @@ public class Post
     /// <summary>
     /// Creates a new post instance.
     /// </summary>
-    public Post(int id, string title, string content, string userId, string username, DateTime createdAt)
+    public Post(string id, string title, string content, string userId, string username, DateTime createdAt)
     {
         Id = id;
         Title = title;
@@ -27,7 +27,7 @@ public class Post
     }
 
     /// <summary>
-    /// Private constructor for entity framework.
+    /// Private constructor for MongoDB.
     /// </summary>
     private Post()
     {

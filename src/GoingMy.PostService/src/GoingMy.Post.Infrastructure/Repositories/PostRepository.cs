@@ -1,40 +1,60 @@
-using GoingMy.Post.Domain;
+using GoingMy.Post.Domain.Repositories;
+using GoingMy.Post.Infrastructure.Data;
+using MongoDB.Driver;
 
 namespace GoingMy.Post.Infrastructure.Repositories;
 
 /// <summary>
-/// In-memory implementation of Post repository for demonstration.
-/// In production, this would use Entity Framework Core with a database.
+/// MongoDB implementation of Post repository.
+/// Provides data access operations for Post aggregates.
 /// </summary>
 public class PostRepository : IPostRepository
 {
-    private static readonly Dictionary<int, Domain.Post> Posts = new();
+    private readonly MongoDbContext _context;
 
-    public Task<IEnumerable<Domain.Post>> GetAllAsync(CancellationToken cancellationToken = default)
+    public PostRepository(MongoDbContext context)
     {
-        return Task.FromResult(Posts.Values.AsEnumerable());
+        _context = context;
     }
 
-    public Task<Domain.Post?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Domain.Post>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        Posts.TryGetValue(id, out var post);
-        return Task.FromResult(post);
+        return await _context.Posts
+            .Find(_ => true)
+            .SortByDescending(p => p.CreatedAt)
+            .ToListAsync(cancellationToken);
     }
 
-    public Task<Domain.Post> AddAsync(Domain.Post post, CancellationToken cancellationToken = default)
+    public async Task<Domain.Post?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        Posts[post.Id] = post;
-        return Task.FromResult(post);
+        return await _context.Posts
+            .Find(p => p.Id == id)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<Domain.Post> UpdateAsync(Domain.Post post, CancellationToken cancellationToken = default)
+    public async Task<Domain.Post> AddAsync(Domain.Post post, CancellationToken cancellationToken = default)
     {
-        Posts[post.Id] = post;
-        return Task.FromResult(post);
+        await _context.Posts.InsertOneAsync(post, cancellationToken: cancellationToken);
+        return post;
     }
 
-    public Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Domain.Post> UpdateAsync(Domain.Post post, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(Posts.Remove(id));
+        var filter = Builders<Domain.Post>.Filter.Eq(p => p.Id, post.Id);
+        var result = await _context.Posts.ReplaceOneAsync(filter, post, cancellationToken: cancellationToken);
+
+        if (result.MatchedCount == 0)
+        {
+            throw new InvalidOperationException($"Post with ID {post.Id} not found");
+        }
+
+        return post;
+    }
+
+    public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<Domain.Post>.Filter.Eq(p => p.Id, id);
+        var result = await _context.Posts.DeleteOneAsync(filter, cancellationToken);
+        return result.DeletedCount > 0;
     }
 }

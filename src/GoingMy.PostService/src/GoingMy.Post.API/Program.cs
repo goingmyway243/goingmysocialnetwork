@@ -1,16 +1,25 @@
 using GoingMy.Post.Application.Commands;
-using GoingMy.Post.Application.Queries;
+using GoingMy.Post.Domain.Repositories;
 using GoingMy.Post.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Authorization;
+using GoingMy.Post.Infrastructure.Data;
+using MongoDB.Driver;
 using OpenIddict.Validation.AspNetCore;
 using Scalar.AspNetCore;
-using System.Security.Claims;
+using GoingMy.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddSingleton<IMongoClient>(sp => new MongoClient(builder.Configuration.GetConnectionString(SharedServices.MongoDB)));
+
+builder.Services.AddScoped<MongoDbContext>(provider =>
+{
+    var client = provider.GetRequiredService<IMongoClient>();
+    return new MongoDbContext(client, "goingmy_posts");
+});
 
 // Register MediatR
 builder.Services.AddMediatR(config =>
@@ -50,6 +59,13 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+// Initialize MongoDB indexes
+using (var scope = app.Services.CreateScope())
+{
+    var mongoDbContext = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
+    await mongoDbContext.InitializeAsync();
+}
 
 app.UseCors();
 app.UseHttpsRedirection();

@@ -4,7 +4,7 @@ namespace GoingMy.Post.Application.Dtos;
 /// Data Transfer Object for Post.
 /// </summary>
 public record PostDto(
-    int Id,
+    string Id,
     string Title,
     string Content,
     string UserId,

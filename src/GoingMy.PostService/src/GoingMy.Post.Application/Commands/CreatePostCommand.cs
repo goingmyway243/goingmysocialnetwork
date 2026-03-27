@@ -1,7 +1,7 @@
 using GoingMy.Post.Application.Dtos;
-using GoingMy.Post.Domain;
-using GoingMy.Post.Infrastructure.Repositories;
+using GoingMy.Post.Domain.Repositories;
 using MediatR;
+using MongoDB.Bson;
 
 namespace GoingMy.Post.Application.Commands;
 
@@ -30,7 +30,7 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostD
     public async Task<PostDto> Handle(CreatePostCommand request, CancellationToken cancellationToken)
     {
         var post = new Domain.Post(
-            id: Random.Shared.Next(1000, 9999),
+            id: ObjectId.GenerateNewId().ToString(),
             title: request.Title,
             content: request.Content,
             userId: request.UserId,
