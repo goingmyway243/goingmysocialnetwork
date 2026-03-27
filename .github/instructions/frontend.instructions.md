@@ -36,6 +36,11 @@ src/GoingMy.Web/
 
 ---
 
+## Coding Conventions
+- Use pascal case with underscore prefix for private fields (e.g., `_myField`)
+
+---
+
 ## Angular Signals — State Management
 
 Use Angular Signals as the **primary** state mechanism. Avoid RxJS where signals suffice.

@@ -158,6 +158,15 @@ public async Task<IActionResult> CreatePost([FromBody] CreatePostRequest request
 
 ---
 
+## Code Conventions
+- Use `var` when the type is obvious from the right-hand side
+- Use expression-bodied members for simple methods
+- Use pattern matching and switch expressions where appropriate
+- Keep methods short and focused (max ~20 lines)
+- Use pascal case for public members, camel case for private fields (with underscore prefix)
+
+---
+
 ## Pre-Build Checklist
 
 Before building or submitting any backend change:

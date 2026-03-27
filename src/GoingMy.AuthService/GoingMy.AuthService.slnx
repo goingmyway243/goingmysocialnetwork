@@ -1,9 +1,6 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/GoingMy.Auth.API/GoingMy.Auth.API.csproj" />
-    <Project Path="src/GoingMy.Auth.Application/GoingMy.Auth.Application.csproj" />
-    <Project Path="src/GoingMy.Auth.Domain/GoingMy.Auth.Domain.csproj" />
-    <Project Path="src/GoingMy.Auth.Infrastructure/GoingMy.Auth.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/GoingMy.Auth.IntegrationTests/GoingMy.Auth.IntegrationTests.csproj" />
