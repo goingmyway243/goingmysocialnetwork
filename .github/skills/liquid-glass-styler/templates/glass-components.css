@@ -1,0 +1,89 @@
+/* Liquid Glass Components - Pre-built CSS classes for Apple glassmorphism effects */
+
+/* Base glass variables */
+:root {
+  --glass-primary-bg: rgba(255, 255, 255, 0.1);
+  --glass-secondary-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-border-hover: rgba(255, 255, 255, 0.3);
+  --glass-blur: blur(10px);
+  --glass-blur-strong: blur(20px);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --glass-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+  --glass-radius: 16px;
+  --glass-radius-large: 24px;
+  --glass-transition: all 0.3s ease;
+}
+
+/* Glass card */
+.glass-card {
+  background: var(--glass-primary-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
+  transition: var(--glass-transition);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow-hover);
+}
+
+/* Liquid glass button */
+.liquid-button {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+  backdrop-filter: var(--glass-blur-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius-large);
+  box-shadow: var(--glass-shadow);
+  transition: var(--glass-transition);
+  cursor: pointer;
+}
+
+.liquid-button:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+  transform: translateY(-2px);
+}
+
+/* Glass input */
+.glass-input {
+  background: var(--glass-secondary-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  padding: 12px 16px;
+  transition: var(--glass-transition);
+}
+
+.glass-input:focus {
+  background: var(--glass-primary-bg);
+  border-color: var(--glass-border-hover);
+  outline: none;
+}
+
+/* Glass modal/overlay */
+.glass-overlay {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: var(--glass-blur-strong);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glass-modal {
+  background: var(--glass-primary-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
+  max-width: 500px;
+  width: 90%;
+  padding: 24px;
+}

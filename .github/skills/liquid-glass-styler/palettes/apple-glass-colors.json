@@ -1,0 +1,37 @@
+{
+  "light": {
+    "primary": "#ffffff",
+    "secondary": "#f8f9fa",
+    "accent": "#007aff",
+    "text": "#1d1d1f",
+    "text-secondary": "#86868b",
+    "glass-bg": "rgba(255, 255, 255, 0.1)",
+    "glass-border": "rgba(255, 255, 255, 0.2)",
+    "glass-shadow": "rgba(0, 0, 0, 0.1)"
+  },
+  "dark": {
+    "primary": "#1d1d1f",
+    "secondary": "#2c2c2e",
+    "accent": "#0a84ff",
+    "text": "#ffffff",
+    "text-secondary": "#98989d",
+    "glass-bg": "rgba(255, 255, 255, 0.05)",
+    "glass-border": "rgba(255, 255, 255, 0.1)",
+    "glass-shadow": "rgba(0, 0, 0, 0.3)"
+  },
+  "gradients": {
+    "ocean": ["#667eea", "#764ba2"],
+    "sunset": ["#ff9a9e", "#fecfef"],
+    "forest": ["#a8edea", "#fed6e3"],
+    "cosmic": ["#667eea", "#764ba2", "#f093fb", "#f5576c"]
+  },
+  "glass-effects": {
+    "blur-light": "blur(8px)",
+    "blur-medium": "blur(12px)",
+    "blur-strong": "blur(20px)",
+    "opacity-subtle": 0.05,
+    "opacity-light": 0.1,
+    "opacity-medium": 0.2,
+    "opacity-strong": 0.3
+  }
+}

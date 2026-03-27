@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Feed - Liquid Glass Layout</title>
+    <link rel="stylesheet" href="../templates/glass-components.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .feed-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .post {
+            margin-bottom: 20px;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-primary-bg);
+            backdrop-filter: var(--glass-blur);
+            margin-right: 12px;
+        }
+        .post-content {
+            margin-bottom: 12px;
+        }
+        .post-actions {
+            display: flex;
+            gap: 16px;
+        }
+        .action-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: var(--glass-transition);
+        }
+        .action-btn:hover {
+            background: var(--glass-secondary-bg);
+            backdrop-filter: var(--glass-blur);
+        }
+    </style>
+</head>
+<body>
+    <div class="feed-container">
+        <div class="post glass-card">
+            <div class="post-header">
+                <div class="avatar"></div>
+                <div>
+                    <strong>User Name</strong>
+                    <br>
+                    <small>2 hours ago</small>
+                </div>
+            </div>
+            <div class="post-content">
+                <p>This is a sample post with liquid glass styling. The glassmorphism effect creates a beautiful, modern look that fits perfectly with Apple's design aesthetic.</p>
+            </div>
+            <div class="post-actions">
+                <button class="action-btn">👍 Like</button>
+                <button class="action-btn">💬 Comment</button>
+                <button class="action-btn">🔗 Share</button>
+            </div>
+        </div>
+
+        <div class="post glass-card">
+            <div class="post-header">
+                <div class="avatar"></div>
+                <div>
+                    <strong>Another User</strong>
+                    <br>
+                    <small>4 hours ago</small>
+                </div>
+            </div>
+            <div class="post-content">
+                <p>Another post showcasing the glass effect. Notice how the background gradient shows through the semi-transparent elements.</p>
+                <img src="https://via.placeholder.com/400x200" alt="Sample image" style="width: 100%; border-radius: var(--glass-radius); margin-top: 12px;">
+            </div>
+            <div class="post-actions">
+                <button class="action-btn">👍 Like</button>
+                <button class="action-btn">💬 Comment</button>
+                <button class="action-btn">🔗 Share</button>
+            </div>
+        </div>
+
+        <div class="post glass-card">
+            <div class="post-header">
+                <div class="avatar"></div>
+                <div>
+                    <strong>Social Designer</strong>
+                    <br>
+                    <small>6 hours ago</small>
+                </div>
+            </div>
+            <div class="post-content">
+                <p>Creating social interfaces with liquid glass effects requires careful attention to contrast and readability. The glassmorphism style works best when content remains the focus.</p>
+            </div>
+            <div class="post-actions">
+                <button class="action-btn">👍 Like</button>
+                <button class="action-btn">💬 Comment</button>
+                <button class="action-btn">🔗 Share</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
