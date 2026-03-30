@@ -13,7 +13,7 @@ var database = postgresql.AddDatabase(SharedServices.IdentityDb);
 var mongodb = builder.AddMongoDB(SharedServices.MongoDB)
     .WithImage("mongodb/mongodb-community-server", "5.0-ubuntu2204-slim")
     .WithMongoExpress(containerName: "mongo-express")
-    .WithHttpEndpoint(27017, 27017)
+    .WithDataVolume()
     .WithLifetime(ContainerLifetime.Persistent);
 
 var postDb = mongodb.AddDatabase(SharedServices.PostDb);

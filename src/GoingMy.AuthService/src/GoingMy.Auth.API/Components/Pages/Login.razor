@@ -1,0 +1,196 @@
+@page "/"
+@page "/login"
+@using GoingMy.Auth.API.Services
+@using GoingMy.Auth.API.Dtos
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject IUserService UserService
+@inject NavigationManager NavManager
+@inject HttpClient Http
+
+<div class="login-container">
+    <!-- Animated gradient background -->
+    <div class="gradient-bg"></div>
+    <div class="gradient-bg-overlay"></div>
+
+    <!-- Glass card -->
+    <div class="glass glass-card">
+        <div class="card-header">
+            <h1 class="title">Welcome Back</h1>
+            <p class="subtitle">Sign in to continue to your account</p>
+        </div>
+
+        <form @onsubmit="OnSubmit" class="login-form">
+            <!-- Username field -->
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <div class="input-wrapper">
+                    <i class="pi pi-user input-icon"></i>
+                    <input
+                        id="username"
+                        type="text"
+                        @bind="Username"
+                        class="form-input"
+                        placeholder="Enter your username"
+                        disabled="@IsLoading"
+                        required
+                    />
+                </div>
+                @if (!string.IsNullOrEmpty(ValidationError) && ValidationError.Contains("Username"))
+                {
+                    <span class="error-message">@ValidationError</span>
+                }
+            </div>
+
+            <!-- Password field -->
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-wrapper">
+                    <i class="pi pi-lock input-icon"></i>
+                    <input
+                        id="password"
+                        type="password"
+                        @bind="Password"
+                        class="form-input"
+                        placeholder="Enter your password"
+                        disabled="@IsLoading"
+                        required
+                    />
+                </div>
+                @if (!string.IsNullOrEmpty(ValidationError) && ValidationError.Contains("Password"))
+                {
+                    <span class="error-message">@ValidationError</span>
+                }
+            </div>
+
+            <!-- Remember me -->
+            <div class="form-options">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="rememberMe" disabled />
+                    <label for="rememberMe" class="checkbox-text">Remember me</label>
+                </div>
+            </div>
+
+            <!-- Error message -->
+            @if (!string.IsNullOrEmpty(AuthError))
+            {
+                <div class="error-alert">@AuthError</div>
+            }
+
+            <!-- Submit button -->
+            <button type="submit" class="submit-btn" disabled="@IsLoading">
+                @if (IsLoading)
+                {
+                    <span>Signing in...</span>
+                }
+                else
+                {
+                    <span>Sign In</span>
+                }
+            </button>
+        </form>
+
+        <!-- Sign up link -->
+        <div class="card-footer">
+            <p class="signup-text">
+                Don't have an account?
+                <a href="/signup" class="signup-link">Sign up</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string Username = string.Empty;
+    private string Password = string.Empty;
+    private bool IsLoading = false;
+    private string? AuthError = null;
+    private string? ValidationError = null;
+
+    private async Task OnSubmit()
+    {
+        IsLoading = true;
+        AuthError = null;
+        ValidationError = null;
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(Username))
+            {
+                ValidationError = "Username is required";
+                IsLoading = false;
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(Password))
+            {
+                ValidationError = "Password is required";
+                IsLoading = false;
+                return;
+            }
+
+            // Validate credentials
+            var user = await UserService.ValidateCredentialsAsync(Username, Password);
+            
+            if (user == null)
+            {
+                AuthError = "Invalid username or password";
+                IsLoading = false;
+                return;
+            }
+
+            // Request token from OpenIddict endpoint
+            var tokenRequest = new Dictionary<string, string>
+            {
+                { "grant_type", "password" },
+                { "username", Username },
+                { "password", Password },
+                { "client_id", "web-client" },
+                { "scope", "social_api email profile roles openid" }
+            };
+
+            var response = await Http.PostAsync("/connect/token", new FormUrlEncodedContent(tokenRequest));
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                AuthError = "Authentication failed. Please try again.";
+                IsLoading = false;
+                return;
+            }
+
+            var tokenJson = await response.Content.ReadAsStringAsync();
+            var tokenResponse = JsonSerializer.Deserialize<TokenResponse>(tokenJson);
+            
+            // Store token for API calls
+            if (tokenResponse?.AccessToken != null)
+            {
+                // In a real app, store in secure cookie or local storage
+                // For now, set it in the Http client default headers
+                Http.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
+                
+                // Redirect to dashboard
+                NavManager.NavigateTo("/dashboard");
+            }
+            else
+            {
+                AuthError = "Failed to obtain access token";
+            }
+        }
+        catch (Exception ex)
+        {
+            AuthError = $"Sign in failed: {ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private class TokenResponse
+    {
+        public string? AccessToken { get; set; }
+        public string? TokenType { get; set; }
+        public int ExpiresIn { get; set; }
+        public string? RefreshToken { get; set; }
+    }
+}
