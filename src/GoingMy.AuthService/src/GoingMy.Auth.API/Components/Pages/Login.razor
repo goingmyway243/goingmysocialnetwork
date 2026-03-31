@@ -29,15 +29,12 @@
                 <label for="username" class="form-label">Username</label>
                 <div class="input-wrapper">
                     <i class="pi pi-user input-icon"></i>
-                    <input
+                    <InputText
                         id="username"
-                        type="text"
-                        @bind="Model.Username"
-                        @bind:event="oninput"
+                        @bind-Value="Model.Username"
                         class="form-input"
                         placeholder="Enter your username"
-                        disabled="@IsLoading"
-                    />
+                        disabled="@IsLoading" />
                 </div>
                 <ValidationMessage class="error-message" For="() => Model.Username" />
             </div>
@@ -47,15 +44,13 @@
                 <label for="password" class="form-label">Password</label>
                 <div class="input-wrapper">
                     <i class="pi pi-lock input-icon"></i>
-                    <input
+                    <InputText
                         id="password"
                         type="password"
-                        @bind="Model.Password"
-                        @bind:event="oninput"
+                        @bind-Value="Model.Password"
                         class="form-input"
                         placeholder="Enter your password"
-                        disabled="@IsLoading"
-                    />
+                        disabled="@IsLoading" />
                 </div>
                 <ValidationMessage class="error-message" For="() => Model.Password" />
             </div>
