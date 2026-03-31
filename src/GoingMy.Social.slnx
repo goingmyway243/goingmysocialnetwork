@@ -18,6 +18,17 @@
     <Project Path="GoingMy.PostService/tests/GoingMy.Post.IntegrationTests/GoingMy.Post.IntegrationTests.csproj" />
     <Project Path="GoingMy.PostService/tests/GoingMy.Post.Tests/GoingMy.Post.Tests.csproj" />
   </Folder>
+  <Folder Name="/GoingMy.ChatService/" />
+  <Folder Name="/GoingMy.ChatService/src/">
+    <Project Path="GoingMy.ChatService/src/GoingMy.Chat.API/GoingMy.Chat.API.csproj" />
+    <Project Path="GoingMy.ChatService/src/GoingMy.Chat.Application/GoingMy.Chat.Application.csproj" />
+    <Project Path="GoingMy.ChatService/src/GoingMy.Chat.Domain/GoingMy.Chat.Domain.csproj" />
+    <Project Path="GoingMy.ChatService/src/GoingMy.Chat.Infrastructure/GoingMy.Chat.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/GoingMy.ChatService/tests/">
+    <Project Path="GoingMy.ChatService/tests/GoingMy.Chat.IntegrationTests/GoingMy.Chat.IntegrationTests.csproj" />
+    <Project Path="GoingMy.ChatService/tests/GoingMy.Chat.Tests/GoingMy.Chat.Tests.csproj" />
+  </Folder>
   <Project Path="GoingMy.AppHost/GoingMy.AppHost.csproj" />
   <Project Path="GoingMy.ServiceDefaults/GoingMy.ServiceDefaults.csproj" />
   <Project Path="GoingMy.Shared/GoingMy.Shared.csproj" Id="96c540df-f207-4559-ad3b-016d3e76302e" />

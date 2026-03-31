@@ -1,0 +1,31 @@
+@baseUrl = https://localhost:7003
+@contentType = application/json
+
+### Get all conversations for the authenticated user
+GET {{baseUrl}}/api/chat/conversations
+Content-Type: {{contentType}}
+Authorization: Bearer {{authToken}}
+
+### Create or retrieve a conversation
+POST {{baseUrl}}/api/chat/conversations
+Content-Type: {{contentType}}
+Authorization: Bearer {{authToken}}
+
+{
+  "recipientId": "recipient-user-id",
+  "recipientUsername": "RecipientName"
+}
+
+### Get messages in a conversation
+GET {{baseUrl}}/api/chat/conversations/{{conversationId}}/messages
+Content-Type: {{contentType}}
+Authorization: Bearer {{authToken}}
+
+### Send a message
+POST {{baseUrl}}/api/chat/conversations/{{conversationId}}/messages
+Content-Type: {{contentType}}
+Authorization: Bearer {{authToken}}
+
+{
+  "content": "Hello, world!"
+}

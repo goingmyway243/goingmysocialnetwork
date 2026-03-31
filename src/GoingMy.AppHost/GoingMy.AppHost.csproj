@@ -10,8 +10,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\GoingMy.AuthService\src\GoingMy.Auth.API\GoingMy.Auth.API.csproj" />
-		<ProjectReference Include="..\GoingMy.PostService\src\GoingMy.Post.API\GoingMy.Post.API.csproj" />
-		<ProjectReference Include="..\GoingMy.Shared\GoingMy.Shared.csproj" IsAspireProjectResource="false" />
+		<ProjectReference Include="..\GoingMy.PostService\src\GoingMy.Post.API\GoingMy.Post.API.csproj" />    <ProjectReference Include="..\GoingMy.ChatService\src\GoingMy.Chat.API\GoingMy.Chat.API.csproj" />		<ProjectReference Include="..\GoingMy.Shared\GoingMy.Shared.csproj" IsAspireProjectResource="false" />
 	</ItemGroup>
 
 	<ItemGroup>

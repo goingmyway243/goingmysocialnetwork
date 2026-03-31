@@ -40,6 +40,17 @@ src/
 │       ├── GoingMy.Post.Tests/           # Unit tests
 │       └── GoingMy.Post.IntegrationTests/# Integration tests
 │
+├── GoingMy.ChatService/          # Real-time chat and messaging service
+│   ├── GoingMy.ChatService.slnx  # Solution file
+│   ├── src/
+│   │   ├── GoingMy.Chat.Domain/          # Domain models and entities
+│   │   ├── GoingMy.Chat.Application/     # CQRS commands, queries, DTOs
+│   │   ├── GoingMy.Chat.Infrastructure/  # MongoDB repositories and context
+│   │   └── GoingMy.Chat.API/             # REST controllers + SignalR hub
+│   └── tests/
+│       ├── GoingMy.Chat.Tests/           # Unit tests
+│       └── GoingMy.Chat.IntegrationTests/# Integration tests
+│
 ├── GoingMy.AppHost/              # .NET Aspire orchestration host
 ├── GoingMy.ServiceDefaults/      # Shared service defaults and extensions
 ├── GoingMy.Shared/               # Shared utilities and configurations
@@ -150,6 +161,7 @@ chmod +x run.sh  # Make script executable (first time only)
 - **Web Application**: `http://localhost:4200`
 - **Auth Service API**: `http://localhost:5001`
 - **Post Service API**: `http://localhost:5002`
+- **Chat Service API**: `http://localhost:5003`
 - **Aspire Dashboard**: Displayed in AppHost output
 
 ### Build Instructions
@@ -208,6 +220,15 @@ dotnet add package Moq
 - Media attachment support
 
 **Default API Port**: 5002
+
+### Chat Service (`GoingMy.ChatService`)
+- Private one-to-one conversations
+- Real-time messaging via SignalR hub (`/hubs/chat`)
+- Message history retrieval
+- Idempotent conversation creation (reuses existing conversations)
+- MongoDB-backed message and conversation storage
+
+**Default API Port**: 5003
 
 ## Next Steps
 
@@ -379,7 +400,7 @@ For questions or issues:
 ---
 
 **Created**: March 19, 2026  
-**Last Updated**: March 25, 2026  
+**Last Updated**: March 31, 2026  
 **Backend Technology**: .NET 10.0, PostgreSQL, xUnit, MediatR, Serilog, FluentValidation, Scalar.AspNetCore
 **Frontend Technology**: Angular 20, PrimeNG, TypeScript, CSS  
 **Architecture Pattern**: Clean Architecture with Microservices (Backend) + Signals & Code Flow Blocks (Frontend)

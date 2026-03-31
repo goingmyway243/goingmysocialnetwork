@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/GoingMy.Chat.API/GoingMy.Chat.API.csproj" />
+    <Project Path="src/GoingMy.Chat.Application/GoingMy.Chat.Application.csproj" />
+    <Project Path="src/GoingMy.Chat.Domain/GoingMy.Chat.Domain.csproj" />
+    <Project Path="src/GoingMy.Chat.Infrastructure/GoingMy.Chat.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GoingMy.Chat.IntegrationTests/GoingMy.Chat.IntegrationTests.csproj" />
+    <Project Path="tests/GoingMy.Chat.Tests/GoingMy.Chat.Tests.csproj" />
+  </Folder>
+</Solution>

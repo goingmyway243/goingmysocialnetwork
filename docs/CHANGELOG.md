@@ -2,6 +2,28 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.4.0] - 2026-03-31
+
+### Added
+- **ChatService**: New microservice for real-time chat and messaging
+  - Clean architecture scaffold: `GoingMy.Chat.Domain`, `GoingMy.Chat.Application`, `GoingMy.Chat.Infrastructure`, `GoingMy.Chat.API`
+  - `Conversation` and `Message` domain entities with business logic methods
+  - `IConversationRepository` and `IMessageRepository` domain interfaces
+  - CQRS commands: `SendMessageCommand`, `CreateConversationCommand`
+  - CQRS queries: `GetConversationsQuery`, `GetConversationMessagesQuery`
+  - `ConversationDto` and `MessageDto` application DTOs
+  - MongoDB `MongoDbContext` with compound indexes on conversations and messages
+  - `ConversationRepository` and `MessageRepository` MongoDB implementations
+  - `ChatController` REST API: `GET /api/chat/conversations`, `POST /api/chat/conversations`, `GET /api/chat/conversations/{id}/messages`, `POST /api/chat/conversations/{id}/messages`
+  - `ChatHub` SignalR hub at `/hubs/chat` for real-time message broadcasting
+  - Idempotent conversation creation (returns existing conversation between two participants)
+  - OpenIddict JWT validation (same issuer as PostService)
+  - `.http` file for manual API testing
+  - Unit and integration test project stubs
+- **SharedServices constants**: Added `ChatApi = "chat-api"` and `ChatDb = "chat-db"`
+- **AppHost orchestration**: ChatService registered with MongoDB `chat-db` database and identity issuer env variable
+- **Solution files**: `GoingMy.ChatService.slnx` and all four projects added to `GoingMy.Social.slnx`
+
 ## [0.3.0] - 2026-03-25
 
 ### Added

@@ -17,6 +17,7 @@ var mongodb = builder.AddMongoDB(SharedServices.MongoDB)
     .WithLifetime(ContainerLifetime.Persistent);
 
 var postDb = mongodb.AddDatabase(SharedServices.PostDb);
+var chatDb = mongodb.AddDatabase(SharedServices.ChatDb);
 
 var identityService = builder.AddProject<Projects.GoingMy_Auth_API>(SharedServices.IdentityApi)
     .WithReference(database)
@@ -26,6 +27,12 @@ builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.PostApi)
     .WithReference(postDb)
     .WaitFor(identityService)
     .WaitFor(postDb)
+    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
+
+builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.ChatApi)
+    .WithReference(chatDb)
+    .WaitFor(identityService)
+    .WaitFor(chatDb)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 builder.Build().Run();

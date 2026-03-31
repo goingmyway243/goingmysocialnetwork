@@ -42,6 +42,7 @@ Go directly to the service location � do not search the solution explorer.
 |---------|----------------|----------|
 | AuthService | User authentication & authorization | `src/GoingMy.AuthService/` |
 | PostService | Social content & interactions | `src/GoingMy.PostService/` |
+| ChatService | Real-time chat & messaging | `src/GoingMy.ChatService/` |
 | ServiceDefaults | Shared configurations & extensions | `src/GoingMy.ServiceDefaults/` |
 | AppHost | Aspire orchestration host | `src/GoingMy.AppHost/` |
 | Web | Angular frontend application | `src/GoingMy.Web/` |
@@ -76,7 +77,7 @@ Each skill file lists the specific libraries to fetch for that tech stack.
 
 - **Workspace Root**: repository root
 - **Source**: `src/`
-- **Backend Services**: `src/GoingMy.AuthService/`, `src/GoingMy.PostService/`
+- **Backend Services**: `src/GoingMy.AuthService/`, `src/GoingMy.PostService/`, `src/GoingMy.ChatService/`
 - **Frontend**: `src/GoingMy.Web/`
 - **Shared Defaults**: `src/GoingMy.ServiceDefaults/`
 - **Orchestration**: `src/GoingMy.AppHost/`
