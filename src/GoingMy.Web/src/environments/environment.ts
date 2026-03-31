@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  blazorLoginUrl: 'https://localhost:7001/login',
   authConfig: {
     issuer: 'https://localhost:7001/',
     clientId: 'web-client',

@@ -3,7 +3,8 @@
 @using System.Net.Http.Json
 @using System.Text.Json
 @inject NavigationManager NavManager
-@inject HttpClient Http
+@inject IHttpClientFactory HttpClientFactory
+@rendermode InteractiveServer
 
 <div class="login-container">
     <!-- Animated gradient background -->
@@ -27,10 +28,10 @@
                         id="email"
                         type="email"
                         @bind="Email"
+                        @bind:event="oninput"
                         class="form-input"
                         placeholder="Enter your email"
                         disabled="@IsLoading"
-                        required
                     />
                 </div>
                 @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("email")))
@@ -48,10 +49,10 @@
                         id="username"
                         type="text"
                         @bind="Username"
+                        @bind:event="oninput"
                         class="form-input"
                         placeholder="Choose a username"
                         disabled="@IsLoading"
-                        required
                     />
                 </div>
                 @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("username")))
@@ -69,10 +70,10 @@
                         id="password"
                         type="password"
                         @bind="Password"
+                        @bind:event="oninput"
                         class="form-input"
                         placeholder="Create a password"
                         disabled="@IsLoading"
-                        required
                     />
                 </div>
                 @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("password")))
@@ -90,10 +91,10 @@
                         id="confirm-password"
                         type="password"
                         @bind="ConfirmPassword"
+                        @bind:event="oninput"
                         class="form-input"
                         placeholder="Confirm your password"
                         disabled="@IsLoading"
-                        required
                     />
                 </div>
                 @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("confirmPassword")))
@@ -179,6 +180,9 @@
                 Username = Username,
                 Password = Password
             };
+
+            using var Http = HttpClientFactory.CreateClient();
+            Http.BaseAddress = new Uri(NavManager.BaseUri);
 
             var response = await Http.PostAsJsonAsync("/api/user/signup", signupRequest);
             

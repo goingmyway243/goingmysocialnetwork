@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'auth-callback',
@@ -18,22 +19,16 @@ export class AuthCallbackComponent implements OnInit {
     try {
       const success = await this.authService.handleAuthCallback();
       if (success) {
-        // Redirect to home page or requested page
         const returnUrl = sessionStorage.getItem('returnUrl') || '/dashboard';
         sessionStorage.removeItem('returnUrl');
         this.router.navigateByUrl(returnUrl);
       } else {
-        console.error('Authentication failed');
-        this.router.navigate(['/login'], {
-          queryParams: { error: 'Authentication failed' }
-        });
+        // No token found — redirect back to Blazor login
+        window.location.href = environment.blazorLoginUrl;
       }
     } catch (error) {
-      console.log(error);
       console.error('Error during callback processing:', error);
-      this.router.navigate(['/login'], {
-        queryParams: { error: 'An error occurred during authentication' }
-      });
+      window.location.href = environment.blazorLoginUrl;
     }
   }
 }

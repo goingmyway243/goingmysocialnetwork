@@ -3,16 +3,7 @@ import { authGuard, guestGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
-    path: 'login',
-    loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent),
-    canActivate: [guestGuard]
-  },
-  {
-    path: 'signup',
-    loadComponent: () => import('./pages/signup/signup.component').then(m => m.SignupComponent),
-    canActivate: [guestGuard]
-  },
-  {
+    // OAuth2/OIDC callback route — also handles Blazor login token redirect
     path: 'signin-oidc',
     loadComponent: () => import('./pages/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent),
     canActivate: [guestGuard]
@@ -58,8 +49,9 @@ export const routes: Routes = [
     ]
   },
   {
+    // Default: go to dashboard (authGuard will redirect to Blazor login if not authenticated)
     path: '',
-    redirectTo: '/login',
+    redirectTo: '/dashboard',
     pathMatch: 'full'
   }
 ];
