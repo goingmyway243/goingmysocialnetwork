@@ -8,7 +8,6 @@
 @inject IUserService UserService
 @inject NavigationManager NavManager
 @inject IHttpClientFactory HttpClientFactory
-@rendermode InteractiveServer
 
 <div class="login-container">
     <!-- Animated gradient background -->
@@ -29,17 +28,14 @@
                 <label for="username" class="form-label">Username</label>
                 <div class="input-wrapper">
                     <i class="pi pi-user input-icon"></i>
-                    <input
+                    <InputText
                         id="username"
-                        type="text"
-                        @bind="Model.Username"
-                        @bind:event="oninput"
+                        @bind-Value="Model!.Username"
                         class="form-input"
                         placeholder="Enter your username"
-                        disabled="@IsLoading"
                     />
                 </div>
-                <ValidationMessage class="error-message" For="() => Model.Username" />
+                <ValidationMessage class="error-message" For="() => Model!.Username" />
             </div>
 
             <!-- Password field -->
@@ -47,17 +43,15 @@
                 <label for="password" class="form-label">Password</label>
                 <div class="input-wrapper">
                     <i class="pi pi-lock input-icon"></i>
-                    <input
+                    <InputText
                         id="password"
                         type="password"
-                        @bind="Model.Password"
-                        @bind:event="oninput"
+                        @bind-Value="Model!.Password"
                         class="form-input"
                         placeholder="Enter your password"
-                        disabled="@IsLoading"
                     />
                 </div>
-                <ValidationMessage class="error-message" For="() => Model.Password" />
+                <ValidationMessage class="error-message" For="() => Model!.Password" />
             </div>
 
             <!-- Remember me -->
@@ -71,19 +65,12 @@
             <!-- Error message -->
             @if (!string.IsNullOrEmpty(AuthError))
             {
-                <div class="error-alert">@AuthError</div>
+                <div class="error-message">@AuthError</div>
             }
 
             <!-- Submit button -->
-            <button type="submit" class="submit-btn" disabled="@IsLoading">
-                @if (IsLoading)
-                {
-                    <span>Signing in...</span>
-                }
-                else
-                {
-                    <span>Sign In</span>
-                }
+            <button type="submit" class="submit-btn">
+                <span>Sign In</span>
             </button>
         </EditForm>
 
@@ -101,9 +88,10 @@
     [SupplyParameterFromQuery(Name = "returnUrl")]
     private string? ReturnUrl { get; set; }
 
-    private LoginModel Model = new();
-    private bool IsLoading = false;
-    private string? AuthError = null;
+    [SupplyParameterFromForm]
+    private LoginModel? Model { get; set; }
+
+    private string? AuthError;
 
     private class LoginModel
     {
@@ -114,6 +102,11 @@
         public string Password { get; set; } = string.Empty;
     }
 
+    protected override void OnInitialized()
+    {
+        Model ??= new();
+    }
+
     private void OnInvalidSubmit(EditContext context)
     {
         // Validation messages are shown automatically by ValidationMessage components
@@ -121,18 +114,16 @@
 
     private async Task OnValidSubmit(EditContext context)
     {
-        IsLoading = true;
         AuthError = null;
 
         try
         {
             // Validate credentials
-            var user = await UserService.ValidateCredentialsAsync(Model.Username, Model.Password);
-            
+            var user = await UserService.ValidateCredentialsAsync(Model!.Username, Model.Password);
+
             if (user == null)
             {
                 AuthError = "Invalid username or password";
-                IsLoading = false;
                 return;
             }
 
@@ -149,12 +140,11 @@
             using var Http = HttpClientFactory.CreateClient();
             Http.BaseAddress = new Uri(NavManager.BaseUri);
 
-            var response = await Http.PostAsync("/connect/token", new FormUrlEncodedContent(tokenRequest));
-            
+            var response = await Http.PostAsync("/connect/authorize", new FormUrlEncodedContent(tokenRequest));
+
             if (!response.IsSuccessStatusCode)
             {
                 AuthError = "Authentication failed. Please try again.";
-                IsLoading = false;
                 return;
             }
 
@@ -181,10 +171,6 @@
         catch (Exception ex)
         {
             AuthError = $"Sign in failed: {ex.Message}";
-        }
-        finally
-        {
-            IsLoading = false;
         }
     }
 }
