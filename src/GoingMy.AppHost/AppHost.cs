@@ -29,10 +29,10 @@ builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.PostApi)
     .WaitFor(postDb)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
-builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.ChatApi)
+/*builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.ChatApi)
     .WithReference(chatDb)
     .WaitFor(identityService)
     .WaitFor(chatDb)
-    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
+    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));*/
 
 builder.Build().Run();

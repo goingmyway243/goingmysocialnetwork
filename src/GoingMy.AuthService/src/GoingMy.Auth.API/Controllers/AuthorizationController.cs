@@ -16,7 +16,7 @@ public class AuthorizationController : ControllerBase
     private readonly IOpenIddictAuthorizationManager _authorizationManager;
 
     public AuthorizationController(
-        IOpenIddictApplicationManager applicationManager, 
+        IOpenIddictApplicationManager applicationManager,
         IUserService userService,
         IOpenIddictAuthorizationManager authorizationManager)
     {
@@ -30,7 +30,7 @@ public class AuthorizationController : ControllerBase
     [Produces("application/json")]
     public async Task<IActionResult> Authorize()
     {
-        var request = HttpContext.GetOpenIddictServerRequest() 
+        var request = HttpContext.GetOpenIddictServerRequest()
             ?? throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
         // Retrieve the username/password from the request (if provided)
@@ -46,49 +46,40 @@ public class AuthorizationController : ControllerBase
             });
         }
 
-        // Validate the username/password
-        var user = await _userService.ValidateCredentialsAsync(username, password);
-        if (user == null)
+        // If user is not authenticated, redirect to login page
+        var result = await HttpContext.AuthenticateAsync();
+        if (!result.Succeeded)
         {
-            return BadRequest(new OpenIddictResponse
-            {
-                Error = Errors.InvalidGrant,
-                ErrorDescription = "The username or password is invalid."
-            });
+            // Store the original request in a query string parameter
+            return Challenge(
+                authenticationSchemes: "Cookies",
+                properties: new AuthenticationProperties
+                {
+                    RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
+                        Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList())
+                });
         }
 
-        // Create claims identity
+        // Create claims principal
         var identity = new ClaimsIdentity(
-            authenticationType: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-            nameType: Claims.Name,
-            roleType: Claims.Role);
+            result.Principal!.Claims,
+            OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
-        identity.AddClaim(new Claim(Claims.Subject, user.Id.ToString()));
-        identity.AddClaim(new Claim(Claims.Name, user.UserName ?? string.Empty));
-        identity.AddClaim(new Claim(Claims.Email, user.Email ?? string.Empty));
-        identity.AddClaim(new Claim("given_name", user.FirstName));
-        identity.AddClaim(new Claim("family_name", user.LastName));
-
-        // Add roles
-        foreach (var role in user.Roles)
-        {
-            identity.AddClaim(new Claim(Claims.Role, role.ToString()));
-        }
+        var principal = new ClaimsPrincipal(identity);
 
         // Set scopes
-        identity.SetScopes(request.GetScopes());
-        identity.SetResources(await GetResourcesAsync(request.GetScopes()));
-        identity.SetDestinations(GetDestinations);
+        principal.SetScopes(request.GetScopes());
+        principal.SetResources(await GetResourcesAsync(request.GetScopes()));
+        principal.SetDestinations(GetDestinations);
 
-        return SignIn(new ClaimsPrincipal(identity), 
-            OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 
     [HttpPost("~/connect/token")]
     [Produces("application/json")]
     public async Task<IActionResult> Exchange()
     {
-        var request = HttpContext.GetOpenIddictServerRequest() 
+        var request = HttpContext.GetOpenIddictServerRequest()
             ?? throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
         if (request.IsPasswordGrantType())
@@ -126,7 +117,7 @@ public class AuthorizationController : ControllerBase
             identity.SetScopes(request.GetScopes());
             identity.SetDestinations(GetDestinations);
 
-            return SignIn(new ClaimsPrincipal(identity), 
+            return SignIn(new ClaimsPrincipal(identity),
                 OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
         else if (request.IsClientCredentialsGrantType())
@@ -145,7 +136,7 @@ public class AuthorizationController : ControllerBase
             identity.SetScopes(request.GetScopes());
             identity.SetDestinations(GetDestinations);
 
-            return SignIn(new ClaimsPrincipal(identity), 
+            return SignIn(new ClaimsPrincipal(identity),
                 OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
         else if (request.IsAuthorizationCodeGrantType())
@@ -161,7 +152,7 @@ public class AuthorizationController : ControllerBase
                 });
             }
 
-            return SignIn(result.Principal, 
+            return SignIn(result.Principal,
                 OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
         else if (request.IsRefreshTokenGrantType())
@@ -177,7 +168,7 @@ public class AuthorizationController : ControllerBase
                 });
             }
 
-            return SignIn(result.Principal, 
+            return SignIn(result.Principal,
                 OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 

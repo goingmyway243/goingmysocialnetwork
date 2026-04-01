@@ -28,7 +28,7 @@ export class AuthService {
   initAuth(): void {
     const authConfig: AuthConfig = environment.authConfig;
     this.oauthService.configure(authConfig);
-    this.oauthService.loadDiscoveryDocument();
+    this.oauthService.loadDiscoveryDocumentAndTryLogin();
   }
 
   getAccessToken(): string {

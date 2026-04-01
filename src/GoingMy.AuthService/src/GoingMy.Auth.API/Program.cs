@@ -16,7 +16,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddAntiforgery();
+
 builder.Services.AddHttpClient();
+
+// Identity cookie authentication for the login session (used by PKCE flow)
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+    .AddCookie(IdentityConstants.ApplicationScheme, options => options.LoginPath = "/login")
+    .AddCookie(IdentityConstants.ExternalScheme)
+    .AddCookie(IdentityConstants.TwoFactorUserIdScheme);
 
 builder.Services.AddCors(options =>
 {
