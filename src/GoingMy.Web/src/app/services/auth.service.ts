@@ -1,128 +1,88 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { OAuthService, AuthConfig, OAuthEvent } from 'angular-oauth2-oidc';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
-/** Key names used by angular-oauth2-oidc for token storage */
-const TOKEN_KEY = 'access_token';
-const TOKEN_STORED_AT_KEY = 'access_token_stored_at';
-const TOKEN_EXPIRATION_KEY = 'access_token_expiration';
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
-  constructor(
-    private oauthService: OAuthService,
-    private http: HttpClient,
-    private router: Router
-  ) {}
+  // ── 1. Dependencies ─────────────────────────────────────────
+  private readonly _oauthService = inject(OAuthService);
+  private readonly _http = inject(HttpClient);
+  private readonly _router = inject(Router);
 
   get oauthEvents(): Observable<OAuthEvent> {
-    return this.oauthService.events;
+    return this._oauthService.events;
   }
 
+  // ── 2. Initialization ────────────────────────────────────────
   initAuth(): void {
     const authConfig: AuthConfig = environment.authConfig;
-    this.oauthService.configure(authConfig);
-    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+    this._oauthService.configure(authConfig);
+    this._oauthService.loadDiscoveryDocumentAndTryLogin();
   }
 
+  // ── 3. Token Management ──────────────────────────────────────
   getAccessToken(): string {
-    // Check oauthService first, fall back to sessionStorage (tokens stored by Blazor callback)
-    return this.oauthService.getAccessToken() || sessionStorage.getItem(TOKEN_KEY) || '';
+    return this._oauthService.getAccessToken() || '';
   }
 
   isLoggedIn(): boolean {
-    if (this.oauthService.hasValidAccessToken()) {
-      return true;
+    return this._oauthService.hasValidAccessToken();
+  }
+
+  // ── 4. Authentication Flow ───────────────────────────────────
+  /**
+   * Initiates the PKCE authorization code flow.
+   * Redirects user to the authorization server login page.
+   */
+  login(targetUrl?: string): void {
+    if (targetUrl) {
+      sessionStorage.setItem('returnUrl', targetUrl);
     }
-    // Also check token stored directly from Blazor login redirect
-    const token = sessionStorage.getItem(TOKEN_KEY);
-    const expiration = sessionStorage.getItem(TOKEN_EXPIRATION_KEY);
-    if (token && expiration) {
-      return Date.now() < parseInt(expiration, 10);
+    
+    // Check if we need to force re-authentication (after logout)
+    const forceLogin = sessionStorage.getItem('forceLogin');
+    if (forceLogin === 'true') {
+      sessionStorage.removeItem('forceLogin');
+      // Force re-authentication even if session exists
+      this._oauthService.initCodeFlow('', { prompt: 'login' });
+    } else {
+      this._oauthService.initCodeFlow();
     }
-    return false;
   }
 
   /**
-   * Stores a JWT token received from the Blazor login callback in sessionStorage
-   * using the same keys that angular-oauth2-oidc reads.
+   * Handles the OAuth callback after authorization.
+   * Exchanges authorization code for tokens (PKCE).
    */
-  storeExternalToken(accessToken: string, expiresIn: number): void {
-    const now = Date.now();
-    sessionStorage.setItem(TOKEN_KEY, accessToken);
-    sessionStorage.setItem(TOKEN_STORED_AT_KEY, now.toString());
-    sessionStorage.setItem(TOKEN_EXPIRATION_KEY, (now + expiresIn * 1000).toString());
-  }
-
-  /**
-   * Reads access_token and expires_in from the current URL query params
-   * (placed there by the Blazor login page after password flow).
-   * Returns true if a token was found and stored.
-   */
-  handleExternalTokenCallback(): boolean {
-    const params = new URLSearchParams(window.location.search);
-    const accessToken = params.get('access_token');
-    const expiresIn = parseInt(params.get('expires_in') ?? '900', 10);
-
-    if (accessToken) {
-      this.storeExternalToken(accessToken, expiresIn);
-      // Clean up token from URL without reloading
-      const cleanUrl = window.location.pathname;
-      window.history.replaceState({}, '', cleanUrl);
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * @deprecated Login is now handled by the Blazor login page.
-   * Redirects to the Blazor login URL.
-   */
-  login(_username?: string, _password?: string): void {
-    window.location.href = this.getBlazorLoginUrl();
-  }
-
-  /**
-   * Builds the Blazor login URL with the Angular signin-oidc callback as returnUrl.
-   */
-  getBlazorLoginUrl(returnPath?: string): string {
-    const callbackUrl = `${window.location.origin}/signin-oidc`;
-    const params = new URLSearchParams({ returnUrl: callbackUrl });
-    if (returnPath) {
-      sessionStorage.setItem('returnUrl', returnPath);
-    }
-    return `${environment.blazorLoginUrl}?${params.toString()}`;
-  }
-
   async handleAuthCallback(): Promise<boolean> {
-    // First, try the Blazor external token callback (token in URL query params)
-    if (this.handleExternalTokenCallback()) {
-      return true;
-    }
-
-    // Fall back to OIDC code flow exchange
     try {
-      await this.oauthService.tryLoginCodeFlow();
+      await this._oauthService.loadDiscoveryDocumentAndTryLogin();
+      return this._oauthService.hasValidAccessToken();
     } catch (error) {
-      console.log('Error during OIDC login callback processing:', error);
+      console.error('Error during OIDC callback processing:', error);
       return false;
     }
-
-    return this.oauthService.hasValidAccessToken();
   }
 
+  /**
+   * Logs out the user, clears tokens and server-side cookies, then restarts PKCE flow.
+   */
   logout(): void {
-    this.oauthService.logOut();
-    sessionStorage.removeItem(TOKEN_KEY);
-    sessionStorage.removeItem(TOKEN_STORED_AT_KEY);
-    sessionStorage.removeItem(TOKEN_EXPIRATION_KEY);
-    // Redirect to Blazor logout / login
-    window.location.href = environment.blazorLoginUrl;
+    // Clear local OAuth tokens first
+    this._oauthService.logOut();
+    sessionStorage.removeItem('returnUrl');
+    
+    // Set flag to force re-authentication on next login
+    sessionStorage.setItem('forceLogin', 'true');
+    
+    // Redirect to server logout endpoint to clear the cookie
+    // The server will redirect back to postLogoutRedirectUri (/)
+    const logoutUrl = `${environment.authConfig.issuer}connect/logout`;
+    window.location.href = logoutUrl;
   }
 }

@@ -29,7 +29,7 @@ export class DashboardHomeComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.loadPosts();
+    // this.loadPosts();
   }
 
   private loadPosts(): void {

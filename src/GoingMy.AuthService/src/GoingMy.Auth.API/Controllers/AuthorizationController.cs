@@ -1,6 +1,7 @@
 using GoingMy.Auth.API.Services;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
@@ -33,26 +34,15 @@ public class AuthorizationController : ControllerBase
         var request = HttpContext.GetOpenIddictServerRequest()
             ?? throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
-        // Retrieve the username/password from the request (if provided)
-        var username = request.Username ?? HttpContext.Request.Query["username"].ToString();
-        var password = request.Password ?? HttpContext.Request.Query["password"].ToString();
-
-        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+        // Check if prompt=login is requested (force re-authentication)
+        if (request.Prompt == "login")
         {
-            return BadRequest(new OpenIddictResponse
-            {
-                Error = Errors.InvalidRequest,
-                ErrorDescription = "Username and password are required for authorization."
-            });
-        }
-
-        // If user is not authenticated, redirect to login page
-        var result = await HttpContext.AuthenticateAsync();
-        if (!result.Succeeded)
-        {
-            // Store the original request in a query string parameter
+            // Sign out the current user to force re-authentication
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            
+            // Redirect to login page
             return Challenge(
-                authenticationSchemes: "Cookies",
+                authenticationSchemes: IdentityConstants.ApplicationScheme,
                 properties: new AuthenticationProperties
                 {
                     RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
@@ -60,18 +50,68 @@ public class AuthorizationController : ControllerBase
                 });
         }
 
-        // Create claims principal
+        // Check if user is authenticated via cookie session
+        var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
+        if (!result.Succeeded)
+        {
+            // User not authenticated - redirect to login page with return URL
+            return Challenge(
+                authenticationSchemes: IdentityConstants.ApplicationScheme,
+                properties: new AuthenticationProperties
+                {
+                    RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
+                        Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList())
+                });
+        }
+
+        // Get the user from the authenticated cookie principal
+        var userId = result.Principal!.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return BadRequest(new OpenIddictResponse
+            {
+                Error = Errors.InvalidRequest,
+                ErrorDescription = "The user identifier cannot be retrieved."
+            });
+        }
+
+        // Retrieve user details to add richer claims
+        var user = await _userService.GetUserByIdAsync(userId);
+        if (user == null)
+        {
+            return BadRequest(new OpenIddictResponse
+            {
+                Error = Errors.InvalidRequest,
+                ErrorDescription = "The user details cannot be retrieved."
+            });
+        }
+
+        // Create claims identity for authorization code
         var identity = new ClaimsIdentity(
-            result.Principal!.Claims,
-            OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            authenticationType: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+            nameType: Claims.Name,
+            roleType: Claims.Role);
+
+        identity.AddClaim(new Claim(Claims.Subject, user.Id.ToString()));
+        identity.AddClaim(new Claim(Claims.Name, user.UserName ?? string.Empty));
+        identity.AddClaim(new Claim(Claims.Email, user.Email ?? string.Empty));
+        identity.AddClaim(new Claim(Claims.GivenName, user.FirstName));
+        identity.AddClaim(new Claim(Claims.FamilyName, user.LastName));
+
+        // Add roles
+        foreach (var role in user.Roles)
+        {
+            identity.AddClaim(new Claim(Claims.Role, role.ToString()));
+        }
 
         var principal = new ClaimsPrincipal(identity);
 
-        // Set scopes
+        // Set requested scopes and resources
         principal.SetScopes(request.GetScopes());
         principal.SetResources(await GetResourcesAsync(request.GetScopes()));
         principal.SetDestinations(GetDestinations);
 
+        // Issue authorization code (PKCE validation happens automatically in token endpoint)
         return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 
@@ -198,6 +238,20 @@ public class AuthorizationController : ControllerBase
         }
 
         return Ok(claims);
+    }
+
+    [HttpGet("~/connect/logout")]
+    [HttpPost("~/connect/logout")]
+    public async Task<IActionResult> Logout()
+    {
+        // Clear the Identity cookie authentication
+        await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+        
+        // Clear OpenIddict authentication if present
+        await HttpContext.SignOutAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+        // Redirect back to Angular app
+        return Redirect("http://localhost:4200/");
     }
 
     private static IEnumerable<string> GetDestinations(Claim claim)

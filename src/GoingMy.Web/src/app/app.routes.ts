@@ -1,12 +1,11 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from './guards/auth.guard';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
-    // OAuth2/OIDC callback route — also handles Blazor login token redirect
+    // OAuth2/OIDC callback route for PKCE flow
     path: 'signin-oidc',
-    loadComponent: () => import('./pages/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent),
-    canActivate: [guestGuard]
+    loadComponent: () => import('./pages/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent)
   },
   {
     path: 'dashboard',

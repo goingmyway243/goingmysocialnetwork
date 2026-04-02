@@ -9,6 +9,7 @@
 @using System.ComponentModel.DataAnnotations
 @inject SignInManager<ApplicationUser> SignInManager
 @inject NavigationManager NavManager
+@inject IHttpContextAccessor HttpContextAccessor
 
 <div class="login-container">
     <!-- Animated gradient background -->
@@ -117,7 +118,7 @@
 
         try
         {
-            // Sign in using SignInManager (handles cookies/auth state)
+            // Sign in using SignInManager (creates cookie authentication)
             var result = await SignInManager.PasswordSignInAsync(
                 Model!.Username, Model!.Password, isPersistent: Model.RememberMe, lockoutOnFailure: false);
 
@@ -127,8 +128,12 @@
                 return;
             }
 
-            // Redirect back to the OIDC authorize endpoint
-            NavManager.NavigateTo(ReturnUrl ?? "/", forceLoad: true);
+            // Redirect back to the OAuth authorize endpoint (PKCE flow continues)
+            var httpContext = HttpContextAccessor.HttpContext;
+            if (httpContext != null)
+            {
+                httpContext.Response.Redirect(ReturnUrl ?? "/", permanent: false);
+            }
         }
         catch (Exception ex)
         {

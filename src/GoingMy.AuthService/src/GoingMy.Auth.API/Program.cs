@@ -30,9 +30,9 @@ builder.Services.AddCors(options =>
 {
   options.AddDefaultPolicy(policy =>
   {
-    policy.WithOrigins(builder.Configuration["AllowedHosts"]!.Split(','))
-          .AllowAnyHeader()
-          .AllowAnyMethod();
+      policy.WithOrigins(builder.Configuration["AllowedHosts"]!.Split(','))
+            .AllowAnyHeader()
+            .AllowAnyMethod();
   });
 });
 
@@ -66,6 +66,7 @@ builder.Services.AddOpenIddict()
       options.SetTokenEndpointUris("/connect/token");
       options.SetAuthorizationEndpointUris("/connect/authorize");
       options.SetUserinfoEndpointUris("/connect/userinfo");
+      options.SetLogoutEndpointUris("/connect/logout");
 
       // Enable the flows
       options.AllowPasswordFlow();
@@ -81,7 +82,8 @@ builder.Services.AddOpenIddict()
       options.UseAspNetCore()
              .EnableTokenEndpointPassthrough()
              .EnableAuthorizationEndpointPassthrough()
-             .EnableUserinfoEndpointPassthrough();
+             .EnableUserinfoEndpointPassthrough()
+             .EnableLogoutEndpointPassthrough();
 
       options.DisableAccessTokenEncryption();
 
@@ -133,7 +135,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseCors();
-app.UseAntiforgery();
 app.UseHttpsRedirection();
 
 // Map static files (CSS, JS, etc.) - must come before routing
@@ -141,6 +142,7 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseAntiforgery();
 
 // Map Blazor components for the UI
 app.MapRazorComponents<App>()

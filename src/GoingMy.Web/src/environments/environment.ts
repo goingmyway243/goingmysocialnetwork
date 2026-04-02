@@ -1,15 +1,16 @@
 export const environment = {
   production: false,
-  blazorLoginUrl: 'https://localhost:7001/login',
   authConfig: {
     issuer: 'https://localhost:7001/',
     clientId: 'web-client',
     redirectUri: window.location.origin + '/signin-oidc',
     postLogoutRedirectUri: window.location.origin + '/',
+    logoutUrl: 'https://localhost:7001/connect/logout',  // OpenIddict logout endpoint
     responseType: 'code',
-    scope: 'social_api',
+    scope: 'openid profile email roles social_api',
     showDebugInformation: true,
-    useSilentRefresh: false,
-    silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
+    requireHttps: false,  // Local development only
+    strictDiscoveryDocumentValidation: false,  // Local development only
+    // PKCE is enabled automatically when responseType is 'code'
   }
 };

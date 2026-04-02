@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 
 /**
  * Auth guard to protect routes that require authentication.
- * Redirects unauthenticated users to the Blazor login page.
+ * Initiates PKCE OAuth flow for unauthenticated users.
  */
 export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
@@ -13,22 +13,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     return true;
   }
 
-  // Redirect to Blazor login page (external), passing the target path as returnUrl
-  window.location.href = authService.getBlazorLoginUrl(state.url);
+  // Initiate PKCE OAuth flow, passing the target path
+  authService.login(state.url);
   return false;
-};
-
-/**
- * Guest guard to prevent authenticated users from accessing login/register pages.
- */
-export const guestGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
-
-  if (!authService.isLoggedIn()) {
-    return true;
-  }
-
-  // Already authenticated — send to dashboard
-  return router.createUrlTree(['/dashboard']);
 };
