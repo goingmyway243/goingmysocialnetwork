@@ -1,14 +1,31 @@
 .dashboard-sidebar {
   width: 280px;
   height: calc(100vh - 70px);
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-md) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
+  border-right: 1px solid var(--glass-border-base);
+  box-shadow: inset -1px 0 2px var(--glass-highlight-inner);
   display: flex;
   flex-direction: column;
   position: sticky;
   top: 70px;
   padding: 1.5rem 1rem;
+}
+
+/* Right edge gradient highlight */
+.dashboard-sidebar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom,
+      transparent,
+      var(--glass-highlight-top) 50%,
+      transparent);
+  pointer-events: none;
 }
 
 .sidebar-content {
@@ -32,12 +49,47 @@
   padding: 1rem 1.25rem;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition-smooth);
   color: rgba(255, 255, 255, 0.8);
   font-size: 1rem;
   font-weight: 500;
   position: relative;
   overflow: hidden;
+  background: transparent;
+  will-change: transform, background;
+}
+
+/* Glass orb background for icons */
+.menu-item i {
+  font-size: 1.25rem;
+  min-width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+/* Glass orb container */
+.menu-item i::before {
+  position: absolute;
+  content: '';
+  inset: 0;
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: 50%;
+  z-index: -1;
+  box-shadow: var(--glass-shadow-sm),
+    inset 0 1px 2px var(--glass-highlight-inner);
+  transition: all 0.3s ease;
 }
 
 .menu-item::before {
@@ -47,154 +99,203 @@
   top: 0;
   height: 100%;
   width: 4px;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  background: var(--gradient-primary);
   transform: scaleY(0);
   transition: transform 0.3s ease;
+  border-radius: 0 4px 4px 0;
 }
 
 .menu-item:hover {
-  background: rgba(96, 165, 250, 0.1);
+  background: var(--glass-surface-hover);
   color: #ffffff;
   transform: translateX(4px);
+  box-shadow: var(--glass-shadow-sm),
+    inset 0 1px 2px var(--glass-highlight-inner);
+}
+
+.menu-item:hover i::before {
+  background: var(--glass-elevated-bg);
+  box-shadow: var(--glass-shadow-md),
+    var(--glass-glow-sm),
+    inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 .menu-item.active {
-  background: rgba(96, 165, 250, 0.15);
+  background: var(--glass-surface-active);
   color: #ffffff;
-  font-weight: 600;
-}
 
-.menu-item.active::before {
-  transform: scaleY(1);
-}
+  i::before {
+    background: var(--glass-elevated-bg);
+    border: 1px solid var(--glass-border-accent);
+    box-shadow: var(--glass-shadow-md),
+      var(--glass-glow-md),
+      inset 0 1px 2px var(--glass-highlight-inner);
+  }
 
-.menu-item i {
-  font-size: 1.25rem;
-  min-width: 1.5rem;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+  .menu-item.active i {
+    animation: glowPulse 2s ease-in-out infinite
+  }
 
-.menu-item.active i {
-  animation: pulse 2s ease-in-out infinite;
-}
+  .menu-item.active::before {
+    transform: scaleY(1);
+    box-shadow: 0 0 12px var(--glass-glow-color);
+  }
 
-.menu-label {
-  flex: 1;
-}
-
-.sidebar-footer {
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  margin-top: 1rem;
-}
-
-/* PrimeNG Button Customization */
-:host ::ng-deep .p-button.create-post-btn {
-  width: 100%;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
-  border: none;
-  color: #ffffff;
-  font-weight: 600;
-  padding: 0.875rem 1.5rem;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.2);
-}
-
-:host ::ng-deep .p-button.create-post-btn:hover {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(96, 165, 250, 0.4);
-}
-
-:host ::ng-deep .p-button.create-post-btn:active {
-  transform: translateY(0);
-}
-
-/* Animations */
-@keyframes pulse {
-  0%, 100% {
+  .menu-item.active i::before {
     opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .dashboard-sidebar {
-    width: 80px;
-    padding: 1rem 0.5rem;
   }
 
   .menu-label {
-    display: none;
-  }
-
-  .menu-item {
-    justify-content: center;
-    padding: 1rem;
+    flex: 1;
   }
 
   .sidebar-footer {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .dashboard-sidebar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    width: 100%;
-    height: 70px;
-    flex-direction: row;
-    padding: 0.5rem;
-    z-index: 999;
-    border-right: none;
+    padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 1rem;
   }
 
-  .sidebar-content {
-    flex-direction: row;
+  /* PrimeNG Button Customization */
+  :host ::ng-deep .p-button.create-post-btn {
     width: 100%;
+    background: var(--gradient-primary);
+    border: none;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    transition: var(--transition-smooth);
+    box-shadow: var(--glass-shadow-md),
+      0 4px 16px rgba(96, 165, 250, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    will-change: transform, box-shadow;
   }
 
-  .menu-container {
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    gap: 0;
-    overflow-x: auto;
+  /* Liquid gradient shimmer effect */
+  :host ::ng-deep .p-button.create-post-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent);
+    transition: left 0.5s ease;
   }
 
-  .menu-item {
-    flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.5rem;
-    min-width: 60px;
+  :host ::ng-deep .p-button.create-post-btn:hover {
+    background: var(--gradient-primary-hover);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: var(--glass-shadow-lg),
+      0 6px 24px rgba(96, 165, 250, 0.4),
+      var(--glass-glow-md),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
-  .menu-item::before {
-    display: none;
+  :host ::ng-deep .p-button.create-post-btn:hover::before {
+    left: 100%;
   }
 
-  .menu-item i {
-    font-size: 1.5rem;
+  :host ::ng-deep .p-button.create-post-btn:active {
+    transform: translateY(0) scale(1);
   }
 
-  .menu-label {
-    font-size: 0.75rem;
-    display: block;
+  /* Animations */
+  @keyframes glowPulse {
+
+    0%,
+    100% {
+      opacity: 0.7;
+      filter: brightness(1);
+    }
+
+    50% {
+      opacity: 1;
+      filter: brightness(1.2);
+    }
   }
 
-  .menu-item:hover {
-    transform: translateY(-2px);
+  .menu-item.active i {
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .dashboard-sidebar {
+      width: 80px;
+      padding: 1rem 0.5rem;
+    }
+
+    .menu-label {
+      display: none;
+    }
+
+    .menu-item {
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .sidebar-footer {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .dashboard-sidebar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: auto;
+      width: 100%;
+      height: 70px;
+      flex-direction: row;
+      padding: 0.5rem;
+      z-index: 999;
+      border-right: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-content {
+      flex-direction: row;
+      width: 100%;
+    }
+
+    .menu-container {
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+    }
+
+    .menu-item {
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.5rem;
+      min-width: 60px;
+    }
+
+    .menu-item::before {
+      display: none;
+    }
+
+    .menu-item i {
+      font-size: 1.5rem;
+    }
+
+    .menu-label {
+      font-size: 0.75rem;
+      display: block;
+    }
+
+    .menu-item:hover {
+      transform: translateY(-2px);
+    }
   }
 }

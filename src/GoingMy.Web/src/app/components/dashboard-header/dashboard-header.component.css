@@ -3,13 +3,34 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--glass-elevated-bg);
+  backdrop-filter: var(--glass-blur-md) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
+  border-bottom: 1px solid var(--glass-border-base);
+  box-shadow: var(--glass-shadow-md),
+              inset 0 1px 2px var(--glass-highlight-inner);
   position: sticky;
   top: 0;
   z-index: 1000;
   height: 70px;
+  transition: var(--transition-smooth);
+}
+
+/* Top edge highlight for refined look */
+.dashboard-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent,
+    var(--glass-highlight-top) 50%,
+    transparent
+  );
+  opacity: 0.8;
+  pointer-events: none;
 }
 
 .header-left {
@@ -56,24 +77,47 @@
 
 .search-container {
   width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-container i {
+  position: absolute;
+  left: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1rem;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .search-input {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 2.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-md) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
+  border: 1px solid var(--glass-border-base);
   border-radius: 24px;
   color: #ffffff;
   font-size: 0.95rem;
-  transition: all 0.3s ease;
+  transition: var(--transition-smooth);
+  box-shadow: var(--glass-shadow-sm),
+              inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 .search-input:focus {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(96, 165, 250, 0.5);
+  background: var(--glass-elevated-bg);
+  border: 1px solid transparent;
+  background-image: 
+    linear-gradient(var(--glass-elevated-bg), var(--glass-elevated-bg)),
+    linear-gradient(135deg, var(--glass-border-accent), rgba(167, 139, 250, 0.3));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
   outline: none;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  box-shadow: var(--glass-shadow-md),
+              var(--glass-glow-sm),
+              inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 .search-input::placeholder {
@@ -86,36 +130,74 @@
   gap: 0.5rem;
 }
 
-/* PrimeNG Button Customization */
+/* ===== PRIMENG BUTTON CUSTOMIZATION ===== */
+
 :host ::ng-deep .p-button.create-btn {
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  background: var(--gradient-primary);
   border: none;
   color: #ffffff;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
-  transition: all 0.3s ease;
+  transition: var(--transition-smooth);
+  box-shadow: var(--glass-shadow-md),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  will-change: transform, box-shadow;
+}
+
+:host ::ng-deep .p-button.create-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 :host ::ng-deep .p-button.create-btn:hover {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background: var(--gradient-primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+  box-shadow: var(--glass-shadow-lg),
+              0 0 20px rgba(96, 165, 250, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+:host ::ng-deep .p-button.create-btn:hover::before {
+  opacity: 1;
+}
+
+:host ::ng-deep .p-button.create-btn:active {
+  transform: translateY(0);
 }
 
 :host ::ng-deep .p-button.icon-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-md) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
+  border: 1px solid var(--glass-border-base);
   color: #ffffff;
   width: 2.5rem;
   height: 2.5rem;
-  transition: all 0.3s ease;
+  transition: var(--transition-smooth);
+  box-shadow: var(--glass-shadow-sm),
+              inset 0 1px 2px var(--glass-highlight-inner);
+  will-change: transform, box-shadow;
 }
 
 :host ::ng-deep .p-button.icon-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(96, 165, 250, 0.5);
+  background: var(--glass-elevated-bg);
+  border-color: var(--glass-border-accent);
   transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-md),
+              var(--glass-glow-sm),
+              inset 0 1px 2px var(--glass-highlight-inner);
 }
+
+/* ===== PRIMENG INPUT CUSTOMIZATION ===== */
 
 :host ::ng-deep .p-inputtext {
   background: transparent;
@@ -123,30 +205,40 @@
   color: inherit;
 }
 
+/* ===== PRIMENG MENU CUSTOMIZATION ===== */
+
 :host ::ng-deep .p-menu {
-  background: rgba(30, 30, 46, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--glass-overlay-bg);
+  backdrop-filter: var(--glass-blur-lg) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-lg) saturate(180%);
+  border: 1px solid var(--glass-border-strong);
   border-radius: 12px;
   min-width: 200px;
+  box-shadow: var(--glass-shadow-xl),
+              inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 :host ::ng-deep .p-menu .p-menuitem-link {
   color: #ffffff;
   padding: 0.75rem 1rem;
-  transition: all 0.3s ease;
+  transition: var(--transition-smooth);
+  border-radius: 8px;
+  margin: 0.25rem 0.5rem;
 }
 
 :host ::ng-deep .p-menu .p-menuitem-link:hover {
-  background: rgba(96, 165, 250, 0.15);
+  background: var(--glass-elevated-hover);
+  box-shadow: var(--glass-shadow-sm),
+              var(--glass-glow-sm);
 }
 
 :host ::ng-deep .p-menu .p-menuitem-icon {
-  color: #60a5fa;
+  color: var(--color-accent-blue);
   margin-right: 0.75rem;
 }
 
-/* Responsive Design */
+/* ===== RESPONSIVE DESIGN ===== */
+
 @media (max-width: 768px) {
   .dashboard-header {
     padding: 0.75rem 1rem;

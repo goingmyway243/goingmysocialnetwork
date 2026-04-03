@@ -2,6 +2,71 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.5.0] - 2026-04-03
+
+### Added
+- **Liquid Glass Design System**: Complete Apple-inspired glassmorphism aesthetic for dashboard UI
+  - 3-tier elevation system with CSS variables: `--glass-surface-bg` (0.08), `--glass-elevated-bg` (0.12), `--glass-overlay-bg` (0.18)
+  - Performance-optimized blur scale: 8px/16px/24px with automatic performance mode for low-end devices
+  - Comprehensive shadow elevation scale (sm/md/lg/xl) for depth hierarchy
+  - Glass glow effects for hover/focus states
+  - Utility classes: `.glass-surface`, `.glass-elevated`, `.glass-overlay`, `.glass-edge-top`, `.glass-glow`, `.glass-border-gradient`
+  - Edge highlights and inner shadows for refined Apple-quality polish
+- **Enhanced Background Gradients**: Three gradient options for dashboard container
+  - Default: Deep purple-to-navy with enhanced warmth and contrast
+  - `.bg-teal`: Midnight blue with teal accents
+  - `.bg-light`: Slate to indigo (higher luminosity)
+  - Animated radial overlay (0.15 opacity) and mesh gradient texture for added depth
+- **Dashboard Header Redesign**: ([dashboard-header.component.css](../src/GoingMy.Web/src/app/components/dashboard-header/dashboard-header.component.css))
+  - Applied `glass-elevated` styling with top edge highlight
+  - Search input with glass effects and animated gradient border on focus
+  - Create button with liquid gradient shimmer and glow effect
+  - Icon buttons with refined hover states
+  - Dropdown menu with `glass-overlay` styling
+  - Fixed search icon positioning inside input field
+- **Dashboard Sidebar Redesign**: ([dashboard-sidebar.component.css](../src/GoingMy.Web/src/app/components/dashboard-sidebar/dashboard-sidebar.component.css))
+  - Applied `glass-surface` base with right edge gradient highlight
+  - Navigation items with enhanced active state (0.20 opacity + gradient border)
+  - Glass orb backgrounds for icons with pulsing glow animation
+  - Create Post button with liquid gradient shimmer animation
+  - Improved icon styling with visible glass spheres and backdrop effects
+- **Post Cards Multi-Layer Glass Effects**: ([dashboard-home.component.css](../src/GoingMy.Web/src/app/pages/dashboard/dashboard-home/dashboard-home.component.css))
+  - Base glass-elevated with top and bottom edge effects
+  - Gradient border on hover with enhanced lift animation (-4px translateY)
+  - Refined author avatar with gradient ring and inner highlight
+  - Glass action buttons with color-coded hover states (blue/red)
+  - Loading shimmer animation and error/empty states with glass effects
+- **Micro-Interactions System**: Smooth, performant animations across all components
+  - `glassShimmer`: Loading effect with moving gradient
+  - `glowPulse`: Pulsing glow for active states
+  - Standardized transitions: `--transition-smooth` (cubic-bezier), `--transition-fast`
+  - Keyboard focus rings with gradient styling
+  - Full `prefers-reduced-motion` support
+- **PrimeNG Theme Integration**: ([app.theme.ts](../src/GoingMy.Web/src/app/configs/app.theme.ts))
+  - Extended Lara theme with glassmorphism tokens
+  - Mapped surface tokens to CSS variables for consistency
+  - Global styling properties for border radius and transitions
+- **Accessibility & Performance**:
+  - WCAG AA contrast ratios maintained on all text
+  - GPU acceleration with `will-change` hints on interactive elements
+  - Performance mode (`.glass-performance-mode`) reduces blur for low-end devices
+  - Browser compatibility: Chrome/Edge, Safari (-webkit-), Firefox
+
+### Changed
+- **Global Styles**: Replaced old glass class with modern 3-tier elevation CSS variable system
+  - Updated all form inputs with enhanced glass effects
+  - Improved button styling with glow and lift animations
+  - Enhanced checkbox styling with backdrop filters
+- **CSS Variables**: Comprehensive redesign of design tokens
+  - Added 40+ new CSS variables for glass effects, colors, shadows, and transitions
+  - Maintained backward compatibility with legacy variable names
+
+### Fixed
+- **Header CSS**: Cleaned up corrupted duplicate code sections in dashboard-header.component.css
+- **Search Icon Positioning**: Fixed icon positioning inside search input field
+  - Icon now properly positioned with flexbox container
+  - Added `pointer-events: none` to prevent blocking input interactions
+
 ## [0.4.0] - 2026-03-31
 
 ### Added
@@ -89,7 +154,7 @@ All notable changes to the GoingMy Social Network project are documented in this
 ## Guidelines for VERSION Updates
 
 - **MAJOR**: Breaking changes to API contracts or microservice architecture
-- **MINOR**: New features, services, or substantial documentation updates  
+- **MINOR**: New features, services, substantial UI redesigns, or documentation updates  
 - **PATCH**: Bug fixes, small improvements, or clarifications
 
 ## Contributing Changes
