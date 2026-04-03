@@ -128,12 +128,21 @@
                 return;
             }
 
-            // Redirect back to the OAuth authorize endpoint (PKCE flow continues)
+            // Check if this is part of an OAuth flow
             var httpContext = HttpContextAccessor.HttpContext;
-            if (httpContext != null)
+            if (httpContext != null && !string.IsNullOrEmpty(ReturnUrl))
             {
-                httpContext.Response.Redirect(ReturnUrl ?? "/", permanent: false);
+                // Parse the returnUrl to check if it's the authorize endpoint
+                if (ReturnUrl.Contains("/connect/authorize", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Use server-side redirect for OAuth flow to avoid multiple roundtrips
+                    httpContext.Response.Redirect(ReturnUrl, permanent: false);
+                    return;
+                }
             }
+
+            // For non-OAuth flows, use NavigationManager
+            NavManager.NavigateTo(ReturnUrl ?? "/", forceLoad: true);
         }
         catch (Exception ex)
         {
