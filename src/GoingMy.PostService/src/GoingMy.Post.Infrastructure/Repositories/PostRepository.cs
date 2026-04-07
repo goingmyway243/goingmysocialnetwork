@@ -17,7 +17,7 @@ public class PostRepository : IPostRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Domain.Post>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Domain.Entities.Post>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Posts
             .Find(_ => true)
@@ -25,22 +25,22 @@ public class PostRepository : IPostRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Domain.Post?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<Domain.Entities.Post?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         return await _context.Posts
             .Find(p => p.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<Domain.Post> AddAsync(Domain.Post post, CancellationToken cancellationToken = default)
+    public async Task<Domain.Entities.Post> AddAsync(Domain.Entities.Post post, CancellationToken cancellationToken = default)
     {
         await _context.Posts.InsertOneAsync(post, cancellationToken: cancellationToken);
         return post;
     }
 
-    public async Task<Domain.Post> UpdateAsync(Domain.Post post, CancellationToken cancellationToken = default)
+    public async Task<Domain.Entities.Post> UpdateAsync(Domain.Entities.Post post, CancellationToken cancellationToken = default)
     {
-        var filter = Builders<Domain.Post>.Filter.Eq(p => p.Id, post.Id);
+        var filter = Builders<Domain.Entities.Post>.Filter.Eq(p => p.Id, post.Id);
         var result = await _context.Posts.ReplaceOneAsync(filter, post, cancellationToken: cancellationToken);
 
         if (result.MatchedCount == 0)
@@ -53,7 +53,7 @@ public class PostRepository : IPostRepository
 
     public async Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default)
     {
-        var filter = Builders<Domain.Post>.Filter.Eq(p => p.Id, id);
+        var filter = Builders<Domain.Entities.Post>.Filter.Eq(p => p.Id, id);
         var result = await _context.Posts.DeleteOneAsync(filter, cancellationToken);
         return result.DeletedCount > 0;
     }

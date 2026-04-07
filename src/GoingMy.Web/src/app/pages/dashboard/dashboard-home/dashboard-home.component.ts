@@ -4,16 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-
-interface Post {
-  id: string;
-  title: string;
-  content: string;
-  author: string;
-  createdAt: string;
-  likes: number;
-  comments: number;
-}
+import { Post } from '../../../models/post.model';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -29,7 +20,7 @@ export class DashboardHomeComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    // this.loadPosts();
+    this.loadPosts();
   }
 
   private loadPosts(): void {
@@ -37,43 +28,16 @@ export class DashboardHomeComponent implements OnInit {
     this.error.set(null);
     this.http.get<Post[]>('https://localhost:7002/api/posts').subscribe({
       next: (data) => {
-        // Ensure data is always an array
-        // this.posts.set(Array.isArray(data) ? data : []);
-        this.setMockData();
+        const posts: Post[] = Array.isArray(data) ? data : [];
+        this.posts.set(posts);
         this.loading.set(false);
       },
       error: (err) => {
         console.error('Error loading posts:', err);
         this.error.set('Failed to load posts. Please try again later.');
         this.loading.set(false);
-        // For demo purposes, set some mock data
-        this.setMockData();
       }
     });
-  }
-
-  private setMockData(): void {
-    const mockPosts: Post[] = [
-      {
-        id: '1',
-        title: 'Welcome to GoingMySocial',
-        content: 'This is a modern social network built with Angular and .NET. Stay connected with friends and share your moments!',
-        author: 'System',
-        createdAt: new Date().toISOString(),
-        likes: 42,
-        comments: 8
-      },
-      {
-        id: '2',
-        title: 'Getting Started',
-        content: 'Explore the platform, connect with others, and share your thoughts. The journey begins here!',
-        author: 'Admin',
-        createdAt: new Date().toISOString(),
-        likes: 28,
-        comments: 5
-      }
-    ];
-    this.posts.set(mockPosts);
   }
 
   likePost(post: Post): void {

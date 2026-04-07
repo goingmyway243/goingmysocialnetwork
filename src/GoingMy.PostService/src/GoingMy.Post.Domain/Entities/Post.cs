@@ -1,4 +1,4 @@
-namespace GoingMy.Post.Domain;
+namespace GoingMy.Post.Domain.Entities;
 
 /// <summary>
 /// Represents a social media post aggregate root.
@@ -12,6 +12,9 @@ public class Post
     public string Username { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    public int Likes { get; set; }
+    public int Comments { get; set; }
+    public Author? Author { get; set; }
 
     /// <summary>
     /// Creates a new post instance.
@@ -24,13 +27,8 @@ public class Post
         UserId = userId;
         Username = username;
         CreatedAt = createdAt;
-    }
-
-    /// <summary>
-    /// Private constructor for MongoDB.
-    /// </summary>
-    private Post()
-    {
+        Likes = 0;
+        Comments = 0;
     }
 
     /// <summary>

@@ -18,7 +18,7 @@ public class MongoDbContext
     /// <summary>
     /// Gets the Posts collection.
     /// </summary>
-    public IMongoCollection<Domain.Post> Posts => _database.GetCollection<Domain.Post>("posts");
+    public IMongoCollection<Domain.Entities.Post> Posts => _database.GetCollection<Domain.Entities.Post>("posts");
 
     /// <summary>
     /// Initializes MongoDB collections with required indexes.
@@ -26,8 +26,8 @@ public class MongoDbContext
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         // Create compound index on UserId for efficient user post queries
-        var indexKeys = Builders<Domain.Post>.IndexKeys.Ascending(p => p.UserId).Descending(p => p.CreatedAt);
-        var indexModel = new CreateIndexModel<Domain.Post>(indexKeys);
+        var indexKeys = Builders<Domain.Entities.Post>.IndexKeys.Ascending(p => p.UserId).Descending(p => p.CreatedAt);
+        var indexModel = new CreateIndexModel<Domain.Entities.Post>(indexKeys);
 
         try
         {

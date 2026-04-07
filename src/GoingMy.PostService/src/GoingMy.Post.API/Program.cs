@@ -1,11 +1,11 @@
 using GoingMy.Post.Domain.Repositories;
 using GoingMy.Post.Infrastructure.Repositories;
 using GoingMy.Post.Infrastructure.Data;
+using GoingMy.Post.Application.Extensions;
 using MongoDB.Driver;
 using OpenIddict.Validation.AspNetCore;
 using Scalar.AspNetCore;
 using GoingMy.Shared;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,12 +21,8 @@ builder.Services.AddScoped<MongoDbContext>(provider =>
   return new MongoDbContext(client, SharedServices.PostDb);
 });
 
-// Register MediatR
-builder.Services.AddMediatR(config =>
-    config.RegisterServicesFromAssemblies(
-        Assembly.GetExecutingAssembly()
-    )
-);
+// Register Post.Application services (includes MediatR)
+builder.Services.AddPostApplicationServices();
 
 // Register repositories
 builder.Services.AddScoped<IPostRepository, PostRepository>();

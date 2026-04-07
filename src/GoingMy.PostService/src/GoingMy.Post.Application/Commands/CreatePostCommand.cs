@@ -29,7 +29,7 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostD
 
     public async Task<PostDto> Handle(CreatePostCommand request, CancellationToken cancellationToken)
     {
-        var post = new Domain.Post(
+        var post = new Domain.Entities.Post(
             id: ObjectId.GenerateNewId().ToString(),
             title: request.Title,
             content: request.Content,
@@ -39,7 +39,7 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostD
         );
 
         var createdPost = await _postRepository.AddAsync(post, cancellationToken);
-        
+
         return new PostDto(
             Id: createdPost.Id,
             Title: createdPost.Title,
