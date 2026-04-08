@@ -26,7 +26,7 @@ export class DashboardHomeComponent implements OnInit {
   private loadPosts(): void {
     this.loading.set(true);
     this.error.set(null);
-    this.http.get<Post[]>('https://localhost:7002/api/posts').subscribe({
+    this.http.get<Post[]>('https://localhost:7003/api/posts').subscribe({
       next: (data) => {
         const posts: Post[] = Array.isArray(data) ? data : [];
         this.posts.set(posts);

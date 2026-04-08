@@ -41,6 +41,7 @@ Go directly to the service location � do not search the solution explorer.
 | Service | Responsibility | Location |
 |---------|----------------|----------|
 | AuthService | User authentication & authorization | `src/GoingMy.AuthService/` |
+| UserService | User profiles, followers, avatar, cover | `src/GoingMy.UserService/` |
 | PostService | Social content & interactions | `src/GoingMy.PostService/` |
 | ChatService | Real-time chat & messaging | `src/GoingMy.ChatService/` |
 | ServiceDefaults | Shared configurations & extensions | `src/GoingMy.ServiceDefaults/` |
@@ -77,7 +78,7 @@ Each skill file lists the specific libraries to fetch for that tech stack.
 
 - **Workspace Root**: repository root
 - **Source**: `src/`
-- **Backend Services**: `src/GoingMy.AuthService/`, `src/GoingMy.PostService/`, `src/GoingMy.ChatService/`
+- **Backend Services**: `src/GoingMy.AuthService/`, `src/GoingMy.UserService/`, `src/GoingMy.PostService/`, `src/GoingMy.ChatService/`
 - **Frontend**: `src/GoingMy.Web/`
 - **Shared Defaults**: `src/GoingMy.ServiceDefaults/`
 - **Orchestration**: `src/GoingMy.AppHost/`

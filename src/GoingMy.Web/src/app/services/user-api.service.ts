@@ -42,7 +42,7 @@ export interface ChangePasswordRequest {
 export class UserApiService {
   private readonly _http = inject(HttpClient);
   private readonly _authBaseUrl = 'https://localhost:7001/api/user';
-  private readonly _userBaseUrl = 'https://localhost:7003/api/userprofiles';
+  private readonly _userBaseUrl = 'https://localhost:7002/api/userprofiles';
 
   // ── Auth Service ─────────────────────────────────────────────
 

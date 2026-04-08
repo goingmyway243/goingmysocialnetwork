@@ -1,4 +1,4 @@
-@UserApi_HostAddress = https://localhost:7003
+@UserApi_HostAddress = https://localhost:7002
 
 ### Bootstrap a user profile (called by AuthService after signup)
 POST {{UserApi_HostAddress}}/api/userprofiles

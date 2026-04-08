@@ -21,13 +21,21 @@ src/
 ├── GoingMy.AuthService/          # Authentication and authorization service
 │   ├── GoingMy.AuthService.slnx  # Solution file
 │   ├── src/
-│   │   ├── GoingMy.Auth.Domain/          # Domain models and entities
-│   │   ├── GoingMy.Auth.Application/     # Application services and DTOs
-│   │   ├── GoingMy.Auth.Infrastructure/  # Data access and external services
-│   │   └── GoingMy.Auth.API/             # REST API controllers
+│   │   └── GoingMy.Auth.API/             # REST API (identity only — no profile fields)
 │   └── tests/
 │       ├── GoingMy.Auth.Tests/           # Unit tests
 │       └── GoingMy.Auth.IntegrationTests/# Integration tests
+│
+├── GoingMy.UserService/          # User profile, followers, avatar, cover service
+│   ├── GoingMy.UserService.slnx  # Solution file
+│   ├── src/
+│   │   ├── GoingMy.User.Domain/          # UserProfile, UserFollow entities & repo interfaces
+│   │   ├── GoingMy.User.Application/     # CQRS commands, queries, DTOs (MediatR)
+│   │   ├── GoingMy.User.Infrastructure/  # EF Core / PostgreSQL repositories & migrations
+│   │   └── GoingMy.User.API/             # REST API controllers
+│   └── tests/
+│       ├── GoingMy.User.Tests/           # Unit tests
+│       └── GoingMy.User.IntegrationTests/# Integration tests
 │
 ├── GoingMy.PostService/          # Post management service
 │   ├── GoingMy.PostService.slnx  # Solution file
@@ -160,8 +168,9 @@ chmod +x run.sh  # Make script executable (first time only)
 **Access the Application:**
 - **Web Application**: `http://localhost:4200`
 - **Auth Service API**: `http://localhost:5001`
-- **Post Service API**: `http://localhost:5002`
-- **Chat Service API**: `http://localhost:5003`
+- **Post Service API**: `http://localhost:5003`
+- **User Service API**: `http://localhost:5002`
+- **Chat Service API**: `http://localhost:5004`
 - **Aspire Dashboard**: Displayed in AppHost output
 
 ### Build Instructions
@@ -205,12 +214,22 @@ dotnet add package Moq
 
 ### Auth Service (`GoingMy.AuthService`)
 - User registration and login
-- JWT token generation and validation
-- User profile management
+- JWT token generation and validation (OpenIddict PKCE)
+- Identity fields only (`FirstName`, `LastName`, `IsActive`)
+- Bootstraps a `UserProfile` in UserService after every signup
 - Password management
-- OAuth/SSO integration (future)
 
 **Default API Port**: 5001
+
+### User Service (`GoingMy.UserService`)
+- Owns all non-authentication user data (single source of truth)
+- User profile CRUD (`bio`, `avatarUrl`, `coverUrl`, `location`, `websiteUrl`, `gender`, `dateOfBirth`, `isPrivate`)
+- Social counters (`followersCount`, `followingCount`, `postsCount`)
+- Follow / Unfollow users
+- Paginated followers & following lists
+- Uses **PostgreSQL** via EF Core (relational follow graph)
+
+**Default API Port**: 5002
 
 ### Post Service (`GoingMy.PostService`)
 - Create, read, update, delete posts
@@ -219,7 +238,7 @@ dotnet add package Moq
 - Post feed management
 - Media attachment support
 
-**Default API Port**: 5002
+**Default API Port**: 5003
 
 ### Chat Service (`GoingMy.ChatService`)
 - Private one-to-one conversations
@@ -228,7 +247,7 @@ dotnet add package Moq
 - Idempotent conversation creation (reuses existing conversations)
 - MongoDB-backed message and conversation storage
 
-**Default API Port**: 5003
+**Default API Port**: 5004
 
 ## Next Steps
 
@@ -400,7 +419,7 @@ For questions or issues:
 ---
 
 **Created**: March 19, 2026  
-**Last Updated**: March 31, 2026  
-**Backend Technology**: .NET 10.0, PostgreSQL, xUnit, MediatR, Serilog, FluentValidation, Scalar.AspNetCore
+**Last Updated**: April 8, 2026  
+**Backend Technology**: .NET 10.0, PostgreSQL, MongoDB, xUnit, MediatR, OpenIddict, Scalar.AspNetCore
 **Frontend Technology**: Angular 20, PrimeNG, TypeScript, CSS  
 **Architecture Pattern**: Clean Architecture with Microservices (Backend) + Signals & Code Flow Blocks (Frontend)
