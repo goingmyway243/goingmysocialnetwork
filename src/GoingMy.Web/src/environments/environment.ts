@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  apiGatewayUrl: 'https://localhost:7000',
   authConfig: {
     issuer: 'https://localhost:7001/',
     clientId: 'web-client',

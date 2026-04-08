@@ -5,6 +5,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { Post } from '../../../models/post.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -26,7 +27,7 @@ export class DashboardHomeComponent implements OnInit {
   private loadPosts(): void {
     this.loading.set(true);
     this.error.set(null);
-    this.http.get<Post[]>('https://localhost:7003/api/posts').subscribe({
+    this.http.get<Post[]>(`${environment.apiGatewayUrl}/api/posts`).subscribe({
       next: (data) => {
         const posts: Post[] = Array.isArray(data) ? data : [];
         this.posts.set(posts);

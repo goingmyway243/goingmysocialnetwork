@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.yourdomain.com/api',
+  apiGatewayUrl: 'https://api.yourdomain.com',
   auth: {
     issuer: 'https://identity.yourdomain.com',
     clientId: 'web-client',

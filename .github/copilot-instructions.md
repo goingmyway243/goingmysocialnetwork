@@ -40,6 +40,7 @@ Go directly to the service location � do not search the solution explorer.
 
 | Service | Responsibility | Location |
 |---------|----------------|----------|
+| ApiGateway | Centralized reverse proxy, JWT validation, CORS, rate limiting | `src/GoingMy.ApiGateway/` |
 | AuthService | User authentication & authorization | `src/GoingMy.AuthService/` |
 | UserService | User profiles, followers, avatar, cover | `src/GoingMy.UserService/` |
 | PostService | Social content & interactions | `src/GoingMy.PostService/` |
@@ -52,11 +53,15 @@ Go directly to the service location � do not search the solution explorer.
 
 ## Architecture Principles
 
-- Each microservice owns its own database and API contract
-- Services communicate via HTTP/REST; auth tokens passed in `Authorization` headers
-- Authentication is centralized in AuthService (JWT)
-- All services run with health checks and structured logging
-- Use .NET Aspire (`GoingMy.AppHost`) for local development orchestration
+- **Single Entry Point**: All external API requests route through `GoingMy.ApiGateway` (YARP reverse proxy on port 7000)
+- **JWT Validation at Edge**: Gateway validates tokens before forwarding to downstream services
+- **Service Isolation**: Each microservice owns its own database and API contract
+- **Inter-Service Communication**: Services communicate via HTTP/REST; auth tokens passed in `Authorization` headers + claimed forwarded via `X-User-Id`/`X-Username` headers from gateway
+- **Centralized Authentication**: Issued by AuthService; validated at gateway and optionally by downstream services (defense in depth)
+- **OIDC Flow Exception**: Angular login bypasses gateway and calls Auth Service directly for OIDC flows (`/connect/authorize`, `/connect/token`)
+- **Rate Limiting**: Gateway enforces 100 req/10 sec per IP (configurable)
+- **Health Checks & Logging**: All services run with health checks and structured logging
+- **Local Orchestration**: .NET Aspire (`GoingMy.AppHost`) orchestrates all services including the gateway
 
 ---
 
@@ -78,6 +83,7 @@ Each skill file lists the specific libraries to fetch for that tech stack.
 
 - **Workspace Root**: repository root
 - **Source**: `src/`
+- **API Gateway**: `src/GoingMy.ApiGateway/` (YARP reverse proxy, JWT validation, rate limiting)
 - **Backend Services**: `src/GoingMy.AuthService/`, `src/GoingMy.UserService/`, `src/GoingMy.PostService/`, `src/GoingMy.ChatService/`
 - **Frontend**: `src/GoingMy.Web/`
 - **Shared Defaults**: `src/GoingMy.ServiceDefaults/`

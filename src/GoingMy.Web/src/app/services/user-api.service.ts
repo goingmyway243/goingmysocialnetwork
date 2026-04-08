@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import {
   UserProfile,
   UpdateProfileRequest,
@@ -41,8 +42,8 @@ export interface ChangePasswordRequest {
 })
 export class UserApiService {
   private readonly _http = inject(HttpClient);
-  private readonly _authBaseUrl = 'https://localhost:7001/api/user';
-  private readonly _userBaseUrl = 'https://localhost:7002/api/userprofiles';
+  private readonly _authBaseUrl = `${environment.apiGatewayUrl}/api/user`;
+  private readonly _userBaseUrl = `${environment.apiGatewayUrl}/api/userprofiles`;
 
   // ── Auth Service ─────────────────────────────────────────────
 

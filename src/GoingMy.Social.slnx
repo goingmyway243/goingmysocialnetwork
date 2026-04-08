@@ -40,6 +40,9 @@
     <Project Path="GoingMy.UserService/tests/GoingMy.User.IntegrationTests/GoingMy.User.IntegrationTests.csproj" />
     <Project Path="GoingMy.UserService/tests/GoingMy.User.Tests/GoingMy.User.Tests.csproj" />
   </Folder>
+  <Folder Name="/GoingMy.ApiGateway/">
+    <Project Path="GoingMy.ApiGateway/GoingMy.ApiGateway.csproj" />
+  </Folder>
   <Project Path="GoingMy.AppHost/GoingMy.AppHost.csproj" />
   <Project Path="GoingMy.ServiceDefaults/GoingMy.ServiceDefaults.csproj" />
   <Project Path="GoingMy.Shared/GoingMy.Shared.csproj" Id="96c540df-f207-4559-ad3b-016d3e76302e" />

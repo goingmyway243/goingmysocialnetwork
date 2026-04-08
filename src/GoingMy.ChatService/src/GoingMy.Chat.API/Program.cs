@@ -43,17 +43,6 @@ builder.Services.AddOpenIddict()
         options.AddAudiences("social-api");
     });
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.WithOrigins(builder.Configuration["AllowedHosts"]!.Split(','))
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // required for SignalR
-    });
-});
-
 builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
@@ -68,7 +57,6 @@ using (var scope = app.Services.CreateScope())
     await mongoDbContext.InitializeAsync();
 }
 
-app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

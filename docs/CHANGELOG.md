@@ -2,6 +2,55 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.6.0] - 2026-04-08
+
+### Added
+- **YARP Reverse Proxy API Gateway** (`GoingMy.ApiGateway`): Centralized entry point for all backend services
+  - New project: `src/GoingMy.ApiGateway/` with YARP 2.3.0 for reverse proxying
+  - Aspire service discovery integration via `AddServiceDiscoveryDestinationResolver()`
+  - **OpenIddict JWT validation at the gateway edge**: Validates tokens issued by Auth Service before forwarding to downstream services
+  - **6 YARP routes** with Aspire-resolved cluster addresses:
+    - `/connect/{**catch-all}` → `https://identity-api` (OIDC flows, anonymous)
+    - `/api/user/{**catch-all}` → `https://identity-api` (Auth Service signup, anonymous)
+    - `/api/userprofiles/{**catch-all}` → `https://user-api` (protected)
+    - `/api/posts/{**catch-all}` → `https://post-api` (protected)
+    - `/api/chat/{**catch-all}` → `https://chat-api` (protected)
+    - `/hubs/{**catch-all}` → `https://chat-api` (SignalR WebSocket, protected)
+  - **Centralized CORS policy**: Configured per `AllowedHosts` from `appsettings.json` with `AllowCredentials()` for SignalR upgrade
+  - **Rate limiting**: Fixed-window limiter (100 requests per 10 seconds per IP, HTTP 429 rejection)
+  - **Claim forwarding middleware**: Extracts authenticated user's `sub` and `name` claims, forwards as `X-User-Id` and `X-Username` headers to downstream services
+  - **WebSocket support**: `app.UseWebSockets()` positioned before YARP to enable SignalR proxying
+  - **Defense-in-depth**: Original `Authorization` header with JWT is forwarded to downstream services; they validate independently
+  - HTTPS port: 7000, HTTP port: 5000
+- **Chat Service re-enabled** in AppHost (`GoingMy.AppHost.cs`)
+  - Uncommented ChatService orchestration
+  - Fixed port conflict: changed from 5003/7003 (owned by Post Service) to **5004/7004**
+  - Registered gateway with Aspire references to all four services
+- **CORS removed from downstream services** (User, Post, Chat API `Program.cs`)
+  - Centralized CORS enforcement at gateway
+  - Auth Service retains CORS for direct OIDC flows (Angular oauth2-oidc library calls `/connect/token` directly)
+- **Angular frontend updated** to use gateway URL:
+  - `environment.ts`: Added `apiGatewayUrl: 'https://localhost:7000'` (kept `authConfig.issuer` pointing to Auth Service directly)
+  - `environment.prod.ts`: Added `apiGatewayUrl: 'https://api.yourdomain.com'`
+  - `user-api.service.ts`: Both `_authBaseUrl` and `_userBaseUrl` now read from `environment.apiGatewayUrl`
+  - `dashboard-home.component.ts`: Posts endpoint URL now reads from `environment.apiGatewayUrl`
+
+### Changed
+- **AppHost.cs**: Restructured service registrations to capture `postService`, `userService`, `chatService` variables for gateway dependencies
+- **Directory.Packages.props**: Added `Yarp.ReverseProxy 2.3.0` and `Microsoft.Extensions.ServiceDiscovery.Yarp 10.4.0`
+- **GoingMy.Social.slnx**: Added `GoingMy.ApiGateway` project folder
+- **GoingMy.AppHost.csproj**: Added ProjectReference to `GoingMy.ApiGateway`
+- **Authentication flow**: Client calls to protected endpoints now route through gateway JWT validation; OIDC login still bypasses gateway
+
+### Fixed
+- **Port management**: Resolved conflict where Chat Service was attempting to use same ports (5003/7003) as Post Service
+
+### Architecture Notes
+- **Gateway responsibilities**: JWT validation, CORS, rate limiting, claim forwarding, WebSocket proxying
+- **Downstream services**: Retain independent JWT validation (defense in depth), removed redundant CORS
+- **OIDC flows**: Angular's `angular-oauth2-oidc` library continues to call Auth Service directly for `/connect/authorize`, `/connect/token`—the gateway does not interfere
+- **Development access**: API calls to `https://localhost:7000` now centralized; individual service ports (5001-5004) still accessible directly if needed
+
 ## [0.5.0] - 2026-04-03
 
 ### Added

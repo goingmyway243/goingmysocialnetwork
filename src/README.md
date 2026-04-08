@@ -8,6 +8,13 @@ This directory contains the complete GoingMy social network platform with both b
 
 ```
 src/
+├── GoingMy.ApiGateway/            # YARP reverse proxy gateway (single entry point)
+│   ├── Program.cs                # YARP + OpenIddict + rate limiting
+│   ├── appsettings.json          # YARP route & cluster configuration
+│   ├── appsettings.Development.json
+│   ├── Properties/launchSettings.json
+│   └── GoingMy.ApiGateway.csproj
+│
 ├── GoingMy.Web/                   # Angular 20 frontend application
 │   ├── src/
 │   │   ├── app/                  # Angular components and modules
@@ -167,10 +174,15 @@ chmod +x run.sh  # Make script executable (first time only)
 
 **Access the Application:**
 - **Web Application**: `http://localhost:4200`
-- **Auth Service API**: `http://localhost:5001`
-- **Post Service API**: `http://localhost:5003`
-- **User Service API**: `http://localhost:5002`
-- **Chat Service API**: `http://localhost:5004`
+- **API Gateway** (single entry point): `https://localhost:7000`
+  - Proxies all REST API calls (`/api/*`) and WebSocket connections (`/hubs/*`)
+  - Validates JWT tokens at the edge
+  - Centralizes CORS and rate limiting
+- **Auth Service API** (direct, for OIDC only): `https://localhost:7001`
+  - Used directly by Angular for login (`/connect/authorize`, `/connect/token`)
+- **User Service API** (direct): `https://localhost:7002`
+- **Post Service API** (direct): `https://localhost:7003`
+- **Chat Service API** (direct): `https://localhost:7004`
 - **Aspire Dashboard**: Displayed in AppHost output
 
 ### Build Instructions
@@ -248,6 +260,35 @@ dotnet add package Moq
 - MongoDB-backed message and conversation storage
 
 **Default API Port**: 5004
+
+### API Gateway (`GoingMy.ApiGateway`)
+**Purpose**: Single public entry point for all backend services. Routes requests to downstream services, validates JWT tokens, enforces rate limiting, centralizes CORS, and forwards user context.
+
+**Architecture**:
+- **YARP Reverse Proxy**: Routes based on URL path patterns
+- **OpenIddict JWT Validation**: Validates tokens against Auth Service issuer
+- **Aspire Service Discovery**: Resolves downstream service addresses (`identity-api`, `user-api`, `post-api`, `chat-api`)
+- **Rate Limiting**: 100 requests per 10 seconds per IP (HTTP 429)
+- **CORS**: Centralized policy with `AllowCredentials` for SignalR
+- **Claim Forwarding**: Extracts `sub` (user ID) and `name` (username) claims, forwards as `X-User-Id` and `X-Username` headers
+- **WebSocket Proxying**: Enables SignalR hub communication through gateway
+
+**Routes**:
+| Path | Destination | Auth Required |
+|------|-------------|---------------|
+| `/connect/*` | Auth Service | No |
+| `/api/user/*` | Auth Service (signup) | No |
+| `/api/userprofiles/*` | User Service | Yes |
+| `/api/posts/*` | Post Service | Yes |
+| `/api/chat/*` | Chat Service | Yes |
+| `/hubs/*` | Chat Service (SignalR) | Yes |
+
+**Default Gateway Port**: **7000** (HTTPS) / 5000 (HTTP)
+
+**Important Notes**:
+- OIDC login flows bypass the gateway—Angular's `angular-oauth2-oidc` calls Auth Service directly
+- Downstream services retain independent JWT validation (defense in depth)
+- Original `Authorization` header forwarded to all downstream services
 
 ## Next Steps
 

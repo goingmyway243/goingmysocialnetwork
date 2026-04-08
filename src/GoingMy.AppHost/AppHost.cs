@@ -24,21 +24,30 @@ var identityService = builder.AddProject<Projects.GoingMy_Auth_API>(SharedServic
     .WithReference(database)
     .WaitFor(database);
 
-builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.PostApi)
+var postService = builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.PostApi)
     .WithReference(postDb)
     .WaitFor(identityService)
     .WaitFor(postDb)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
-/*builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.ChatApi)
+var chatService = builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.ChatApi)
     .WithReference(chatDb)
     .WaitFor(identityService)
-    .WaitFor(chatDb)    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));*/
+    .WaitFor(chatDb)
+    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
-builder.AddProject<Projects.GoingMy_User_API>(SharedServices.UserApi)
+var userService = builder.AddProject<Projects.GoingMy_User_API>(SharedServices.UserApi)
     .WithReference(userDb)
     .WaitFor(identityService)
     .WaitFor(userDb)
+    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
+
+builder.AddProject<Projects.GoingMy_ApiGateway>("api-gateway")
+    .WithReference(identityService)
+    .WithReference(userService)
+    .WithReference(postService)
+    .WithReference(chatService)
+    .WaitFor(identityService)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 builder.Build().Run();
