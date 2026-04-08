@@ -28,9 +28,8 @@ public static class UserSeeder
             NormalizedEmail = "ADMIN@SOCIALNETWORK.COM",
             FirstName = "Admin",
             LastName = "User",
-            Bio = "I am the administrator of the social network.",
+            // Bio, IsVerified and other profile fields moved to UserService.
             Roles = [UserRole.Admin],
-            IsVerified = true,
             SecurityStamp = Guid.NewGuid().ToString()
         };
 

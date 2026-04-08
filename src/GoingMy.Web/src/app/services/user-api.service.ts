@@ -1,15 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {
+  UserProfile,
+  UpdateProfileRequest,
+  UpdateAvatarRequest,
+  UpdateCoverRequest
+} from '../models/user.models';
 
-// Enums
-export enum Gender {
-  Male = 0,
-  Female = 1,
-  Other = 2
-}
-
-// Request DTOs
+/** Auth-scoped signup request — targets AuthService, not UserService. */
 export interface SignUpRequest {
   username: string;
   email: string;
@@ -18,129 +17,95 @@ export interface SignUpRequest {
   lastName: string;
 }
 
-export interface UpdateUserRequest {
-  firstName?: string;
-  lastName?: string;
-  bio?: string;
-  dateOfBirth?: string; // ISO date string
-  gender?: Gender;
-  location?: string;
-  websiteUrl?: string;
-  isPrivate?: boolean;
-}
-
-export interface ChangeAvatarRequest {
-  avatarUrl: string;
-}
-
-export interface ChangeCoverRequest {
-  coverUrl: string;
-}
-
-export interface ChangePasswordRequest {
-  currentPassword: string;
-  newPassword: string;
-}
-
-// Response DTOs
-export interface UserResponse {
+/** Auth-scoped user identity response (no profile fields). */
+export interface AuthUserResponse {
   id: string;
   username: string;
   email: string;
   firstName: string;
   lastName: string;
-  bio?: string;
-  avatarUrl?: string;
-  coverUrl?: string;
-  dateOfBirth?: string;
-  gender: Gender;
-  location?: string;
-  websiteUrl?: string;
-  followersCount: number;
-  followingCount: number;
-  postsCount: number;
-  isVerified: boolean;
-  isPrivate: boolean;
   isActive: boolean;
   createdAt: string;
   updatedAt?: string;
   lastLoginAt?: string;
 }
 
+/** Change password request — auth operation, stays in AuthService. */
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserApiService {
-  private readonly baseUrl = 'https://localhost:7001/api/user';
+  private readonly _http = inject(HttpClient);
+  private readonly _authBaseUrl = 'https://localhost:7001/api/user';
+  private readonly _userBaseUrl = 'https://localhost:7003/api/userprofiles';
 
-  constructor(private http: HttpClient) {}
+  // ── Auth Service ─────────────────────────────────────────────
 
-  /**
-   * Register a new user account
-   * POST /api/user/signup
-   */
-  signUp(request: SignUpRequest): Observable<UserResponse> {
-    return this.http.post<UserResponse>(`${this.baseUrl}/signup`, request);
+  /** POST /api/user/signup (AuthService) */
+  signUp(request: SignUpRequest): Observable<AuthUserResponse> {
+    return this._http.post<AuthUserResponse>(`${this._authBaseUrl}/signup`, request);
   }
 
-  /**
-   * Get user by ID
-   * GET /api/user/{id}
-   */
-  getUserById(id: string): Observable<UserResponse> {
-    return this.http.get<UserResponse>(`${this.baseUrl}/${id}`);
+  /** GET /api/user/{id} (AuthService) */
+  getAuthUserById(id: string): Observable<AuthUserResponse> {
+    return this._http.get<AuthUserResponse>(`${this._authBaseUrl}/${id}`);
   }
 
-  /**
-   * Get user by username
-   * GET /api/user/username/{username}
-   */
-  getUserByUsername(username: string): Observable<UserResponse> {
-    return this.http.get<UserResponse>(`${this.baseUrl}/username/${username}`);
-  }
-
-  /**
-   * Update user profile
-   * PUT /api/user/{id}
-   * Requires authorization
-   */
-  updateUser(id: string, request: UpdateUserRequest): Observable<UserResponse> {
-    return this.http.put<UserResponse>(`${this.baseUrl}/${id}`, request);
-  }
-
-  /**
-   * Deactivate user account (soft delete)
-   * DELETE /api/user/{id}
-   * Requires authorization
-   */
-  deleteUser(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
-  }
-
-  /**
-   * Change user avatar
-   * POST /api/user/{id}/avatar
-   * Requires authorization
-   */
-  changeAvatar(id: string, request: ChangeAvatarRequest): Observable<UserResponse> {
-    return this.http.post<UserResponse>(`${this.baseUrl}/${id}/avatar`, request);
-  }
-
-  /**
-   * Change user cover photo
-   * POST /api/user/{id}/cover
-   * Requires authorization
-   */
-  changeCover(id: string, request: ChangeCoverRequest): Observable<UserResponse> {
-    return this.http.post<UserResponse>(`${this.baseUrl}/${id}/cover`, request);
-  }
-
-  /**
-   * Change user password
-   * POST /api/user/{id}/change-password
-   * Requires authorization
-   */
+  /** POST /api/user/{id}/change-password (AuthService) */
   changePassword(id: string, request: ChangePasswordRequest): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.baseUrl}/${id}/change-password`, request);
+    return this._http.post<{ message: string }>(`${this._authBaseUrl}/${id}/change-password`, request);
+  }
+
+  // ── User Service — Profile ───────────────────────────────────
+
+  /** GET /api/userprofiles/{id} (UserService) */
+  getUserProfile(id: string): Observable<UserProfile> {
+    return this._http.get<UserProfile>(`${this._userBaseUrl}/${id}`);
+  }
+
+  /** PUT /api/userprofiles/{id} (UserService) */
+  updateUserProfile(id: string, request: UpdateProfileRequest): Observable<UserProfile> {
+    return this._http.put<UserProfile>(`${this._userBaseUrl}/${id}`, request);
+  }
+
+  // ── User Service — Media ─────────────────────────────────────
+
+  /** POST /api/userprofiles/{id}/avatar (UserService) */
+  updateAvatar(id: string, request: UpdateAvatarRequest): Observable<UserProfile> {
+    return this._http.post<UserProfile>(`${this._userBaseUrl}/${id}/avatar`, request);
+  }
+
+  /** POST /api/userprofiles/{id}/cover (UserService) */
+  updateCover(id: string, request: UpdateCoverRequest): Observable<UserProfile> {
+    return this._http.post<UserProfile>(`${this._userBaseUrl}/${id}/cover`, request);
+  }
+
+  // ── User Service — Follow Graph ──────────────────────────────
+
+  /** POST /api/userprofiles/{id}/follow (UserService) */
+  followUser(id: string): Observable<void> {
+    return this._http.post<void>(`${this._userBaseUrl}/${id}/follow`, {});
+  }
+
+  /** DELETE /api/userprofiles/{id}/follow (UserService) */
+  unfollowUser(id: string): Observable<void> {
+    return this._http.delete<void>(`${this._userBaseUrl}/${id}/follow`);
+  }
+
+  /** GET /api/userprofiles/{id}/followers (UserService) */
+  getFollowers(id: string, page = 1, pageSize = 20): Observable<UserProfile[]> {
+    return this._http.get<UserProfile[]>(
+      `${this._userBaseUrl}/${id}/followers?page=${page}&pageSize=${pageSize}`);
+  }
+
+  /** GET /api/userprofiles/{id}/following (UserService) */
+  getFollowing(id: string, page = 1, pageSize = 20): Observable<UserProfile[]> {
+    return this._http.get<UserProfile[]>(
+      `${this._userBaseUrl}/${id}/following?page=${page}&pageSize=${pageSize}`);
   }
 }

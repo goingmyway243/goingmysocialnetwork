@@ -21,7 +21,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
         modelBuilder.Entity<ApplicationUser>(entity =>
         {
             entity.ToTable("Users");
-            entity.Property(e => e.Gender).HasConversion<string>();
 
             // Configure List<UserRole> as JSON
             entity.Property(e => e.Roles)

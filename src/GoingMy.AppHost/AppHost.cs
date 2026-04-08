@@ -9,6 +9,7 @@ var postgresql = builder.AddPostgres(SharedServices.Postgresql)
     .WithLifetime(ContainerLifetime.Persistent);
 
 var database = postgresql.AddDatabase(SharedServices.IdentityDb);
+var userDb = postgresql.AddDatabase(SharedServices.UserDb);
 
 var mongodb = builder.AddMongoDB(SharedServices.MongoDB)
     .WithImage("mongodb/mongodb-community-server", "5.0-ubuntu2204-slim")
@@ -32,7 +33,12 @@ builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.PostApi)
 /*builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.ChatApi)
     .WithReference(chatDb)
     .WaitFor(identityService)
-    .WaitFor(chatDb)
-    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));*/
+    .WaitFor(chatDb)    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));*/
+
+builder.AddProject<Projects.GoingMy_User_API>(SharedServices.UserApi)
+    .WithReference(userDb)
+    .WaitFor(identityService)
+    .WaitFor(userDb)
+    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 builder.Build().Run();

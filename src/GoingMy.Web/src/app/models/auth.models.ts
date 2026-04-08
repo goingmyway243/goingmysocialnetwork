@@ -20,6 +20,7 @@ export interface UserInfo {
   firstName: string;
   lastName: string;
   roles: string[];
+  // Full social profile (bio, avatar, followers, etc.) is in UserProfile — see user.models.ts
 }
 
 export interface LoginResponse {

@@ -1,0 +1,75 @@
+@UserApi_HostAddress = https://localhost:7003
+
+### Bootstrap a user profile (called by AuthService after signup)
+POST {{UserApi_HostAddress}}/api/userprofiles
+Content-Type: application/json
+
+{
+  "id": "00000000-0000-0000-0000-000000000001",
+  "username": "jdoe",
+  "firstName": "John",
+  "lastName": "Doe"
+}
+
+###
+
+### Get a user profile by ID
+GET {{UserApi_HostAddress}}/api/userprofiles/00000000-0000-0000-0000-000000000001
+
+###
+
+### Update profile (requires Bearer token)
+PUT {{UserApi_HostAddress}}/api/userprofiles/00000000-0000-0000-0000-000000000001
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "bio": "Software engineer and traveller.",
+  "location": "Ho Chi Minh City, Vietnam",
+  "websiteUrl": "https://example.com",
+  "isPrivate": false
+}
+
+###
+
+### Update avatar (requires Bearer token)
+POST {{UserApi_HostAddress}}/api/userprofiles/00000000-0000-0000-0000-000000000001/avatar
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "avatarUrl": "https://cdn.example.com/avatars/jdoe.png"
+}
+
+###
+
+### Update cover (requires Bearer token)
+POST {{UserApi_HostAddress}}/api/userprofiles/00000000-0000-0000-0000-000000000001/cover
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "coverUrl": "https://cdn.example.com/covers/jdoe.jpg"
+}
+
+###
+
+### Follow a user (requires Bearer token)
+POST {{UserApi_HostAddress}}/api/userprofiles/00000000-0000-0000-0000-000000000002/follow
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Unfollow a user (requires Bearer token)
+DELETE {{UserApi_HostAddress}}/api/userprofiles/00000000-0000-0000-0000-000000000002/follow
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Get followers
+GET {{UserApi_HostAddress}}/api/userprofiles/00000000-0000-0000-0000-000000000001/followers?page=1&pageSize=20
+
+###
+
+### Get following
+GET {{UserApi_HostAddress}}/api/userprofiles/00000000-0000-0000-0000-000000000001/following?page=1&pageSize=20

@@ -97,30 +97,11 @@ public class UserService : IUserService
             throw new KeyNotFoundException($"User with ID '{userId}' not found.");
         }
 
-        // Apply updates from DTO - only update if value is provided
         if (!string.IsNullOrWhiteSpace(dto.FirstName))
             user.FirstName = dto.FirstName;
 
         if (!string.IsNullOrWhiteSpace(dto.LastName))
             user.LastName = dto.LastName;
-
-        if (dto.Bio is not null)
-            user.Bio = dto.Bio;
-
-        if (dto.DateOfBirth.HasValue)
-            user.DateOfBirth = dto.DateOfBirth.Value;
-
-        if (dto.Gender.HasValue)
-            user.Gender = dto.Gender.Value;
-
-        if (dto.Location is not null)
-            user.Location = dto.Location;
-
-        if (dto.WebsiteUrl is not null)
-            user.WebsiteUrl = dto.WebsiteUrl;
-
-        if (dto.IsPrivate.HasValue)
-            user.IsPrivate = dto.IsPrivate.Value;
 
         user.UpdatedAt = DateTime.UtcNow;
 

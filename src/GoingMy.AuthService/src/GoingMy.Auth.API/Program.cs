@@ -122,6 +122,10 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 // Register custom services
 builder.Services.AddScoped<IUserService, UserService>();
 
+// Register typed HTTP client to UserService (Aspire service discovery)
+builder.Services.AddHttpClient<IUserProfileClient, UserProfileClient>(
+    client => client.BaseAddress = new Uri("https+http://user-api"));
+
 // Build the app
 var app = builder.Build();
 

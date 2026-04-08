@@ -10,5 +10,7 @@ public static class SharedServices
     public const string MongoDB = "mongodb";
     public const string PostDb = "post-db";
     public const string ChatDb = "chat-db";
+    public const string UserDb = "user-db";
+    public const string UserApi = "user-api";
     public const string WebApp = "web-app";
 }
