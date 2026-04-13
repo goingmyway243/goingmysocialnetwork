@@ -6,8 +6,11 @@ using MongoDB.Driver;
 using OpenIddict.Validation.AspNetCore;
 using Scalar.AspNetCore;
 using GoingMy.Shared;
+using GoingMy.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -54,6 +57,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
+app.UseGatewayAuthentication();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -65,5 +69,6 @@ if (app.Environment.IsDevelopment())
 
 // Map controllers
 app.MapControllers();
+app.MapServiceDefaults();
 
 app.Run();

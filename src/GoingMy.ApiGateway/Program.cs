@@ -19,6 +19,11 @@ builder.Services
         // Forward authenticated user claims as request headers to downstream services
         transformBuilderContext.AddRequestTransform(async transformContext =>
         {
+            // Strip client-supplied auth headers to prevent spoofing
+            transformContext.ProxyRequest.Headers.Remove("X-Gateway-Authenticated");
+            transformContext.ProxyRequest.Headers.Remove("X-User-Id");
+            transformContext.ProxyRequest.Headers.Remove("X-Username");
+
             var user = transformContext.HttpContext.User;
             if (user.Identity?.IsAuthenticated == true)
             {
@@ -27,6 +32,7 @@ builder.Services
                 var username = user.FindFirstValue(ClaimTypes.Name)
                                ?? user.FindFirstValue("name");
 
+                transformContext.ProxyRequest.Headers.TryAddWithoutValidation("X-Gateway-Authenticated", "true");
                 if (userId is not null)
                     transformContext.ProxyRequest.Headers.TryAddWithoutValidation("X-User-Id", userId);
                 if (username is not null)
@@ -54,7 +60,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        var origins = builder.Configuration["AllowedHosts"]!.Split(',');
+        var origins = builder.Configuration["CorsOrigins"]!.Split(',');
         policy.WithOrigins(origins)
               .AllowAnyHeader()
               .AllowAnyMethod()

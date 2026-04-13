@@ -1,3 +1,4 @@
+using GoingMy.ServiceDefaults;
 using GoingMy.Shared;
 using GoingMy.User.Application.Extensions;
 using GoingMy.User.Domain.Repositories;
@@ -8,6 +9,8 @@ using OpenIddict.Validation.AspNetCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.AddOpenApi();
 
@@ -50,6 +53,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
+app.UseGatewayAuthentication();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -60,5 +64,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
+app.MapServiceDefaults();
 
 app.Run();

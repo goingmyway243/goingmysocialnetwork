@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Trace;
+using System.Security.Claims;
 
 namespace GoingMy.ServiceDefaults;
 
@@ -32,6 +35,7 @@ public static class Extensions
         services.ConfigureHttpClientDefaults(http =>
         {
             // Enable name resolution through service discovery
+            http.AddServiceDiscovery();
             http.ConfigureHttpClient(client => 
             {
                 // Service discovery is automatically applied to typed HttpClients
@@ -78,6 +82,52 @@ public static class Extensions
         
         // Allow anonymous access to health checks
         healthChecks.AllowAnonymous();
+
+        return app;
+    }
+
+    /// <summary>
+    /// Use gateway authentication middleware to trust pre-authenticated requests from API Gateway.
+    /// Should be called BEFORE app.UseAuthentication().
+    /// </summary>
+    public static WebApplication UseGatewayAuthentication(this WebApplication app)
+    {
+        app.Use(async (context, next) =>
+        {
+            var isGatewayAuthenticated = context.Request.Headers["X-Gateway-Authenticated"] == "true";
+            
+            if (isGatewayAuthenticated)
+            {
+                // Extract user identity from gateway-provided headers
+                var userId = context.Request.Headers["X-User-Id"].FirstOrDefault();
+                var username = context.Request.Headers["X-Username"].FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    // Build claims from gateway headers
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, userId),
+                        new Claim("sub", userId), // Subject claim for OpenIddict compatibility
+                    };
+
+                    if (!string.IsNullOrEmpty(username))
+                    {
+                        claims.Add(new Claim(ClaimTypes.Name, username));
+                        claims.Add(new Claim("name", username));
+                    }
+
+                    // Create an authenticated principal
+                    var identity = new ClaimsIdentity(claims, "GatewayAuthentication");
+                    var principal = new ClaimsPrincipal(identity);
+
+                    // Set as the authenticated user
+                    context.User = principal;
+                }
+            }
+
+            await next();
+        });
 
         return app;
     }

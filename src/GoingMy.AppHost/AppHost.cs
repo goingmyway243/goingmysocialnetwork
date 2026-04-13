@@ -8,7 +8,7 @@ var postgresql = builder.AddPostgres(SharedServices.Postgresql)
     .WithPgAdmin(containerName: "pgadmin")
     .WithLifetime(ContainerLifetime.Persistent);
 
-var database = postgresql.AddDatabase(SharedServices.IdentityDb);
+var identityDb = postgresql.AddDatabase(SharedServices.IdentityDb);
 var userDb = postgresql.AddDatabase(SharedServices.UserDb);
 
 var mongodb = builder.AddMongoDB(SharedServices.MongoDB)
@@ -21,8 +21,8 @@ var postDb = mongodb.AddDatabase(SharedServices.PostDb);
 var chatDb = mongodb.AddDatabase(SharedServices.ChatDb);
 
 var identityService = builder.AddProject<Projects.GoingMy_Auth_API>(SharedServices.IdentityApi)
-    .WithReference(database)
-    .WaitFor(database);
+    .WithReference(identityDb)
+    .WaitFor(identityDb);
 
 var postService = builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.PostApi)
     .WithReference(postDb)

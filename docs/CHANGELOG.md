@@ -16,7 +16,7 @@ All notable changes to the GoingMy Social Network project are documented in this
     - `/api/posts/{**catch-all}` → `https://post-api` (protected)
     - `/api/chat/{**catch-all}` → `https://chat-api` (protected)
     - `/hubs/{**catch-all}` → `https://chat-api` (SignalR WebSocket, protected)
-  - **Centralized CORS policy**: Configured per `AllowedHosts` from `appsettings.json` with `AllowCredentials()` for SignalR upgrade
+  - **Centralized CORS policy**: Configured per `CorsOrigins` from `appsettings.json` with `AllowCredentials()` for SignalR upgrade
   - **Rate limiting**: Fixed-window limiter (100 requests per 10 seconds per IP, HTTP 429 rejection)
   - **Claim forwarding middleware**: Extracts authenticated user's `sub` and `name` claims, forwards as `X-User-Id` and `X-Username` headers to downstream services
   - **WebSocket support**: `app.UseWebSockets()` positioned before YARP to enable SignalR proxying

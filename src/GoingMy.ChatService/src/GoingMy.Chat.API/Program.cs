@@ -7,8 +7,11 @@ using OpenIddict.Validation.AspNetCore;
 using Scalar.AspNetCore;
 using GoingMy.Shared;
 using System.Reflection;
+using GoingMy.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.AddOpenApi();
 
@@ -58,6 +61,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
+app.UseGatewayAuthentication();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -69,5 +73,6 @@ if (app.Environment.IsDevelopment())
 
 app.MapControllers();
 app.MapHub<ChatHub>("/hubs/chat");
+app.MapServiceDefaults();
 
 app.Run();

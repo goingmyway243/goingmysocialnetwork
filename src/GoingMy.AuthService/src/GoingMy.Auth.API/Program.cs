@@ -30,7 +30,7 @@ builder.Services.AddCors(options =>
 {
   options.AddDefaultPolicy(policy =>
   {
-      policy.WithOrigins(builder.Configuration["AllowedHosts"]!.Split(','))
+      policy.WithOrigins(builder.Configuration["CorsOrigins"]!.Split(','))
             .AllowAnyHeader()
             .AllowAnyMethod();
   });
