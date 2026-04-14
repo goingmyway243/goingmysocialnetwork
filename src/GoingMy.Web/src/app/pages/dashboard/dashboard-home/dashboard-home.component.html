@@ -61,14 +61,14 @@
             <div class="post-actions">
               <p-button 
                 icon="pi pi-heart" 
-                [label]="post.likes.toString()" 
+                [label]="(post.likes ?? 0).toString()" 
                 [text]="true"
                 styleClass="action-btn likes-btn"
                 (onClick)="likePost(post)"></p-button>
               
               <p-button 
                 icon="pi pi-comment" 
-                [label]="post.comments.toString()" 
+                [label]="(post.comments ?? 0).toString()" 
                 [text]="true"
                 styleClass="action-btn"></p-button>
               

@@ -8,7 +8,7 @@ export interface Post {
   username: string;
   createdAt: string;
   updatedAt?: string;
-  likes: number;
-  comments: number;
+  likes?: number;
+  comments?: number;
   author?: Author;
 }

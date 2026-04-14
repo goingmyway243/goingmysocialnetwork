@@ -69,7 +69,6 @@
   justify-content: center;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
   position: relative;
   z-index: 1;
@@ -77,7 +76,7 @@
 }
 
 /* Glass orb container */
-.menu-item i::before {
+.menu-item i::after {
   position: absolute;
   content: '';
   inset: 0;
@@ -113,7 +112,7 @@
     inset 0 1px 2px var(--glass-highlight-inner);
 }
 
-.menu-item:hover i::before {
+.menu-item:hover i::after {
   background: var(--glass-elevated-bg);
   box-shadow: var(--glass-shadow-md),
     var(--glass-glow-sm),
@@ -124,7 +123,7 @@
   background: var(--glass-surface-active);
   color: #ffffff;
 
-  i::before {
+  i::after {
     background: var(--glass-elevated-bg);
     border: 1px solid var(--glass-border-accent);
     box-shadow: var(--glass-shadow-md),
@@ -141,7 +140,7 @@
     box-shadow: 0 0 12px var(--glass-glow-color);
   }
 
-  .menu-item.active i::before {
+  .menu-item.active i::after {
     opacity: 1;
   }
 

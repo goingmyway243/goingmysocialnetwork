@@ -29,7 +29,13 @@ export class DashboardHomeComponent implements OnInit {
     this.error.set(null);
     this.http.get<Post[]>(`${environment.apiGatewayUrl}/api/posts`).subscribe({
       next: (data) => {
-        const posts: Post[] = Array.isArray(data) ? data : [];
+        const rawPosts: Post[] = Array.isArray(data) ? data : [];
+        // Normalize posts to ensure likes and comments have default values
+        const posts = rawPosts.map(p => ({
+          ...p,
+          likes: p.likes ?? 0,
+          comments: p.comments ?? 0
+        }));
         this.posts.set(posts);
         this.loading.set(false);
       },
@@ -44,7 +50,7 @@ export class DashboardHomeComponent implements OnInit {
   likePost(post: Post): void {
     // Create a new array with the updated post to trigger signal update
     const updatedPosts = this.posts().map(p => 
-      p.id === post.id ? { ...p, likes: p.likes + 1 } : p
+      p.id === post.id ? { ...p, likes: (p.likes ?? 0) + 1 } : p
     );
     this.posts.set(updatedPosts);
   }
