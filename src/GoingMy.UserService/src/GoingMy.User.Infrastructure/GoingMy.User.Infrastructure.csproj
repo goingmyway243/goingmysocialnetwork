@@ -8,11 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="MassTransit.EntityFrameworkCore" />
+    <PackageReference Include="MassTransit.Kafka" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GoingMy.User.Domain\GoingMy.User.Domain.csproj" />
-    <ProjectReference Include="..\GoingMy.User.Application\GoingMy.User.Application.csproj" />
+    <ProjectReference Include=".\..\GoingMy.User.Domain\GoingMy.User.Domain.csproj" />
+    <ProjectReference Include=".\..\GoingMy.User.Application\GoingMy.User.Application.csproj" />
+    <ProjectReference Include="..\..\..\GoingMy.Shared\GoingMy.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,18 @@
 namespace GoingMy.Post.Application.Dtos;
 
 /// <summary>
+/// Denormalized user info embedded in post responses.
+/// </summary>
+public record UserDto(
+    string Id,
+    string UserName,
+    string FirstName,
+    string LastName,
+    string? AvatarUrl,
+    bool IsVerified
+);
+
+/// <summary>
 /// Data Transfer Object for Post.
 /// </summary>
 public record PostDto(
@@ -9,6 +21,9 @@ public record PostDto(
     string Content,
     string UserId,
     string Username,
+    int Likes,
+    int Comments,
+    UserDto? Author,
     DateTime CreatedAt,
     DateTime? UpdatedAt
 );

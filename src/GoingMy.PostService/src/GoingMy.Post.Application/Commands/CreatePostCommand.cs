@@ -40,14 +40,24 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostD
 
         var createdPost = await _postRepository.AddAsync(post, cancellationToken);
 
-        return new PostDto(
-            Id: createdPost.Id,
-            Title: createdPost.Title,
-            Content: createdPost.Content,
-            UserId: createdPost.UserId,
-            Username: createdPost.Username,
-            CreatedAt: createdPost.CreatedAt,
-            UpdatedAt: createdPost.UpdatedAt
-        );
+        return MapToDto(createdPost);
     }
+
+    internal static PostDto MapToDto(Domain.Entities.Post p) => new(
+        Id: p.Id,
+        Title: p.Title,
+        Content: p.Content,
+        UserId: p.UserId,
+        Username: p.Username,
+        Likes: p.Likes,
+        Comments: p.Comments,
+        Author: p.Author is null ? null : new UserDto(
+            Id: p.Author.Id,
+            UserName: p.Author.UserName,
+            FirstName: p.Author.FirstName,
+            LastName: p.Author.LastName,
+            AvatarUrl: p.Author.AvatarUrl,
+            IsVerified: p.Author.IsVerified),
+        CreatedAt: p.CreatedAt,
+        UpdatedAt: p.UpdatedAt);
 }

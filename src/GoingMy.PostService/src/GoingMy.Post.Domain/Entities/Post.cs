@@ -14,7 +14,7 @@ public class Post
     public DateTime? UpdatedAt { get; set; }
     public int Likes { get; set; }
     public int Comments { get; set; }
-    public Author? Author { get; set; }
+    public User? Author { get; set; }
 
     /// <summary>
     /// Creates a new post instance.

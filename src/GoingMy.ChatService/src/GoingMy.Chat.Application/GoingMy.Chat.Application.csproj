@@ -9,10 +9,12 @@
   <ItemGroup>
     <PackageReference Include="MediatR" />
     <PackageReference Include="MongoDB.Driver" />
+    <PackageReference Include="MassTransit.Kafka" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GoingMy.Chat.Domain\GoingMy.Chat.Domain.csproj" />
+    <ProjectReference Include=".\..\GoingMy.Chat.Domain\GoingMy.Chat.Domain.csproj" />
+    <ProjectReference Include="..\..\..\GoingMy.Shared\GoingMy.Shared.csproj" />
   </ItemGroup>
 
 </Project>

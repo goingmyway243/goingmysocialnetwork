@@ -1,9 +1,10 @@
 namespace GoingMy.Post.Domain.Entities;
 
 /// <summary>
-/// Represents a denormalized user profile for posts (synced from AuthService).
+/// Represents a denormalized snapshot of a user's profile embedded in a post.
+/// Synced from UserService via Kafka events.
 /// </summary>
-public record Author
+public record User
 {
     public required string Id { get; set; }
     public required string UserName { get; set; }
@@ -12,8 +13,5 @@ public record Author
     public string? AvatarUrl { get; set; }
     public bool IsVerified { get; set; }
 
-    /// <summary>
-    /// Gets the full name of the author.
-    /// </summary>
     public string FullName => $"{FirstName} {LastName}".Trim();
 }

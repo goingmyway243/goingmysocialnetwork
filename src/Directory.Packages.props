@@ -9,6 +9,7 @@
     <PackageVersion Include="Aspire.Hosting.MongoDB" Version="13.1.1" />
     <PackageVersion Include="Aspire.Hosting.Redis" Version="13.1.1" />
     <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.1.1" />
+    <PackageVersion Include="Aspire.Hosting.Kafka" Version="13.1.1" />
   </ItemGroup>
   <!--Aspire Client Packages-->
   <ItemGroup>
@@ -29,6 +30,12 @@
   <!--MongoDB Packages-->
   <ItemGroup>
     <PackageVersion Include="MongoDB.Driver" Version="3.2.0" />
+  </ItemGroup>
+  <!--MassTransit Packages-->
+  <ItemGroup>
+    <PackageVersion Include="MassTransit" Version="8.4.1" />
+    <PackageVersion Include="MassTransit.Kafka" Version="8.4.1" />
+    <PackageVersion Include="MassTransit.EntityFrameworkCore" Version="8.4.1" />
   </ItemGroup>
   <!--MediatR Packages-->
   <ItemGroup>

@@ -1,3 +1,4 @@
+using GoingMy.Post.Application.Commands;
 using GoingMy.Post.Application.Dtos;
 using GoingMy.Post.Domain.Repositories;
 using MediatR;
@@ -30,14 +31,6 @@ public class GetPostByIdQueryHandler : IRequestHandler<GetPostByIdQuery, PostDto
             return null;
         }
 
-        return new PostDto(
-            Id: post.Id,
-            Title: post.Title,
-            Content: post.Content,
-            UserId: post.UserId,
-            Username: post.Username,
-            CreatedAt: post.CreatedAt,
-            UpdatedAt: post.UpdatedAt
-        );
+        return CreatePostCommandHandler.MapToDto(post);
     }
 }

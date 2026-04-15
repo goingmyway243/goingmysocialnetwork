@@ -1,10 +1,11 @@
+using GoingMy.Post.Domain.Entities;
 using MongoDB.Driver;
 
 namespace GoingMy.Post.Infrastructure.Data;
 
 /// <summary>
 /// MongoDB context for Post service.
-/// Manages connections and collections for the Post aggregate.
+/// Manages connections and collections for the Post, Like, and Comment aggregates.
 /// </summary>
 public class MongoDbContext
 {
@@ -15,27 +16,35 @@ public class MongoDbContext
         _database = client.GetDatabase(databaseName);
     }
 
-    /// <summary>
-    /// Gets the Posts collection.
-    /// </summary>
     public IMongoCollection<Domain.Entities.Post> Posts => _database.GetCollection<Domain.Entities.Post>("posts");
+    public IMongoCollection<Like> Likes => _database.GetCollection<Like>("likes");
+    public IMongoCollection<Comment> Comments => _database.GetCollection<Comment>("comments");
 
-    /// <summary>
-    /// Initializes MongoDB collections with required indexes.
-    /// </summary>
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        // Create compound index on UserId for efficient user post queries
-        var indexKeys = Builders<Domain.Entities.Post>.IndexKeys.Ascending(p => p.UserId).Descending(p => p.CreatedAt);
-        var indexModel = new CreateIndexModel<Domain.Entities.Post>(indexKeys);
+        // posts: compound index on (UserId, CreatedAt desc) for feed queries
+        await Posts.Indexes.CreateOneAsync(
+            new CreateIndexModel<Domain.Entities.Post>(
+                Builders<Domain.Entities.Post>.IndexKeys.Ascending(p => p.UserId).Descending(p => p.CreatedAt)),
+            cancellationToken: cancellationToken);
 
-        try
-        {
-            await Posts.Indexes.CreateOneAsync(indexModel, cancellationToken: cancellationToken);
-        }
-        catch (MongoCommandException ex) when (ex.Code == 68)
-        {
-            // Index already exists - this is expected
-        }
+        // likes: unique compound index (PostId, UserId) — one like per user per post
+        await Likes.Indexes.CreateOneAsync(
+            new CreateIndexModel<Like>(
+                Builders<Like>.IndexKeys.Ascending(l => l.PostId).Ascending(l => l.UserId),
+                new CreateIndexOptions { Unique = true }),
+            cancellationToken: cancellationToken);
+
+        // likes: single index on PostId for GetByPostId queries
+        await Likes.Indexes.CreateOneAsync(
+            new CreateIndexModel<Like>(
+                Builders<Like>.IndexKeys.Ascending(l => l.PostId)),
+            cancellationToken: cancellationToken);
+
+        // comments: index on PostId for GetByPostId queries
+        await Comments.Indexes.CreateOneAsync(
+            new CreateIndexModel<Comment>(
+                Builders<Comment>.IndexKeys.Ascending(c => c.PostId).Descending(c => c.CreatedAt)),
+            cancellationToken: cancellationToken);
     }
 }

@@ -16,6 +16,7 @@
     <PackageReference Include="OpenIddict.Validation.SystemNetHttp" />
     <PackageReference Include="Scalar.AspNetCore" />
     <PackageReference Include="MediatR" />
+    <PackageReference Include="MassTransit.Kafka" />
   </ItemGroup>
 
   <ItemGroup>

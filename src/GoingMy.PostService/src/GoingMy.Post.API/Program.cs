@@ -1,12 +1,15 @@
-using GoingMy.Post.Domain.Repositories;
-using GoingMy.Post.Infrastructure.Repositories;
-using GoingMy.Post.Infrastructure.Data;
+using GoingMy.Post.Application.Consumers;
 using GoingMy.Post.Application.Extensions;
+using GoingMy.Post.Domain.Repositories;
+using GoingMy.Post.Infrastructure.Data;
+using GoingMy.Post.Infrastructure.Repositories;
+using GoingMy.ServiceDefaults;
+using GoingMy.Shared;
+using GoingMy.Shared.Events;
+using MassTransit;
 using MongoDB.Driver;
 using OpenIddict.Validation.AspNetCore;
 using Scalar.AspNetCore;
-using GoingMy.Shared;
-using GoingMy.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +32,42 @@ builder.Services.AddPostApplicationServices();
 
 // Register repositories
 builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<ILikeRepository, LikeRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+
+// ── MassTransit + Kafka (event consumers) ────────────────────
+var kafkaBootstrapServers = builder.Configuration.GetConnectionString(SharedServices.Kafka)
+    ?? "localhost:9092";
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddRider(rider =>
+    {
+        rider.AddConsumer<UserCreatedEventConsumer>();
+        rider.AddConsumer<UserUpdatedEventConsumer>();
+        rider.AddConsumer<UserDeletedEventConsumer>();
+
+        rider.UsingKafka((context, cfg) =>
+        {
+            cfg.Host(kafkaBootstrapServers);
+
+            cfg.TopicEndpoint<UserCreatedEvent>(
+                SharedServices.KafkaTopics.UserCreated,
+                SharedServices.KafkaConsumerGroups.PostService,
+                e => e.ConfigureConsumer<UserCreatedEventConsumer>(context));
+
+            cfg.TopicEndpoint<UserUpdatedEvent>(
+                SharedServices.KafkaTopics.UserUpdated,
+                SharedServices.KafkaConsumerGroups.PostService,
+                e => e.ConfigureConsumer<UserUpdatedEventConsumer>(context));
+
+            cfg.TopicEndpoint<UserDeletedEvent>(
+                SharedServices.KafkaTopics.UserDeleted,
+                SharedServices.KafkaConsumerGroups.PostService,
+                e => e.ConfigureConsumer<UserDeletedEventConsumer>(context));
+        });
+    });
+});
 
 // Configure OpenIddict validation
 builder.Services.AddOpenIddict()

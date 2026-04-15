@@ -152,4 +152,57 @@ public class PostsController : ControllerBase
             return NotFound(ex.Message);
         }
     }
+
+    // ── Likes ─────────────────────────────────────────────────
+
+    [HttpPost("{id}/likes")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> LikePost(string id)
+    {
+        try
+        {
+            var userId = User.FindFirst("sub")?.Value ?? "unknown";
+            var username = User.FindFirst("name")?.Value ?? "unknown";
+            var like = await _mediator.Send(new LikePostCommand(id, userId, username));
+            return CreatedAtAction(nameof(GetLikes), new { id }, like);
+        }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("not found"))
+        {
+            return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
+        }
+    }
+
+    [HttpDelete("{id}/likes")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> UnlikePost(string id)
+    {
+        try
+        {
+            var userId = User.FindFirst("sub")?.Value ?? "unknown";
+            await _mediator.Send(new UnlikePostCommand(id, userId));
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet("{id}/likes")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> GetLikes(string id)
+    {
+        var likes = await _mediator.Send(new GetPostLikesQuery(id));
+        return Ok(likes);
+    }
 }

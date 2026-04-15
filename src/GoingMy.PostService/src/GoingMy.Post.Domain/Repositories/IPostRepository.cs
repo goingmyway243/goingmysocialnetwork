@@ -29,4 +29,43 @@ public interface IPostRepository
     /// Deletes a post by ID.
     /// </summary>
     Task<bool> DeleteAsync(string id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Atomically increments the Likes counter of a post by 1.
+    /// </summary>
+    Task IncrementLikesAsync(string postId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Atomically decrements the Likes counter of a post by 1 (minimum 0).
+    /// </summary>
+    Task DecrementLikesAsync(string postId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Atomically increments the Comments counter of a post by 1.
+    /// </summary>
+    Task IncrementCommentsAsync(string postId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Atomically decrements the Comments counter of a post by 1 (minimum 0).
+    /// </summary>
+    Task DecrementCommentsAsync(string postId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Bulk-updates the denormalized Author fields on all posts belonging to <paramref name="userId"/>.
+    /// Used to propagate user profile changes (username, avatar, verification) across all existing posts.
+    /// </summary>
+    Task<long> BulkUpdateAuthorAsync(
+        string userId,
+        string username,
+        string firstName,
+        string lastName,
+        string? avatarUrl,
+        bool isVerified,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Marks all posts belonging to <paramref name="userId"/> as authored by a deleted user.
+    /// </summary>
+    Task<long> MarkPostsAsDeletedUserAsync(string userId, CancellationToken cancellationToken = default);
 }
+

@@ -1,13 +1,16 @@
-using GoingMy.Chat.Domain.Repositories;
-using GoingMy.Chat.Infrastructure.Repositories;
-using GoingMy.Chat.Infrastructure.Data;
 using GoingMy.Chat.API.Hubs;
+using GoingMy.Chat.Application.Consumers;
+using GoingMy.Chat.Domain.Repositories;
+using GoingMy.Chat.Infrastructure.Data;
+using GoingMy.Chat.Infrastructure.Repositories;
+using GoingMy.ServiceDefaults;
+using GoingMy.Shared;
+using GoingMy.Shared.Events;
+using MassTransit;
 using MongoDB.Driver;
 using OpenIddict.Validation.AspNetCore;
 using Scalar.AspNetCore;
-using GoingMy.Shared;
 using System.Reflection;
-using GoingMy.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +38,34 @@ builder.Services.AddMediatR(config =>
 // Register repositories
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+
+// ── MassTransit + Kafka (event consumers) ────────────────────
+var kafkaBootstrapServers = builder.Configuration.GetConnectionString(SharedServices.Kafka)
+    ?? "localhost:9092";
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddRider(rider =>
+    {
+        rider.AddConsumer<UserUpdatedEventConsumer>();
+        rider.AddConsumer<UserDeletedEventConsumer>();
+
+        rider.UsingKafka((context, cfg) =>
+        {
+            cfg.Host(kafkaBootstrapServers);
+
+            cfg.TopicEndpoint<UserUpdatedEvent>(
+                SharedServices.KafkaTopics.UserUpdated,
+                SharedServices.KafkaConsumerGroups.ChatService,
+                e => e.ConfigureConsumer<UserUpdatedEventConsumer>(context));
+
+            cfg.TopicEndpoint<UserDeletedEvent>(
+                SharedServices.KafkaTopics.UserDeleted,
+                SharedServices.KafkaConsumerGroups.ChatService,
+                e => e.ConfigureConsumer<UserDeletedEventConsumer>(context));
+        });
+    });
+});
 
 // Configure OpenIddict validation
 builder.Services.AddOpenIddict()

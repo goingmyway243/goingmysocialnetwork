@@ -20,26 +20,37 @@ var mongodb = builder.AddMongoDB(SharedServices.MongoDB)
 var postDb = mongodb.AddDatabase(SharedServices.PostDb);
 var chatDb = mongodb.AddDatabase(SharedServices.ChatDb);
 
+var kafka = builder.AddKafka(SharedServices.Kafka)
+    .WithKafkaUI(containerName: "kafka-ui")
+    .WithDataVolume("goingmysocial-kafka")
+    .WithLifetime(ContainerLifetime.Persistent);
+
 var identityService = builder.AddProject<Projects.GoingMy_Auth_API>(SharedServices.IdentityApi)
     .WithReference(identityDb)
     .WaitFor(identityDb);
 
 var postService = builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.PostApi)
     .WithReference(postDb)
+    .WithReference(kafka)
     .WaitFor(identityService)
     .WaitFor(postDb)
+    .WaitFor(kafka)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 var chatService = builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.ChatApi)
     .WithReference(chatDb)
+    .WithReference(kafka)
     .WaitFor(identityService)
     .WaitFor(chatDb)
+    .WaitFor(kafka)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 var userService = builder.AddProject<Projects.GoingMy_User_API>(SharedServices.UserApi)
     .WithReference(userDb)
+    .WithReference(kafka)
     .WaitFor(identityService)
     .WaitFor(userDb)
+    .WaitFor(kafka)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 builder.AddProject<Projects.GoingMy_ApiGateway>("api-gateway")

@@ -1,3 +1,4 @@
+using GoingMy.Post.Application.Commands;
 using GoingMy.Post.Application.Dtos;
 using GoingMy.Post.Domain.Repositories;
 using MediatR;
@@ -25,14 +26,6 @@ public class GetPostsQueryHandler : IRequestHandler<GetPostsQuery, IEnumerable<P
     {
         var posts = await _postRepository.GetAllAsync(cancellationToken);
 
-        return posts.Select(p => new PostDto(
-            Id: p.Id,
-            Title: p.Title,
-            Content: p.Content,
-            UserId: p.UserId,
-            Username: p.Username,
-            CreatedAt: p.CreatedAt,
-            UpdatedAt: p.UpdatedAt
-        ));
+        return posts.Select(CreatePostCommandHandler.MapToDto);
     }
 }

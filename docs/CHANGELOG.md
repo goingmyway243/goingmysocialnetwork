@@ -2,6 +2,91 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.8.0] - 2026-04-15
+
+### Added
+- **Like feature** in `GoingMy.PostService`:
+  - `Like` domain entity (`Entities/Like.cs`): Id, PostId, UserId, Username, CreatedAt
+  - `ILikeRepository` domain interface with `ExistsAsync`, `GetByPostIdAsync`, `AddAsync`, `DeleteAsync`
+  - `LikeRepository` MongoDB implementation with a **unique compound index `(PostId, UserId)`** enforcing one like per user per post at the database level
+  - `LikePostCommand` — validates post exists, returns `409 Conflict` if already liked, atomically increments `Likes` counter via MongoDB `$inc`
+  - `UnlikePostCommand` — validates like exists, atomically decrements `Likes` counter
+  - `GetPostLikesQuery` — returns all likes for a post
+  - `LikeDto` application DTO
+  - REST endpoints on `PostsController`: `POST /api/posts/{id}/likes` → 201, `DELETE /api/posts/{id}/likes` → 204, `GET /api/posts/{id}/likes` → 200
+- **Comment feature** in `GoingMy.PostService`:
+  - `Comment` domain entity (`Entities/Comment.cs`): Id, PostId, UserId, Username, Content, CreatedAt, UpdatedAt; `Update(content)` method
+  - `ICommentRepository` domain interface with full CRUD
+  - `CommentRepository` MongoDB implementation with `(PostId, CreatedAt desc)` index for efficient paged reads
+  - `AddCommentCommand` — validates post exists, atomically increments `Comments` counter
+  - `UpdateCommentCommand` — ownership enforced (`UnauthorizedAccessException` → 403 if wrong user)
+  - `DeleteCommentCommand` — ownership enforced, atomically decrements `Comments` counter
+  - `GetCommentsByPostIdQuery` — returns comments sorted newest-first
+  - `CommentDto` application DTO
+  - New `CommentsController` at `[Route("api/posts/{postId}/comments")]`: `GET`, `POST` → 201, `PUT /{commentId}` → 200, `DELETE /{commentId}` → 204
+- **Atomic post counters** on `IPostRepository` / `PostRepository`:
+  - `IncrementLikesAsync`, `DecrementLikesAsync`, `IncrementCommentsAsync`, `DecrementCommentsAsync` — all use MongoDB `$inc` operator (race-condition safe; no load-then-save)
+  - `DecrementLikesAsync` / `DecrementCommentsAsync` apply a `$gt: 0` filter guard to prevent negative counters
+- **MongoDB collections** for `likes` and `comments` registered in `MongoDbContext` with indexes created in `InitializeAsync`
+
+### Changed
+- **`Author` record renamed to `User`** in `GoingMy.Post.Domain.Entities` (file [Author.cs](../src/GoingMy.PostService/src/GoingMy.Post.Domain/Entities/Author.cs) retains its filename; only the class name changed — no MongoDB data migration required as the document field name is determined by the C# *property* name `Author` on `Post`, which is unchanged)
+- **`PostDto`** expanded with `int Likes`, `int Comments`, `UserDto? Author` fields; added `UserDto` record mirroring the `User` entity
+- **PostDto construction centralised**: all four sites (`CreatePostCommand`, `UpdatePostCommand`, `GetPostsQuery`, `GetPostByIdQuery`) now delegate to a single `CreatePostCommandHandler.MapToDto()` helper
+
+### Architecture Notes
+- Likes and Comments are separate MongoDB collections (not embedded arrays in Post) to avoid unbounded document growth and enable efficient independent queries
+- Post `likes`/`comments` integer fields are denormalized counters kept in sync via atomic `$inc` — they represent cached totals for feed display without requiring aggregation queries
+
+---
+
+## [0.7.0] - 2026-04-15
+
+### Added
+- **Event-driven user synchronization** across `PostService` and `ChatService` using **Apache Kafka** and **MassTransit**:
+  - Shared event contracts in `GoingMy.Shared/Events/`:
+    - `UserCreatedEvent` (UserId, Username, FirstName, LastName, AvatarUrl, IsVerified, CreatedAt)
+    - `UserUpdatedEvent` (same fields + UpdatedAt)
+    - `UserDeletedEvent` (UserId, Username, DeletedAt)
+  - Kafka topic constants and consumer group constants added to `SharedServices` (`SharedServices.KafkaTopics`, `SharedServices.KafkaConsumerGroups`)
+- **Outbox pattern** in `GoingMy.UserService` (exactly-once delivery guarantee):
+  - `OutboxMessage` domain entity (`User.Domain/Outbox/OutboxMessage.cs`): Id, EventType, Payload (JSON), CreatedAt, PublishedAt, Error, RetryCount
+  - `UserProfileOutboxInterceptor` EF Core `SaveChangesInterceptor` — automatically writes `OutboxMessage` rows within the same transaction as any `UserProfile` `Add`/`Modify`/`Delete` change; zero changes required to existing command handlers
+  - `OutboxMessages` table added to `UserDbContext` with index on `PublishedAt` for efficient polling; EF Core migration `AddOutboxMessages` created and applied on startup
+  - `UserDbContextDesignTimeFactory` added for EF Core tooling support (`dotnet ef migrations add`) without requiring the full Kafka DI graph
+  - `OutboxPublisherWorker` hosted service (polls every 5 seconds, processes up to 50 messages per batch, max 5 retries, logs failures per entry)
+- **Kafka producer** registered in `UserService` (`Program.cs`): `ITopicProducer<UserCreatedEvent>`, `ITopicProducer<UserUpdatedEvent>`, `ITopicProducer<UserDeletedEvent>` via MassTransit Kafka Rider
+- **Kafka consumers** in `PostService`:
+  - `UserCreatedEventConsumer` — log-only no-op (no pre-population needed)
+  - `UserUpdatedEventConsumer` — calls `BulkUpdateAuthorAsync` to propagate username/avatar/verification changes to all posts via single MongoDB `UpdateMany`
+  - `UserDeletedEventConsumer` — calls `MarkPostsAsDeletedUserAsync` to tombstone posts with `[deleted]` author placeholder (preserves post history)
+  - Topic endpoints: `goingmy.user.created`, `goingmy.user.updated`, `goingmy.user.deleted` — consumer group `post-service`
+- **Kafka consumers** in `ChatService`:
+  - `UserUpdatedEventConsumer` — calls `BulkUpdateParticipantUsernameAsync` to sync username across all conversations the user participates in
+  - `UserDeletedEventConsumer` — calls `RemoveParticipantAsync` to remove deleted user from participant lists (message history retained)
+  - Consumer group `chat-service`
+- **Bulk repository methods** (all use MongoDB driver directly, no load-then-save):
+  - `PostService/IPostRepository`: `BulkUpdateAuthorAsync`, `MarkPostsAsDeletedUserAsync`
+  - `ChatService/IConversationRepository`: `BulkUpdateParticipantUsernameAsync`, `RemoveParticipantAsync`
+- **Kafka container** added to `GoingMy.AppHost`:
+  - Bitnami Kafka image via `builder.AddKafka()` with Kafka UI sidecar and persistent data volume
+  - `post-api`, `chat-api`, `user-api` each reference and `WaitFor(kafka)` before starting
+
+### Changed
+- **`Directory.Packages.props`**: Added `MassTransit 8.4.1`, `MassTransit.Kafka 8.4.1`, `MassTransit.EntityFrameworkCore 8.4.1`, `Aspire.Hosting.Kafka 13.1.1`
+- **`GoingMy.AppHost.csproj`**: Added `Aspire.Hosting.Kafka` package reference
+- **`UserService` `.csproj` files**: `GoingMy.User.Infrastructure` gains `MassTransit.EntityFrameworkCore` + `MassTransit.Kafka`; `GoingMy.User.API` gains `MassTransit.Kafka`
+- **`PostService` / `ChatService` Application `.csproj` files**: Added `MassTransit.Kafka` and `GoingMy.Shared` project reference
+- **`UserDbContext`**: Added `OutboxMessages` DbSet and `UserProfileOutboxInterceptor` interceptor registration; `Program.cs` updated to use `(sp, options)` lambda for interceptor injection
+- **`PostService Program.cs`** / **`ChatService Program.cs`**: MassTransit Kafka Rider registered with consumer endpoints
+
+### Architecture Notes
+- **Zero command handler changes in UserService**: the `UserProfileOutboxInterceptor` automatically captures EF Core entity state changes — no explicit event publishing in business logic
+- **Idempotent consumers**: MongoDB `UpdateMany` is safe to re-run; duplicate delivery does not cause data corruption
+- **Tombstoning over deletion**: deleted users' posts display `[deleted]` author rather than being removed, preserving content history for community integrity
+
+---
+
 ## [0.6.0] - 2026-04-08
 
 ### Added

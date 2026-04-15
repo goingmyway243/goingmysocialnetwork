@@ -29,4 +29,20 @@ public interface IConversationRepository
     /// Updates an existing conversation.
     /// </summary>
     Task<Conversation> UpdateAsync(Conversation conversation, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Bulk-updates the denormalized username for a participant across all conversations they belong to.
+    /// Uses a positional $ operator to update only the matching element in the usernames array.
+    /// </summary>
+    Task<long> BulkUpdateParticipantUsernameAsync(
+        string userId,
+        string newUsername,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Removes a deleted user from the participant lists of all their conversations.
+    /// The conversation history is retained; only the participant entry is removed.
+    /// </summary>
+    Task<long> RemoveParticipantAsync(string userId, CancellationToken cancellationToken = default);
 }
+

@@ -40,14 +40,6 @@ public class UpdatePostCommandHandler : IRequestHandler<UpdatePostCommand, PostD
         post.Update(request.Title, request.Content);
         var updatedPost = await _postRepository.UpdateAsync(post, cancellationToken);
 
-        return new PostDto(
-            Id: updatedPost.Id,
-            Title: updatedPost.Title,
-            Content: updatedPost.Content,
-            UserId: updatedPost.UserId,
-            Username: updatedPost.Username,
-            CreatedAt: updatedPost.CreatedAt,
-            UpdatedAt: updatedPost.UpdatedAt
-        );
+        return CreatePostCommandHandler.MapToDto(updatedPost);
     }
 }
