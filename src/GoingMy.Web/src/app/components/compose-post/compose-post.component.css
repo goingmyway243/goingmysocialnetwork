@@ -1,43 +1,41 @@
-:host ::ng-deep .p-card.compose-card {
+/* ── Trigger Bar ──────────────────────────────────────────── */
+
+.compose-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
   background: var(--glass-elevated-bg);
   backdrop-filter: var(--glass-blur-md) saturate(180%);
   -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
-  border: 1px solid var(--glass-border-accent);
+  border: 1px solid var(--glass-border-base);
   border-radius: 16px;
   box-shadow: var(--glass-shadow-lg),
               inset 0 1px 2px var(--glass-highlight-inner);
+  cursor: pointer;
+  transition: var(--transition-smooth);
   position: relative;
   overflow: hidden;
 }
 
-:host ::ng-deep .p-card.compose-card::before {
+.compose-trigger::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--glass-highlight-top) 50%, transparent);
-  opacity: 0.8;
+  opacity: 0.6;
   pointer-events: none;
 }
 
-:host ::ng-deep .p-card.compose-card .p-card-body {
-  padding: 1.5rem;
+.compose-trigger:hover {
+  background: var(--glass-elevated-hover);
+  border-color: var(--glass-border-accent);
+  box-shadow: var(--glass-shadow-xl), var(--glass-glow-sm),
+              inset 0 1px 2px var(--glass-highlight-inner);
 }
 
-:host ::ng-deep .p-card.compose-card .p-card-content {
-  padding: 0;
-}
-
-/* ── Header ── */
-
-.compose-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
-}
-
-.author-avatar {
+.trigger-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -46,63 +44,167 @@
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   flex-shrink: 0;
 }
 
-.compose-label {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.5);
+.trigger-input-mock {
+  flex: 1;
+  padding: 0.55rem 1rem;
+  background: var(--glass-surface-bg);
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.9375rem;
+  user-select: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
-/* ── Fields ── */
+.compose-trigger:hover .trigger-input-mock {
+  border-color: var(--glass-border-accent);
+  background: var(--glass-surface-hover);
+  color: rgba(255, 255, 255, 0.55);
+}
 
-.compose-fields {
+:host ::ng-deep .p-button.trigger-media-btn {
+  color: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  background: var(--glass-surface-bg);
+  border: 1px solid var(--glass-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+:host ::ng-deep .p-button.trigger-media-btn:hover {
+  color: var(--color-accent-blue);
+  background: var(--glass-surface-hover);
+  border-color: var(--glass-border-accent);
+}
+
+/* ── Dialog Glass Overlay ─────────────────────────────────── */
+
+:host ::ng-deep .p-dialog.compose-dialog {
+  background: var(--glass-elevated-bg);
+  backdrop-filter: var(--glass-blur-md) saturate(200%);
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(200%);
+  border: 1px solid var(--glass-border-accent);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow-xl), var(--glass-glow-md),
+              inset 0 1px 2px var(--glass-highlight-inner);
+  overflow: hidden;
+}
+
+:host ::ng-deep .p-dialog.compose-dialog::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-highlight-top) 50%, transparent);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+:host ::ng-deep .p-dialog.compose-dialog .p-dialog-header {
+  background: transparent;
+  border-bottom: 1px solid var(--glass-border-base);
+  padding: 1.25rem 1.5rem;
+}
+
+:host ::ng-deep .p-dialog.compose-dialog .p-dialog-header-actions .p-button {
+  width: 32px;
+  height: 32px;
+  color: var(--primary-color-text);
+}
+
+:host ::ng-deep .p-dialog.compose-dialog .p-dialog-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+:host ::ng-deep .p-dialog.compose-dialog .p-dialog-header-icon {
+  color: rgba(255, 255, 255, 0.55);
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: var(--glass-surface-bg);
+  border: 1px solid var(--glass-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+:host ::ng-deep .p-dialog.compose-dialog .p-dialog-header-icon:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--glass-border-base);
+}
+
+:host ::ng-deep .p-dialog.compose-dialog .p-dialog-content {
+  background: transparent;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 1rem;
 }
 
-.field {
+:host ::ng-deep .p-dialog.compose-dialog .p-dialog-footer {
+  background: transparent;
+  border-top: 1px solid var(--glass-border-base);
+  padding: 1rem 1.5rem;
+}
+
+/* ── Dialog Fields ────────────────────────────────────────── */
+
+.dialog-field {
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
-:host ::ng-deep .compose-title-input,
-:host ::ng-deep .compose-content-input {
+:host ::ng-deep .dialog-title-input,
+:host ::ng-deep .dialog-content-input {
   width: 100%;
   background: var(--glass-surface-bg) !important;
   border: 1px solid var(--glass-border-subtle) !important;
-  border-radius: 10px !important;
+  border-radius: 12px !important;
   color: #ffffff !important;
+  font-size: 0.9375rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   resize: none;
 }
 
-:host ::ng-deep .compose-title-input::placeholder,
-:host ::ng-deep .compose-content-input::placeholder {
-  color: rgba(255, 255, 255, 0.35);
+:host ::ng-deep .dialog-title-input::placeholder,
+:host ::ng-deep .dialog-content-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
 }
 
-:host ::ng-deep .compose-title-input:focus,
-:host ::ng-deep .compose-content-input:focus {
+:host ::ng-deep .dialog-title-input:focus,
+:host ::ng-deep .dialog-content-input:focus {
   border-color: var(--glass-border-accent) !important;
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2) !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.18) !important;
   outline: none;
 }
 
-:host ::ng-deep .compose-title-input.invalid,
-:host ::ng-deep .compose-content-input.invalid {
+:host ::ng-deep .dialog-title-input.invalid,
+:host ::ng-deep .dialog-content-input.invalid {
   border-color: rgba(239, 68, 68, 0.6) !important;
 }
 
 .char-counter {
-  position: absolute;
-  bottom: 0.5rem;
-  right: 0.75rem;
+  align-self: flex-end;
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.35);
-  pointer-events: none;
+  margin-top: 0.25rem;
 }
 
 .char-counter.warn,
@@ -113,31 +215,38 @@
 .char-warn {
   font-size: 0.75rem;
   margin-top: 0.25rem;
-  display: block;
 }
 
-/* ── Error ── */
+/* ── Error ─────────────────────────────────────────────────── */
 
-.compose-error {
+.dialog-error {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.6rem 0.875rem;
   background: rgba(239, 68, 68, 0.12);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 8px;
+  border-radius: 10px;
   color: rgba(239, 68, 68, 0.9);
   font-size: 0.875rem;
-  margin-bottom: 1rem;
 }
 
-/* ── Actions ── */
+/* ── Footer ────────────────────────────────────────────────── */
 
-.compose-actions {
+.dialog-footer {
   display: flex;
   justify-content: flex-end;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--glass-border-base);
+  align-items: center;
+  gap: 0.625rem;
+}
+
+:host ::ng-deep .p-button.cancel-btn {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+}
+
+:host ::ng-deep .p-button.cancel-btn:hover {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 :host ::ng-deep .p-button.post-btn {
@@ -145,7 +254,7 @@
   border: none;
   border-radius: 10px;
   font-weight: 600;
-  padding: 0.6rem 1.5rem;
+  padding: 0.6rem 1.6rem;
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
 

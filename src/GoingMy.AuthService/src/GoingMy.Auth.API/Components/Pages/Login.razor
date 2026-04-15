@@ -54,10 +54,11 @@
 
             <!-- Remember me -->
             <div class="form-options">
-                <div class="checkbox-wrapper">
-                    <input type="checkbox" id="rememberMe" @bind="Model!.RememberMe" />
-                    <label for="rememberMe" class="checkbox-text">Remember me</label>
-                </div>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="rememberMe" @bind="Model!.RememberMe" class="glass-checkbox-input" />
+                    <span class="glass-checkbox"></span>
+                    <span class="checkbox-text">Remember me</span>
+                </label>
             </div>
 
             <!-- Error message -->

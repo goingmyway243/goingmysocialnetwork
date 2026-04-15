@@ -1,60 +1,91 @@
-<p-card styleClass="compose-card">
-  <div class="compose-header">
-    <div class="author-avatar">
-      <i class="pi pi-user"></i>
-    </div>
-    <span class="compose-label">What's on your mind?</span>
+<!-- ── Trigger Bar ──────────────────────────────────────── -->
+<div class="compose-trigger" (click)="openDialog()">
+  <div class="trigger-avatar">
+    <i class="pi pi-user"></i>
+  </div>
+  <div class="trigger-input-mock">
+    <span>What's on your mind?</span>
+  </div>
+  <p-button
+    icon="pi pi-image"
+    [text]="true"
+    styleClass="trigger-media-btn"
+    (onClick)="$event.stopPropagation(); openDialog()">
+  </p-button>
+</div>
+
+<!-- ── Compose Modal ────────────────────────────────────── -->
+<p-dialog
+  header="Create Post"
+  [modal]="true"
+  [(visible)]="dialogVisible"
+  [style]="{ width: '560px' }"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="compose-dialog"
+  (onHide)="closeDialog()">
+
+  <!-- Title field -->
+  <div class="dialog-field">
+    <input
+      pInputText
+      type="text"
+      placeholder="Give your post a title..."
+      class="dialog-title-input"
+      [value]="title()"
+      (input)="onTitleChange($any($event.target).value)"
+      [class.invalid]="titleTooLong()"
+      [disabled]="submitting()" />
+    @if (titleTooLong()) {
+      <span class="char-warn">{{ titleLength() }}/200 — title is too long</span>
+    }
   </div>
 
-  <div class="compose-fields">
-    <div class="field">
-      <input
-        pInputText
-        type="text"
-        placeholder="Title"
-        class="compose-title-input"
-        [value]="title()"
-        (input)="onTitleChange($any($event.target).value)"
-        [class.invalid]="titleTooLong()"
-        [disabled]="submitting()" />
-      @if (titleTooLong()) {
-        <span class="char-warn">{{ titleLength() }}/200 — title too long</span>
-      }
-    </div>
-
-    <div class="field">
-      <textarea
-        pTextarea
-        [autoResize]="true"
-        rows="3"
-        placeholder="Share something with your network..."
-        class="compose-content-input"
-        [value]="content()"
-        (input)="onContentChange($any($event.target).value)"
-        [class.invalid]="contentTooLong()"
-        [disabled]="submitting()">
-      </textarea>
-      <span class="char-counter" [class.warn]="contentTooLong()">
-        {{ contentLength() }}/2000
-      </span>
-    </div>
+  <!-- Content field -->
+  <div class="dialog-field">
+    <textarea
+      pTextarea
+      [autoResize]="true"
+      rows="5"
+      placeholder="Share something with your network..."
+      class="dialog-content-input"
+      [value]="content()"
+      (input)="onContentChange($any($event.target).value)"
+      [class.invalid]="contentTooLong()"
+      [disabled]="submitting()">
+    </textarea>
+    <span class="char-counter" [class.warn]="contentTooLong()">
+      {{ contentLength() }}/2000
+    </span>
   </div>
 
+  <!-- Error -->
   @if (error()) {
-    <div class="compose-error">
+    <div class="dialog-error">
       <i class="pi pi-exclamation-circle"></i>
       {{ error() }}
     </div>
   }
 
-  <div class="compose-actions">
-    <p-button
-      label="Post"
-      icon="pi pi-send"
-      [loading]="submitting()"
-      [disabled]="!canSubmit()"
-      styleClass="post-btn"
-      (onClick)="submit()">
-    </p-button>
-  </div>
-</p-card>
+  <!-- Footer actions -->
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <p-button
+        label="Cancel"
+        [text]="true"
+        styleClass="cancel-btn"
+        [disabled]="submitting()"
+        (onClick)="closeDialog()">
+      </p-button>
+      <p-button
+        label="Post"
+        icon="pi pi-send"
+        [loading]="submitting()"
+        [disabled]="!canSubmit()"
+        styleClass="post-btn"
+        (onClick)="submit()">
+      </p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+

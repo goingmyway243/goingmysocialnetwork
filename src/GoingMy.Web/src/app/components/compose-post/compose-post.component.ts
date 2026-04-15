@@ -1,7 +1,7 @@
 import { Component, output, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { PostApiService } from '../../services/post-api.service';
@@ -9,7 +9,7 @@ import { Post } from '../../models/post.model';
 
 @Component({
   selector: 'app-compose-post',
-  imports: [FormsModule, CardModule, ButtonModule, TextareaModule, InputTextModule],
+  imports: [FormsModule, ButtonModule, DialogModule, TextareaModule, InputTextModule],
   templateUrl: './compose-post.component.html',
   styleUrl: './compose-post.component.css'
 })
@@ -22,6 +22,7 @@ export class ComposePostComponent {
   readonly postCreated = output<Post>();
 
   // ── 3. State ─────────────────────────────────────────────────
+  readonly dialogVisible = signal(false);
   readonly title = signal('');
   readonly content = signal('');
   readonly submitting = signal(false);
@@ -36,6 +37,17 @@ export class ComposePostComponent {
   readonly canSubmit = computed(() => this.isValid() && !this.contentTooLong() && !this.titleTooLong() && !this.submitting());
 
   // ── 5. Actions ───────────────────────────────────────────────
+  openDialog(): void {
+    this.dialogVisible.set(true);
+  }
+
+  closeDialog(): void {
+    this.dialogVisible.set(false);
+    this.title.set('');
+    this.content.set('');
+    this.error.set(null);
+  }
+
   submit(): void {
     if (!this.canSubmit()) return;
 
@@ -45,9 +57,8 @@ export class ComposePostComponent {
     this._postApi.createPost({ title: this.title().trim(), content: this.content().trim() }).subscribe({
       next: (response) => {
         this.postCreated.emit(response.post);
-        this.title.set('');
-        this.content.set('');
         this.submitting.set(false);
+        this.closeDialog();
       },
       error: () => {
         this.error.set('Failed to create post. Please try again.');
