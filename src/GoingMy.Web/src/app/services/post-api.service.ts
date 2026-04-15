@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Post } from '../models/post.model';
+import { Post, Comment, Like } from '../models/post.model';
 
 /** Request DTO for creating a post. */
 export interface CreatePostRequest {
@@ -70,4 +70,44 @@ export class PostApiService {
   deletePost(id: string): Observable<{ message: string }> {
     return this._http.delete<{ message: string }>(`${this._baseUrl}/${id}`);
   }
+
+  // ── 6. Likes ─────────────────────────────────────────────────
+
+  /** POST /api/posts/{id}/likes — Likes a post. */
+  likePost(postId: string): Observable<Like> {
+    return this._http.post<Like>(`${this._baseUrl}/${postId}/likes`, {});
+  }
+
+  /** DELETE /api/posts/{id}/likes — Unlikes a post. */
+  unlikePost(postId: string): Observable<void> {
+    return this._http.delete<void>(`${this._baseUrl}/${postId}/likes`);
+  }
+
+  /** GET /api/posts/{id}/likes — Retrieves all likes for a post. */
+  getPostLikes(postId: string): Observable<Like[]> {
+    return this._http.get<Like[]>(`${this._baseUrl}/${postId}/likes`);
+  }
+
+  // ── 7. Comments ──────────────────────────────────────────────
+
+  /** GET /api/posts/{postId}/comments — Retrieves all comments for a post. */
+  getComments(postId: string): Observable<Comment[]> {
+    return this._http.get<Comment[]>(`${this._baseUrl}/${postId}/comments`);
+  }
+
+  /** POST /api/posts/{postId}/comments — Adds a comment to a post. */
+  addComment(postId: string, content: string): Observable<Comment> {
+    return this._http.post<Comment>(`${this._baseUrl}/${postId}/comments`, { content });
+  }
+
+  /** PUT /api/posts/{postId}/comments/{commentId} — Updates a comment. */
+  updateComment(postId: string, commentId: string, content: string): Observable<Comment> {
+    return this._http.put<Comment>(`${this._baseUrl}/${postId}/comments/${commentId}`, { content });
+  }
+
+  /** DELETE /api/posts/{postId}/comments/{commentId} — Deletes a comment. */
+  deleteComment(postId: string, commentId: string): Observable<void> {
+    return this._http.delete<void>(`${this._baseUrl}/${postId}/comments/${commentId}`);
+  }
 }
+

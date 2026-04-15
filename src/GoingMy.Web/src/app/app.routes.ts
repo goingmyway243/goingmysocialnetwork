@@ -8,6 +8,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent)
   },
   {
+    path: 'posts/:id',
+    loadComponent: () => import('./pages/post-detail/post-detail.component').then(m => m.PostDetailComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'dashboard',
     loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [authGuard],

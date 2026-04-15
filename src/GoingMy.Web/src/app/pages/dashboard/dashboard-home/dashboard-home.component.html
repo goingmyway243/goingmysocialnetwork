@@ -1,8 +1,13 @@
+<p-toast></p-toast>
+
 <div class="dashboard-home">
   <div class="welcome-section">
     <h1 class="page-title">Home Feed</h1>
     <p class="page-subtitle">Stay connected with your network</p>
   </div>
+
+  <!-- Compose Post -->
+  <app-compose-post (postCreated)="onPostCreated($event)"></app-compose-post>
 
   @if (loading()) {
     <div class="posts-container">
@@ -29,7 +34,7 @@
     <div class="error-container">
       <i class="pi pi-exclamation-triangle error-icon"></i>
       <p class="error-message">{{ error() }}</p>
-      <p-button label="Retry" icon="pi pi-refresh" (onClick)="ngOnInit()"></p-button>
+      <p-button label="Retry" icon="pi pi-refresh" (onClick)="loadPosts()"></p-button>
     </div>
   } @else {
     <div class="posts-container">
@@ -37,49 +42,23 @@
         <div class="empty-state">
           <i class="pi pi-inbox empty-icon"></i>
           <h3>No posts yet</h3>
-          <p>Be the first to share something!</p>
-          <p-button label="Create Post" icon="pi pi-plus" styleClass="create-btn"></p-button>
+          <p>Be the first to share something above!</p>
         </div>
       } @else {
-        @for (post of posts() || []; track post.id) {
-          <p-card styleClass="post-card">
-            <div class="post-header">
-              <div class="author-avatar">
-                <i class="pi pi-user"></i>
-              </div>
-              <div class="post-meta">
-                <h3 class="author-name">{{ post.author?.firstName }} {{ post.author?.lastName }}</h3>
-                <span class="post-time">{{ formatDate(post.createdAt) }}</span>
-              </div>
-            </div>
-
-            <div class="post-content">
-              <h2 class="post-title">{{ post.title }}</h2>
-              <p class="post-text">{{ post.content }}</p>
-            </div>
-
-            <div class="post-actions">
-              <p-button 
-                icon="pi pi-heart" 
-                [label]="(post.likes ?? 0).toString()" 
-                [text]="true"
-                styleClass="action-btn likes-btn"
-                (onClick)="likePost(post)"></p-button>
-              
-              <p-button 
-                icon="pi pi-comment" 
-                [label]="(post.comments ?? 0).toString()" 
-                [text]="true"
-                styleClass="action-btn"></p-button>
-              
-              <p-button 
-                icon="pi pi-share-alt" 
-                [text]="true"
-                styleClass="action-btn"></p-button>
-            </div>
-          </p-card>
+        @for (post of posts(); track post.id) {
+          <app-post-card
+            [post]="post"
+            [commentState]="getCommentState(post.id)"
+            [liked]="isLiked(post.id)"
+            (likeToggle)="toggleLike($event)"
+            (commentsToggle)="toggleComments($event)"
+            (newCommentInput)="onNewCommentChange($event.postId, $event.value)"
+            (commentSubmit)="submitComment($event)"
+            (detailView)="viewPostDetail($event)">
+          </app-post-card>
         }
       }
     </div>
   }
 </div>
+

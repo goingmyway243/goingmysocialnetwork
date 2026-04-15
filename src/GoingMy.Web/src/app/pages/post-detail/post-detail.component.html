@@ -1,0 +1,173 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="post-detail">
+
+  <!-- Back Button -->
+  <div class="back-nav">
+    <p-button icon="pi pi-arrow-left" label="Back to Feed" [text]="true" styleClass="back-btn" (onClick)="goBack()"></p-button>
+  </div>
+
+  <!-- Post Card -->
+  @if (loadingPost()) {
+    <p-card styleClass="detail-card">
+      <div class="post-header">
+        <p-skeleton shape="circle" size="3rem"></p-skeleton>
+        <div class="post-meta">
+          <p-skeleton width="10rem" height="1rem"></p-skeleton>
+          <p-skeleton width="5rem" height="0.875rem" styleClass="mt-1"></p-skeleton>
+        </div>
+      </div>
+      <p-skeleton width="60%" height="2rem" styleClass="mb-3"></p-skeleton>
+      <p-skeleton width="100%" height="6rem"></p-skeleton>
+    </p-card>
+  } @else if (post()) {
+    <p-card styleClass="detail-card">
+      <div class="post-header">
+        <div class="author-avatar">
+          <i class="pi pi-user"></i>
+        </div>
+        <div class="post-meta">
+          <h3 class="author-name">{{ post()!.author?.firstName }} {{ post()!.author?.lastName }}</h3>
+          <span class="post-time">{{ formatDate(post()!.createdAt) }}</span>
+        </div>
+      </div>
+
+      <div class="post-content">
+        <h1 class="post-title">{{ post()!.title }}</h1>
+        <p class="post-text">{{ post()!.content }}</p>
+      </div>
+
+      <div class="post-actions">
+        <p-button
+          [icon]="liked() ? 'pi pi-heart-fill' : 'pi pi-heart'"
+          [label]="(post()!.likes ?? 0).toString()"
+          [text]="true"
+          [loading]="likeSubmitting()"
+          styleClass="action-btn"
+          [class.liked]="liked()"
+          (onClick)="toggleLike()">
+        </p-button>
+        <p-button
+          icon="pi pi-comment"
+          [label]="(post()!.comments ?? 0).toString()"
+          [text]="true"
+          styleClass="action-btn">
+        </p-button>
+      </div>
+    </p-card>
+  }
+
+  <!-- Comments Section -->
+  <div class="comments-section">
+    <h2 class="comments-heading">
+      <i class="pi pi-comments"></i>
+      Comments
+      @if (post()) {
+        <span class="comment-count">{{ post()!.comments ?? 0 }}</span>
+      }
+    </h2>
+
+    <!-- New Comment Input -->
+    <p-card styleClass="comment-compose-card">
+      <div class="comment-input-row">
+        <div class="author-avatar small">
+          <i class="pi pi-user"></i>
+        </div>
+        <div class="comment-input-wrap">
+          <textarea
+            pTextarea
+            [autoResize]="true"
+            rows="2"
+            placeholder="Write a comment..."
+            class="comment-textarea"
+            [value]="newComment()"
+            (input)="onNewCommentChange($any($event.target).value)"
+            [disabled]="commentSubmitting()">
+          </textarea>
+        </div>
+      </div>
+      <div class="comment-submit-row">
+        <p-button
+          label="Comment"
+          icon="pi pi-send"
+          [loading]="commentSubmitting()"
+          [disabled]="!canSubmitComment()"
+          styleClass="comment-submit-btn"
+          (onClick)="submitComment()">
+        </p-button>
+      </div>
+    </p-card>
+
+    <!-- Comment List -->
+    @if (loadingComments()) {
+      @for (item of [1,2,3]; track item) {
+        <p-card styleClass="comment-card">
+          <div class="comment-header">
+            <p-skeleton shape="circle" size="2rem"></p-skeleton>
+            <p-skeleton width="8rem" height="0.875rem"></p-skeleton>
+          </div>
+          <p-skeleton width="100%" height="1.5rem"></p-skeleton>
+        </p-card>
+      }
+    } @else if (comments().length === 0) {
+      <div class="no-comments">
+        <i class="pi pi-comment"></i>
+        <p>No comments yet. Be the first!</p>
+      </div>
+    } @else {
+      @for (comment of comments(); track comment.id) {
+        <p-card styleClass="comment-card">
+          <div class="comment-header">
+            <div class="author-avatar small">
+              <i class="pi pi-user"></i>
+            </div>
+            <div class="comment-meta">
+              <span class="comment-author">{{ comment.username }}</span>
+              <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
+              @if (comment.updatedAt) {
+                <span class="comment-edited">(edited)</span>
+              }
+            </div>
+            @if (isOwnComment(comment)) {
+              <div class="comment-owner-actions">
+                <p-button
+                  icon="pi pi-pencil"
+                  [text]="true"
+                  styleClass="comment-action-btn"
+                  (onClick)="startEditComment(comment)">
+                </p-button>
+                <p-button
+                  icon="pi pi-trash"
+                  [text]="true"
+                  styleClass="comment-action-btn delete-btn"
+                  (onClick)="confirmDeleteComment(comment, $event)">
+                </p-button>
+              </div>
+            }
+          </div>
+
+          @if (editingCommentId() === comment.id) {
+            <div class="comment-edit-wrap">
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                rows="2"
+                class="comment-textarea"
+                [value]="editingContent()"
+                (input)="onEditContentChange($any($event.target).value)"
+                [disabled]="editSubmitting()">
+              </textarea>
+              <div class="edit-actions">
+                <p-button label="Save" icon="pi pi-check" [loading]="editSubmitting()" styleClass="save-btn" (onClick)="saveEditComment(comment)"></p-button>
+                <p-button label="Cancel" icon="pi pi-times" [text]="true" styleClass="cancel-btn" (onClick)="cancelEditComment()"></p-button>
+              </div>
+            </div>
+          } @else {
+            <p class="comment-text">{{ comment.content }}</p>
+          }
+        </p-card>
+      }
+    }
+  </div>
+</div>

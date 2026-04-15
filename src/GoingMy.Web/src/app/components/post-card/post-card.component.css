@@ -1,0 +1,349 @@
+/* ===== POST CARD — GLASS EFFECT ===== */
+
+:host ::ng-deep .p-card.post-card {
+  background: var(--glass-elevated-bg);
+  backdrop-filter: var(--glass-blur-md) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
+  border: 1px solid var(--glass-border-base);
+  border-radius: 16px;
+  transition: var(--transition-smooth);
+  box-shadow: var(--glass-shadow-lg),
+              inset 0 1px 2px var(--glass-highlight-inner);
+  position: relative;
+  overflow: hidden;
+  will-change: transform, box-shadow;
+}
+
+:host ::ng-deep .p-card.post-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-highlight-top) 50%, transparent);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+:host ::ng-deep .p-card.post-card::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+:host ::ng-deep .p-card.post-card:hover {
+  background: var(--glass-elevated-hover);
+  border: 1px solid transparent;
+  background-image:
+    linear-gradient(var(--glass-elevated-hover), var(--glass-elevated-hover)),
+    linear-gradient(135deg, var(--glass-border-accent), rgba(167, 139, 250, 0.3));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  transform: translateY(-4px);
+  box-shadow: var(--glass-shadow-xl),
+              var(--glass-glow-md),
+              inset 0 1px 2px var(--glass-highlight-inner);
+}
+
+:host ::ng-deep .p-card.post-card:hover::after {
+  opacity: 1;
+}
+
+:host ::ng-deep .p-card.post-card .p-card-body {
+  padding: 1.5rem;
+}
+
+:host ::ng-deep .p-card.post-card .p-card-content {
+  padding: 0;
+}
+
+/* ===== POST HEADER ===== */
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.author-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.5rem;
+  box-shadow: var(--glass-shadow-md),
+              inset 0 2px 4px rgba(255, 255, 255, 0.2);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.author-avatar::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  padding: 2px;
+  background: var(--gradient-primary);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0.5;
+}
+
+.post-meta { flex: 1; }
+
+.author-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.25rem 0;
+}
+
+.post-time {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== POST CONTENT ===== */
+
+.post-content {
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.post-content:hover .post-title {
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+}
+
+.post-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.75rem 0;
+}
+
+.post-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+/* ===== POST ACTIONS ===== */
+
+.post-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--glass-border-base);
+}
+
+:host ::ng-deep .p-button.action-btn {
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border-subtle);
+  color: rgba(255, 255, 255, 0.7);
+  transition: var(--transition-smooth);
+  box-shadow: var(--glass-shadow-sm),
+              inset 0 1px 1px var(--glass-highlight-inner);
+  will-change: transform, background;
+}
+
+:host ::ng-deep .p-button.action-btn:hover {
+  color: var(--color-accent-blue);
+  background: var(--glass-surface-hover);
+  border-color: var(--glass-border-accent);
+  transform: translateY(-1px);
+  box-shadow: var(--glass-shadow-md),
+              var(--glass-glow-sm),
+              inset 0 1px 1px var(--glass-highlight-inner);
+}
+
+:host ::ng-deep .p-button.action-btn:active {
+  transform: scale(0.95);
+}
+
+:host ::ng-deep .p-button.action-btn.liked {
+  color: var(--color-accent-red);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+:host ::ng-deep .p-button.action-btn.liked .p-button-icon {
+  color: var(--color-accent-red);
+}
+
+:host ::ng-deep .p-button.action-btn.active {
+  color: var(--color-accent-blue);
+  border-color: var(--glass-border-accent);
+}
+
+/* ===== INLINE COMMENTS PANEL ===== */
+
+.comments-panel {
+  border-top: 1px solid var(--glass-border-base);
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.comment-input-row {
+  display: flex;
+  gap: 0.625rem;
+  align-items: flex-start;
+}
+
+.comment-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.comment-input-wrap {
+  flex: 1;
+  display: flex;
+  gap: 0.375rem;
+  align-items: flex-start;
+}
+
+:host ::ng-deep .comment-textarea {
+  flex: 1;
+  background: var(--glass-surface-bg) !important;
+  border: 1px solid var(--glass-border-subtle) !important;
+  border-radius: 10px !important;
+  color: #ffffff !important;
+  font-size: 0.875rem;
+  resize: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+:host ::ng-deep .comment-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+:host ::ng-deep .comment-textarea:focus {
+  border-color: var(--glass-border-accent) !important;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2) !important;
+  outline: none;
+}
+
+:host ::ng-deep .p-button.send-btn {
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.125rem;
+  transition: color 0.2s ease;
+}
+
+:host ::ng-deep .p-button.send-btn:not(:disabled):hover {
+  color: var(--color-accent-blue);
+}
+
+.comment-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.comment-skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.no-comments-hint {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+  padding-left: 0.25rem;
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.comment-item {
+  display: flex;
+  gap: 0.625rem;
+  align-items: flex-start;
+  animation: fadeIn 0.15s ease;
+}
+
+.comment-body {
+  flex: 1;
+  background: var(--glass-surface-bg);
+  border: 1px solid var(--glass-border-subtle);
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+}
+
+.comment-author {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-right: 0.375rem;
+}
+
+.comment-time {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.comment-text {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0.25rem 0 0 0;
+  line-height: 1.4;
+}
+
+.view-all-link {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  font-size: 0.8125rem;
+  color: rgba(139, 92, 246, 0.8);
+  transition: color 0.2s ease;
+  text-align: left;
+}
+
+.view-all-link:hover {
+  color: rgba(139, 92, 246, 1);
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+  :host ::ng-deep .p-card.post-card .p-card-body {
+    padding: 1rem;
+  }
+
+  .post-title { font-size: 1.125rem; }
+  .post-text  { font-size: 0.9375rem; }
+}

@@ -41,6 +41,8 @@ var kafkaBootstrapServers = builder.Configuration.GetConnectionString(SharedServ
 
 builder.Services.AddMassTransit(x =>
 {
+    x.UsingInMemory();
+
     x.AddRider(rider =>
     {
         rider.AddProducer<UserCreatedEvent>(SharedServices.KafkaTopics.UserCreated);

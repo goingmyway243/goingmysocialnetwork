@@ -34,6 +34,16 @@ export class AuthService {
     return this._oauthService.hasValidAccessToken();
   }
 
+  getCurrentUserId(): string {
+    const claims = this._oauthService.getIdentityClaims() as Record<string, unknown> | null;
+    return (claims?.['sub'] as string) ?? '';
+  }
+
+  getCurrentUsername(): string {
+    const claims = this._oauthService.getIdentityClaims() as Record<string, unknown> | null;
+    return (claims?.['name'] as string) ?? '';
+  }
+
   // ── 4. Authentication Flow ───────────────────────────────────
   /**
    * Initiates the PKCE authorization code flow.

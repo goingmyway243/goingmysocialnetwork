@@ -1,0 +1,160 @@
+:host ::ng-deep .p-card.compose-card {
+  background: var(--glass-elevated-bg);
+  backdrop-filter: var(--glass-blur-md) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
+  border: 1px solid var(--glass-border-accent);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow-lg),
+              inset 0 1px 2px var(--glass-highlight-inner);
+  position: relative;
+  overflow: hidden;
+}
+
+:host ::ng-deep .p-card.compose-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-highlight-top) 50%, transparent);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+:host ::ng-deep .p-card.compose-card .p-card-body {
+  padding: 1.5rem;
+}
+
+:host ::ng-deep .p-card.compose-card .p-card-content {
+  padding: 0;
+}
+
+/* ── Header ── */
+
+.compose-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.compose-label {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Fields ── */
+
+.compose-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.field {
+  position: relative;
+}
+
+:host ::ng-deep .compose-title-input,
+:host ::ng-deep .compose-content-input {
+  width: 100%;
+  background: var(--glass-surface-bg) !important;
+  border: 1px solid var(--glass-border-subtle) !important;
+  border-radius: 10px !important;
+  color: #ffffff !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  resize: none;
+}
+
+:host ::ng-deep .compose-title-input::placeholder,
+:host ::ng-deep .compose-content-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+:host ::ng-deep .compose-title-input:focus,
+:host ::ng-deep .compose-content-input:focus {
+  border-color: var(--glass-border-accent) !important;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2) !important;
+  outline: none;
+}
+
+:host ::ng-deep .compose-title-input.invalid,
+:host ::ng-deep .compose-content-input.invalid {
+  border-color: rgba(239, 68, 68, 0.6) !important;
+}
+
+.char-counter {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.75rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+.char-counter.warn,
+.char-warn {
+  color: rgba(239, 68, 68, 0.8);
+}
+
+.char-warn {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* ── Error ── */
+
+.compose-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: rgba(239, 68, 68, 0.9);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Actions ── */
+
+.compose-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--glass-border-base);
+}
+
+:host ::ng-deep .p-button.post-btn {
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 0.6rem 1.5rem;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+:host ::ng-deep .p-button.post-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+:host ::ng-deep .p-button.post-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

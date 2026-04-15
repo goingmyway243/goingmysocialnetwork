@@ -23,8 +23,8 @@ builder.Services.AddSingleton<IMongoClient>(sp => new MongoClient(builder.Config
 
 builder.Services.AddScoped<MongoDbContext>(provider =>
 {
-  var client = provider.GetRequiredService<IMongoClient>();
-  return new MongoDbContext(client, SharedServices.PostDb);
+    var client = provider.GetRequiredService<IMongoClient>();
+    return new MongoDbContext(client, SharedServices.PostDb);
 });
 
 // Register Post.Application services (includes MediatR)
@@ -41,6 +41,8 @@ var kafkaBootstrapServers = builder.Configuration.GetConnectionString(SharedServ
 
 builder.Services.AddMassTransit(x =>
 {
+    x.UsingInMemory();
+
     x.AddRider(rider =>
     {
         rider.AddConsumer<UserCreatedEventConsumer>();
@@ -73,10 +75,10 @@ builder.Services.AddMassTransit(x =>
 builder.Services.AddOpenIddict()
     .AddValidation(options =>
     {
-      options.SetIssuer(builder.Configuration["OpenIddict:Issuer"]!);
-      options.UseSystemNetHttp();
-      options.UseAspNetCore();
-      options.AddAudiences("social-api");
+        options.SetIssuer(builder.Configuration["OpenIddict:Issuer"]!);
+        options.UseSystemNetHttp();
+        options.UseAspNetCore();
+        options.AddAudiences("social-api");
     });
 
 builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
@@ -90,8 +92,8 @@ var app = builder.Build();
 // Initialize MongoDB indexes
 using (var scope = app.Services.CreateScope())
 {
-  var mongoDbContext = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
-  await mongoDbContext.InitializeAsync();
+    var mongoDbContext = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
+    await mongoDbContext.InitializeAsync();
 }
 
 app.UseHttpsRedirection();
@@ -102,8 +104,8 @@ app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
-  app.MapOpenApi();
-  app.MapScalarApiReference();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 // Map controllers

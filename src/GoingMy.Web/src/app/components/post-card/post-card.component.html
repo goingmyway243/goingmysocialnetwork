@@ -1,0 +1,117 @@
+<p-card styleClass="post-card">
+
+  <!-- Post Header -->
+  <div class="post-header">
+    <div class="author-avatar">
+      <i class="pi pi-user"></i>
+    </div>
+    <div class="post-meta">
+      <h3 class="author-name">{{ post().author?.firstName }} {{ post().author?.lastName }}</h3>
+      <span class="post-time">{{ formatDate(post().createdAt) }}</span>
+    </div>
+  </div>
+
+  <!-- Post Content -->
+  <div class="post-content" (click)="onViewDetail()">
+    <h2 class="post-title">{{ post().title }}</h2>
+    <p class="post-text">{{ post().content }}</p>
+  </div>
+
+  <!-- Post Actions -->
+  <div class="post-actions">
+    <p-button
+      [icon]="liked() ? 'pi pi-heart-fill' : 'pi pi-heart'"
+      [label]="(post().likes ?? 0).toString()"
+      [text]="true"
+      styleClass="action-btn"
+      [class.liked]="liked()"
+      (onClick)="onLikeClick()">
+    </p-button>
+
+    <p-button
+      icon="pi pi-comment"
+      [label]="(post().comments ?? 0).toString()"
+      [text]="true"
+      styleClass="action-btn"
+      [class.active]="commentState().expanded"
+      (onClick)="onCommentsClick()">
+    </p-button>
+
+    <p-button
+      icon="pi pi-arrow-up-right"
+      label="View"
+      [text]="true"
+      styleClass="action-btn"
+      (onClick)="onViewDetail()">
+    </p-button>
+  </div>
+
+  <!-- Inline Comments Panel -->
+  @if (commentState().expanded) {
+    <div class="comments-panel">
+
+      <!-- Comment Input -->
+      <div class="comment-input-row">
+        <div class="comment-avatar">
+          <i class="pi pi-user"></i>
+        </div>
+        <div class="comment-input-wrap">
+          <textarea
+            pTextarea
+            [autoResize]="true"
+            rows="1"
+            placeholder="Write a comment..."
+            class="comment-textarea"
+            [value]="commentState().newComment"
+            (input)="onCommentInput($any($event.target).value)"
+            [disabled]="commentState().submitting">
+          </textarea>
+          <p-button
+            icon="pi pi-send"
+            [text]="true"
+            styleClass="send-btn"
+            [disabled]="!commentState().newComment.trim() || commentState().submitting"
+            [loading]="commentState().submitting"
+            (onClick)="onCommentSubmit()">
+          </p-button>
+        </div>
+      </div>
+
+      <!-- Comment List -->
+      @if (commentState().loading) {
+        <div class="comment-loading">
+          @for (i of [1, 2]; track i) {
+            <div class="comment-skeleton-row">
+              <p-skeleton shape="circle" size="1.75rem"></p-skeleton>
+              <p-skeleton width="100%" height="1.5rem"></p-skeleton>
+            </div>
+          }
+        </div>
+      } @else if (commentState().comments.length === 0) {
+        <p class="no-comments-hint">No comments yet.</p>
+      } @else {
+        <div class="comment-list">
+          @for (comment of commentState().comments.slice(0, 3); track comment.id) {
+            <div class="comment-item">
+              <div class="comment-avatar">
+                <i class="pi pi-user"></i>
+              </div>
+              <div class="comment-body">
+                <span class="comment-author">{{ comment.username }}</span>
+                <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
+                <p class="comment-text">{{ comment.content }}</p>
+              </div>
+            </div>
+          }
+          @if (commentState().comments.length > 3) {
+            <button class="view-all-link" (click)="onViewDetail()">
+              View all {{ post().comments }} comments →
+            </button>
+          }
+        </div>
+      }
+
+    </div>
+  }
+
+</p-card>

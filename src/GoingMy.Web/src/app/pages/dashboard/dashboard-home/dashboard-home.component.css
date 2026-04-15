@@ -2,10 +2,13 @@
   max-width: 800px;
   margin: 0 auto;
   padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .welcome-section {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .page-title {
@@ -30,204 +33,22 @@
   gap: 1.5rem;
 }
 
-/* ===== POST CARD STYLES WITH MULTI-LAYER GLASS EFFECT ===== */
-
-:host ::ng-deep .p-card.post-card {
-  background: var(--glass-elevated-bg);
-  backdrop-filter: var(--glass-blur-md) saturate(180%);
-  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
-  border: 1px solid var(--glass-border-base);
-  border-radius: 16px;
-  transition: var(--transition-smooth);
-  box-shadow: var(--glass-shadow-lg),
-              inset 0 1px 2px var(--glass-highlight-inner);
-  position: relative;
-  overflow: hidden;
-  will-change: transform, box-shadow;
-}
-
-/* Top edge highlight */
-:host ::ng-deep .p-card.post-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg,
-    transparent,
-    var(--glass-highlight-top) 50%,
-    transparent
-  );
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-/* Bottom shadow for depth */
-:host ::ng-deep .p-card.post-card::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(to top,
-    rgba(0, 0, 0, 0.1),
-    transparent
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-:host ::ng-deep .p-card.post-card:hover {
-  background: var(--glass-elevated-hover);
-  border: 1px solid transparent;
-  background-image: 
-    linear-gradient(var(--glass-elevated-hover), var(--glass-elevated-hover)),
-    linear-gradient(135deg, var(--glass-border-accent), rgba(167, 139, 250, 0.3));
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  transform: translateY(-4px);
-  box-shadow: var(--glass-shadow-xl),
-              var(--glass-glow-md),
-              inset 0 1px 2px var(--glass-highlight-inner);
-}
-
-:host ::ng-deep .p-card.post-card:hover::after {
-  opacity: 1;
-}
-
-:host ::ng-deep .p-card.post-card .p-card-body {
-  padding: 1.5rem;
-}
-
-:host ::ng-deep .p-card.post-card .p-card-content {
-  padding: 0;
-}
-
-/* ===== POST CONTENT STYLES ===== */
-
-.post-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.author-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--gradient-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-size: 1.5rem;
-  box-shadow: var(--glass-shadow-md),
-              inset 0 2px 4px rgba(255, 255, 255, 0.2);
-  position: relative;
-}
-
-.author-avatar::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 50%;
-  padding: 2px;
-  background: var(--gradient-primary);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  opacity: 0.5;
-}
-
-.post-meta {
-  flex: 1;
-}
-
-.author-name {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0 0 0.25rem 0;
-}
-
-.post-time {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.post-content {
-  margin-bottom: 1rem;
-}
-
-.post-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0 0 0.75rem 0;
-}
-
-.post-text {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.8);
-  margin: 0;
-}
-
-/* ===== POST ACTIONS WITH GLASS BUTTONS ===== */
-
-.post-actions {
-  display: flex;
-  gap: 0.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--glass-border-base);
-}
-
-:host ::ng-deep .p-button.action-btn {
-  background: var(--glass-surface-bg);
-  backdrop-filter: var(--glass-blur-sm);
-  -webkit-backdrop-filter: var(--glass-blur-sm);
-  border: 1px solid var(--glass-border-subtle);
-  color: rgba(255, 255, 255, 0.7);
-  transition: var(--transition-smooth);
-  box-shadow: var(--glass-shadow-sm),
-              inset 0 1px 1px var(--glass-highlight-inner);
-  will-change: transform, background;
-}
-
-:host ::ng-deep .p-button.action-btn:hover {
-  color: var(--color-accent-blue);
-  background: var(--glass-surface-hover);
-  border-color: var(--glass-border-accent);
-  transform: translateY(-1px);
-  box-shadow: var(--glass-shadow-md),
-              var(--glass-glow-sm),
-              inset 0 1px 1px var(--glass-highlight-inner);
-}
-
-:host ::ng-deep .p-button.action-btn.likes-btn:hover {
-  color: var(--color-accent-red);
-  border-color: rgba(239, 68, 68, 0.3);
-  box-shadow: var(--glass-shadow-md),
-              0 0 12px rgba(239, 68, 68, 0.2);
-}
-
-/* Ripple effect on click */
-:host ::ng-deep .p-button.action-btn:active {
-  transform: scale(0.95);
-}
-
-/* ===== LOADING STATE WITH GLASS SHIMMER ===== */
+/* ===== LOADING SKELETON SHIMMER ===== */
 
 :host ::ng-deep .p-card.loading-card {
   pointer-events: none;
   position: relative;
   overflow: hidden;
+  background: var(--glass-elevated-bg);
+  backdrop-filter: var(--glass-blur-md) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
+  border: 1px solid var(--glass-border-base);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow-lg);
 }
+
+:host ::ng-deep .p-card.loading-card .p-card-body { padding: 1.5rem; }
+:host ::ng-deep .p-card.loading-card .p-card-content { padding: 0; }
 
 :host ::ng-deep .p-card.loading-card::after {
   content: '';
@@ -236,34 +57,35 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
   animation: shimmer 2s infinite;
 }
 
 @keyframes shimmer {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
-  }
+  0%   { left: -100%; }
+  100% { left: 100%; }
 }
 
 :host ::ng-deep .p-skeleton {
   background: var(--glass-surface-bg);
-  backdrop-filter: var(--glass-blur-sm);
-  -webkit-backdrop-filter: var(--glass-blur-sm);
 }
 
-.mb-2 {
-  margin-bottom: 0.5rem;
+.mb-2 { margin-bottom: 0.5rem; }
+
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-/* ===== ERROR STATE WITH GLASS EFFECT ===== */
+.post-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 1rem;
+}
+
+/* ===== ERROR STATE ===== */
 
 .error-container {
   display: flex;
@@ -295,7 +117,7 @@
   margin-bottom: 1.5rem;
 }
 
-/* ===== EMPTY STATE WITH DASHED GLASS BORDER ===== */
+/* ===== EMPTY STATE ===== */
 
 .empty-state {
   display: flex;
@@ -316,7 +138,6 @@
   font-size: 4rem;
   color: rgba(255, 255, 255, 0.3);
   margin-bottom: 1rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .empty-state h3 {
@@ -332,43 +153,38 @@
 .empty-state p {
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 1.5rem;
+  margin: 0;
 }
 
-:host ::ng-deep .empty-state .p-button.create-btn {
-  background: var(--gradient-primary);
-  border: none;
-  box-shadow: var(--glass-shadow-md),
-              var(--glass-glow-sm);
-}
-
-:host ::ng-deep .empty-state .p-button.create-btn:hover {
-  background: var(--gradient-primary-hover);
-  transform: translateY(-2px);
-  box-shadow: var(--glass-shadow-lg),
-              var(--glass-glow-md);
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
+/* ===== RESPONSIVE ===== */
 
 @media (max-width: 768px) {
-  .page-title {
-    font-size: 1.5rem;
-  }
+  .page-title { font-size: 1.5rem; }
+  .posts-container { gap: 1rem; }
+}
 
-  .posts-container {
-    gap: 1rem;
-  }
+.welcome-section {
+  margin-bottom: 2rem;
+}
 
-  :host ::ng-deep .p-card.post-card .p-card-body {
-    padding: 1rem;
-  }
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-  .post-title {
-    font-size: 1.125rem;
-  }
+.page-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
 
-  .post-text {
-    font-size: 0.9375rem;
-  }
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
