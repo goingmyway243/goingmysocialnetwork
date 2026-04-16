@@ -8,7 +8,7 @@ import Lara from '@primeuix/themes/lara';
  * to our CSS variables defined in styles.css. It ensures consistent glass
  * effects across all PrimeNG components used in the dashboard.
  * 
- * Note: Specific component styling is handled via CSS with ::ng-deep selectors
+ * Note: Specific component styling is handled via CSS overrides in styles.css
  * to maintain full control over glassmorphism effects.
  */
 const MyPreset = definePreset(Lara, {

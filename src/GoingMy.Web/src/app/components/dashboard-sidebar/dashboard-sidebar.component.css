@@ -122,179 +122,118 @@
 .menu-item.active {
   background: var(--glass-surface-active);
   color: #ffffff;
+}
 
-  i::after {
-    background: var(--glass-elevated-bg);
-    border: 1px solid var(--glass-border-accent);
-    box-shadow: var(--glass-shadow-md),
-      var(--glass-glow-md),
-      inset 0 1px 2px var(--glass-highlight-inner);
+.menu-item.active i::after {
+  background: var(--glass-elevated-bg);
+  border: 1px solid var(--glass-border-accent);
+  box-shadow: var(--glass-shadow-md),
+    var(--glass-glow-md),
+    inset 0 1px 2px var(--glass-highlight-inner);
+}
+
+.menu-item.active i {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+.menu-item.active::before {
+  transform: scaleY(1);
+  box-shadow: 0 0 12px var(--glass-glow-color);
+}
+
+.menu-label {
+  flex: 1;
+}
+
+.sidebar-footer {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 1rem;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.7;
+    filter: brightness(1);
   }
-
-  .menu-item.active i {
-    animation: glowPulse 2s ease-in-out infinite
-  }
-
-  .menu-item.active::before {
-    transform: scaleY(1);
-    box-shadow: 0 0 12px var(--glass-glow-color);
-  }
-
-  .menu-item.active i::after {
+  50% {
     opacity: 1;
+    filter: brightness(1.2);
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 1024px) {
+  .dashboard-sidebar {
+    width: 80px;
+    padding: 1rem 0.5rem;
   }
 
   .menu-label {
-    flex: 1;
+    display: none;
+  }
+
+  .menu-item {
+    justify-content: center;
+    padding: 1rem;
   }
 
   .sidebar-footer {
-    padding-top: 1rem;
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    height: 70px;
+    flex-direction: row;
+    padding: 0.5rem;
+    z-index: 999;
+    border-right: none;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 1rem;
   }
 
-  /* PrimeNG Button Customization */
-  :host ::ng-deep .p-button.create-post-btn {
+  .sidebar-content {
+    flex-direction: row;
     width: 100%;
-    background: var(--gradient-primary);
-    border: none;
-    color: #ffffff;
-    font-weight: 600;
-    padding: 0.875rem 1.5rem;
-    font-size: 1rem;
-    transition: var(--transition-smooth);
-    box-shadow: var(--glass-shadow-md),
-      0 4px 16px rgba(96, 165, 250, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    position: relative;
-    overflow: hidden;
-    will-change: transform, box-shadow;
   }
 
-  /* Liquid gradient shimmer effect */
-  :host ::ng-deep .p-button.create-post-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba(255, 255, 255, 0.3),
-        transparent);
-    transition: left 0.5s ease;
+  .menu-container {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
   }
 
-  :host ::ng-deep .p-button.create-post-btn:hover {
-    background: var(--gradient-primary-hover);
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: var(--glass-shadow-lg),
-      0 6px 24px rgba(96, 165, 250, 0.4),
-      var(--glass-glow-md),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  .menu-item {
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    min-width: 60px;
   }
 
-  :host ::ng-deep .p-button.create-post-btn:hover::before {
-    left: 100%;
+  .menu-item::before {
+    display: none;
   }
 
-  :host ::ng-deep .p-button.create-post-btn:active {
-    transform: translateY(0) scale(1);
+  .menu-item i {
+    font-size: 1.5rem;
   }
 
-  /* Animations */
-  @keyframes glowPulse {
-
-    0%,
-    100% {
-      opacity: 0.7;
-      filter: brightness(1);
-    }
-
-    50% {
-      opacity: 1;
-      filter: brightness(1.2);
-    }
+  .menu-label {
+    font-size: 0.75rem;
+    display: block;
   }
 
-  .menu-item.active i {
-    animation: glowPulse 2s ease-in-out infinite;
-  }
-
-  /* Responsive Design */
-  @media (max-width: 1024px) {
-    .dashboard-sidebar {
-      width: 80px;
-      padding: 1rem 0.5rem;
-    }
-
-    .menu-label {
-      display: none;
-    }
-
-    .menu-item {
-      justify-content: center;
-      padding: 1rem;
-    }
-
-    .sidebar-footer {
-      display: none;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .dashboard-sidebar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      top: auto;
-      width: 100%;
-      height: 70px;
-      flex-direction: row;
-      padding: 0.5rem;
-      z-index: 999;
-      border-right: none;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .sidebar-content {
-      flex-direction: row;
-      width: 100%;
-    }
-
-    .menu-container {
-      flex-direction: row;
-      justify-content: space-around;
-      align-items: center;
-      gap: 0;
-      overflow-x: auto;
-    }
-
-    .menu-item {
-      flex-direction: column;
-      gap: 0.25rem;
-      padding: 0.5rem;
-      min-width: 60px;
-    }
-
-    .menu-item::before {
-      display: none;
-    }
-
-    .menu-item i {
-      font-size: 1.5rem;
-    }
-
-    .menu-label {
-      font-size: 0.75rem;
-      display: block;
-    }
-
-    .menu-item:hover {
-      transform: translateY(-2px);
-    }
+  .menu-item:hover {
+    transform: translateY(-2px);
   }
 }

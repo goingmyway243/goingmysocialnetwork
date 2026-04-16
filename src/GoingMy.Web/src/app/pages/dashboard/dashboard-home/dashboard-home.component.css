@@ -35,41 +35,6 @@
 
 /* ===== LOADING SKELETON SHIMMER ===== */
 
-:host ::ng-deep .p-card.loading-card {
-  pointer-events: none;
-  position: relative;
-  overflow: hidden;
-  background: var(--glass-elevated-bg);
-  backdrop-filter: var(--glass-blur-md) saturate(180%);
-  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
-  border: 1px solid var(--glass-border-base);
-  border-radius: 16px;
-  box-shadow: var(--glass-shadow-lg);
-}
-
-:host ::ng-deep .p-card.loading-card .p-card-body { padding: 1.5rem; }
-:host ::ng-deep .p-card.loading-card .p-card-content { padding: 0; }
-
-:host ::ng-deep .p-card.loading-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-  0%   { left: -100%; }
-  100% { left: 100%; }
-}
-
-:host ::ng-deep .p-skeleton {
-  background: var(--glass-surface-bg);
-}
-
 .mb-2 { margin-bottom: 0.5rem; }
 
 .post-header {

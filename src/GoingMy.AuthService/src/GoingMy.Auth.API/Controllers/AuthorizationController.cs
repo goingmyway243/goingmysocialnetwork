@@ -14,13 +14,19 @@ public class AuthorizationController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IOpenIddictApplicationManager _applicationManager;
+    private readonly IRefreshTokenBlacklistService _refreshTokenBlacklistService;
+    private readonly ILogger<AuthorizationController> _logger;
 
     public AuthorizationController(
         IOpenIddictApplicationManager applicationManager,
-        IUserService userService)
+        IUserService userService,
+        IRefreshTokenBlacklistService refreshTokenBlacklistService,
+        ILogger<AuthorizationController> logger)
     {
         _userService = userService;
         _applicationManager = applicationManager;
+        _refreshTokenBlacklistService = refreshTokenBlacklistService;
+        _logger = logger;
     }
 
     [HttpGet("~/connect/authorize")]
@@ -122,6 +128,22 @@ public class AuthorizationController : ControllerBase
             });
         }
 
+        // Check if the refresh token has been revoked (blacklisted)
+        var tokenJti = principal.FindFirst("jti")?.Value;
+        if (!string.IsNullOrEmpty(tokenJti))
+        {
+            var isRevoked = await _refreshTokenBlacklistService.IsTokenRevokedAsync(tokenJti);
+            if (isRevoked)
+            {
+                _logger.LogWarning("Attempt to use revoked refresh token: {TokenJti}", tokenJti);
+                return BadRequest(new OpenIddictResponse
+                {
+                    Error = Errors.InvalidGrant,
+                    ErrorDescription = "The refresh token is no longer valid."
+                });
+            }
+        }
+
         return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 
@@ -208,6 +230,38 @@ public class AuthorizationController : ControllerBase
     [HttpPost("~/connect/logout")]
     public async Task<IActionResult> Logout()
     {
+        try
+        {
+            // Get the current authenticated principal to extract user info and token claims
+            var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            if (result.Succeeded && result.Principal != null)
+            {
+                // Extract token JTI (JWT ID) claim for revocation
+                var tokenJti = result.Principal.FindFirst("jti")?.Value;
+                var subject = result.Principal.FindFirst(Claims.Subject)?.Value;
+
+                // If we have both JTI and subject, revoke the refresh token
+                if (!string.IsNullOrEmpty(tokenJti) && !string.IsNullOrEmpty(subject))
+                {
+                    // Get the configured refresh token lifetime
+                    var refreshTokenLifetimeMinutes = int.Parse(
+                        HttpContext.RequestServices.GetRequiredService<IConfiguration>()
+                            ["OpenIddict:RefreshTokenLifetime"] ?? "60");
+                    var expiresAt = DateTime.UtcNow.AddMinutes(refreshTokenLifetimeMinutes);
+
+                    await _refreshTokenBlacklistService.RevokeTokenAsync(
+                        tokenJti,
+                        subject,
+                        expiresAt);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error revoking refresh token during logout");
+            // Log the error but don't fail the logout process
+        }
+
         // Clear the Identity cookie authentication
         await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
 

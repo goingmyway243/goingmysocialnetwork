@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using GoingMy.Auth.API.Components;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -121,6 +122,12 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 
 // Register custom services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRefreshTokenBlacklistService, RefreshTokenBlacklistService>();
+
+// Register Redis connection (Aspire provides connection string via configuration)
+var redisConnectionString = builder.Configuration.GetConnectionString("redis") ?? "localhost:6379";
+var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 
 // Register typed HTTP client to UserService (Aspire service discovery)
 builder.Services.AddHttpClient<IUserProfileClient, UserProfileClient>(

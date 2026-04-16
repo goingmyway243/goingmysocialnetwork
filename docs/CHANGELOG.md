@@ -2,6 +2,40 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.9.0] - 2026-04-16
+
+### Added
+- **Refresh token mechanism** across `GoingMy.AuthService` and `GoingMy.Web`:
+  - **AuthService backend**:
+    - `IRefreshTokenBlacklistService` / `RefreshTokenBlacklistService` — Redis-backed token revocation using `StackExchange.Redis`; stores revoked token JTIs with automatic TTL-based expiry (no cleanup job needed)
+    - Refresh token revocation in `AuthorizationController.Logout()` — extracts JTI from authenticated principal and adds it to the Redis blacklist on every logout
+    - Blacklist check in `HandleRefreshTokenGrantTypeAsync()` — rejects revoked tokens with `400 invalid_grant` before issuing new access tokens
+    - `OpenIddict:IssueCookies` and `OpenIddict:RefreshTokenInCookie` configuration flags added to `appsettings.json`
+  - **Angular frontend**:
+    - `AuthService.initAuth()` now calls `OAuthService.setupAutomaticSilentRefresh()` — library-managed proactive refresh before token expiry (default 30-second margin)
+    - `AuthService.refreshAccessToken()` — manual fallback wrapper over `OAuthService.refreshToken()` for edge cases
+    - `refreshTokenInterceptor` (`refresh-token.interceptor.ts`) — functional HTTP interceptor; catches 401 responses and triggers logout as a safety net
+    - Logout cancels the auto-refresh subscription before clearing tokens
+    - Interceptor registered in `app.config.ts` after `authInterceptor` in the pipeline
+- **Redis** added to `.NET Aspire` orchestration (`GoingMy.AppHost`):
+  - `redis:7-alpine` container with persistent data volume (`goingmysocial-redis`)
+  - `Aspire.Hosting.Redis` package added to `GoingMy.AppHost.csproj`
+  - `StackExchange.Redis 2.7.27` added to `Directory.Packages.props` and `GoingMy.Auth.API.csproj`
+  - `identity-api` configured with `.WithReference(redis)` and `.WaitFor(redis)`
+
+### Changed
+- **`AuthService` DI registrations** (`Program.cs`): replaced `RefreshTokenCleanupHostedService` hosted service with Redis `IConnectionMultiplexer` singleton; `IRefreshTokenBlacklistService` scoped registration retained
+- **`ApplicationDbContext`**: removed `RefreshTokenBlacklist` DbSet and entity configuration (revocation data now lives in Redis, not PostgreSQL)
+- **`AuthorizationController`**: constructor updated to inject `IRefreshTokenBlacklistService` and `ILogger<AuthorizationController>`
+- **`angular-oauth2-oidc` usage**: replaced manual timer-based `scheduleTokenRefresh()` and BehaviorSubject-backed 401-retry logic with library's built-in `setupAutomaticSilentRefresh()`; significantly reduced frontend auth code complexity
+
+### Architecture Notes
+- **Redis TTL ≡ refresh token lifetime**: No background cleanup needed — revoked tokens auto-expire from Redis at the same time as the original token would have expired
+- **Layered security**: Auth Service validates token against Redis blacklist on every refresh grant; 401 interceptor catches any access token expiry that slips through the proactive refresh window
+- **HttpOnly cookie** is the intended storage for refresh tokens; browser sends it automatically on every `/connect/token` refresh request without JavaScript access
+
+---
+
 ## [0.8.0] - 2026-04-15
 
 ### Added

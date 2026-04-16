@@ -25,9 +25,17 @@ var kafka = builder.AddKafka(SharedServices.Kafka)
     .WithDataVolume("goingmysocial-kafka")
     .WithLifetime(ContainerLifetime.Persistent);
 
+var redis = builder.AddRedis("redis")
+    .WithImage("redis", "7-alpine")
+    .WithRedisInsight(containerName: "redis-insight")
+    .WithDataVolume("goingmysocial-redis")
+    .WithLifetime(ContainerLifetime.Persistent);
+
 var identityService = builder.AddProject<Projects.GoingMy_Auth_API>(SharedServices.IdentityApi)
     .WithReference(identityDb)
-    .WaitFor(identityDb);
+    .WithReference(redis)
+    .WaitFor(identityDb)
+    .WaitFor(redis);
 
 var postService = builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.PostApi)
     .WithReference(postDb)

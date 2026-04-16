@@ -1,6 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { OAuthService, AuthConfig, OAuthEvent } from 'angular-oauth2-oidc';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
@@ -11,21 +9,37 @@ import { Observable } from 'rxjs';
 export class AuthService {
   // ── 1. Dependencies ─────────────────────────────────────────
   private readonly _oauthService = inject(OAuthService);
-  private readonly _http = inject(HttpClient);
-  private readonly _router = inject(Router);
+
+  // ── 2. Private State ─────────────────────────────────────────
+  private _refreshSubscription: any = null;
 
   get oauthEvents(): Observable<OAuthEvent> {
     return this._oauthService.events;
   }
 
-  // ── 2. Initialization ────────────────────────────────────────
+  // ── 3. Initialization ────────────────────────────────────────
   initAuth(): void {
     const authConfig: AuthConfig = environment.authConfig;
     this._oauthService.configure(authConfig);
     this._oauthService.loadDiscoveryDocumentAndTryLogin();
+
+    // Setup automatic silent token refresh
+    // The library will proactively refresh the token before expiry
+    this._setupAutoRefresh();
   }
 
-  // ── 3. Token Management ──────────────────────────────────────
+  private _setupAutoRefresh(): void {
+    // Remove any existing subscription
+    if (this._refreshSubscription) {
+      this._refreshSubscription.unsubscribe();
+    }
+
+    // Configure automatic silent refresh
+    // The library will proactively refresh the token before expiry (default: 30s margin)
+    this._refreshSubscription = this._oauthService.setupAutomaticSilentRefresh();
+  }
+
+  // ── 4. Token Management ──────────────────────────────────────
   getAccessToken(): string {
     return this._oauthService.getAccessToken() || '';
   }
@@ -44,7 +58,24 @@ export class AuthService {
     return (claims?.['name'] as string) ?? '';
   }
 
-  // ── 4. Authentication Flow ───────────────────────────────────
+  /**
+   * Manually refresh the access token (fallback mechanism).
+   * Normally the library handles this automatically via setupAutomaticSilentRefresh().
+   */
+  refreshAccessToken(): Observable<any> {
+    return new Observable((observer) => {
+      this._oauthService.refreshToken()
+        .then(() => {
+          observer.next({ access_token: this.getAccessToken() });
+          observer.complete();
+        })
+        .catch((error) => {
+          observer.error(error);
+        });
+    });
+  }
+
+  // ── 5. Authentication Flow ───────────────────────────────────
   /**
    * Initiates the PKCE authorization code flow.
    * Redirects user to the authorization server login page.
@@ -83,6 +114,12 @@ export class AuthService {
    * Logs out the user, clears tokens and server-side cookies, then restarts PKCE flow.
    */
   logout(): void {
+    // Stop automatic silent refresh
+    if (this._refreshSubscription) {
+      this._refreshSubscription.unsubscribe();
+      this._refreshSubscription = null;
+    }
+
     // Clear local OAuth tokens first
     this._oauthService.logOut();
     sessionStorage.removeItem('returnUrl');

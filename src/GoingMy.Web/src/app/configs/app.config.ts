@@ -7,6 +7,7 @@ import { routes } from '../app.routes';
 import { providePrimeNG } from 'primeng/config';
 import MyPreset from './app.theme';
 import { authInterceptor } from '../interceptors/auth.interceptor';
+import { refreshTokenInterceptor } from '../interceptors/refresh-token.interceptor';
 import { provideOAuthClient } from 'angular-oauth2-oidc';
 import { AuthService } from '../services/auth.service';
 
@@ -17,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideHttpClient(
       withFetch(),
-      withInterceptors([authInterceptor])
+      withInterceptors([authInterceptor, refreshTokenInterceptor])
     ),
     provideOAuthClient({
       resourceServer: {

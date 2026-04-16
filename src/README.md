@@ -149,6 +149,7 @@ npm run test    # Run unit tests
 - **.NET 10.0 SDK** or later (for backend services)
 - **Node.js 22+** and **npm 11+** (for frontend)
 - **PostgreSQL** (for database)
+- **Redis** (for refresh token blacklist — provisioned automatically via Aspire)
 - **Docker** (optional, for containerization)
 
 ### Quick Start
@@ -230,6 +231,7 @@ dotnet add package Moq
 - Identity fields only (`FirstName`, `LastName`, `IsActive`)
 - Bootstraps a `UserProfile` in UserService after every signup
 - Password management
+- **Refresh token blacklist** via Redis (revoked tokens stored with TTL-based auto-expiry)
 
 **Default API Port**: 5001
 
@@ -460,7 +462,7 @@ For questions or issues:
 ---
 
 **Created**: March 19, 2026  
-**Last Updated**: April 8, 2026  
-**Backend Technology**: .NET 10.0, PostgreSQL, MongoDB, xUnit, MediatR, OpenIddict, Scalar.AspNetCore
+**Last Updated**: April 16, 2026  
+**Backend Technology**: .NET 10.0, PostgreSQL, MongoDB, Redis, xUnit, MediatR, OpenIddict, Scalar.AspNetCore
 **Frontend Technology**: Angular 20, PrimeNG, TypeScript, CSS  
 **Architecture Pattern**: Clean Architecture with Microservices (Backend) + Signals & Code Flow Blocks (Frontend)

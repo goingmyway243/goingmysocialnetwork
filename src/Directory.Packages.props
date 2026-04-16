@@ -41,6 +41,10 @@
   <ItemGroup>
     <PackageVersion Include="MediatR" Version="12.4.1" />
   </ItemGroup>
+  <!--Redis Packages-->
+  <ItemGroup>
+    <PackageVersion Include="StackExchange.Redis" Version="2.7.27" />
+  </ItemGroup>
   <!--YARP Packages-->
   <ItemGroup>
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="10.4.0" />

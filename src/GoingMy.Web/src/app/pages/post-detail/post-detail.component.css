@@ -13,54 +13,7 @@
   margin-bottom: -0.5rem;
 }
 
-:host ::ng-deep .p-button.back-btn {
-  color: rgba(255, 255, 255, 0.6);
-  padding-left: 0;
-  transition: color 0.2s ease;
-}
-
-:host ::ng-deep .p-button.back-btn:hover {
-  color: #ffffff;
-}
-
 /* ── Detail Card (shared glass base) ── */
-
-:host ::ng-deep .p-card.detail-card,
-:host ::ng-deep .p-card.comment-compose-card,
-:host ::ng-deep .p-card.comment-card {
-  background: var(--glass-elevated-bg);
-  backdrop-filter: var(--glass-blur-md) saturate(180%);
-  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
-  border: 1px solid var(--glass-border-base);
-  border-radius: 16px;
-  box-shadow: var(--glass-shadow-lg),
-              inset 0 1px 2px var(--glass-highlight-inner);
-  position: relative;
-  overflow: hidden;
-}
-
-:host ::ng-deep .p-card.detail-card::before,
-:host ::ng-deep .p-card.comment-compose-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--glass-highlight-top) 50%, transparent);
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-:host ::ng-deep .p-card.detail-card .p-card-body,
-:host ::ng-deep .p-card.comment-compose-card .p-card-body,
-:host ::ng-deep .p-card.comment-card .p-card-body {
-  padding: 1.25rem 1.5rem;
-}
-
-:host ::ng-deep .p-card.detail-card .p-card-content,
-:host ::ng-deep .p-card.comment-compose-card .p-card-content,
-:host ::ng-deep .p-card.comment-card .p-card-content {
-  padding: 0;
-}
 
 /* ── Post Header ── */
 
@@ -137,26 +90,6 @@
   border-top: 1px solid var(--glass-border-base);
 }
 
-:host ::ng-deep .p-button.action-btn {
-  background: var(--glass-surface-bg);
-  backdrop-filter: var(--glass-blur-sm);
-  border: 1px solid var(--glass-border-subtle);
-  color: rgba(255, 255, 255, 0.7);
-  transition: var(--transition-smooth);
-  box-shadow: var(--glass-shadow-sm),
-              inset 0 1px 1px var(--glass-highlight-inner);
-}
-
-:host ::ng-deep .p-button.action-btn:hover {
-  color: var(--color-accent-blue);
-  background: var(--glass-surface-hover);
-  border-color: var(--glass-border-accent);
-}
-
-:host ::ng-deep .p-button.action-btn.liked .p-button-icon {
-  color: var(--color-accent-red);
-}
-
 /* ── Comments Section ── */
 
 .comments-section {
@@ -203,49 +136,12 @@
   flex: 1;
 }
 
-:host ::ng-deep .comment-textarea {
-  width: 100%;
-  background: var(--glass-surface-bg) !important;
-  border: 1px solid var(--glass-border-subtle) !important;
-  border-radius: 10px !important;
-  color: #ffffff !important;
-  resize: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-:host ::ng-deep .comment-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.35);
-}
-
-:host ::ng-deep .comment-textarea:focus {
-  border-color: var(--glass-border-accent) !important;
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2) !important;
-  outline: none;
-}
-
 .comment-submit-row {
   display: flex;
   justify-content: flex-end;
 }
 
-:host ::ng-deep .p-button.comment-submit-btn {
-  background: var(--gradient-primary);
-  border: none;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  padding: 0.45rem 1.1rem;
-}
-
-:host ::ng-deep .p-button.comment-submit-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
 /* ── Individual Comment Card ── */
-
-:host ::ng-deep .p-card.comment-card {
-  border-radius: 12px;
-}
 
 .comment-header {
   display: flex;
@@ -295,27 +191,6 @@
   transition: opacity 0.2s ease;
 }
 
-:host ::ng-deep .p-card.comment-card:hover .comment-owner-actions {
-  opacity: 1;
-}
-
-:host ::ng-deep .p-button.comment-action-btn {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 6px;
-  color: rgba(255, 255, 255, 0.45);
-  transition: color 0.2s ease, background 0.2s ease;
-}
-
-:host ::ng-deep .p-button.comment-action-btn:hover {
-  color: rgba(255, 255, 255, 0.9);
-  background: var(--glass-surface-hover);
-}
-
-:host ::ng-deep .p-button.comment-action-btn.delete-btn:hover {
-  color: rgba(239, 68, 68, 0.8);
-}
-
 /* ── Edit Inline ── */
 
 .comment-edit-wrap {
@@ -328,19 +203,6 @@
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
-}
-
-:host ::ng-deep .p-button.save-btn {
-  background: var(--gradient-primary);
-  border: none;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  padding: 0.35rem 0.9rem;
-}
-
-:host ::ng-deep .p-button.cancel-btn {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.8rem;
 }
 
 /* ── No Comments ── */
