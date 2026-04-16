@@ -88,7 +88,7 @@ builder.Services.AddOpenIddict()
 
       options.DisableAccessTokenEncryption();
 
-      options.RegisterScopes("social_api", "email", "profile", "roles", "openid");
+      options.RegisterScopes("social_api", "email", "profile", "roles", "openid", "offline_access");
     })
     .AddValidation(options =>
     {

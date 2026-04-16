@@ -7,7 +7,7 @@ export const environment = {
     redirectUri: window.location.origin + '/signin-oidc',
     postLogoutRedirectUri: window.location.origin + '/',
     responseType: 'code',
-    scope: 'openid profile email roles',
+    scope: 'openid profile email roles offline_access',
     showDebugInformation: false,
     requireHttps: true,
     useSilentRefresh: true,

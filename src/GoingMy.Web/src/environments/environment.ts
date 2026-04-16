@@ -8,7 +8,7 @@ export const environment = {
     postLogoutRedirectUri: window.location.origin + '/',
     logoutUrl: 'https://localhost:7001/connect/logout',  // OpenIddict logout endpoint
     responseType: 'code',
-    scope: 'openid profile email roles social_api',
+    scope: 'openid profile email roles social_api offline_access',
     showDebugInformation: true,
     requireHttps: false,  // Local development only
     strictDiscoveryDocumentValidation: false,  // Local development only

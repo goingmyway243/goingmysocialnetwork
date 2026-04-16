@@ -37,7 +37,8 @@ public static class OpenIddictSeeder
                     Permissions.Prefixes.Scope + "profile",
                     Permissions.Prefixes.Scope + "roles",
                     Permissions.Prefixes.Scope + "openid",
-                    Permissions.Prefixes.Scope + "social_api"
+                    Permissions.Prefixes.Scope + "social_api",
+                    Permissions.Prefixes.Scope + "offline_access"
                 },
                 RedirectUris =
                 {
