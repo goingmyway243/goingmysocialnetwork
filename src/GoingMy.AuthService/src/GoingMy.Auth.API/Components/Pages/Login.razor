@@ -143,7 +143,7 @@
             }
 
             // For non-OAuth flows, use NavigationManager
-            NavManager.NavigateTo(ReturnUrl ?? "/", forceLoad: true);
+            NavManager.NavigateTo(ReturnUrl ?? "http://locahost:4200", forceLoad: true);
         }
         catch (Exception ex)
         {

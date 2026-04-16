@@ -54,14 +54,21 @@ public class UserController : ControllerBase
                 new { id = user.Id },
                 MapToUserResponse(user));
         }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("already exists"))
+        {
+            var message = ex.Message.Replace("Failed to create user: ", string.Empty);
+            _logger.LogWarning("User creation conflict: {Message}", message);
+            return Conflict(new { message });
+        }
         catch (InvalidOperationException ex)
         {
-            _logger.LogWarning("User creation failed: {Message}", ex.Message);
-            return Conflict(new { message = ex.Message });
+            var message = ex.Message.Replace("Failed to create user: ", string.Empty);
+            _logger.LogWarning("User creation failed: {Message}", message);
+            return BadRequest(new { message });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error creating user");
+            _logger.LogError("Error creating user: {Message}", ex.Message);
             return BadRequest(new { message = "Failed to create user account" });
         }
     }

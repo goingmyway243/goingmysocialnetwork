@@ -2,6 +2,7 @@
 @using GoingMy.Auth.API.Dtos
 @using System.Net.Http.Json
 @using System.Text.Json
+@using System.Text.Json.Serialization
 @inject NavigationManager NavManager
 @inject IHttpClientFactory HttpClientFactory
 @rendermode InteractiveServer
@@ -10,34 +11,53 @@
     <div class="gradient-bg-overlay"></div>
 
     <div class="glass glass-card signup-card">
-        <div class="card-header">
-            <h1 class="title">Create Account</h1>
-            <p class="subtitle">Join our social network today</p>
-        </div>
+        <!-- Success Screen -->
+        @if (IsSuccessful)
+        {
+            <div class="success-container">
+                <div class="success-icon">
+                    <i class="pi pi-check"></i>
+                </div>
+                <h2 class="success-title">Account Created Successfully!</h2>
+                <p class="success-message">Welcome to GoingMy, @FirstName!</p>
+                <p class="success-subtitle">Redirecting to login in <span class="countdown">@RedirectCountdown</span> seconds...</p>
+                <div class="success-actions">
+                    <button type="button" class="submit-btn" @onclick="NavigateToLogin">
+                        Sign In Now <i class="pi pi-arrow-right" style="margin-left: 0.5rem;"></i>
+                    </button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card-header">
+                <h1 class="title">Create Account</h1>
+                <p class="subtitle">Join our social network today</p>
+            </div>
 
-        <!-- Stepper indicator -->
-        <div class="stepper">
-            <div class="stepper-step @(CurrentStep >= 1 ? "active" : "") @(CurrentStep > 1 ? "completed" : "")">
-                <div class="step-circle">
-                    @if (CurrentStep > 1)
-                    {
-                        <i class="pi pi-check"></i>
-                    }
-                    else
-                    {
-                        <span>1</span>
-                    }
+            <!-- Stepper indicator -->
+            <div class="stepper">
+                <div class="stepper-step @(CurrentStep >= 1 ? "active" : "") @(CurrentStep > 1 ? "completed" : "")">
+                    <div class="step-circle">
+                        @if (CurrentStep > 1)
+                        {
+                            <i class="pi pi-check"></i>
+                        }
+                        else
+                        {
+                            <span>1</span>
+                        }
+                    </div>
+                    <span class="step-label">Personal</span>
                 </div>
-                <span class="step-label">Personal</span>
-            </div>
-            <div class="stepper-line @(CurrentStep > 1 ? "completed" : "")"></div>
-            <div class="stepper-step @(CurrentStep >= 2 ? "active" : "")">
-                <div class="step-circle">
-                    <span>2</span>
+                <div class="stepper-line @(CurrentStep > 1 ? "completed" : "")"></div>
+                <div class="stepper-step @(CurrentStep >= 2 ? "active" : "")">
+                    <div class="step-circle">
+                        <span>2</span>
+                    </div>
+                    <span class="step-label">Account</span>
                 </div>
-                <span class="step-label">Account</span>
             </div>
-        </div>
 
         <!-- Step 1: Personal Info -->
         @if (CurrentStep == 1)
@@ -199,6 +219,7 @@
                 <a href="/login" class="signup-link">Sign in</a>
             </p>
         </div>
+        }
     </div>
 </div>
 
@@ -328,6 +349,98 @@
         flex: 1;
         margin-top: 0;
     }
+
+    /* Error Alert */
+    .error-alert {
+        padding: 1rem 1.25rem;
+        background: rgba(239, 68, 68, 0.15);
+        border: 1.5px solid rgba(239, 68, 68, 0.5);
+        border-radius: 0.75rem;
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-weight: 500;
+        line-height: 1.5;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @@keyframes slideIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Success Screen */
+    .success-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        animation: successFadeIn 0.5s ease-out;
+        padding: 1rem 0;
+    }
+
+    @@keyframes successFadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+
+    .success-icon {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        background: rgba(52, 211, 153, 0.2);
+        border: 2px solid rgba(52, 211, 153, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: #34d399;
+        animation: successPulse 0.6s ease-out;
+    }
+
+    @@keyframes successPulse {
+        from {
+            box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4);
+        }
+        to {
+            box-shadow: 0 0 0 1rem rgba(52, 211, 153, 0);
+        }
+    }
+
+    .success-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.95);
+        margin: 0;
+        text-align: center;
+    }
+
+    .success-message {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0;
+        text-align: center;
+    }
+
+    .success-subtitle {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+        text-align: center;
+    }
+
+    .countdown {
+        color: #34d399;
+        font-weight: 600;
+    }
+
+    .success-actions {
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    .success-actions .submit-btn {
+        width: 100%;
+    }
 </style>
 
 @code {
@@ -338,15 +451,29 @@
     private string Password = string.Empty;
     private string ConfirmPassword = string.Empty;
     private bool IsLoading = false;
+    private bool IsSuccessful = false;
+    private int RedirectCountdown = 5;
     private string? AuthError = null;
     private Dictionary<string, string> ValidationErrors = new();
     private int CurrentStep = 1;
+
+    protected override void OnInitialized()
+    {
+        // Reset success state on page load
+        IsSuccessful = false;
+        RedirectCountdown = 5;
+    }
 
     private void GoToStep1()
     {
         ValidationErrors.Clear();
         AuthError = null;
         CurrentStep = 1;
+    }
+
+    private void NavigateToLogin()
+    {
+        NavManager.NavigateTo("/login");
     }
 
     private void GoToStep2()
@@ -398,11 +525,14 @@
 
             if (response.IsSuccessStatusCode)
             {
-                NavManager.NavigateTo("/login?signup=success");
+                IsSuccessful = true;
+                await StartCountdownAndRedirect();
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
             {
-                AuthError = "Username or email already taken";
+                var contentString = await response.Content.ReadAsStringAsync();
+                var error = JsonSerializer.Deserialize<ErrorResponse>(contentString);
+                AuthError = error?.Message ?? "Username or email already taken.";
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
@@ -425,6 +555,17 @@
         }
     }
 
+    private async Task StartCountdownAndRedirect()
+    {
+        for (int i = 4; i >= 0; i--)
+        {
+            await Task.Delay(1000);
+            RedirectCountdown = i;
+            StateHasChanged();
+        }
+        NavManager.NavigateTo("/login?signup=success");
+    }
+
     private class SignupRequest
     {
         public string Email { get; set; } = string.Empty;
@@ -436,6 +577,7 @@
 
     private class ErrorResponse
     {
+        [JsonPropertyName("message")]
         public string Message { get; set; } = string.Empty;
     }
 }
