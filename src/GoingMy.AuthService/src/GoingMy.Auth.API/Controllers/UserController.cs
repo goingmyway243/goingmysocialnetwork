@@ -1,4 +1,7 @@
 ﻿using GoingMy.Auth.API.Services;
+using GoingMy.Shared;
+using GoingMy.Shared.Events;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using GoingMy.Auth.API.Dtos;
@@ -12,16 +15,16 @@ namespace GoingMy.Auth.API.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly IUserProfileClient _userProfileClient;
+    private readonly IPublishEndpoint _publishEndpoint;
     private readonly ILogger<UserController> _logger;
 
     public UserController(
         IUserService userService,
-        IUserProfileClient userProfileClient,
+        IPublishEndpoint publishEndpoint,
         ILogger<UserController> logger)
     {
         _userService = userService;
-        _userProfileClient = userProfileClient;
+        _publishEndpoint = publishEndpoint;
         _logger = logger;
     }
 
@@ -45,9 +48,16 @@ public class UserController : ControllerBase
 
             _logger.LogInformation("User created successfully: {Username}", request.Username);
 
-            // Bootstrap a social profile in UserService (best-effort).
-            await _userProfileClient.CreateProfileAsync(
-                user.Id, user.UserName!, user.FirstName, user.LastName);
+            // Publish event to RabbitMQ — UserService will consume and bootstrap the social profile.
+            await _publishEndpoint.Publish(new UserRegisteredEvent
+            {
+                UserId = user.Id,
+                Username = user.UserName!,
+                Email = user.Email!,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                RegisteredAt = user.CreatedAt
+            });
 
             return CreatedAtAction(
                 nameof(GetUserById),

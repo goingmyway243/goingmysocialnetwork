@@ -20,12 +20,11 @@ var mongodb = builder.AddMongoDB(SharedServices.MongoDB)
 var postDb = mongodb.AddDatabase(SharedServices.PostDb);
 var chatDb = mongodb.AddDatabase(SharedServices.ChatDb);
 
-var kafka = builder.AddKafka(SharedServices.Kafka)
-    .WithKafkaUI(containerName: "kafka-ui")
-    .WithDataVolume("goingmysocial-kafka")
+var rabbitmq = builder.AddRabbitMQ(SharedServices.RabbitMQ)
+    .WithManagementPlugin()
     .WithLifetime(ContainerLifetime.Persistent);
 
-var redis = builder.AddRedis("redis")
+var redis = builder.AddRedis(SharedServices.Redis)
     .WithImage("redis", "7-alpine")
     .WithRedisInsight(containerName: "redis-insight")
     .WithDataVolume("goingmysocial-redis")
@@ -34,31 +33,33 @@ var redis = builder.AddRedis("redis")
 var identityService = builder.AddProject<Projects.GoingMy_Auth_API>(SharedServices.IdentityApi)
     .WithReference(identityDb)
     .WithReference(redis)
+    .WithReference(rabbitmq)
     .WaitFor(identityDb)
-    .WaitFor(redis);
+    .WaitFor(redis)
+    .WaitFor(rabbitmq);
 
 var postService = builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.PostApi)
     .WithReference(postDb)
-    .WithReference(kafka)
+    .WithReference(rabbitmq)
     .WaitFor(identityService)
     .WaitFor(postDb)
-    .WaitFor(kafka)
+    .WaitFor(rabbitmq)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 var chatService = builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.ChatApi)
     .WithReference(chatDb)
-    .WithReference(kafka)
+    .WithReference(rabbitmq)
     .WaitFor(identityService)
     .WaitFor(chatDb)
-    .WaitFor(kafka)
+    .WaitFor(rabbitmq)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 var userService = builder.AddProject<Projects.GoingMy_User_API>(SharedServices.UserApi)
     .WithReference(userDb)
-    .WithReference(kafka)
+    .WithReference(rabbitmq)
     .WaitFor(identityService)
     .WaitFor(userDb)
-    .WaitFor(kafka)
+    .WaitFor(rabbitmq)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 builder.AddProject<Projects.GoingMy_ApiGateway>("api-gateway")

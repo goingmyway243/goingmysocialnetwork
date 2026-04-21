@@ -2,7 +2,7 @@ namespace GoingMy.Post.Domain.Entities;
 
 /// <summary>
 /// Represents a denormalized snapshot of a user's profile embedded in a post.
-/// Synced from UserService via Kafka events.
+/// Synced from UserService via RabbitMQ events.
 /// </summary>
 public record User
 {

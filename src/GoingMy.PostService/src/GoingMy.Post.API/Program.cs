@@ -35,39 +35,27 @@ builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<ILikeRepository, LikeRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
-// ── MassTransit + Kafka (event consumers) ────────────────────
-var kafkaBootstrapServers = builder.Configuration.GetConnectionString(SharedServices.Kafka)
-    ?? "localhost:9092";
-
+// ── MassTransit + RabbitMQ (event consumers) ────────────────────
 builder.Services.AddMassTransit(x =>
 {
-    x.UsingInMemory();
+    x.AddConsumer<UserCreatedEventConsumer>();
+    x.AddConsumer<UserUpdatedEventConsumer>();
+    x.AddConsumer<UserDeletedEventConsumer>();
 
-    x.AddRider(rider =>
+    x.UsingRabbitMq((context, cfg) =>
     {
-        rider.AddConsumer<UserCreatedEventConsumer>();
-        rider.AddConsumer<UserUpdatedEventConsumer>();
-        rider.AddConsumer<UserDeletedEventConsumer>();
+        cfg.Host(new Uri(builder.Configuration.GetConnectionString(SharedServices.RabbitMQ)!));
 
-        rider.UsingKafka((context, cfg) =>
-        {
-            cfg.Host(kafkaBootstrapServers);
+        cfg.ReceiveEndpoint($"{nameof(UserCreatedEvent)}_consumer", e =>
+            e.ConfigureConsumer<UserCreatedEventConsumer>(context));
 
-            cfg.TopicEndpoint<UserCreatedEvent>(
-                SharedServices.KafkaTopics.UserCreated,
-                SharedServices.KafkaConsumerGroups.PostService,
-                e => e.ConfigureConsumer<UserCreatedEventConsumer>(context));
+        cfg.ReceiveEndpoint($"{nameof(UserUpdatedEvent)}_consumer", e =>
+            e.ConfigureConsumer<UserUpdatedEventConsumer>(context));
 
-            cfg.TopicEndpoint<UserUpdatedEvent>(
-                SharedServices.KafkaTopics.UserUpdated,
-                SharedServices.KafkaConsumerGroups.PostService,
-                e => e.ConfigureConsumer<UserUpdatedEventConsumer>(context));
+        cfg.ReceiveEndpoint($"{nameof(UserDeletedEvent)}_consumer", e =>
+            e.ConfigureConsumer<UserDeletedEventConsumer>(context));
 
-            cfg.TopicEndpoint<UserDeletedEvent>(
-                SharedServices.KafkaTopics.UserDeleted,
-                SharedServices.KafkaConsumerGroups.PostService,
-                e => e.ConfigureConsumer<UserDeletedEventConsumer>(context));
-        });
+        cfg.ConfigureEndpoints(context);
     });
 });
 

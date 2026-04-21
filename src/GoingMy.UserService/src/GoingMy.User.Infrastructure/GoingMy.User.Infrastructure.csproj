@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="MassTransit.EntityFrameworkCore" />
-    <PackageReference Include="MassTransit.Kafka" />
+    <PackageReference Include="MassTransit.RabbitMQ" />
   </ItemGroup>
 
   <ItemGroup>

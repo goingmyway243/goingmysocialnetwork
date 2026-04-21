@@ -1,6 +1,7 @@
 using GoingMy.ServiceDefaults;
 using GoingMy.Shared;
 using GoingMy.Shared.Events;
+using GoingMy.User.Application.Consumers;
 using GoingMy.User.Application.Extensions;
 using GoingMy.User.Domain.Repositories;
 using GoingMy.User.Infrastructure.Data;
@@ -35,24 +36,22 @@ builder.Services.AddUserApplicationServices();
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddScoped<IUserFollowRepository, UserFollowRepository>();
 
-// ── MassTransit + Kafka (Outbox publisher) ───────────────────
-var kafkaBootstrapServers = builder.Configuration.GetConnectionString(SharedServices.Kafka)
-    ?? "localhost:9092";
-
+// ── MassTransit + RabbitMQ (Event consumer & outbox publisher) ─
+// ── MassTransit + RabbitMQ (Event consumer & outbox publisher) ─
 builder.Services.AddMassTransit(x =>
 {
-    x.UsingInMemory();
+    x.AddConsumer<UserRegisteredEventConsumer>();
 
-    x.AddRider(rider =>
+    x.UsingRabbitMq((context, cfg) =>
     {
-        rider.AddProducer<UserCreatedEvent>(SharedServices.KafkaTopics.UserCreated);
-        rider.AddProducer<UserUpdatedEvent>(SharedServices.KafkaTopics.UserUpdated);
-        rider.AddProducer<UserDeletedEvent>(SharedServices.KafkaTopics.UserDeleted);
+        cfg.Host(new Uri(builder.Configuration.GetConnectionString(SharedServices.RabbitMQ)!));
 
-        rider.UsingKafka((_, cfg) =>
+        cfg.ReceiveEndpoint($"{nameof(UserRegisteredEvent)}_consumer", e =>
         {
-            cfg.Host(kafkaBootstrapServers);
+            e.ConfigureConsumer<UserRegisteredEventConsumer>(context);
         });
+
+        cfg.ConfigureEndpoints(context);
     });
 });
 

@@ -259,8 +259,7 @@ dotnet add package Moq
 - Real-time messaging via SignalR hub (`/hubs/chat`)
 - Message history retrieval
 - Idempotent conversation creation (reuses existing conversations)
-- MongoDB-backed message and conversation storage
-
+- MongoDB-backed message and conversation storage  - Consumes `UserUpdatedEvent` (sync username changes), `UserDeletedEvent` (remove from conversations)
 **Default API Port**: 5004
 
 ### API Gateway (`GoingMy.ApiGateway`)
@@ -462,7 +461,7 @@ For questions or issues:
 ---
 
 **Created**: March 19, 2026  
-**Last Updated**: April 16, 2026  
-**Backend Technology**: .NET 10.0, PostgreSQL, MongoDB, Redis, xUnit, MediatR, OpenIddict, Scalar.AspNetCore
+**Last Updated**: April 21, 2026  
+**Backend Technology**: .NET 10.0, PostgreSQL, MongoDB, Redis, RabbitMQ, xUnit, MediatR, OpenIddict, Scalar.AspNetCore, MassTransit, Aspire
 **Frontend Technology**: Angular 20, PrimeNG, TypeScript, CSS  
-**Architecture Pattern**: Clean Architecture with Microservices (Backend) + Signals & Code Flow Blocks (Frontend)
+**Architecture Pattern**: Clean Architecture with Microservices (Backend) + Signals & Code Flow Blocks (Frontend) + Event-Driven (RabbitMQ/MassTransit)

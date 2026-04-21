@@ -2,7 +2,7 @@ namespace GoingMy.User.Domain.Outbox;
 
 /// <summary>
 /// Represents an outbox message stored atomically with business data.
-/// A background worker reads pending entries and publishes them to Kafka,
+/// A background worker reads pending entries and publishes them to RabbitMQ,
 /// ensuring exactly-once delivery even in the face of transient failures.
 /// </summary>
 public class OutboxMessage
@@ -18,7 +18,7 @@ public class OutboxMessage
     /// <summary>When the outbox entry was created (same transaction as the domain change).</summary>
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    /// <summary>Set when the message was successfully published to Kafka.</summary>
+    /// <summary>Set when the message was successfully published to RabbitMQ.</summary>
     public DateTime? PublishedAt { get; set; }
 
     /// <summary>Last error message if publishing failed.</summary>

@@ -1,7 +1,10 @@
 using GoingMy.Auth.API.Data;
 using GoingMy.Auth.API.Models;
 using GoingMy.Auth.API.Services;
+using GoingMy.ServiceDefaults;
 using GoingMy.Shared;
+using GoingMy.Shared.Events;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -9,6 +12,8 @@ using GoingMy.Auth.API.Components;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
@@ -125,13 +130,19 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRefreshTokenBlacklistService, RefreshTokenBlacklistService>();
 
 // Register Redis connection (Aspire provides connection string via configuration)
-var redisConnectionString = builder.Configuration.GetConnectionString("redis") ?? "localhost:6379";
+var redisConnectionString = builder.Configuration.GetConnectionString(SharedServices.Redis) ?? "localhost:6379";
 var redis = ConnectionMultiplexer.Connect(redisConnectionString);
 builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 
-// Register typed HTTP client to UserService (Aspire service discovery)
-builder.Services.AddHttpClient<IUserProfileClient, UserProfileClient>(
-    client => client.BaseAddress = new Uri("https+http://user-api"));
+// ── MassTransit + RabbitMQ (event publisher) ─────────────────────
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(new Uri(builder.Configuration.GetConnectionString(SharedServices.RabbitMQ)!));
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 // Build the app
 var app = builder.Build();
@@ -166,5 +177,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
+app.MapServiceDefaults();
 
 app.Run();

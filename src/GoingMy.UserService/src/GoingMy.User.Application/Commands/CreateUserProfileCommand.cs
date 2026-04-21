@@ -20,6 +20,11 @@ public class CreateUserProfileCommandHandler(IUserProfileRepository userProfileR
 {
     public async Task<UserProfileDto> Handle(CreateUserProfileCommand request, CancellationToken cancellationToken)
     {
+        // Idempotent: if the profile already exists, return it as-is (handles duplicate RabbitMQ delivery).
+        var existing = await userProfileRepository.GetByIdAsync(request.Id, cancellationToken);
+        if (existing != null)
+            return MapToDto(existing);
+
         var profile = new UserProfile(
             id: request.Id,
             username: request.Username,

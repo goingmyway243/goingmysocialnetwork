@@ -18,7 +18,7 @@ public class UserDbContextDesignTimeFactory : IDesignTimeDbContextFactory<UserDb
         optionsBuilder.UseNpgsql(
             "Host=localhost;Port=5432;Database=userdb;Username=postgres;Password=postgres");
 
-        // Register the interceptor so the context is valid (no actual Kafka calls at design time)
+        // Register the interceptor so the context is valid (no actual RabbitMQ calls at design time)
         var interceptor = new UserProfileOutboxInterceptor();
         optionsBuilder.AddInterceptors(interceptor);
 

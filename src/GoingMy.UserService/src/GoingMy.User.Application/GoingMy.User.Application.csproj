@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit" />
     <PackageReference Include="MediatR" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GoingMy.User.Domain\GoingMy.User.Domain.csproj" />
+    <ProjectReference Include="..\..\..\GoingMy.Shared\GoingMy.Shared.csproj" />
   </ItemGroup>
 
 </Project>

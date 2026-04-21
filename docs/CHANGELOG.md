@@ -2,6 +2,40 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.10.0] - 2026-04-21
+
+### Added
+- **RabbitMQ event bus** replacing Apache Kafka for simplified event-driven architecture:
+  - New `Aspire.Hosting.RabbitMQ` integration in `GoingMy.AppHost` for automatic container orchestration
+  - `MassTransit.RabbitMQ` transport across all services (AuthService, UserService, PostService, ChatService)
+  - Automatic queue creation by RabbitMQ broker (no pre-creation AdminClient code needed)
+
+### Changed
+- **Event bus migration from Kafka → RabbitMQ**:
+  - All `MassTransit.Kafka` package references replaced with `MassTransit.RabbitMQ 8.4.1`
+  - `Aspire.Hosting.Kafka` replaced with `Aspire.Hosting.RabbitMQ 13.1.1` in Directory.Packages.props
+  - **AppHost.cs**: `builder.AddKafka()` → `builder.AddRabbitMQ("rabbitmq")` with automatic Aspire service discovery
+  - **MassTransit configuration pattern**:
+    - Removed Kafka rider pattern (AddRider, UsingKafka)
+    - Simplified to direct `UsingRabbitMq()` with standard receive/publish endpoints
+    - Connection string now sourced directly from Aspire: `cfg.Host(new Uri(builder.Configuration.GetConnectionString("rabbitmq")!))`
+    - No manual host/username/password configuration needed
+  - **Publisher API change**: `ITopicProducer<T>` → `IPublishEndpoint` with `.Publish()` instead of `.Produce()`
+    - Updated `AuthService/UserController.cs` (signup event publisher)
+    - Updated `AuthService/UserSeeder.cs` (bootstrap admin with event)
+    - Updated `UserService/OutboxPublisherWorker.cs` (outbox event dispatcher)
+  - **Consumer endpoints**: All services now use `cfg.ReceiveEndpoint(queue_name, handler)` pattern instead of TopicEndpoint
+    - UserService: `UserRegisteredEvent_consumer` queue
+    - PostService: `UserCreatedEvent_consumer`, `UserUpdatedEvent_consumer`, `UserDeletedEvent_consumer` queues  
+    - ChatService: `UserUpdatedEvent_consumer`, `UserDeletedEvent_consumer` queues
+  - **Connection resolution**: Services now properly resolve RabbitMQ AMQP URI from Aspire's injected `ConnectionStrings__rabbitmq` configuration
+
+### Architecture Notes
+- **Simplified message broker**: RabbitMQ eliminates Kafka AdminClient topic pre-creation complexity; queues created on-demand
+- **Aspire integration**: Automatic connection string injection with username/password handled by Aspire orchestration
+- **No loss of semantics**: Event flow remains identical — signup → UserRegisteredEvent → UserService profile creation → UserCreatedEvent → Post/Chat sync
+- **Production-ready**: Outbox pattern (UserService) ensures exactly-once event delivery; consumer idempotency unchanged
+
 ## [0.9.0] - 2026-04-16
 
 ### Added

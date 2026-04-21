@@ -12,7 +12,7 @@ namespace GoingMy.User.Infrastructure.Workers;
 
 /// <summary>
 /// Background worker that polls the <see cref="OutboxMessage"/> table and
-/// publishes pending messages to Kafka via MassTransit topic producers.
+/// publishes pending messages to RabbitMQ via MassTransit topic producers.
 /// Implements the Outbox pattern: messages are written atomically with domain
 /// data and delivered asynchronously, guaranteeing no message loss on crashes.
 /// </summary>
@@ -97,10 +97,10 @@ public class OutboxPublisherWorker(
     private static async Task ProduceAsync<T>(IServiceProvider sp, OutboxMessage message, CancellationToken ct)
         where T : class
     {
-        var producer = sp.GetRequiredService<ITopicProducer<T>>();
+        var publishEndpoint = sp.GetRequiredService<IPublishEndpoint>();
         var payload = JsonSerializer.Deserialize<T>(message.Payload)
             ?? throw new InvalidOperationException($"Failed to deserialize {typeof(T).Name} from outbox message {message.Id}.");
 
-        await producer.Produce(payload, ct);
+        await publishEndpoint.Publish(payload, ct);
     }
 }

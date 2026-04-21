@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using GoingMy.Auth.API.Enums;
 using GoingMy.Auth.API.Models;
+using GoingMy.Shared.Events;
+using MassTransit;
 
 namespace GoingMy.Auth.API.Data;
 
@@ -37,5 +39,25 @@ public static class UserSeeder
 
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
+
+        // Publish event so UserService bootstraps the social profile for the seeded admin.
+        try
+        {
+            var publishEndpoint = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
+            await publishEndpoint.Publish(new UserRegisteredEvent
+            {
+                UserId = user.Id,
+                Username = user.UserName!,
+                Email = user.Email!,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                RegisteredAt = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            var logger = scope.ServiceProvider.GetService<ILogger<ApplicationDbContext>>();
+            logger?.LogError(ex, "Failed to publish UserRegisteredEvent for seeded admin user. Profile bootstrapping will be delayed.");
+        }
     }
 }

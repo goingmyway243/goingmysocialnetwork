@@ -13,10 +13,13 @@ public static class SharedServices
     public const string UserDb = "user-db";
     public const string UserApi = "user-api";
     public const string WebApp = "web-app";
+    public const string Redis = "redis";
     public const string Kafka = "kafka";
+    public const string RabbitMQ = "rabbitmq";
 
     public static class KafkaTopics
     {
+        public const string UserRegistered = "goingmy.user.registered";
         public const string UserCreated = "goingmy.user.created";
         public const string UserUpdated = "goingmy.user.updated";
         public const string UserDeleted = "goingmy.user.deleted";
@@ -24,6 +27,7 @@ public static class SharedServices
 
     public static class KafkaConsumerGroups
     {
+        public const string UserService = "user-service";
         public const string PostService = "post-service";
         public const string ChatService = "chat-service";
     }

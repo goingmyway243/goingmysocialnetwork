@@ -39,33 +39,23 @@ builder.Services.AddMediatR(config =>
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
-// ── MassTransit + Kafka (event consumers) ────────────────────
-var kafkaBootstrapServers = builder.Configuration.GetConnectionString(SharedServices.Kafka)
-    ?? "localhost:9092";
-
+// ── MassTransit + RabbitMQ (event consumers) ────────────────────
 builder.Services.AddMassTransit(x =>
 {
-    x.UsingInMemory();
+    x.AddConsumer<UserUpdatedEventConsumer>();
+    x.AddConsumer<UserDeletedEventConsumer>();
 
-    x.AddRider(rider =>
+    x.UsingRabbitMq((context, cfg) =>
     {
-        rider.AddConsumer<UserUpdatedEventConsumer>();
-        rider.AddConsumer<UserDeletedEventConsumer>();
+        cfg.Host(new Uri(builder.Configuration.GetConnectionString(SharedServices.RabbitMQ)!));
 
-        rider.UsingKafka((context, cfg) =>
-        {
-            cfg.Host(kafkaBootstrapServers);
+        cfg.ReceiveEndpoint($"{nameof(UserUpdatedEvent)}_consumer", e =>
+            e.ConfigureConsumer<UserUpdatedEventConsumer>(context));
 
-            cfg.TopicEndpoint<UserUpdatedEvent>(
-                SharedServices.KafkaTopics.UserUpdated,
-                SharedServices.KafkaConsumerGroups.ChatService,
-                e => e.ConfigureConsumer<UserUpdatedEventConsumer>(context));
+        cfg.ReceiveEndpoint($"{nameof(UserDeletedEvent)}_consumer", e =>
+            e.ConfigureConsumer<UserDeletedEventConsumer>(context));
 
-            cfg.TopicEndpoint<UserDeletedEvent>(
-                SharedServices.KafkaTopics.UserDeleted,
-                SharedServices.KafkaConsumerGroups.ChatService,
-                e => e.ConfigureConsumer<UserDeletedEventConsumer>(context));
-        });
+        cfg.ConfigureEndpoints(context);
     });
 });
 
