@@ -49,7 +49,8 @@
             (commentsToggle)="toggleComments($event)"
             (newCommentInput)="onNewCommentChange($event.postId, $event.value)"
             (commentSubmit)="submitComment($event)"
-            (detailView)="viewPostDetail($event)">
+            (detailView)="viewPostDetail($event)"
+            (authorClick)="navigateToProfile($event)">
           </app-post-card>
         }
       }

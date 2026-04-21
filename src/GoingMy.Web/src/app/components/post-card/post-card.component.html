@@ -2,11 +2,11 @@
 
   <!-- Post Header -->
   <div class="post-header">
-    <div class="author-avatar">
+    <div class="author-avatar" (click)="onAuthorClick()" style="cursor:pointer">
       <i class="pi pi-user"></i>
     </div>
     <div class="post-meta">
-      <h3 class="author-name">{{ post().author?.firstName }} {{ post().author?.lastName }}</h3>
+      <h3 class="author-name" (click)="onAuthorClick()" style="cursor:pointer">{{ post().author?.firstName }} {{ post().author?.lastName }}</h3>
       <span class="post-time">{{ formatDate(post().createdAt) }}</span>
     </div>
   </div>

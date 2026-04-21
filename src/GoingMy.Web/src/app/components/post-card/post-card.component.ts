@@ -1,6 +1,7 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -10,7 +11,7 @@ import { Post, PostCommentsState } from '../../models/post.model';
 @Component({
   selector: 'app-post-card',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardModule, ButtonModule, SkeletonModule, TextareaModule],
+  imports: [CommonModule, FormsModule, RouterModule, CardModule, ButtonModule, SkeletonModule, TextareaModule],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css'
 })
@@ -27,6 +28,7 @@ export class PostCardComponent {
   readonly newCommentInput = output<{ postId: string; value: string }>();
   readonly commentSubmit = output<Post>();
   readonly detailView = output<string>();
+  readonly authorClick = output<string>();
 
   // ── 3. Actions ───────────────────────────────────────────────
   onLikeClick(): void {
@@ -47,6 +49,11 @@ export class PostCardComponent {
 
   onViewDetail(): void {
     this.detailView.emit(this.post().id);
+  }
+
+  onAuthorClick(): void {
+    const userId = this.post().author?.id ?? this.post().userId;
+    if (userId) this.authorClick.emit(userId);
   }
 
   // ── 4. Utilities ─────────────────────────────────────────────

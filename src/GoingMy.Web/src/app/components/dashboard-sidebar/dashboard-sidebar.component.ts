@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './dashboard-sidebar.component.css'
 })
 export class DashboardSidebarComponent {
-  activeMenu = signal('home');
+  readonly activeMenu = signal('home');
 
   menuItems: MenuItem[] = [
     {

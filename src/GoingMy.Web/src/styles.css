@@ -969,3 +969,99 @@ button.p-button:active:not(:disabled) {
   color: var(--color-accent-blue);
   margin-right: 0.75rem;
 }
+
+/* ===== PRIMENG GLASS DIALOG ===== */
+/* p-dialog portals outside the Angular component tree into <body>.
+   Global selectors scoped by the styleClass="glass-dialog" token
+   are the PrimeNG v20 recommended here. */
+
+.glass-dialog {
+  background: rgba(15, 23, 42, 0.85) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid var(--glass-border-strong) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--glass-shadow-xl) !important;
+  color: #ffffff !important;
+}
+
+.glass-dialog .p-dialog-header {
+  background: transparent;
+  border-bottom: 1px solid var(--glass-border-base);
+  color: #ffffff;
+  padding: 1.25rem 1.5rem;
+  font-weight: 700;
+}
+
+.glass-dialog .p-dialog-content {
+  background: transparent;
+  padding: 0.75rem 0;
+  overflow-y: auto;
+}
+
+/* Edit profile dialog — has form padding inside content */
+.glass-dialog.edit-dialog .p-dialog-content {
+  padding: 1.25rem 1.5rem;
+}
+
+.glass-dialog .p-dialog-footer {
+  background: transparent;
+  border-top: 1px solid var(--glass-border-base);
+  padding: 1rem 1.5rem;
+}
+
+/* Close button — targets the button rendered by PrimeNG inside dialog header */
+.glass-dialog .p-dialog-header-icon,
+.glass-dialog .p-dialog-header button {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.glass-dialog .p-dialog-header-icon:hover,
+.glass-dialog .p-dialog-header button:hover {
+  color: #ffffff;
+  background: var(--glass-surface-hover);
+}
+
+/* ===== PRIMENG GLASS TABS ===== */
+/* Uses styleClass="glass-tabs" on <p-tabs>.
+   Global scope needed because PrimeNG tab internals have their own
+   Angular view encapsulation boundary. */
+
+.glass-tabs .p-tablist {
+  background: transparent;
+  border-bottom: 1px solid var(--glass-border-base);
+  padding: 0 1rem;
+}
+
+.glass-tabs .p-tab {
+  color: var(--text-color-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.glass-tabs .p-tab:hover {
+  color: rgba(255, 255, 255, 0.85);
+  background: var(--glass-surface-hover);
+}
+
+.glass-tabs .p-tab[data-p-active="true"] {
+  color: #ffffff;
+  border-bottom-color: var(--color-accent-blue);
+}
+
+.glass-tabs .p-tabpanels {
+  background: transparent;
+  padding: 0;
+}
+
+.glass-tabs .p-tabpanel {
+  padding: 0;
+}

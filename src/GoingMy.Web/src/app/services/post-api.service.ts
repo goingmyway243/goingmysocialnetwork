@@ -109,5 +109,17 @@ export class PostApiService {
   deleteComment(postId: string, commentId: string): Observable<void> {
     return this._http.delete<void>(`${this._baseUrl}/${postId}/comments/${commentId}`);
   }
+
+  // ── 8. User Profile Posts ────────────────────────────────────
+
+  /** GET /api/posts/user/{userId} — Retrieves paginated posts by a specific user. */
+  getUserPosts(userId: string, page = 1, pageSize = 20): Observable<Post[]> {
+    return this._http.get<Post[]>(`${this._baseUrl}/user/${userId}?page=${page}&pageSize=${pageSize}`);
+  }
+
+  /** GET /api/posts/user/{userId}/likes — Retrieves posts liked by a specific user. */
+  getUserLikedPosts(userId: string, page = 1, pageSize = 20): Observable<Post[]> {
+    return this._http.get<Post[]>(`${this._baseUrl}/user/${userId}/likes?page=${page}&pageSize=${pageSize}`);
+  }
 }
 

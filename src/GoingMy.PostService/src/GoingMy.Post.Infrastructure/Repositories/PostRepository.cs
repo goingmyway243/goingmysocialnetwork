@@ -128,4 +128,29 @@ public class PostRepository : IPostRepository
         var result = await _context.Posts.UpdateManyAsync(filter, update, cancellationToken: cancellationToken);
         return result.ModifiedCount;
     }
+
+    public async Task<IEnumerable<Domain.Entities.Post>> GetByUserIdAsync(
+        string userId, int page, int pageSize, CancellationToken cancellationToken = default)
+    {
+        return await _context.Posts
+            .Find(p => p.UserId == userId)
+            .SortByDescending(p => p.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<Domain.Entities.Post>> GetByIdsAsync(
+        IEnumerable<string> ids, CancellationToken cancellationToken = default)
+    {
+        var idList = ids.ToList();
+        if (idList.Count == 0)
+            return [];
+
+        var filter = Builders<Domain.Entities.Post>.Filter.In(p => p.Id, idList);
+        return await _context.Posts
+            .Find(filter)
+            .SortByDescending(p => p.CreatedAt)
+            .ToListAsync(cancellationToken);
+    }
 }

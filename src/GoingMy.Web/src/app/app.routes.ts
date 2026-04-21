@@ -53,6 +53,11 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'profile/:userId',
+    loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent),
+    canActivate: [authGuard]
+  },
+  {
     // Default: go to dashboard (authGuard will redirect to Blazor login if not authenticated)
     path: '',
     redirectTo: '/dashboard',

@@ -1,0 +1,137 @@
+<p-toast position="top-right"></p-toast>
+
+<div class="profile-page">
+
+  @if (error()) {
+    <div class="error-banner glass-elevated">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <!-- Profile Header -->
+  <app-profile-header
+    [profile]="profile()"
+    [isOwnProfile]="isOwnProfile()"
+    [isFollowing]="isFollowing()"
+    [loading]="loading()"
+    (followToggle)="onFollowToggle()"
+    (editClick)="onEditClick()"
+    (followersClick)="onFollowersClick()"
+    (followingClick)="onFollowingClick()">
+  </app-profile-header>
+
+  <!-- About Section -->
+  <app-profile-about [profile]="profile()"></app-profile-about>
+
+  <!-- Content Tabs -->
+  <div class="profile-tabs glass-elevated">
+    <p-tabs [value]="activeTab()" styleClass="glass-tabs" (onChange)="onTabChange($any($event).index ?? 0)">
+
+      <p-tablist>
+        <p-tab [value]="0">
+          <i class="pi pi-th-large tab-icon"></i>
+          <span>Posts</span>
+        </p-tab>
+        <p-tab [value]="1">
+          <i class="pi pi-heart tab-icon"></i>
+          <span>Likes</span>
+        </p-tab>
+      </p-tablist>
+
+      <!-- Posts Tab -->
+      <p-tabpanel [value]="0">
+        <div class="tab-content">
+          @if (postsLoading()) {
+            <div class="skeleton-list">
+              @for (i of [1,2,3]; track i) {
+                <div class="post-skeleton glass-surface">
+                  <p-skeleton height="120px"></p-skeleton>
+                </div>
+              }
+            </div>
+          } @else if (profilePosts().length === 0) {
+            <div class="empty-tab">
+              <i class="pi pi-file-edit empty-icon"></i>
+              <p>No posts yet</p>
+            </div>
+          } @else {
+            @for (post of profilePosts(); track post.id) {
+              <app-post-card
+                [post]="post"
+                [commentState]="getCommentState(post.id)"
+                [liked]="isLiked(post.id)"
+                (likeToggle)="onLikeToggle($event)"
+                (commentsToggle)="onCommentsToggle($event)"
+                (newCommentInput)="onCommentInput($event)"
+                (commentSubmit)="onCommentSubmit($event)"
+                (detailView)="onDetailView($event)"
+                (authorClick)="onUserSelected($event)">
+              </app-post-card>
+            }
+          }
+        </div>
+      </p-tabpanel>
+
+      <!-- Likes Tab -->
+      <p-tabpanel [value]="1">
+        <div class="tab-content">
+          @if (likesLoading()) {
+            <div class="skeleton-list">
+              @for (i of [1,2,3]; track i) {
+                <div class="post-skeleton glass-surface">
+                  <p-skeleton height="120px"></p-skeleton>
+                </div>
+              }
+            </div>
+          } @else if (profileLikes().length === 0) {
+            <div class="empty-tab">
+              <i class="pi pi-heart empty-icon"></i>
+              <p>No liked posts yet</p>
+            </div>
+          } @else {
+            @for (post of profileLikes(); track post.id) {
+              <app-post-card
+                [post]="post"
+                [commentState]="getCommentState(post.id)"
+                [liked]="true"
+                (likeToggle)="onLikeToggle($event)"
+                (commentsToggle)="onCommentsToggle($event)"
+                (newCommentInput)="onCommentInput($event)"
+                (commentSubmit)="onCommentSubmit($event)"
+                (detailView)="onDetailView($event)"
+                (authorClick)="onUserSelected($event)">
+              </app-post-card>
+            }
+          }
+        </div>
+      </p-tabpanel>
+
+    </p-tabs>
+  </div>
+
+</div>
+
+<!-- Modals -->
+<app-followers-modal
+  [followers]="followers()"
+  [isVisible]="showFollowersModal()"
+  [loading]="followersLoading()"
+  (close)="showFollowersModal.set(false)"
+  (userSelected)="onUserSelected($event)">
+</app-followers-modal>
+
+<app-following-modal
+  [following]="following()"
+  [isVisible]="showFollowingModal()"
+  [loading]="followingLoading()"
+  (close)="showFollowingModal.set(false)"
+  (userSelected)="onUserSelected($event)">
+</app-following-modal>
+
+<app-edit-profile-modal
+  [profile]="profile()"
+  [isVisible]="showEditModal()"
+  (close)="showEditModal.set(false)"
+  (profileUpdated)="onProfileUpdated()">
+</app-edit-profile-modal>

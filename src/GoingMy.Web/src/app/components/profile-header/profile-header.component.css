@@ -1,0 +1,163 @@
+.profile-header {
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+/* ===== COVER PHOTO ===== */
+.cover-photo {
+  height: 200px;
+  background: var(--gradient-primary);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(15, 23, 42, 0.6) 100%);
+}
+
+/* ===== HEADER BODY ===== */
+.header-body {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  margin-top: -48px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== AVATAR ===== */
+.avatar-wrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+}
+
+.avatar-img,
+.avatar-initials {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--glass-shadow-lg);
+  object-fit: cover;
+}
+
+.avatar-initials {
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.verified-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 24px;
+  height: 24px;
+  background: var(--color-accent-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #ffffff;
+  border: 2px solid rgba(15, 23, 42, 1);
+}
+
+/* ===== ACTION BUTTONS ===== */
+.header-actions {
+  padding-bottom: 0.5rem;
+}
+
+/* ===== PROFILE INFO ===== */
+.profile-info {
+  padding: 0.75rem 1.5rem 0;
+}
+
+.display-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0.25rem 0;
+}
+
+.username {
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.bio {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0.5rem 0 0;
+}
+
+/* ===== STATS ROW ===== */
+.stats-row {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 1.5rem 1.25rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.stat-clickable {
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 0.25rem 0.5rem;
+  transition: var(--transition-fast);
+}
+
+.stat-clickable:hover {
+  background: var(--glass-surface-hover);
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+/* ===== SKELETON ===== */
+.profile-header-skeleton {
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--glass-elevated-bg);
+  margin-bottom: 1rem;
+}
+
+.cover-skeleton {
+  height: 200px;
+}
+
+.avatar-skeleton-wrap {
+  padding: 0 1.5rem;
+  margin-top: -48px;
+}
+
+.info-skeleton {
+  padding: 1rem 1.5rem;
+}

@@ -1,0 +1,110 @@
+<p-dialog
+  header="Edit Profile"
+  [visible]="isVisible()"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="glass-dialog edit-dialog"
+  [style]="{ width: '480px' }"
+  (onHide)="onClose()">
+
+  <form class="edit-form" (ngSubmit)="onSave()">
+
+    <div class="form-row">
+      <div class="form-field">
+        <label class="field-label" for="firstName">First Name</label>
+        <input
+          id="firstName"
+          pInputText
+          [(ngModel)]="firstName"
+          name="firstName"
+          placeholder="First name"
+          class="glass-input"
+          autocomplete="off" />
+      </div>
+      <div class="form-field">
+        <label class="field-label" for="lastName">Last Name</label>
+        <input
+          id="lastName"
+          pInputText
+          [(ngModel)]="lastName"
+          name="lastName"
+          placeholder="Last name"
+          class="glass-input"
+          autocomplete="off" />
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label class="field-label" for="bio">Bio</label>
+      <textarea
+        id="bio"
+        pTextarea
+        [(ngModel)]="bio"
+        name="bio"
+        placeholder="Tell people about yourself..."
+        rows="3"
+        class="glass-input"
+        [autoResize]="true">
+      </textarea>
+    </div>
+
+    <div class="form-field">
+      <label class="field-label" for="location">Location</label>
+      <input
+        id="location"
+        pInputText
+        [(ngModel)]="location"
+        name="location"
+        placeholder="City, Country"
+        class="glass-input"
+        autocomplete="off" />
+    </div>
+
+    <div class="form-field">
+      <label class="field-label" for="website">Website</label>
+      <input
+        id="website"
+        pInputText
+        [(ngModel)]="websiteUrl"
+        name="websiteUrl"
+        placeholder="https://yoursite.com"
+        class="glass-input"
+        autocomplete="off" />
+    </div>
+
+    <div class="form-field">
+      <label class="field-label">Gender</label>
+      <p-select
+        [(ngModel)]="selectedGender"
+        name="gender"
+        [options]="genderOptions"
+        optionLabel="label"
+        placeholder="Select gender"
+        [pt]="selectPt">
+      </p-select>
+    </div>
+
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <p-button
+        label="Cancel"
+        [text]="true"
+        [pt]="cancelBtnPt"
+        (onClick)="onClose()"
+        [disabled]="saving">
+      </p-button>
+      <p-button
+        label="Save Changes"
+        icon="pi pi-check"
+        [pt]="saveBtnPt"
+        [loading]="saving"
+        (onClick)="onSave()">
+      </p-button>
+    </div>
+  </ng-template>
+
+</p-dialog>

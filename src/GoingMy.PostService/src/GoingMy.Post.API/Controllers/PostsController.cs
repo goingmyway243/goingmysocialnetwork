@@ -205,4 +205,30 @@ public class PostsController : ControllerBase
         var likes = await _mediator.Send(new GetPostLikesQuery(id));
         return Ok(likes);
     }
+
+    // ── User Profile Content ──────────────────────────────────
+
+    /// <summary>
+    /// Retrieves a paginated list of posts authored by a specific user.
+    /// </summary>
+    [HttpGet("user/{userId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> GetUserPosts(string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    {
+        var posts = await _mediator.Send(new GetUserPostsQuery(userId, page, pageSize));
+        return Ok(posts);
+    }
+
+    /// <summary>
+    /// Retrieves a paginated list of posts liked by a specific user.
+    /// </summary>
+    [HttpGet("user/{userId}/likes")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> GetUserLikedPosts(string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    {
+        var posts = await _mediator.Send(new GetUserLikedPostsQuery(userId, page, pageSize));
+        return Ok(posts);
+    }
 }

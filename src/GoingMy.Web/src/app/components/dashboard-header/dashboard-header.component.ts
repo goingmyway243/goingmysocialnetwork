@@ -1,4 +1,4 @@
-import { Component, ViewChild, signal } from '@angular/core';
+import { Component, ViewChild, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MenubarModule } from 'primeng/menubar';
@@ -17,6 +17,8 @@ import { AuthService } from '../../services/auth.service';
 })
 export class DashboardHeaderComponent {
   @ViewChild('userMenu') userMenu!: Menu;
+  
+  private readonly _authService = inject(AuthService);
   
   searchValue = signal('');
   userMenuItems: MenuItem[] = [];
@@ -57,7 +59,10 @@ export class DashboardHeaderComponent {
   }
 
   navigateToProfile(): void {
-    this.router.navigate(['/dashboard/profile']);
+    const userId = this._authService.getCurrentUserId();
+    if (userId) {
+      this.router.navigate(['/profile', userId]);
+    }
   }
 
   logout(): void {

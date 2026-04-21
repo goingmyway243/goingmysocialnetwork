@@ -67,5 +67,15 @@ public interface IPostRepository
     /// Marks all posts belonging to <paramref name="userId"/> as authored by a deleted user.
     /// </summary>
     Task<long> MarkPostsAsDeletedUserAsync(string userId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves a paginated list of posts authored by the specified user.
+    /// </summary>
+    Task<IEnumerable<Entities.Post>> GetByUserIdAsync(string userId, int page, int pageSize, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves posts whose IDs are in the provided collection. Used for liked-posts lookups.
+    /// </summary>
+    Task<IEnumerable<Entities.Post>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken = default);
 }
 

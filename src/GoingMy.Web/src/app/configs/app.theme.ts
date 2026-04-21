@@ -70,4 +70,82 @@ const MyPreset = definePreset(Lara, {
   }
 });
 
+// ── PrimeNG v20 Pass Through (pt) Configurations ──────────────────
+// Replaces deprecated ::ng-deep styling for PrimeNG components.
+// These objects define inline styles for component internals
+// without breaking Angular's view encapsulation.
+
+// Button Styles
+export const GLASS_BTN_PT = {
+  root: {
+    style: {
+      background: 'var(--glass-elevated-bg)',
+      backdropFilter: 'blur(16px)',
+      WebkitBackdropFilter: 'blur(16px)',
+      border: '1px solid var(--glass-border-strong)',
+      color: '#ffffff',
+      borderRadius: '20px',
+      padding: '0.5rem 1.25rem',
+      fontWeight: '600',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      cursor: 'pointer'
+    }
+  }
+};
+
+export const FOLLOW_BTN_PT = {
+  root: {
+    style: {
+      background: 'linear-gradient(135deg, #60a5fa, #a78bfa)',
+      border: 'none',
+      color: '#ffffff',
+      borderRadius: '20px',
+      padding: '0.5rem 1.25rem',
+      fontWeight: '600',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      cursor: 'pointer'
+    }
+  }
+};
+
+export const CANCEL_BTN_PT = {
+  root: {
+    style: {
+      color: 'rgba(255, 255, 255, 0.6)',
+      background: 'transparent',
+      border: 'none',
+      cursor: 'pointer'
+    }
+  }
+};
+
+export const SAVE_BTN_PT = {
+  root: {
+    style: {
+      background: 'linear-gradient(135deg, #60a5fa, #a78bfa)',
+      border: 'none',
+      color: '#ffffff',
+      borderRadius: '10px',
+      padding: '0.5rem 1.25rem',
+      fontWeight: '600',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      cursor: 'pointer'
+    }
+  }
+};
+
+// Form Controls
+export const SELECT_PT = {
+  root: {
+    style: {
+      background: 'var(--glass-surface-bg)',
+      border: '1px solid var(--glass-border-base)',
+      borderRadius: '10px',
+      width: '100%',
+      color: '#ffffff'
+    }
+  },
+  label: { style: { color: '#ffffff' } }
+};
+
 export default MyPreset;

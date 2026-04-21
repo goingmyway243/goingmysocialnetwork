@@ -197,6 +197,10 @@ export class DashboardHomeComponent implements OnInit {
     this._router.navigate(['/posts', postId]);
   }
 
+  navigateToProfile(userId: string): void {
+    this._router.navigate(['/profile', userId]);
+  }
+
   // ── 9. Utilities ─────────────────────────────────────────────
   formatDate(dateString: string): string {
     const date = new Date(dateString);

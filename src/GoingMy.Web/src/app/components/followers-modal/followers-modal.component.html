@@ -1,0 +1,50 @@
+<p-dialog
+  header="Followers"
+  [visible]="isVisible()"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="glass-dialog"
+  [style]="{ width: '420px', maxHeight: '70vh' }"
+  (onHide)="onClose()">
+
+  <div class="user-list">
+    @if (loading()) {
+      @for (i of [1,2,3,4,5]; track i) {
+        <div class="user-row">
+          <p-skeleton shape="circle" size="44px"></p-skeleton>
+          <div class="user-info-skel">
+            <p-skeleton width="140px" height="1rem" styleClass="mb-1"></p-skeleton>
+            <p-skeleton width="90px" height="0.75rem"></p-skeleton>
+          </div>
+        </div>
+      }
+    } @else if (followers().length === 0) {
+      <div class="empty-state">
+        <i class="pi pi-users empty-icon"></i>
+        <p>No followers yet</p>
+      </div>
+    } @else {
+      @for (user of followers(); track user.id) {
+        <div class="user-row" (click)="onUserClick(user.id)" role="button" tabindex="0"
+             (keydown.enter)="onUserClick(user.id)">
+          <div class="user-avatar">
+            @if (user.avatarUrl) {
+              <img [src]="user.avatarUrl" [alt]="user.username" />
+            } @else {
+              <span class="initials">{{ getInitials(user) }}</span>
+            }
+          </div>
+          <div class="user-info">
+            <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+            <span class="user-handle">&#64;{{ user.username }}</span>
+          </div>
+          @if (user.isVerified) {
+            <i class="pi pi-verified verified-icon"></i>
+          }
+        </div>
+      }
+    }
+  </div>
+</p-dialog>

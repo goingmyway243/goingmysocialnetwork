@@ -32,6 +32,17 @@ public class LikeRepository(MongoDbContext context) : ILikeRepository
         return like;
     }
 
+    public async Task<IEnumerable<Like>> GetByUserIdAsync(
+        string userId, int page, int pageSize, CancellationToken cancellationToken = default)
+    {
+        return await context.Likes
+            .Find(l => l.UserId == userId)
+            .SortByDescending(l => l.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<bool> DeleteAsync(string postId, string userId, CancellationToken cancellationToken = default)
     {
         var filter = Builders<Like>.Filter.And(

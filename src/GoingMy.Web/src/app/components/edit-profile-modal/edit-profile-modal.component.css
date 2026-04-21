@@ -1,0 +1,61 @@
+/* ===== FORM ===== */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== GLASS INPUTS ===== */
+
+.glass-input {
+  background: var(--glass-surface-bg);
+  border: 1px solid var(--glass-border-base);
+  color: #ffffff;
+  border-radius: 10px;
+  width: 100%;
+  font-size: 0.95rem;
+  transition: var(--transition-fast);
+}
+
+.glass-input:focus {
+  border-color: var(--color-accent-blue);
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.15);
+  background: var(--glass-elevated-bg);
+  outline: none;
+}
+
+.glass-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Select trigger appearance applied via [pt] in the template. */
+
+/* ===== FOOTER ===== */
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Cancel and Save buttons are styled via [pt] Pass Through API in the template. */

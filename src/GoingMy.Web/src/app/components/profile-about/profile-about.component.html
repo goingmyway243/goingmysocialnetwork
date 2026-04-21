@@ -1,0 +1,35 @@
+@if (profile(); as p) {
+  @if (hasAboutInfo(p)) {
+    <div class="profile-about glass-elevated">
+      <h3 class="about-title">About</h3>
+      <ul class="about-list">
+        @if (p.location) {
+          <li class="about-item">
+            <i class="pi pi-map-marker about-icon"></i>
+            <span>{{ p.location }}</span>
+          </li>
+        }
+        @if (p.websiteUrl) {
+          <li class="about-item">
+            <i class="pi pi-link about-icon"></i>
+            <a [href]="p.websiteUrl" target="_blank" rel="noopener noreferrer" class="website-link">
+              {{ p.websiteUrl }}
+            </a>
+          </li>
+        }
+        @if (p.dateOfBirth) {
+          <li class="about-item">
+            <i class="pi pi-calendar about-icon"></i>
+            <span>Born {{ p.dateOfBirth | date:'MMMM d, y' }}</span>
+          </li>
+        }
+        @if (p.createdAt) {
+          <li class="about-item">
+            <i class="pi pi-clock about-icon"></i>
+            <span>Joined {{ formatJoinDate(p.createdAt) }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+}
