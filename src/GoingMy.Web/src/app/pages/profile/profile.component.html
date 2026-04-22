@@ -1,5 +1,8 @@
 <p-toast position="top-right"></p-toast>
 
+<!-- App Header with Navigation -->
+<app-dashboard-header></app-dashboard-header>
+
 <div class="profile-page">
 
   @if (error()) {
@@ -21,26 +24,66 @@
     (followingClick)="onFollowingClick()">
   </app-profile-header>
 
-  <!-- About Section -->
-  <app-profile-about [profile]="profile()"></app-profile-about>
+  <!-- Two Column Layout -->
+  <div class="profile-container">
 
-  <!-- Content Tabs -->
-  <div class="profile-tabs glass-elevated">
-    <p-tabs [value]="activeTab()" styleClass="glass-tabs" (onChange)="onTabChange($any($event).index ?? 0)">
+    <!-- Left Sidebar -->
+    <aside class="profile-sidebar">
+      <!-- About Section -->
+      <app-profile-about [profile]="profile()"></app-profile-about>
 
-      <p-tablist>
-        <p-tab [value]="0">
-          <i class="pi pi-th-large tab-icon"></i>
-          <span>Posts</span>
-        </p-tab>
-        <p-tab [value]="1">
-          <i class="pi pi-heart tab-icon"></i>
-          <span>Likes</span>
-        </p-tab>
-      </p-tablist>
+      <!-- Stats Card -->
+      <div class="glass-card stats-card">
+        <div class="card-header">
+          <h3 class="card-title">Stats</h3>
+        </div>
+        <div class="stats-list">
+          <div class="stat-row">
+            <span class="stat-label">Posts</span>
+            <span class="stat-value">{{ profile()?.postsCount || 0 }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Followers</span>
+            <span class="stat-value stat-clickable" (click)="onFollowersClick()" role="button" tabindex="0" (keydown.enter)="onFollowersClick()">{{ profile()?.followersCount || 0 }}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Following</span>
+            <span class="stat-value stat-clickable" (click)="onFollowingClick()" role="button" tabindex="0" (keydown.enter)="onFollowingClick()">{{ profile()?.followingCount || 0 }}</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Content Section -->
+    <main class="profile-content">
+
+      <!-- Compose Post (own profile only) -->
+      @if (isOwnProfile()) {
+        <app-compose-post (postCreated)="onPostCreated($event)"></app-compose-post>
+      }
+
+      <!-- Content Tabs — liquid glass pill style -->
+      <div class="profile-tabs-wrapper">
+        <div class="glass-tab-pill">
+          <button
+            class="glass-tab-btn"
+            [class.active]="activeTab() === 0"
+            (click)="onTabChange(0)">
+            <i class="pi pi-th-large"></i>
+            <span>Posts</span>
+          </button>
+          <button
+            class="glass-tab-btn"
+            [class.active]="activeTab() === 1"
+            (click)="onTabChange(1)">
+            <i class="pi pi-heart"></i>
+            <span>Likes</span>
+          </button>
+        </div>
+      </div>
 
       <!-- Posts Tab -->
-      <p-tabpanel [value]="0">
+      @if (activeTab() === 0) {
         <div class="tab-content">
           @if (postsLoading()) {
             <div class="skeleton-list">
@@ -51,10 +94,11 @@
               }
             </div>
           } @else if (profilePosts().length === 0) {
-            <div class="empty-tab">
-              <i class="pi pi-file-edit empty-icon"></i>
-              <p>No posts yet</p>
-            </div>
+            <app-empty-state
+              icon="pi-inbox"
+              title="No posts yet"
+              subtitle="Be the first to share something above!">
+            </app-empty-state>
           } @else {
             @for (post of profilePosts(); track post.id) {
               <app-post-card
@@ -71,10 +115,10 @@
             }
           }
         </div>
-      </p-tabpanel>
+      }
 
       <!-- Likes Tab -->
-      <p-tabpanel [value]="1">
+      @if (activeTab() === 1) {
         <div class="tab-content">
           @if (likesLoading()) {
             <div class="skeleton-list">
@@ -85,10 +129,11 @@
               }
             </div>
           } @else if (profileLikes().length === 0) {
-            <div class="empty-tab">
-              <i class="pi pi-heart empty-icon"></i>
-              <p>No liked posts yet</p>
-            </div>
+            <app-empty-state
+              icon="pi-heart"
+              title="No liked posts yet"
+              subtitle="Posts you like will appear here">
+            </app-empty-state>
           } @else {
             @for (post of profileLikes(); track post.id) {
               <app-post-card
@@ -105,9 +150,10 @@
             }
           }
         </div>
-      </p-tabpanel>
+      }
 
-    </p-tabs>
+    </main>
+
   </div>
 
 </div>

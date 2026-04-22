@@ -1,17 +1,31 @@
+/* ===== PROFILE ABOUT ===== */
 .profile-about {
   border-radius: 16px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 1rem;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: slideInUp 0.4s ease;
+}
+
+.profile-about:hover {
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(96, 165, 250, 0.2), 0 0 20px rgba(96, 165, 250, 0.1);
 }
 
 .about-title {
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: #ffffff;
-  margin: 0 0 1rem 0;
+  margin: 0;
+  padding: 1rem 1.25rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.6;
+  letter-spacing: 0.6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .about-list {
@@ -20,31 +34,56 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0;
 }
 
 .about-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.85);
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.about-item:last-child {
+  border-bottom: none;
+}
+
+.about-item:hover {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .about-icon {
-  color: var(--color-accent-blue);
+  color: #60a5fa;
   font-size: 0.95rem;
   flex-shrink: 0;
+  margin-top: 0.15rem;
 }
 
 .website-link {
-  color: var(--color-accent-blue);
+  color: #60a5fa;
   text-decoration: none;
   word-break: break-all;
-  transition: var(--transition-fast);
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .website-link:hover {
   text-decoration: underline;
-  color: var(--color-accent-purple);
+  color: #a78bfa;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

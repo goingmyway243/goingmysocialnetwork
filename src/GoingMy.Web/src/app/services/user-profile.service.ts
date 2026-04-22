@@ -157,6 +157,16 @@ export class UserProfileService {
     this._profileLikes.update(applyDelta);
   }
 
+  /** Prepend a newly created post to the top of profilePosts. */
+  prependPost(post: Post): void {
+    const normalized = { ...post, likes: post.likes ?? 0, comments: post.comments ?? 0 };
+    this._profilePosts.update(current => [normalized, ...current]);
+    const profile = this._profile();
+    if (profile) {
+      this._profile.set({ ...profile, postsCount: profile.postsCount + 1 });
+    }
+  }
+
   clearProfile(): void {
     this._profile.set(null);
     this._followers.set([]);

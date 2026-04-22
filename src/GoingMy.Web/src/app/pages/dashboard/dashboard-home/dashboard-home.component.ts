@@ -11,11 +11,12 @@ import { PostApiService } from '../../../services/post-api.service';
 import { AuthService } from '../../../services/auth.service';
 import { ComposePostComponent } from '../../../components/compose-post/compose-post.component';
 import { PostCardComponent } from '../../../components/post-card/post-card.component';
+import { EmptyStateComponent } from '../../../components/empty-state/empty-state.component';
 import { Post, Comment, PostCommentsState } from '../../../models/post.model';
 
 @Component({
   selector: 'app-dashboard-home',
-  imports: [CommonModule, CardModule, ButtonModule, SkeletonModule, ToastModule, ComposePostComponent, PostCardComponent],
+  imports: [CommonModule, CardModule, ButtonModule, SkeletonModule, ToastModule, ComposePostComponent, PostCardComponent, EmptyStateComponent],
   providers: [MessageService],
   templateUrl: './dashboard-home.component.html',
   styleUrl: './dashboard-home.component.css'

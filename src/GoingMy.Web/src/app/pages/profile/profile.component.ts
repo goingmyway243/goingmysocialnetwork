@@ -9,12 +9,15 @@ import { MessageService } from 'primeng/api';
 import { UserProfileService } from '../../services/user-profile.service';
 import { PostApiService } from '../../services/post-api.service';
 import { AuthService } from '../../services/auth.service';
+import { DashboardHeaderComponent } from '../../components/dashboard-header/dashboard-header.component';
 import { ProfileHeaderComponent } from '../../components/profile-header/profile-header.component';
 import { ProfileAboutComponent } from '../../components/profile-about/profile-about.component';
 import { FollowersModalComponent } from '../../components/followers-modal/followers-modal.component';
 import { FollowingModalComponent } from '../../components/following-modal/following-modal.component';
 import { EditProfileModalComponent } from '../../components/edit-profile-modal/edit-profile-modal.component';
 import { PostCardComponent } from '../../components/post-card/post-card.component';
+import { ComposePostComponent } from '../../components/compose-post/compose-post.component';
+import { EmptyStateComponent } from '../../components/empty-state/empty-state.component';
 import { Post, PostCommentsState } from '../../models/post.model';
 
 @Component({
@@ -25,12 +28,15 @@ import { Post, PostCommentsState } from '../../models/post.model';
     TabsModule,
     SkeletonModule,
     ToastModule,
+    DashboardHeaderComponent,
     ProfileHeaderComponent,
     ProfileAboutComponent,
     FollowersModalComponent,
     FollowingModalComponent,
     EditProfileModalComponent,
-    PostCardComponent
+    PostCardComponent,
+    ComposePostComponent,
+    EmptyStateComponent
   ],
   providers: [MessageService],
   templateUrl: './profile.component.html',
@@ -280,5 +286,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onDetailView(postId: string): void {
     this._router.navigate(['/posts', postId]);
+  }
+
+  onPostCreated(post: Post): void {
+    this._profileService.prependPost(post);
+    this._messageService.add({ severity: 'success', summary: 'Posted!', detail: 'Your post has been published.' });
   }
 }

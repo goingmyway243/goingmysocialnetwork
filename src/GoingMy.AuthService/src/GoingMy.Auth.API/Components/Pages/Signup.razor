@@ -59,166 +59,154 @@
                 </div>
             </div>
 
-        <!-- Step 1: Personal Info -->
-        @if (CurrentStep == 1)
-        {
-            <div class="step-content">
-                <div class="form-group">
-                    <label for="first-name" class="form-label">First Name</label>
-                    <div class="input-wrapper">
-                        <i class="pi pi-id-card input-icon"></i>
-                        <input
-                            id="first-name"
-                            type="text"
-                            @bind="FirstName"
-                            @bind:event="oninput"
-                            class="form-input"
-                            placeholder="Enter your first name"
-                        />
-                    </div>
-                    @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("firstName")))
-                    {
-                        <span class="error-message">@ValidationErrors["firstName"]</span>
-                    }
-                </div>
-
-                <div class="form-group">
-                    <label for="last-name" class="form-label">Last Name</label>
-                    <div class="input-wrapper">
-                        <i class="pi pi-id-card input-icon"></i>
-                        <input
-                            id="last-name"
-                            type="text"
-                            @bind="LastName"
-                            @bind:event="oninput"
-                            class="form-input"
-                            placeholder="Enter your last name"
-                        />
-                    </div>
-                    @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("lastName")))
-                    {
-                        <span class="error-message">@ValidationErrors["lastName"]</span>
-                    }
-                </div>
-
-                <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
-                    <div class="input-wrapper">
-                        <i class="pi pi-envelope input-icon"></i>
-                        <input
-                            id="email"
-                            type="email"
-                            @bind="Email"
-                            @bind:event="oninput"
-                            class="form-input"
-                            placeholder="Enter your email"
-                        />
-                    </div>
-                    @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("email")))
-                    {
-                        <span class="error-message">@ValidationErrors["email"]</span>
-                    }
-                </div>
-
-                <button type="button" class="submit-btn" @onclick="GoToStep2">
-                    Continue <i class="pi pi-arrow-right" style="margin-left: 0.5rem;"></i>
-                </button>
-            </div>
-        }
-
-        <!-- Step 2: Account Setup -->
-        @if (CurrentStep == 2)
-        {
-            <div class="step-content">
-                <div class="form-group">
-                    <label for="username" class="form-label">Username</label>
-                    <div class="input-wrapper">
-                        <i class="pi pi-user input-icon"></i>
-                        <input
-                            id="username"
-                            type="text"
-                            @bind="Username"
-                            @bind:event="oninput"
-                            class="form-input"
-                            placeholder="Choose a username"
-                            disabled="@IsLoading"
-                        />
-                    </div>
-                    @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("username")))
-                    {
-                        <span class="error-message">@ValidationErrors["username"]</span>
-                    }
-                </div>
-
-                <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <div class="input-wrapper">
-                        <i class="pi pi-lock input-icon"></i>
-                        <input
-                            id="password"
-                            type="password"
-                            @bind="Password"
-                            @bind:event="oninput"
-                            class="form-input"
-                            placeholder="Create a password"
-                            disabled="@IsLoading"
-                        />
-                    </div>
-                    @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("password")))
-                    {
-                        <span class="error-message">@ValidationErrors["password"]</span>
-                    }
-                </div>
-
-                <div class="form-group">
-                    <label for="confirm-password" class="form-label">Confirm Password</label>
-                    <div class="input-wrapper">
-                        <i class="pi pi-lock input-icon"></i>
-                        <input
-                            id="confirm-password"
-                            type="password"
-                            @bind="ConfirmPassword"
-                            @bind:event="oninput"
-                            class="form-input"
-                            placeholder="Confirm your password"
-                            disabled="@IsLoading"
-                        />
-                    </div>
-                    @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("confirmPassword")))
-                    {
-                        <span class="error-message">@ValidationErrors["confirmPassword"]</span>
-                    }
-                </div>
-
-                @if (!string.IsNullOrEmpty(AuthError))
-                {
-                    <div class="error-alert">@AuthError</div>
-                }
-
-                <div class="step-actions">
-                    <button type="button" class="back-btn" @onclick="GoToStep1" disabled="@IsLoading">
-                        <i class="pi pi-arrow-left" style="margin-right: 0.5rem;"></i> Back
-                    </button>
-                    <button type="button" class="submit-btn step2-submit" @onclick="OnSubmit" disabled="@IsLoading">
-                        @if (IsLoading)
+            <!-- Step 1: Personal Info -->
+            @if (CurrentStep == 1)
+            {
+                <div class="step-content">
+                    <div class="form-group">
+                        <label for="first-name" class="form-label">First Name</label>
+                        <div class="input-wrapper">
+                            <i class="pi pi-id-card input-icon"></i>
+                            <input id="first-name"
+                                   type="text"
+                                   @bind="FirstName"
+                                   @bind:event="oninput"
+                                   class="form-input"
+                                   placeholder="Enter your first name" />
+                        </div>
+                        @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("firstName")))
                         {
-                            <span>Creating account...</span>
+                            <span class="error-message">@ValidationErrors["firstName"]</span>
                         }
-                        else
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last-name" class="form-label">Last Name</label>
+                        <div class="input-wrapper">
+                            <i class="pi pi-id-card input-icon"></i>
+                            <input id="last-name"
+                                   type="text"
+                                   @bind="LastName"
+                                   @bind:event="oninput"
+                                   class="form-input"
+                                   placeholder="Enter your last name" />
+                        </div>
+                        @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("lastName")))
                         {
-                            <span>Sign Up</span>
+                            <span class="error-message">@ValidationErrors["lastName"]</span>
                         }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <div class="input-wrapper">
+                            <i class="pi pi-envelope input-icon"></i>
+                            <input id="email"
+                                   type="email"
+                                   @bind="Email"
+                                   @bind:event="oninput"
+                                   class="form-input"
+                                   placeholder="Enter your email" />
+                        </div>
+                        @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("email")))
+                        {
+                            <span class="error-message">@ValidationErrors["email"]</span>
+                        }
+                    </div>
+
+                    <button type="button" class="submit-btn" @onclick="GoToStep2">
+                        Continue <i class="pi pi-arrow-right" style="margin-left: 0.5rem;"></i>
                     </button>
                 </div>
-            </div>
-        }
+            }
 
-        <div class="card-footer">
-            <p class="signup-text">
-                Already have an account?
-                <a href="/login" class="signup-link">Sign in</a>
-            </p>
-        </div>
+            <!-- Step 2: Account Setup -->
+            @if (CurrentStep == 2)
+            {
+                <div class="step-content">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-wrapper">
+                            <i class="pi pi-user input-icon"></i>
+                            <input id="username"
+                                   type="text"
+                                   @bind="Username"
+                                   @bind:event="oninput"
+                                   class="form-input"
+                                   placeholder="Choose a username"
+                                   disabled="@IsLoading" />
+                        </div>
+                        @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("username")))
+                        {
+                            <span class="error-message">@ValidationErrors["username"]</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-wrapper">
+                            <i class="pi pi-lock input-icon"></i>
+                            <input id="password"
+                                   type="password"
+                                   @bind="Password"
+                                   @bind:event="oninput"
+                                   class="form-input"
+                                   placeholder="Create a password"
+                                   disabled="@IsLoading" />
+                        </div>
+                        @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("password")))
+                        {
+                            <span class="error-message">@ValidationErrors["password"]</span>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password" class="form-label">Confirm Password</label>
+                        <div class="input-wrapper">
+                            <i class="pi pi-lock input-icon"></i>
+                            <input id="confirm-password"
+                                   type="password"
+                                   @bind="ConfirmPassword"
+                                   @bind:event="oninput"
+                                   class="form-input"
+                                   placeholder="Confirm your password"
+                                   disabled="@IsLoading" />
+                        </div>
+                        @if (!string.IsNullOrEmpty(ValidationErrors.GetValueOrDefault("confirmPassword")))
+                        {
+                            <span class="error-message">@ValidationErrors["confirmPassword"]</span>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(AuthError))
+                    {
+                        <div class="error-alert">@AuthError</div>
+                    }
+
+                    <div class="step-actions">
+                        <button type="button" class="back-btn" @onclick="GoToStep1" disabled="@IsLoading">
+                            <i class="pi pi-arrow-left" style="margin-right: 0.5rem;"></i> Back
+                        </button>
+                        <button type="button" class="submit-btn step2-submit" @onclick="OnSubmit" disabled="@IsLoading">
+                            @if (IsLoading)
+                            {
+                                <span>Creating account...</span>
+                            }
+                            else
+                            {
+                                <span>Sign Up</span>
+                            }
+                        </button>
+                    </div>
+                </div>
+            }
+
+            <div class="card-footer">
+                <p class="signup-text">
+                    Already have an account?
+                    <a href="@(string.IsNullOrEmpty(ReturnUrl) ? "/login" : $"/login?returnUrl={Uri.EscapeDataString(ReturnUrl)}")" class="signup-link">Sign in</a>
+                </p>
+            </div>
         }
     </div>
 </div>
@@ -295,9 +283,9 @@
         min-width: 3rem;
     }
 
-    .stepper-line.completed {
-        background: rgba(52, 211, 153, 0.5);
-    }
+        .stepper-line.completed {
+            background: rgba(52, 211, 153, 0.5);
+        }
 
     /* Step content */
     .step-content {
@@ -308,8 +296,15 @@
     }
 
     @@keyframes stepFadeIn {
-        from { opacity: 0; transform: translateX(12px); }
-        to   { opacity: 1; transform: translateX(0); }
+        from {
+            opacity: 0;
+            transform: translateX(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 
     /* Step 2 back navigation */
@@ -335,15 +330,15 @@
         align-items: center;
     }
 
-    .back-btn:hover:not(:disabled) {
-        background: rgba(255, 255, 255, 0.18);
-        border-color: rgba(255, 255, 255, 0.5);
-    }
+        .back-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
 
-    .back-btn:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
+        .back-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
     .step2-submit {
         flex: 1;
@@ -364,8 +359,15 @@
     }
 
     @@keyframes slideIn {
-        from { opacity: 0; transform: translateY(-8px); }
-        to   { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     /* Success Screen */
@@ -379,8 +381,15 @@
     }
 
     @@keyframes successFadeIn {
-        from { opacity: 0; transform: scale(0.95); }
-        to   { opacity: 1; transform: scale(1); }
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 
     .success-icon {
@@ -401,6 +410,7 @@
         from {
             box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4);
         }
+
         to {
             box-shadow: 0 0 0 1rem rgba(52, 211, 153, 0);
         }
@@ -438,12 +448,15 @@
         width: 100%;
     }
 
-    .success-actions .submit-btn {
-        width: 100%;
-    }
+        .success-actions .submit-btn {
+            width: 100%;
+        }
 </style>
 
 @code {
+    [SupplyParameterFromQuery(Name = "returnUrl")]
+    private string? ReturnUrl { get; set; }
+
     private string Email = string.Empty;
     private string FirstName = string.Empty;
     private string LastName = string.Empty;
@@ -473,7 +486,10 @@
 
     private void NavigateToLogin()
     {
-        NavManager.NavigateTo("/login");
+        string loginUrl = string.IsNullOrEmpty(ReturnUrl)
+            ? "/login"
+            : $"/login?returnUrl={Uri.EscapeDataString(ReturnUrl)}";
+        NavManager.NavigateTo(loginUrl);
     }
 
     private void GoToStep2()
@@ -486,6 +502,8 @@
             ValidationErrors["lastName"] = "Last name is required";
         if (string.IsNullOrWhiteSpace(Email))
             ValidationErrors["email"] = "Email is required";
+        else if (!System.Text.RegularExpressions.Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            ValidationErrors["email"] = "Please enter a valid email address";
 
         if (ValidationErrors.Any()) return;
 
@@ -563,7 +581,13 @@
             RedirectCountdown = i;
             StateHasChanged();
         }
-        NavManager.NavigateTo("/login?signup=success");
+
+        string redirectUrl = "/login?signup=success";
+        if (!string.IsNullOrEmpty(ReturnUrl))
+        {
+            redirectUrl += $"&returnUrl={Uri.EscapeDataString(ReturnUrl)}";
+        }
+        NavManager.NavigateTo(redirectUrl);
     }
 
     private class SignupRequest

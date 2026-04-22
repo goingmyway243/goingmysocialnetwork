@@ -1,10 +1,13 @@
+/* ===== PROFILE PAGE LAYOUT ===== */
+
 .profile-page {
-  max-width: 680px;
   margin: 0 auto;
-  padding: 1rem 1rem 3rem;
+  padding: 1.5rem;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 1.5rem;
+  min-height: calc(100vh - 80px);
 }
 
 /* ===== ERROR BANNER ===== */
@@ -19,43 +22,242 @@
   margin-bottom: 1rem;
 }
 
-/* ===== TABS ===== */
+/* ===== TWO COLUMN LAYOUT ===== */
+.profile-container {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
 
-.profile-tabs {
+/* ===== LEFT SIDEBAR ===== */
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: sticky;
+  top: 1.5rem;
+}
+
+/* ===== GLASS CARD COMPONENT ===== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.tab-icon {
-  font-size: 0.85rem;
+.glass-card:hover {
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(96, 165, 250, 0.2), 0 0 20px rgba(96, 165, 250, 0.1);
 }
 
-/* ===== TAB CONTENT ===== */
-.tab-content {
-  padding: 1rem;
+.card-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ===== STATS CARD ===== */
+.stats-card {
+  animation: slideInUp 0.4s ease;
+}
+
+.stats-list {
+  padding: 0.75rem 0;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background-color 0.2s ease;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.stat-clickable {
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+}
+
+.stat-clickable:hover {
+  color: #60a5fa;
+}
+
+/* ===== RIGHT CONTENT SECTION ===== */
+.profile-content {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* ===== EMPTY STATE ===== */
-.empty-tab {
+/* ===== TABS — Liquid Glass Pill ===== */
+.profile-tabs-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  padding: 0.25rem 0;
+}
+
+.glass-tab-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.glass-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  letter-spacing: 0.01em;
+}
+
+.glass-tab-btn i {
+  font-size: 0.9rem;
+}
+
+.glass-tab-btn:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.glass-tab-btn.active {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  box-shadow:
+    0 2px 12px rgba(96, 165, 250, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Remove stale .profile-tabs styles */
+.profile-tabs {
+  display: none;
+}
+
+/* ===== TAB CONTENT ===== */
+.tab-content {
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 3rem 1.5rem;
-  color: var(--text-color-secondary);
+  gap: 1rem;
+  min-height: 200px;
 }
 
-.empty-icon {
-  font-size: 2.5rem;
-  opacity: 0.4;
+/* ===== SKELETON LOADING ===== */
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.empty-tab p {
-  margin: 0;
-  font-size: 0.95rem;
+.post-skeleton {
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .profile-container {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-sidebar {
+    grid-column: 1;
+    position: static;
+  }
+
+  .profile-page {
+    padding: 1rem;
+    padding-top: 0.5rem;
+  }
+
+  .glass-tabs :deep(.p-tab) {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .tab-content {
+    padding: 1rem;
+  }
 }
 
 /* ===== SKELETON ===== */

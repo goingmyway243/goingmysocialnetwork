@@ -21,8 +21,11 @@ applyTo: "src/**/*.{cs,csproj,slnx,http}"
 
 | Service | Responsibility | Location |
 |---------|----------------|----------|
+| ApiGateway | Centralized reverse proxy, JWT validation, CORS, rate limiting | `src/GoingMy.ApiGateway/` |
 | AuthService | User authentication & authorization | `src/GoingMy.AuthService/` |
+| UserService | User profiles, followers, avatar, cover | `src/GoingMy.UserService/` |
 | PostService | Social content & interactions | `src/GoingMy.PostService/` |
+| ChatService | Real-time chat & messaging | `src/GoingMy.ChatService/` |
 | ServiceDefaults | Shared configurations & extensions | `src/GoingMy.ServiceDefaults/` |
 | AppHost | Aspire orchestration host | `src/GoingMy.AppHost/` |
 

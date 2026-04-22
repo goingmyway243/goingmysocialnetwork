@@ -129,21 +129,21 @@
                 return;
             }
 
-            // Check if this is part of an OAuth flow
+            // Always use server-side redirect to support external URLs (e.g. Angular app)
+            // NavigationManager.NavigateTo throws NavigationException for cross-origin URLs
             var httpContext = HttpContextAccessor.HttpContext;
-            if (httpContext != null && !string.IsNullOrEmpty(ReturnUrl))
+            string redirectUrl = string.IsNullOrEmpty(ReturnUrl)
+                ? "http://localhost:4200"
+                : ReturnUrl;
+
+            if (httpContext != null)
             {
-                // Parse the returnUrl to check if it's the authorize endpoint
-                if (ReturnUrl.Contains("/connect/authorize", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Use server-side redirect for OAuth flow to avoid multiple roundtrips
-                    httpContext.Response.Redirect(ReturnUrl, permanent: false);
-                    return;
-                }
+                httpContext.Response.Redirect(redirectUrl, permanent: false);
+                return;
             }
 
-            // For non-OAuth flows, use NavigationManager
-            NavManager.NavigateTo(ReturnUrl ?? "http://locahost:4200", forceLoad: true);
+            // Fallback: only safe for same-origin relative URLs
+            NavManager.NavigateTo(redirectUrl, forceLoad: true);
         }
         catch (Exception ex)
         {

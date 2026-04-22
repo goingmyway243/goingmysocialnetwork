@@ -5,6 +5,20 @@ GoingMy is a modern social network platform built with microservice architecture
 
 ---
 
+## AI Agent Guidelines
+
+### Context7 MCP Usage
+**Always use Context7 MCP for up-to-date library documentation** � do not rely on training data alone.
+
+1. `resolve-library-id` ? get the Context7 library ID
+2. `get-library-docs` ? fetch current documentation
+   - `mode='code'` for API references and code examples
+   - `mode='info'` for conceptual guides and architecture
+
+Each skill file lists the specific libraries to fetch for that tech stack.
+
+---
+
 ## Skill Files � Load Before Working
 
 The project has dedicated instruction files per tech stack. **Always load the relevant skill file before making any changes.**
@@ -62,20 +76,6 @@ Go directly to the service location � do not search the solution explorer.
 - **Rate Limiting**: Gateway enforces 100 req/10 sec per IP (configurable)
 - **Health Checks & Logging**: All services run with health checks and structured logging
 - **Local Orchestration**: .NET Aspire (`GoingMy.AppHost`) orchestrates all services including the gateway
-
----
-
-## AI Agent Guidelines
-
-### Context7 MCP Usage
-**Always use Context7 MCP for up-to-date library documentation** � do not rely on training data alone.
-
-1. `resolve-library-id` ? get the Context7 library ID
-2. `get-library-docs` ? fetch current documentation
-   - `mode='code'` for API references and code examples
-   - `mode='info'` for conceptual guides and architecture
-
-Each skill file lists the specific libraries to fetch for that tech stack.
 
 ---
 

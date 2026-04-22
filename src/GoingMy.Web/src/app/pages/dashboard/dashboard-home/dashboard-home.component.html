@@ -34,11 +34,11 @@
   } @else {
     <div class="posts-container">
       @if (posts().length === 0) {
-        <div class="empty-state">
-          <i class="pi pi-inbox empty-icon"></i>
-          <h3>No posts yet</h3>
-          <p>Be the first to share something above!</p>
-        </div>
+        <app-empty-state
+          icon="pi-inbox"
+          title="No posts yet"
+          subtitle="Be the first to share something above!">
+        </app-empty-state>
       } @else {
         @for (post of posts(); track post.id) {
           <app-post-card
