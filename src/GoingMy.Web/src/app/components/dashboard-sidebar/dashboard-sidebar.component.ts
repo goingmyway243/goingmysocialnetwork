@@ -27,6 +27,12 @@ export class DashboardSidebarComponent {
       command: () => this.setActiveMenu('explore', '/dashboard/explore')
     },
     {
+      label: 'Discover',
+      icon: 'pi pi-users',
+      id: 'discover',
+      command: () => this.setActiveMenu('discover', '/discover')
+    },
+    {
       label: 'Messages',
       icon: 'pi pi-envelope',
       id: 'messages',

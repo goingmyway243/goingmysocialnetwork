@@ -24,7 +24,8 @@ public record UpdateUserProfileRequest(
     Gender? Gender,
     string? Location,
     string? WebsiteUrl,
-    bool? IsPrivate);
+    bool? IsPrivate,
+    List<string>? Interests = null);
 
 public record UpdateAvatarRequest(string AvatarUrl);
 
@@ -100,7 +101,8 @@ public class UserProfilesController(IMediator mediator) : ControllerBase
                 request.Gender,
                 request.Location,
                 request.WebsiteUrl,
-                request.IsPrivate));
+                request.IsPrivate,
+                request.Interests));
 
             return Ok(profile);
         }
@@ -232,5 +234,27 @@ public class UserProfilesController(IMediator mediator) : ControllerBase
     {
         var following = await mediator.Send(new GetUserFollowingQuery(id, page, pageSize));
         return Ok(following);
+    }
+
+    // ── Search ────────────────────────────────────────────────
+
+    /// <summary>Search users by name/username with optional filters. Public endpoint.</summary>
+    [HttpGet("search")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IEnumerable<UserProfileDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> SearchUsers(
+        [FromQuery] string? searchTerm,
+        [FromQuery] string? location,
+        [FromQuery] bool? isVerified,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var callerId = User.FindFirst("sub")?.Value;
+        Guid.TryParse(callerId, out var callerGuid);
+
+        var results = await mediator.Send(
+            new SearchUsersQuery(searchTerm, location, isVerified, page, pageSize,
+                callerGuid == Guid.Empty ? null : callerGuid));
+        return Ok(results);
     }
 }

@@ -58,6 +58,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'discover',
+    loadComponent: () => import('./pages/discover/discover.component').then(m => m.DiscoverComponent),
+    canActivate: [authGuard]
+  },
+  {
     // Default: go to dashboard (authGuard will redirect to Blazor login if not authenticated)
     path: '',
     redirectTo: '/dashboard',

@@ -43,6 +43,8 @@ public class UserProfile
 
     public bool IsActive { get; set; } = true;
 
+    public List<string> Interests { get; set; } = [];
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public DateTime? UpdatedAt { get; set; }
@@ -68,7 +70,8 @@ public class UserProfile
         Gender? gender,
         string? location,
         string? websiteUrl,
-        bool? isPrivate)
+        bool? isPrivate,
+        List<string>? interests = null)
     {
         if (firstName is not null) FirstName = firstName;
         if (lastName is not null) LastName = lastName;
@@ -78,6 +81,7 @@ public class UserProfile
         if (location is not null) Location = location;
         if (websiteUrl is not null) WebsiteUrl = websiteUrl;
         if (isPrivate.HasValue) IsPrivate = isPrivate.Value;
+        if (interests is not null) Interests = interests;
         UpdatedAt = DateTime.UtcNow;
     }
 

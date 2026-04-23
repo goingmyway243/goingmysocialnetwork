@@ -14,7 +14,8 @@ public record UpdateUserProfileCommand(
     Gender? Gender,
     string? Location,
     string? WebsiteUrl,
-    bool? IsPrivate
+    bool? IsPrivate,
+    List<string>? Interests = null
 ) : IRequest<UserProfileDto>;
 
 public class UpdateUserProfileCommandHandler(IUserProfileRepository userProfileRepository)
@@ -33,7 +34,8 @@ public class UpdateUserProfileCommandHandler(IUserProfileRepository userProfileR
             gender: request.Gender,
             location: request.Location,
             websiteUrl: request.WebsiteUrl,
-            isPrivate: request.IsPrivate);
+            isPrivate: request.IsPrivate,
+            interests: request.Interests);
 
         var updated = await userProfileRepository.UpdateAsync(profile, cancellationToken);
 

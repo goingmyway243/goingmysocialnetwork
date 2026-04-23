@@ -1,6 +1,6 @@
 <p-dialog
-  header="Followers"
-  [visible]="isVisible()"
+  [header]="header()"
+  [(visible)]="dialogVisible"
   [modal]="true"
   [closable]="true"
   [draggable]="false"
@@ -20,13 +20,13 @@
           </div>
         </div>
       }
-    } @else if (followers().length === 0) {
+    } @else if (users().length === 0) {
       <div class="empty-state">
         <i class="pi pi-users empty-icon"></i>
-        <p>No followers yet</p>
+        <p>{{ emptyMessage() }}</p>
       </div>
     } @else {
-      @for (user of followers(); track user.id) {
+      @for (user of users(); track user.id) {
         <div class="user-row" (click)="onUserClick(user.id)" role="button" tabindex="0"
              (keydown.enter)="onUserClick(user.id)">
           <div class="user-avatar">

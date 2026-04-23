@@ -175,4 +175,36 @@ export class UserProfileService {
     this._profileLikes.set([]);
     this._isFollowing.set(false);
   }
+
+  // ── Search ────────────────────────────────────────────────────
+
+  private readonly _searchResults = signal<UserProfile[]>([]);
+  private readonly _searchLoading = signal(false);
+  private readonly _searchError = signal<string | null>(null);
+
+  readonly searchResults = computed(() => this._searchResults());
+  readonly searchLoading = computed(() => this._searchLoading());
+  readonly searchError = computed(() => this._searchError());
+
+  searchUsers(searchTerm?: string, location?: string, isVerified?: boolean, page = 1, pageSize = 20): Observable<UserProfile[]> {
+    this._searchLoading.set(true);
+    this._searchError.set(null);
+    return this._api.searchUsers(searchTerm, location, isVerified, page, pageSize).pipe(
+      tap({
+        next: results => {
+          this._searchResults.set(results);
+          this._searchLoading.set(false);
+        },
+        error: () => {
+          this._searchError.set('Failed to search users. Please try again.');
+          this._searchLoading.set(false);
+        }
+      })
+    );
+  }
+
+  clearSearchResults(): void {
+    this._searchResults.set([]);
+    this._searchError.set(null);
+  }
 }

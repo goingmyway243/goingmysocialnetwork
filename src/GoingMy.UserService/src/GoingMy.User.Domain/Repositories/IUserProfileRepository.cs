@@ -9,4 +9,5 @@ public interface IUserProfileRepository
     Task<UserProfile> UpdateAsync(UserProfile profile, CancellationToken ct = default);
     Task<IEnumerable<UserProfile>> GetFollowersAsync(Guid userId, int page, int pageSize, CancellationToken ct = default);
     Task<IEnumerable<UserProfile>> GetFollowingAsync(Guid userId, int page, int pageSize, CancellationToken ct = default);
+    Task<IEnumerable<UserProfile>> SearchAsync(string? searchTerm, string? location, bool? isVerified, int page, int pageSize, Guid? excludeUserId = null, CancellationToken ct = default);
 }

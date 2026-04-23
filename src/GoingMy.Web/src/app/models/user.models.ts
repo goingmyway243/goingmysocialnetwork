@@ -27,6 +27,7 @@ export interface UserProfile {
   isActive: boolean;
   createdAt: string;
   updatedAt?: string;
+  interests: string[];
 }
 
 // ── Request DTOs ─────────────────────────────────────────────
@@ -39,6 +40,7 @@ export interface UpdateProfileRequest {
   location?: string;
   websiteUrl?: string;
   isPrivate?: boolean;
+  interests?: string[];
 }
 
 export interface UpdateAvatarRequest {

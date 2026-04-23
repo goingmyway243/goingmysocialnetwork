@@ -12,12 +12,12 @@ import { AuthService } from '../../services/auth.service';
 import { DashboardHeaderComponent } from '../../components/dashboard-header/dashboard-header.component';
 import { ProfileHeaderComponent } from '../../components/profile-header/profile-header.component';
 import { ProfileAboutComponent } from '../../components/profile-about/profile-about.component';
-import { FollowersModalComponent } from '../../components/followers-modal/followers-modal.component';
-import { FollowingModalComponent } from '../../components/following-modal/following-modal.component';
+import { UserListModalComponent } from '../../components/followers-modal/followers-modal.component';
 import { EditProfileModalComponent } from '../../components/edit-profile-modal/edit-profile-modal.component';
 import { PostCardComponent } from '../../components/post-card/post-card.component';
 import { ComposePostComponent } from '../../components/compose-post/compose-post.component';
 import { EmptyStateComponent } from '../../components/empty-state/empty-state.component';
+import { FollowListComponent } from '../../components/follow-list/follow-list.component';
 import { Post, PostCommentsState } from '../../models/post.model';
 
 @Component({
@@ -31,12 +31,12 @@ import { Post, PostCommentsState } from '../../models/post.model';
     DashboardHeaderComponent,
     ProfileHeaderComponent,
     ProfileAboutComponent,
-    FollowersModalComponent,
-    FollowingModalComponent,
+    UserListModalComponent,
     EditProfileModalComponent,
     PostCardComponent,
     ComposePostComponent,
-    EmptyStateComponent
+    EmptyStateComponent,
+    FollowListComponent
   ],
   providers: [MessageService],
   templateUrl: './profile.component.html',
@@ -55,7 +55,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   // ── 2. State ─────────────────────────────────────────────────
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
-  readonly activeTab = signal(0);
+  readonly activeTab = signal('0');  // Use string values for PrimeNG v20
 
   readonly showFollowersModal = signal(false);
   readonly showFollowingModal = signal(false);
@@ -101,7 +101,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.loading.set(true);
     this.error.set(null);
     this._profileService.clearProfile();
-    this.activeTab.set(0);
+    this.activeTab.set('0');
 
     this._profileService.loadProfile(userId).subscribe({
       next: (p) => {
@@ -124,11 +124,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   // ── 5. Tab Management ────────────────────────────────────────
-  onTabChange(index: number): void {
-    this.activeTab.set(index);
-    switch (index) {
-      case 0: this.loadPostsTab(); break;
-      case 1: this.loadLikesTab(); break;
+  onActiveTabChange(event: any): void {
+    const value = event?.value || event;
+    this.activeTab.set(value);
+    // Lazy load posts/likes only when tabs are activated
+    if (value === '0' && this.profilePosts().length === 0) {
+      this.loadPostsTab();
+    } else if (value === '1' && this.profileLikes().length === 0) {
+      this.loadLikesTab();
     }
   }
 

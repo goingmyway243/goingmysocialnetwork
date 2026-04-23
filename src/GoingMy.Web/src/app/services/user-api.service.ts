@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
@@ -104,9 +104,24 @@ export class UserApiService {
       `${this._userBaseUrl}/${id}/followers?page=${page}&pageSize=${pageSize}`);
   }
 
-  /** GET /api/userprofiles/{id}/following (UserService) */
+/** GET /api/userprofiles/{id}/following (UserService) */
   getFollowing(id: string, page = 1, pageSize = 20): Observable<UserProfile[]> {
     return this._http.get<UserProfile[]>(
       `${this._userBaseUrl}/${id}/following?page=${page}&pageSize=${pageSize}`);
+  }
+
+  // ── User Service — Search ────────────────────────────────────
+
+  /** GET /api/userprofiles/search (UserService) */
+  searchUsers(searchTerm?: string, location?: string, isVerified?: boolean, page = 1, pageSize = 20): Observable<UserProfile[]> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    if (searchTerm) params = params.set('searchTerm', searchTerm);
+    if (location) params = params.set('location', location);
+    if (isVerified !== undefined) params = params.set('isVerified', isVerified.toString());
+
+    return this._http.get<UserProfile[]>(`${this._userBaseUrl}/search`, { params });
   }
 }

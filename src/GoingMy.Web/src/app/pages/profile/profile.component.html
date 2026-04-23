@@ -57,100 +57,121 @@
     <!-- Right Content Section -->
     <main class="profile-content">
 
-      <!-- Compose Post (own profile only) -->
-      @if (isOwnProfile()) {
-        <app-compose-post (postCreated)="onPostCreated($event)"></app-compose-post>
-      }
+      <!-- Content Tabs — PrimeNG v20 p-tabs with glassmorphism -->
+      <div class="glass-tabs">
+        <p-tabs 
+          [value]="activeTab()" 
+          (onChange)="onActiveTabChange($event)">
+          
+          <!-- Tab Headers -->
+          <p-tablist>
+            <p-tab value="0">
+              <i class="pi pi-th-large"></i>
+              <span>Posts</span>
+            </p-tab>
+            <p-tab value="1">
+              <i class="pi pi-heart"></i>
+              <span>Likes</span>
+            </p-tab>
+            <p-tab value="2">
+              <i class="pi pi-users"></i>
+              <span>Followers</span>
+            </p-tab>
+            <p-tab value="3">
+              <i class="pi pi-user-plus"></i>
+              <span>Following</span>
+            </p-tab>
+          </p-tablist>
 
-      <!-- Content Tabs — liquid glass pill style -->
-      <div class="profile-tabs-wrapper">
-        <div class="glass-tab-pill">
-          <button
-            class="glass-tab-btn"
-            [class.active]="activeTab() === 0"
-            (click)="onTabChange(0)">
-            <i class="pi pi-th-large"></i>
-            <span>Posts</span>
-          </button>
-          <button
-            class="glass-tab-btn"
-            [class.active]="activeTab() === 1"
-            (click)="onTabChange(1)">
-            <i class="pi pi-heart"></i>
-            <span>Likes</span>
-          </button>
-        </div>
+        <!-- Tab Panels -->
+        <p-tabpanels>
+          <!-- Posts Panel -->
+          <p-tabpanel value="0" styleClass="glass-tab-panel">
+            <!-- Compose Post (own profile only) -->
+            @if (isOwnProfile()) {
+              <app-compose-post (postCreated)="onPostCreated($event)"></app-compose-post>
+            }
+            @if (postsLoading()) {
+              <div class="skeleton-list">
+                @for (i of [1,2,3]; track i) {
+                  <div class="post-skeleton glass-surface">
+                    <p-skeleton height="120px"></p-skeleton>
+                  </div>
+                }
+              </div>
+            } @else if (profilePosts().length === 0) {
+              <app-empty-state
+                icon="pi-inbox"
+                title="No posts yet"
+                subtitle="Be the first to share something above!">
+              </app-empty-state>
+            } @else {
+              @for (post of profilePosts(); track post.id) {
+                <app-post-card
+                  [post]="post"
+                  [commentState]="getCommentState(post.id)"
+                  [liked]="isLiked(post.id)"
+                  (likeToggle)="onLikeToggle($event)"
+                  (commentsToggle)="onCommentsToggle($event)"
+                  (newCommentInput)="onCommentInput($event)"
+                  (commentSubmit)="onCommentSubmit($event)"
+                  (detailView)="onDetailView($event)"
+                  (authorClick)="onUserSelected($event)">
+                </app-post-card>
+              }
+            }
+          </p-tabpanel>
+
+          <!-- Likes Panel -->
+          <p-tabpanel value="1" styleClass="glass-tab-panel">
+            @if (likesLoading()) {
+              <div class="skeleton-list">
+                @for (i of [1,2,3]; track i) {
+                  <div class="post-skeleton glass-surface">
+                    <p-skeleton height="120px"></p-skeleton>
+                  </div>
+                }
+              </div>
+            } @else if (profileLikes().length === 0) {
+              <app-empty-state
+                icon="pi-heart"
+                title="No liked posts yet"
+                subtitle="Posts you like will appear here">
+              </app-empty-state>
+            } @else {
+              @for (post of profileLikes(); track post.id) {
+                <app-post-card
+                  [post]="post"
+                  [commentState]="getCommentState(post.id)"
+                  [liked]="true"
+                  (likeToggle)="onLikeToggle($event)"
+                  (commentsToggle)="onCommentsToggle($event)"
+                  (newCommentInput)="onCommentInput($event)"
+                  (commentSubmit)="onCommentSubmit($event)"
+                  (detailView)="onDetailView($event)"
+                  (authorClick)="onUserSelected($event)">
+                </app-post-card>
+              }
+            }
+          </p-tabpanel>
+
+          <!-- Followers Panel -->
+          <p-tabpanel value="2" styleClass="glass-tab-panel">
+            @if (profile()) {
+              <app-follow-list [userId]="profile()!.id" mode="followers" />
+            }
+          </p-tabpanel>
+
+          <!-- Following Panel -->
+          <p-tabpanel value="3" styleClass="glass-tab-panel">
+            @if (profile()) {
+              <app-follow-list [userId]="profile()!.id" mode="following" />
+            }
+          </p-tabpanel>
+        </p-tabpanels>
+        
+      </p-tabs>
       </div>
-
-      <!-- Posts Tab -->
-      @if (activeTab() === 0) {
-        <div class="tab-content">
-          @if (postsLoading()) {
-            <div class="skeleton-list">
-              @for (i of [1,2,3]; track i) {
-                <div class="post-skeleton glass-surface">
-                  <p-skeleton height="120px"></p-skeleton>
-                </div>
-              }
-            </div>
-          } @else if (profilePosts().length === 0) {
-            <app-empty-state
-              icon="pi-inbox"
-              title="No posts yet"
-              subtitle="Be the first to share something above!">
-            </app-empty-state>
-          } @else {
-            @for (post of profilePosts(); track post.id) {
-              <app-post-card
-                [post]="post"
-                [commentState]="getCommentState(post.id)"
-                [liked]="isLiked(post.id)"
-                (likeToggle)="onLikeToggle($event)"
-                (commentsToggle)="onCommentsToggle($event)"
-                (newCommentInput)="onCommentInput($event)"
-                (commentSubmit)="onCommentSubmit($event)"
-                (detailView)="onDetailView($event)"
-                (authorClick)="onUserSelected($event)">
-              </app-post-card>
-            }
-          }
-        </div>
-      }
-
-      <!-- Likes Tab -->
-      @if (activeTab() === 1) {
-        <div class="tab-content">
-          @if (likesLoading()) {
-            <div class="skeleton-list">
-              @for (i of [1,2,3]; track i) {
-                <div class="post-skeleton glass-surface">
-                  <p-skeleton height="120px"></p-skeleton>
-                </div>
-              }
-            </div>
-          } @else if (profileLikes().length === 0) {
-            <app-empty-state
-              icon="pi-heart"
-              title="No liked posts yet"
-              subtitle="Posts you like will appear here">
-            </app-empty-state>
-          } @else {
-            @for (post of profileLikes(); track post.id) {
-              <app-post-card
-                [post]="post"
-                [commentState]="getCommentState(post.id)"
-                [liked]="true"
-                (likeToggle)="onLikeToggle($event)"
-                (commentsToggle)="onCommentsToggle($event)"
-                (newCommentInput)="onCommentInput($event)"
-                (commentSubmit)="onCommentSubmit($event)"
-                (detailView)="onDetailView($event)"
-                (authorClick)="onUserSelected($event)">
-              </app-post-card>
-            }
-          }
-        </div>
-      }
 
     </main>
 
@@ -159,21 +180,25 @@
 </div>
 
 <!-- Modals -->
-<app-followers-modal
-  [followers]="followers()"
+<app-user-list-modal
+  [users]="followers()"
   [isVisible]="showFollowersModal()"
   [loading]="followersLoading()"
+  header="Followers"
+  emptyMessage="No followers yet"
   (close)="showFollowersModal.set(false)"
   (userSelected)="onUserSelected($event)">
-</app-followers-modal>
+</app-user-list-modal>
 
-<app-following-modal
-  [following]="following()"
+<app-user-list-modal
+  [users]="following()"
   [isVisible]="showFollowingModal()"
   [loading]="followingLoading()"
+  header="Following"
+  emptyMessage="Not following anyone yet"
   (close)="showFollowingModal.set(false)"
   (userSelected)="onUserSelected($event)">
-</app-following-modal>
+</app-user-list-modal>
 
 <app-edit-profile-modal
   [profile]="profile()"

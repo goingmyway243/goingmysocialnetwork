@@ -30,6 +30,11 @@ public class UserDbContext(DbContextOptions<UserDbContext> options) : DbContext(
             entity.Property(e => e.WebsiteUrl).HasMaxLength(200);
             entity.Property(e => e.Gender).HasConversion<string>();
             entity.HasIndex(e => e.Username).IsUnique();
+            entity.HasIndex(e => e.Location);
+            entity.HasIndex(e => e.IsVerified);
+            entity.Property(e => e.Interests)
+                .HasColumnType("jsonb")
+                .HasDefaultValueSql("'[]'::jsonb");
         });
 
         modelBuilder.Entity<UserFollow>(entity =>

@@ -71,8 +71,8 @@ export class DashboardHeaderComponent {
 
   onSearch(): void {
     if (this.searchValue().trim()) {
-      // Implement search functionality
-      console.log('Searching for:', this.searchValue());
+      this.router.navigate(['/discover'], { queryParams: { search: this.searchValue().trim() } });
+      this.searchValue.set('');
     }
   }
 }

@@ -1,0 +1,88 @@
+@if (loading()) {
+  <div class="follow-list">
+    @for (_ of [1,2,3,4,5]; track $index) {
+      <div class="follow-item glass-surface skeleton-item">
+        <p-skeleton shape="circle" size="2.75rem" />
+        <div class="skeleton-info">
+          <p-skeleton width="120px" height="0.875rem" />
+          <p-skeleton width="80px" height="0.75rem" styleClass="mt-1" />
+        </div>
+      </div>
+    }
+  </div>
+} @else if (isEmpty()) {
+  <app-empty-state
+    icon="pi-users"
+    [title]="mode === 'followers' ? 'No followers yet' : 'Not following anyone yet'"
+    [subtitle]="mode === 'followers' ? 'Users who follow you will appear here' : 'Users you follow will appear here'">
+  </app-empty-state>
+} @else {
+  <div class="follow-list">
+    @for (user of list(); track user.id) {
+      <div class="follow-item glass-surface" [class.unfollowed]="isUnfollowed(user.id)">
+        <!-- Avatar -->
+        <div class="item-avatar" (click)="navigateToProfile(user.id)">
+          @if (user.avatarUrl) {
+            <img class="avatar-img" [src]="user.avatarUrl" [alt]="user.username" />
+          } @else {
+            <div class="avatar-placeholder">{{ getUserInitials(user) }}</div>
+          }
+          @if (user.isVerified) {
+            <span class="verified-dot" title="Verified"><i class="pi pi-verified"></i></span>
+          }
+        </div>
+
+        <!-- Info -->
+        <div class="item-info" (click)="navigateToProfile(user.id)">
+          <span class="item-name">{{ user.firstName }} {{ user.lastName }}</span>
+          <span class="item-handle">&#64;{{ user.username }}</span>
+          @if (user.bio) {
+            <span class="item-bio">{{ user.bio }}</span>
+          }
+        </div>
+
+        <!-- Counters -->
+        <div class="item-counters">
+          <span class="counter">
+            <strong>{{ user.followersCount }}</strong> followers
+          </span>
+        </div>
+
+        <!-- Action — only show for own-profile context or following list -->
+        @if (user.id !== currentUserId()) {
+          <div class="item-action">
+            @if (mode === 'following' || isUnfollowed(user.id) === false) {
+              @if (!isUnfollowed(user.id)) {
+                <button
+                  class="unfollow-btn"
+                  [disabled]="isFollowLoading(user.id)"
+                  (click)="unfollow(user)"
+                  type="button"
+                >
+                  @if (isFollowLoading(user.id)) {
+                    <i class="pi pi-spinner pi-spin"></i>
+                  } @else {
+                    Unfollow
+                  }
+                </button>
+              } @else {
+                <button
+                  class="follow-back-btn"
+                  [disabled]="isFollowLoading(user.id)"
+                  (click)="follow(user)"
+                  type="button"
+                >
+                  @if (isFollowLoading(user.id)) {
+                    <i class="pi pi-spinner pi-spin"></i>
+                  } @else {
+                    Follow
+                  }
+                </button>
+              }
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

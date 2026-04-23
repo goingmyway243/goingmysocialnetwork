@@ -56,5 +56,6 @@ public class CreateUserProfileCommandHandler(IUserProfileRepository userProfileR
         IsPrivate: p.IsPrivate,
         IsActive: p.IsActive,
         CreatedAt: p.CreatedAt,
-        UpdatedAt: p.UpdatedAt);
+        UpdatedAt: p.UpdatedAt,
+        Interests: p.Interests);
 }

@@ -21,4 +21,5 @@ public record UserProfileDto(
     bool IsPrivate,
     bool IsActive,
     DateTime CreatedAt,
-    DateTime? UpdatedAt);
+    DateTime? UpdatedAt,
+    List<string> Interests);

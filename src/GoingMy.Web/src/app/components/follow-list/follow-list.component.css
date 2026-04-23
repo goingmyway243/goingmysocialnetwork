@@ -1,0 +1,196 @@
+.follow-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ── Item ──────────────────────────────────────────────────── */
+
+.follow-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border-subtle);
+  transition: var(--transition-smooth);
+}
+
+.follow-item:hover {
+  background: var(--glass-surface-hover);
+  border-color: var(--glass-border-base);
+}
+
+.follow-item.unfollowed {
+  opacity: 0.65;
+}
+
+.skeleton-item {
+  min-height: 4rem;
+}
+
+/* ── Avatar ────────────────────────────────────────────────── */
+
+.item-avatar {
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.avatar-img {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--glass-border-base);
+  transition: var(--transition-fast);
+}
+
+.avatar-img:hover {
+  border-color: var(--color-accent-blue);
+}
+
+.avatar-placeholder {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  border: 2px solid var(--glass-border-base);
+}
+
+.verified-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  color: #ffffff;
+  border: 1px solid var(--surface-ground);
+}
+
+/* ── Info ──────────────────────────────────────────────────── */
+
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.item-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: var(--transition-fast);
+}
+
+.item-info:hover .item-name {
+  color: var(--color-accent-blue);
+}
+
+.item-handle {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.item-bio {
+  font-size: 0.775rem;
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Counters ──────────────────────────────────────────────── */
+
+.item-counters {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.item-counters strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ── Action Buttons ────────────────────────────────────────── */
+
+.item-action {
+  flex-shrink: 0;
+}
+
+.unfollow-btn {
+  padding: 0.4rem 0.875rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  background: var(--glass-surface-bg);
+  border: 1px solid var(--glass-border-base);
+  color: var(--text-color-secondary);
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.unfollow-btn:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: var(--color-accent-red);
+}
+
+.follow-back-btn {
+  padding: 0.4rem 0.875rem;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  background: var(--gradient-primary);
+  border: none;
+  color: #ffffff;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.follow-back-btn:hover:not(:disabled) {
+  background: var(--gradient-primary-hover);
+  box-shadow: var(--glass-glow-sm);
+}
+
+.unfollow-btn:disabled,
+.follow-back-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+

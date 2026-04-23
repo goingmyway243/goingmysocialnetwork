@@ -121,6 +121,51 @@ import { InputTextModule } from 'primeng/inputtext';
 })
 ```
 
+### ⚠️ DO NOT USE `::ng-deep` — Critical Rule
+
+**NEVER** use `:host ::ng-deep` or `::ng-deep` to pierce Angular component encapsulation. This violates Angular's design principles and is deprecated.
+
+❌ **WRONG:**
+```css
+:host ::ng-deep .p-button {
+  background: blue;
+}
+```
+
+✅ **CORRECT APPROACHES:**
+
+**1. Use PrimeNG's `styleClass` Input (Preferred)**
+```html
+<!-- Template -->
+<p-button label="Save" styleClass="glass-search-btn" />
+```
+```css
+/* Global styles.css or component.css */
+.glass-search-btn {
+  background: var(--gradient-primary) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  transition: var(--transition-smooth) !important;
+}
+```
+
+**2. Use PrimeNG's Pass Through API (Advanced)**
+```html
+<p-button label="Save" [pt]="{ root: 'custom-class-here' }" />
+```
+
+**3. Use Global Utility Classes** (for reusable patterns)
+Define custom classes in `styles.css` and apply them via `styleClass`:
+```css
+/* styles.css */
+.glass-button-primary {
+  background: var(--gradient-primary) !important;
+  /* ... more styles */
+}
+```
+
+**Rule:** Any PrimeNG styling must use `styleClass` or global utility classes defined in `styles.css`. Component-scoped styles should never pierce encapsulation.
+
 ---
 
 ## Glassmorphism Design System

@@ -1,0 +1,201 @@
+<app-dashboard-header />
+<p-toast />
+
+<div class="discover-page">
+  <!-- ── Hero Header ─────────────────────────────────────── -->
+  <div class="discover-hero glass-surface">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <i class="pi pi-compass"></i>
+        Discover People
+      </h1>
+      <p class="hero-subtitle">Find and connect with people who share your interests</p>
+    </div>
+  </div>
+
+  <!-- ── Search Bar ────────────────────────────────────────── -->
+  <div class="search-section glass-elevated">
+    <div class="search-row">
+      <div class="search-input-wrapper">
+        <i class="pi pi-search search-icon"></i>
+        <input
+          class="glass-search-input"
+          type="text"
+          placeholder="Search by name or username..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+          (keydown)="onSearchKeydown($event)"
+        />
+        @if (searchTerm()) {
+          <button class="clear-btn" (click)="searchTerm.set('')">
+            <i class="pi pi-times"></i>
+          </button>
+        }
+      </div>
+      <p-button
+        label="Search"
+        icon="pi pi-search"
+        [loading]="searchLoading()"
+        (onClick)="onSearch()"
+        styleClass="glass-search-btn"
+      />
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-row">
+      <div class="filter-input-wrapper">
+        <i class="pi pi-map-marker filter-icon"></i>
+        <input
+          class="glass-filter-input"
+          type="text"
+          placeholder="Filter by location..."
+          [ngModel]="locationFilter()"
+          (ngModelChange)="locationFilter.set($event)"
+          (keydown)="onSearchKeydown($event)"
+        />
+      </div>
+
+      <button
+        class="verified-toggle"
+        [class.active]="verifiedOnly()"
+        (click)="verifiedOnly.set(!verifiedOnly())"
+        type="button"
+      >
+        <i class="pi pi-verified"></i>
+        Verified only
+      </button>
+
+      @if (hasSearched()) {
+        <button class="clear-all-btn" (click)="onClearSearch()" type="button">
+          <i class="pi pi-refresh"></i>
+          Clear
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- ── Results ────────────────────────────────────────────── -->
+  <div class="results-section">
+
+    <!-- Loading Skeletons -->
+    @if (searchLoading()) {
+      <div class="results-grid">
+        @for (_ of [1,2,3,4,5,6]; track $index) {
+          <div class="user-card glass-elevated skeleton-card">
+            <p-skeleton shape="circle" size="4rem" />
+            <div class="skeleton-info">
+              <p-skeleton width="120px" height="1rem" />
+              <p-skeleton width="80px" height="0.8rem" styleClass="mt-1" />
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (isEmpty()) {
+      <app-empty-state
+        icon="pi-users"
+        title="No users found"
+        message="Try a different search term or adjust your filters"
+      />
+    }
+
+    <!-- Not searched yet -->
+    @if (!hasSearched() && !searchLoading()) {
+      <div class="placeholder-state">
+        <div class="placeholder-icon glass-surface">
+          <i class="pi pi-users"></i>
+        </div>
+        <p class="placeholder-text">Search for people to connect with</p>
+      </div>
+    }
+
+    <!-- Results Grid -->
+    @if (!searchLoading() && hasResults()) {
+      <div class="results-header">
+        <span class="results-count">{{ searchResults().length }} user{{ searchResults().length !== 1 ? 's' : '' }} found</span>
+      </div>
+
+      <div class="results-grid">
+        @for (user of searchResults(); track user.id) {
+          <div class="user-card glass-elevated" [class.own-profile]="user.id === currentUserId()">
+            <!-- Avatar -->
+            <div class="card-avatar-area" (click)="navigateToProfile(user.id)">
+              @if (user.avatarUrl) {
+                <img class="user-avatar" [src]="user.avatarUrl" [alt]="user.username" />
+              } @else {
+                <div class="user-avatar-placeholder">{{ getUserInitials(user) }}</div>
+              }
+              @if (user.isVerified) {
+                <span class="verified-badge" title="Verified">
+                  <i class="pi pi-verified"></i>
+                </span>
+              }
+            </div>
+
+            <!-- Info -->
+            <div class="card-info" (click)="navigateToProfile(user.id)">
+              <h3 class="user-fullname">{{ user.firstName }} {{ user.lastName }}</h3>
+              <span class="user-handle">&#64;{{ user.username }}</span>
+              @if (user.bio) {
+                <p class="user-bio">{{ user.bio }}</p>
+              }
+              @if (user.location) {
+                <span class="user-location">
+                  <i class="pi pi-map-marker"></i>
+                  {{ user.location }}
+                </span>
+              }
+              @if (user.interests && user.interests.length > 0) {
+                <div class="interests-tags">
+                  @for (interest of user.interests.slice(0, 3); track interest) {
+                    <span class="interest-tag">{{ interest }}</span>
+                  }
+                  @if (user.interests.length > 3) {
+                    <span class="interest-tag more-tag">+{{ user.interests.length - 3 }}</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Stats -->
+            <div class="card-stats">
+              <div class="stat-item">
+                <span class="stat-value">{{ user.followersCount }}</span>
+                <span class="stat-label">Followers</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">{{ user.followingCount }}</span>
+                <span class="stat-label">Following</span>
+              </div>
+            </div>
+
+            <!-- Follow Button -->
+            @if (user.id !== currentUserId()) {
+              <div class="card-action">
+                <button
+                  class="follow-btn"
+                  [class.following]="isFollowing(user.id)"
+                  [disabled]="isFollowLoading(user.id)"
+                  (click)="toggleFollow(user)"
+                  type="button"
+                >
+                  @if (isFollowLoading(user.id)) {
+                    <i class="pi pi-spinner pi-spin"></i>
+                  } @else if (isFollowing(user.id)) {
+                    <i class="pi pi-user-minus"></i>
+                    Unfollow
+                  } @else {
+                    <i class="pi pi-user-plus"></i>
+                    Follow
+                  }
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

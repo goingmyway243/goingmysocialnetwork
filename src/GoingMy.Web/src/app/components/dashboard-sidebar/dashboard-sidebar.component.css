@@ -75,22 +75,6 @@
   transition: all 0.3s ease;
 }
 
-/* Glass orb container */
-.menu-item i::after {
-  position: absolute;
-  content: '';
-  inset: 0;
-  background: var(--glass-surface-bg);
-  backdrop-filter: var(--glass-blur-sm);
-  -webkit-backdrop-filter: var(--glass-blur-sm);
-  border: 1px solid var(--glass-border-subtle);
-  border-radius: 50%;
-  z-index: -1;
-  box-shadow: var(--glass-shadow-sm),
-    inset 0 1px 2px var(--glass-highlight-inner);
-  transition: all 0.3s ease;
-}
-
 .menu-item::before {
   content: '';
   position: absolute;
@@ -220,6 +204,12 @@
     min-width: 60px;
   }
 
+  .menu-item.active {
+    border-radius: 50%;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
   .menu-item::before {
     display: none;
   }
@@ -229,8 +219,7 @@
   }
 
   .menu-label {
-    font-size: 0.75rem;
-    display: block;
+    display: none;
   }
 
   .menu-item:hover {

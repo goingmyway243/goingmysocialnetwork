@@ -6,71 +6,77 @@
   --primary-color: #60a5fa;
   --primary-color-text: #ffffff;
   --surface-ground: #0f172a;
-  
+
   /* Legacy surface tokens - kept for PrimeNG compatibility */
   --surface-section: var(--glass-surface-bg);
   --surface-card: var(--glass-elevated-bg);
   --surface-overlay: var(--glass-overlay-bg);
   --surface-border: var(--glass-border-base);
   --surface-hover: var(--glass-surface-hover);
-  
+
   --text-color: #ffffff;
   --text-color-secondary: rgba(255, 255, 255, 0.6);
 
   /* ===== LIQUID GLASS DESIGN SYSTEM ===== */
-  
+
   /* Glass Background Opacity - 3-Tier Elevation System */
-  --glass-surface-bg: rgba(255, 255, 255, 0.08);         /* Base level surfaces */
-  --glass-elevated-bg: rgba(255, 255, 255, 0.12);        /* Cards, elevated content */
-  --glass-overlay-bg: rgba(255, 255, 255, 0.18);         /* Modals, dropdowns, tooltips */
-  
+  --glass-surface-bg: rgba(255, 255, 255, 0.08);
+  /* Base level surfaces */
+  --glass-elevated-bg: rgba(255, 255, 255, 0.12);
+  /* Cards, elevated content */
+  --glass-overlay-bg: rgba(255, 255, 255, 0.18);
+  /* Modals, dropdowns, tooltips */
+
   /* Glass Hover States */
   --glass-surface-hover: rgba(255, 255, 255, 0.12);
   --glass-elevated-hover: rgba(255, 255, 255, 0.15);
   --glass-overlay-hover: rgba(255, 255, 255, 0.22);
-  
+
   /* Glass Active States */
   --glass-surface-active: rgba(255, 255, 255, 0.20);
   --glass-elevated-active: rgba(255, 255, 255, 0.25);
-  
+
   /* Blur Scale - Performance Optimized */
-  --glass-blur-sm: blur(8px);       /* Subtle blur for performance */
-  --glass-blur-md: blur(16px);      /* Standard glass effect */
-  --glass-blur-lg: blur(24px);      /* Strong glassmorphism */
-  
+  --glass-blur-sm: blur(8px);
+  /* Subtle blur for performance */
+  --glass-blur-md: blur(16px);
+  /* Standard glass effect */
+  --glass-blur-lg: blur(24px);
+  /* Strong glassmorphism */
+
   /* Border System */
   --glass-border-base: rgba(255, 255, 255, 0.1);
   --glass-border-strong: rgba(255, 255, 255, 0.2);
   --glass-border-subtle: rgba(255, 255, 255, 0.05);
   --glass-border-accent: rgba(96, 165, 250, 0.3);
-  
+
   /* Edge Highlights & Inner Glow */
   --glass-highlight-top: rgba(255, 255, 255, 0.2);
   --glass-highlight-inner: rgba(255, 255, 255, 0.15);
   --glass-glow-color: rgba(96, 165, 250, 0.25);
   --glass-glow-strong: rgba(96, 165, 250, 0.4);
-  
+
   /* Shadow Elevation Scale */
   --glass-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
   --glass-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
   --glass-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
   --glass-shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.25);
-  
+
   /* Glass Glow Shadows (for hover/focus states) */
   --glass-glow-sm: 0 0 12px var(--glass-glow-color);
   --glass-glow-md: 0 0 20px var(--glass-glow-color);
   --glass-glow-lg: 0 0 32px var(--glass-glow-strong);
-  
+
   /* Gradient Definitions */
   --gradient-primary: linear-gradient(135deg, #60a5fa, #a78bfa);
   --gradient-primary-hover: linear-gradient(135deg, #3b82f6, #8b5cf6);
   --gradient-border: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
-  
+
   /* Color Accents */
   --color-accent-blue: #60a5fa;
   --color-accent-purple: #a78bfa;
   --color-accent-red: #ef4444;
-  
+
   /* Transition Timing */
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -96,12 +102,11 @@ body {
   color: #ffffff;
   /* Global animated gradient background */
   background: linear-gradient(135deg,
-    #0a0e27 0%,
-    #1a1333 25%,
-    #2d1b4e 50%,
-    #1e1b4b 75%,
-    #0f172a 100%
-  );
+      #0a0e27 0%,
+      #1a1333 25%,
+      #2d1b4e 50%,
+      #1e1b4b 75%,
+      #0f172a 100%);
   background-attachment: fixed;
 }
 
@@ -128,12 +133,10 @@ app-root::before {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(96, 165, 250, 0.15) 0%,
-    rgba(167, 139, 250, 0.08) 35%,
-    transparent 70%
-  );
+  background: radial-gradient(circle at 50% 50%,
+      rgba(96, 165, 250, 0.15) 0%,
+      rgba(167, 139, 250, 0.08) 35%,
+      transparent 70%);
   animation: globalRotate 30s linear infinite;
   pointer-events: none;
   z-index: -1;
@@ -154,8 +157,13 @@ app-root::after {
 }
 
 @keyframes globalRotate {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Smooth scrolling */
@@ -194,7 +202,7 @@ html {
   -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
   border: 1px solid var(--glass-border-base);
   box-shadow: var(--glass-shadow-md),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
   transition: var(--transition-smooth);
 }
 
@@ -206,7 +214,7 @@ html {
   -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
   border: 1px solid var(--glass-border-base);
   box-shadow: var(--glass-shadow-lg),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
   transition: var(--transition-smooth);
 }
 
@@ -218,7 +226,7 @@ html {
   -webkit-backdrop-filter: var(--glass-blur-lg) saturate(180%);
   border: 1px solid var(--glass-border-strong);
   box-shadow: var(--glass-shadow-xl),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
   transition: var(--transition-smooth);
 }
 
@@ -230,11 +238,10 @@ html {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, 
-    transparent,
-    var(--glass-highlight-top) 50%,
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      var(--glass-highlight-top) 50%,
+      transparent);
   opacity: 0.8;
   pointer-events: none;
 }
@@ -242,14 +249,14 @@ html {
 /* Glass with Glow Effect */
 .glass-glow {
   box-shadow: var(--glass-shadow-md),
-              var(--glass-glow-md),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    var(--glass-glow-md),
+    inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 /* Glass Gradient Border */
 .glass-border-gradient {
   border: 1px solid transparent;
-  background-image: 
+  background-image:
     linear-gradient(var(--glass-elevated-bg), var(--glass-elevated-bg)),
     var(--gradient-border);
   background-origin: border-box;
@@ -261,17 +268,16 @@ html {
   background: var(--glass-surface-hover);
   border-color: var(--glass-border-accent);
   box-shadow: var(--glass-shadow-lg),
-              var(--glass-glow-sm),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    var(--glass-glow-sm),
+    inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 .glass-elevated:hover {
   background: var(--glass-elevated-hover);
   border-color: var(--glass-border-accent);
   box-shadow: var(--glass-shadow-xl),
-              var(--glass-glow-md),
-              inset 0 1px 2px var(--glass-highlight-inner);
-  transform: translateY(-2px);
+    var(--glass-glow-md),
+    inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 /* Performance Mode - Reduced blur for low-end devices */
@@ -296,7 +302,7 @@ html {
   border-radius: 2rem;
   padding: 1.25rem;
   box-shadow: var(--glass-shadow-md),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 /* ===== FORM INPUTS WITH GLASS EFFECT ===== */
@@ -308,7 +314,7 @@ input.p-inputtext {
   backdrop-filter: var(--glass-blur-md) saturate(180%);
   -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
   box-shadow: var(--glass-shadow-sm),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
   border: 1px solid var(--glass-border-base);
   border-radius: 12px;
   color: var(--primary-color-text);
@@ -321,8 +327,8 @@ input.p-inputtext:focus {
   background: var(--glass-elevated-bg);
   border-color: var(--glass-border-accent);
   box-shadow: var(--glass-shadow-md),
-              var(--glass-glow-sm),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    var(--glass-glow-sm),
+    inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 input.p-inputtext::placeholder {
@@ -332,7 +338,7 @@ input.p-inputtext::placeholder {
 .p-inputtext.ng-invalid.ng-dirty:enabled:focus {
   border-color: var(--color-accent-red);
   box-shadow: 0 0 0 0.1rem rgba(239, 68, 68, 0.3),
-              var(--glass-shadow-md);
+    var(--glass-shadow-md);
   outline: none;
 }
 
@@ -344,7 +350,7 @@ button.p-button {
   backdrop-filter: var(--glass-blur-md) saturate(180%);
   -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
   box-shadow: var(--glass-shadow-md),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
   border: 1px solid var(--glass-border-base);
   border-radius: 8px;
   color: var(--primary-color-text);
@@ -352,13 +358,37 @@ button.p-button {
   will-change: transform, box-shadow;
 }
 
-button.p-button:hover:not(:disabled) {
+button.p-button:hover:not(:disabled),
+button.p-button-text.p-button-secondary:not(:disabled):hover {
   background: var(--glass-elevated-hover);
   border-color: var(--glass-border-accent);
   box-shadow: var(--glass-shadow-lg),
-              var(--glass-glow-sm);
+    var(--glass-glow-sm);
   color: var(--primary-color-text);
 }
+
+/* Glass Search Button — Gradient primary style */
+.glass-search-btn {
+  background: var(--gradient-primary) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  transition: var(--transition-smooth) !important;
+  white-space: nowrap !important;
+  box-shadow: var(--glass-shadow-md) !important;
+}
+
+.glass-search-btn:hover:not(:disabled) {
+  background: var(--gradient-primary-hover) !important;
+  box-shadow: var(--glass-shadow-md), var(--glass-glow-md) !important;
+  transform: translateY(-1px) !important;
+}
+
+.glass-search-btn:focus:not(:disabled) {
+  box-shadow: var(--glass-shadow-md), var(--glass-glow-md) !important;
+}
+
 /* ===== OTHER PRIMENG COMPONENTS ===== */
 
 .p-password .p-password-toggle-mask-icon {
@@ -372,7 +402,7 @@ button.p-button:hover:not(:disabled) {
   backdrop-filter: var(--glass-blur-sm) saturate(180%);
   -webkit-backdrop-filter: var(--glass-blur-sm) saturate(180%);
   box-shadow: var(--glass-shadow-sm),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
   border: 1px solid var(--glass-border-base);
   transition: var(--transition-smooth);
 }
@@ -380,7 +410,7 @@ button.p-button:hover:not(:disabled) {
 .p-checkbox .p-checkbox-box:hover {
   border-color: var(--glass-border-accent);
   box-shadow: var(--glass-shadow-md),
-              var(--glass-glow-sm);
+    var(--glass-glow-sm);
 }
 
 /* ===== ANIMATIONS & MICRO-INTERACTIONS ===== */
@@ -389,19 +419,23 @@ button.p-button:hover:not(:disabled) {
   0% {
     background-position: -200% center;
   }
+
   100% {
     background-position: 200% center;
   }
 }
 
 @keyframes glowPulse {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: var(--glass-shadow-md),
-                0 0 15px var(--glass-glow-color);
+      0 0 15px var(--glass-glow-color);
   }
+
   50% {
     box-shadow: var(--glass-shadow-md),
-                0 0 25px var(--glass-glow-strong);
+      0 0 25px var(--glass-glow-strong);
   }
 }
 
@@ -410,6 +444,7 @@ button.p-button:hover:not(:disabled) {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -429,12 +464,10 @@ button.p-button:hover:not(:disabled) {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent);
   background-size: 200% 100%;
   animation: glassShimmer 2s infinite;
   pointer-events: none;
@@ -449,6 +482,7 @@ button.p-button:hover:not(:disabled) {
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -456,7 +490,7 @@ button.p-button:hover:not(:disabled) {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .glass-surface:hover,
   .glass-elevated:hover,
   button.p-button:hover {
@@ -479,7 +513,7 @@ button.p-button:hover:not(:disabled) {
   border: 1px solid var(--glass-border-base);
   border-radius: 16px;
   box-shadow: var(--glass-shadow-lg),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
   position: relative;
   overflow: hidden;
 }
@@ -491,7 +525,7 @@ button.p-button:hover:not(:disabled) {
   border: 1px solid var(--glass-border-base);
   border-radius: 12px;
   box-shadow: var(--glass-shadow-lg),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
   position: relative;
   overflow: hidden;
 }
@@ -506,7 +540,9 @@ button.p-button:hover:not(:disabled) {
 .p-card.comment-compose-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--glass-highlight-top) 50%, transparent);
   opacity: 0.6;
@@ -516,7 +552,9 @@ button.p-button:hover:not(:disabled) {
 .p-card.post-card::after {
   content: '';
   position: absolute;
-  bottom: -1px; left: 0; right: 0;
+  bottom: -1px;
+  left: 0;
+  right: 0;
   height: 2px;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.1), transparent);
   opacity: 0;
@@ -534,8 +572,8 @@ button.p-button:hover:not(:disabled) {
   background-clip: padding-box, border-box;
   transform: translateY(-4px);
   box-shadow: var(--glass-shadow-xl),
-              var(--glass-glow-md),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    var(--glass-glow-md),
+    inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 .p-card.post-card:hover::after {
@@ -578,8 +616,13 @@ button.p-button:hover:not(:disabled) {
 }
 
 @keyframes shimmer {
-  0%   { left: -100%; }
-  100% { left: 100%; }
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 100%;
+  }
 }
 
 /* Reveal comment owner actions on card hover */
@@ -610,7 +653,7 @@ button.p-button:hover:not(:disabled) {
   color: rgba(255, 255, 255, 0.7);
   transition: var(--transition-smooth);
   box-shadow: var(--glass-shadow-sm),
-              inset 0 1px 1px var(--glass-highlight-inner);
+    inset 0 1px 1px var(--glass-highlight-inner);
   will-change: transform, background;
 }
 
@@ -620,8 +663,8 @@ button.p-button:hover:not(:disabled) {
   border-color: var(--glass-border-accent);
   transform: translateY(-1px);
   box-shadow: var(--glass-shadow-md),
-              var(--glass-glow-sm),
-              inset 0 1px 1px var(--glass-highlight-inner);
+    var(--glass-glow-sm),
+    inset 0 1px 1px var(--glass-highlight-inner);
 }
 
 .p-button.action-btn:active {
@@ -666,7 +709,7 @@ button.p-button:hover:not(:disabled) {
   height: 2.5rem;
   transition: var(--transition-smooth);
   box-shadow: var(--glass-shadow-sm),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
   will-change: transform, box-shadow;
 }
 
@@ -675,8 +718,8 @@ button.p-button:hover:not(:disabled) {
   border-color: var(--glass-border-accent);
   transform: translateY(-2px);
   box-shadow: var(--glass-shadow-md),
-              var(--glass-glow-sm),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    var(--glass-glow-sm),
+    inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 /* ── p-button: Gradient Primary Variants ─────────────────── */
@@ -697,7 +740,7 @@ button.p-button:hover:not(:disabled) {
 .p-button.create-btn {
   padding: 0.75rem 1.5rem;
   box-shadow: var(--glass-shadow-md),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .p-button.create-post-btn {
@@ -705,8 +748,8 @@ button.p-button:hover:not(:disabled) {
   padding: 0.875rem 1.5rem;
   font-size: 1rem;
   box-shadow: var(--glass-shadow-md),
-              0 4px 16px rgba(96, 165, 250, 0.25),
-              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 4px 16px rgba(96, 165, 250, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .p-button.post-btn {
@@ -730,17 +773,17 @@ button.p-button:hover:not(:disabled) {
   background: var(--gradient-primary-hover);
   transform: translateY(-2px);
   box-shadow: var(--glass-shadow-lg),
-              0 0 20px rgba(96, 165, 250, 0.4),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 0 20px rgba(96, 165, 250, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .p-button.create-post-btn:hover {
   background: var(--gradient-primary-hover);
   transform: translateY(-2px) scale(1.02);
   box-shadow: var(--glass-shadow-lg),
-              0 6px 24px rgba(96, 165, 250, 0.4),
-              var(--glass-glow-md),
-              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 6px 24px rgba(96, 165, 250, 0.4),
+    var(--glass-glow-md),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .p-button.post-btn:hover:not(:disabled) {
@@ -856,80 +899,12 @@ button.p-button:hover:not(:disabled) {
   color: rgba(255, 255, 255, 0.85);
 }
 
-/* ── p-dialog: Compose Dialog ────────────────────────────── */
-
-.p-dialog.compose-dialog {
-  background: var(--glass-elevated-bg);
-  backdrop-filter: var(--glass-blur-md) saturate(200%);
-  -webkit-backdrop-filter: var(--glass-blur-md) saturate(200%);
-  border: 1px solid var(--glass-border-accent);
-  border-radius: 20px;
-  box-shadow: var(--glass-shadow-xl), var(--glass-glow-md),
-              inset 0 1px 2px var(--glass-highlight-inner);
-  overflow: hidden;
-}
-
-.p-dialog.compose-dialog::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--glass-highlight-top) 50%, transparent);
-  opacity: 0.9;
-  pointer-events: none;
-}
-
-.p-dialog.compose-dialog .p-dialog-header {
-  background: transparent;
-  border-bottom: 1px solid var(--glass-border-base);
-  padding: 1.25rem 1.5rem;
-}
-
-.p-dialog.compose-dialog .p-dialog-header-actions .p-button {
-  width: 32px;
-  height: 32px;
-  color: var(--primary-color-text);
-}
-
-.p-dialog.compose-dialog .p-dialog-title {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: -0.01em;
-}
-
-.p-dialog.compose-dialog .p-dialog-header-icon {
-  color: rgba(255, 255, 255, 0.55);
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  border-radius: 50%;
-  background: var(--glass-surface-bg);
-  border: 1px solid var(--glass-border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.2s ease, background 0.2s ease;
-}
-
-.p-dialog.compose-dialog .p-dialog-header-icon:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.12);
-  border-color: var(--glass-border-base);
-}
-
-.p-dialog.compose-dialog .p-dialog-content {
-  background: transparent;
+/* Compose dialog — uses glass-dialog with special content padding for form layout */
+.glass-dialog.compose-content .p-dialog-content {
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.p-dialog.compose-dialog .p-dialog-footer {
-  background: transparent;
-  border-top: 1px solid var(--glass-border-base);
-  padding: 1rem 1.5rem;
 }
 
 /* ── p-inputtext: Compose Textarea / Dialog Inputs ───────── */
@@ -1000,7 +975,7 @@ button.p-button:hover:not(:disabled) {
   border-radius: 12px;
   min-width: 200px;
   box-shadow: var(--glass-shadow-xl),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 .p-menu.glass-menu .p-menuitem-link {
@@ -1014,7 +989,7 @@ button.p-button:hover:not(:disabled) {
 .p-menu.glass-menu .p-menuitem-link:hover {
   background: var(--glass-elevated-hover);
   box-shadow: var(--glass-shadow-sm),
-              var(--glass-glow-sm);
+    var(--glass-glow-sm);
 }
 
 .p-menu.glass-menu .p-menuitem-icon {
@@ -1028,13 +1003,29 @@ button.p-button:hover:not(:disabled) {
    are the PrimeNG v20 recommended here. */
 
 .glass-dialog {
-  background: rgba(15, 23, 42, 0.85) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border: 1px solid var(--glass-border-strong) !important;
+  background: var(--glass-elevated-bg) !important;
+  backdrop-filter: var(--glass-blur-md) saturate(200%) !important;
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(200%) !important;
+  border: 1px solid var(--glass-border-accent) !important;
   border-radius: 16px !important;
-  box-shadow: var(--glass-shadow-xl) !important;
+  box-shadow: var(--glass-shadow-xl), var(--glass-glow-md), inset 0 1px 2px var(--glass-highlight-inner) !important;
   color: #ffffff !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient top edge for glass-dialog */
+.glass-dialog::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-highlight-top) 50%, transparent);
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .glass-dialog .p-dialog-header {
@@ -1043,12 +1034,16 @@ button.p-button:hover:not(:disabled) {
   color: #ffffff;
   padding: 1.25rem 1.5rem;
   font-weight: 700;
+  position: relative;
+  z-index: 2;
 }
 
 .glass-dialog .p-dialog-content {
   background: transparent;
-  padding: 0.75rem 0;
+  padding: 1rem 0;
   overflow-y: auto;
+  position: relative;
+  z-index: 2;
 }
 
 /* Edit profile dialog — has form padding inside content */
@@ -1060,60 +1055,124 @@ button.p-button:hover:not(:disabled) {
   background: transparent;
   border-top: 1px solid var(--glass-border-base);
   padding: 1rem 1.5rem;
+  position: relative;
+  z-index: 2;
 }
 
 /* Close button — targets the button rendered by PrimeNG inside dialog header */
 .glass-dialog .p-dialog-header-icon,
 .glass-dialog .p-dialog-header button {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.55);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--glass-surface-bg);
+  border: 1px solid var(--glass-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .glass-dialog .p-dialog-header-icon:hover,
 .glass-dialog .p-dialog-header button:hover {
   color: #ffffff;
   background: var(--glass-surface-hover);
+  border-color: var(--glass-border-base);
 }
 
 /* ===== PRIMENG GLASS TABS ===== */
-/* Uses styleClass="glass-tabs" on <p-tabs>.
+/* Apply class="glass-tabs" to the wrapper element containing <p-tabs>.
    Global scope needed because PrimeNG tab internals have their own
    Angular view encapsulation boundary. */
 
-.glass-tabs .p-tablist {
-  background: transparent;
-  border-bottom: 1px solid var(--glass-border-base);
-  padding: 0 1rem;
-}
-
-.glass-tabs .p-tab {
-  color: var(--text-color-secondary);
-  font-weight: 600;
-  font-size: 0.9rem;
+.glass-tabs .p-tabs {
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 1rem 1.25rem;
-  background: transparent;
-  border-bottom: 2px solid transparent;
-  transition: var(--transition-fast);
-  cursor: pointer;
+  flex-direction: column;
 }
 
-.glass-tabs .p-tab:hover {
-  color: rgba(255, 255, 255, 0.85);
-  background: var(--glass-surface-hover);
+/* Glass pill tab list */
+.glass-tabs .p-tablist {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 14px;
+  padding: 0.375rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.glass-tabs .p-tablist-tab-list {
+  background: transparent;
+  border: none !important;
+  gap: 0.25rem;
+}
+
+/* Individual tabs */
+.glass-tabs .p-tab {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.125rem;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  border-bottom: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  margin: 0;
+  outline: none;
+}
+
+.glass-tabs .p-tab:not(.p-tab-active):not(.p-disabled):hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .glass-tabs .p-tab[data-p-active="true"] {
   color: #ffffff;
-  border-bottom-color: var(--color-accent-blue);
+  background: rgba(59, 130, 246, 0.2);
+  border: none;
+  border-radius: 10px;
 }
 
 .glass-tabs .p-tabpanels {
   background: transparent;
+  border: none;
   padding: 0;
+  box-shadow: none;
 }
 
 .glass-tabs .p-tabpanel {
-  padding: 0;
+  background: transparent;
+  padding: 1.5rem 0;
+  min-height: 200px;
+}
+
+/* Hidden panels MUST be hidden — overrides any layout styles */
+.glass-tabs .p-tabpanel[hidden] {
+  display: none !important;
+}
+
+/* Active panel — apply flex layout */
+.glass-tabs .p-tabpanel:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: tabSlideIn 0.25s ease-out;
+}
+
+@keyframes tabSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -55,4 +55,41 @@ public class UserProfileRepository(UserDbContext context) : IUserProfileReposito
             .Where(p => followingIds.Contains(p.Id))
             .ToListAsync(ct);
     }
+
+    public async Task<IEnumerable<UserProfile>> SearchAsync(
+        string? searchTerm,
+        string? location,
+        bool? isVerified,
+        int page,
+        int pageSize,
+        Guid? excludeUserId = null,
+        CancellationToken ct = default)
+    {
+        var query = context.UserProfiles.Where(p => p.IsActive).AsQueryable();
+
+        if (excludeUserId.HasValue)
+            query = query.Where(p => p.Id != excludeUserId.Value);
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            var term = searchTerm.ToLower();
+            query = query.Where(p =>
+                p.Username.ToLower().Contains(term) ||
+                p.FirstName.ToLower().Contains(term) ||
+                p.LastName.ToLower().Contains(term) ||
+                (p.FirstName.ToLower() + " " + p.LastName.ToLower()).Contains(term));
+        }
+
+        if (!string.IsNullOrWhiteSpace(location))
+            query = query.Where(p => p.Location != null && p.Location.ToLower().Contains(location.ToLower()));
+
+        if (isVerified.HasValue)
+            query = query.Where(p => p.IsVerified == isVerified.Value);
+
+        return await query
+            .OrderByDescending(p => p.FollowersCount)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
+    }
 }
