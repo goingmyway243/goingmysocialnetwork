@@ -69,6 +69,10 @@ export class DashboardHeaderComponent {
     this.authService.logout();
   }
 
+  navigateToMessages(): void {
+    this.router.navigate(['/dashboard/messages']);
+  }
+
   onSearch(): void {
     if (this.searchValue().trim()) {
       this.router.navigate(['/discover'], { queryParams: { search: this.searchValue().trim() } });

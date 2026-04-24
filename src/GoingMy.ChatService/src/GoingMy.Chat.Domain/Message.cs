@@ -12,6 +12,8 @@ public class Message
     public string Content { get; set; } = null!;
     public DateTime SentAt { get; set; }
     public bool IsDeleted { get; set; }
+    public string? EditedContent { get; set; }
+    public DateTime? EditedAt { get; set; }
 
     public Message(string id, string conversationId, string senderId, string senderUsername, string content, DateTime sentAt)
     {
@@ -32,4 +34,13 @@ public class Message
     /// Soft-deletes this message.
     /// </summary>
     public void Delete() => IsDeleted = true;
+
+    /// <summary>
+    /// Edits the message content. Only the original sender should call this.
+    /// </summary>
+    public void Edit(string newContent)
+    {
+        EditedContent = newContent;
+        EditedAt = DateTime.UtcNow;
+    }
 }

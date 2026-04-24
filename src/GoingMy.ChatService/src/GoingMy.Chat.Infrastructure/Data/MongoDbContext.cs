@@ -28,6 +28,12 @@ public class MongoDbContext
         => _database.GetCollection<Domain.Message>("messages");
 
     /// <summary>
+    /// Gets the ReadReceipts collection.
+    /// </summary>
+    public IMongoCollection<Domain.ReadReceipt> ReadReceipts
+        => _database.GetCollection<Domain.ReadReceipt>("readReceipts");
+
+    /// <summary>
     /// Initializes MongoDB collections with required indexes.
     /// </summary>
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -43,6 +49,17 @@ public class MongoDbContext
             .Ascending(m => m.ConversationId)
             .Ascending(m => m.SentAt);
         await SafeCreateIndexAsync(Messages, new CreateIndexModel<Domain.Message>(msgIndex), cancellationToken);
+
+        // Index: read receipts by messageId + userId (unique per pair)
+        var receiptIndex = Builders<Domain.ReadReceipt>.IndexKeys
+            .Ascending(r => r.MessageId)
+            .Ascending(r => r.ReadByUserId);
+        await SafeCreateIndexAsync(ReadReceipts, new CreateIndexModel<Domain.ReadReceipt>(receiptIndex), cancellationToken);
+
+        // Index: read receipts by conversationId for lookup
+        var receiptConvIndex = Builders<Domain.ReadReceipt>.IndexKeys
+            .Ascending(r => r.ConversationId);
+        await SafeCreateIndexAsync(ReadReceipts, new CreateIndexModel<Domain.ReadReceipt>(receiptConvIndex), cancellationToken);
     }
 
     private static async Task SafeCreateIndexAsync<T>(IMongoCollection<T> collection, CreateIndexModel<T> model, CancellationToken ct)

@@ -5,24 +5,24 @@ using MediatR;
 namespace GoingMy.Chat.Application.Queries;
 
 /// <summary>
-/// Query to retrieve paginated messages in a conversation (newest-first for infinite scroll).
+/// Query to search messages within a conversation by content.
 /// </summary>
-public record GetConversationMessagesQuery(
+public record SearchMessagesQuery(
     string ConversationId,
     string RequestingUserId,
-    int PageNumber = 0,
-    int PageSize = 50
-) : IRequest<PaginatedResultDto<MessageDto>>;
+    string SearchTerm,
+    int Limit = 20
+) : IRequest<IEnumerable<MessageDto>>;
 
 /// <summary>
-/// Handler for the GetConversationMessagesQuery.
+/// Handler for SearchMessagesQuery.
 /// </summary>
-public class GetConversationMessagesQueryHandler(
+public class SearchMessagesQueryHandler(
     IConversationRepository conversationRepository,
     IMessageRepository messageRepository)
-    : IRequestHandler<GetConversationMessagesQuery, PaginatedResultDto<MessageDto>>
+    : IRequestHandler<SearchMessagesQuery, IEnumerable<MessageDto>>
 {
-    public async Task<PaginatedResultDto<MessageDto>> Handle(GetConversationMessagesQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<MessageDto>> Handle(SearchMessagesQuery request, CancellationToken cancellationToken)
     {
         var conversation = await conversationRepository.GetByIdAsync(request.ConversationId, cancellationToken)
             ?? throw new InvalidOperationException($"Conversation {request.ConversationId} not found.");
@@ -30,10 +30,10 @@ public class GetConversationMessagesQueryHandler(
         if (!conversation.ParticipantIds.Contains(request.RequestingUserId))
             throw new UnauthorizedAccessException("User is not a participant of this conversation.");
 
-        var (messages, hasMore) = await messageRepository.GetPagedByConversationAsync(
-            request.ConversationId, request.PageNumber, request.PageSize, cancellationToken);
+        var messages = await messageRepository.SearchAsync(
+            request.ConversationId, request.SearchTerm, request.Limit, cancellationToken);
 
-        var dtos = messages.Select(m => new MessageDto(
+        return messages.Select(m => new MessageDto(
             m.Id,
             m.ConversationId,
             m.SenderId,
@@ -44,7 +44,5 @@ public class GetConversationMessagesQueryHandler(
             m.EditedContent,
             m.EditedAt
         ));
-
-        return new PaginatedResultDto<MessageDto>(dtos, hasMore, request.PageNumber, request.PageSize);
     }
 }

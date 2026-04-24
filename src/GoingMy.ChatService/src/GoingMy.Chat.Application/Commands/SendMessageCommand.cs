@@ -55,7 +55,9 @@ public class SendMessageCommandHandler(
             saved.SenderUsername,
             saved.Content,
             saved.SentAt,
-            saved.IsDeleted
+            saved.IsDeleted,
+            saved.EditedContent,
+            saved.EditedAt
         );
     }
 }

@@ -83,3 +83,7 @@ export default {
 - `templates/basic-test.js` - Starter test template with evidence capture
 - `configs/playwright.config.js` - Configuration for evidence recording
 - `examples/login-test.js` - Complete login flow test example
+
+## Credentials
+- username: `playwright-mcp`
+- password: `Pass@word123`

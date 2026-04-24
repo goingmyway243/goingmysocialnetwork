@@ -10,5 +10,7 @@ public record MessageDto(
     string SenderUsername,
     string Content,
     DateTime SentAt,
-    bool IsDeleted
+    bool IsDeleted,
+    string? EditedContent,
+    DateTime? EditedAt
 );

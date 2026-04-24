@@ -38,6 +38,7 @@ builder.Services.AddMediatR(config =>
 // Register repositories
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IReadReceiptRepository, ReadReceiptRepository>();
 
 // ── MassTransit + RabbitMQ (event consumers) ────────────────────
 builder.Services.AddMassTransit(x =>

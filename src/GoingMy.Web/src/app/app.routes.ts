@@ -32,7 +32,7 @@ export const routes: Routes = [
       },
       {
         path: 'messages',
-        loadComponent: () => import('./pages/dashboard/dashboard-home/dashboard-home.component').then(m => m.DashboardHomeComponent)
+        loadComponent: () => import('./pages/chat/chat.component').then(m => m.ChatComponent)
       },
       {
         path: 'notifications',
