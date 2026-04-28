@@ -216,6 +216,21 @@ public class UserProfilesController(IMediator mediator) : ControllerBase
         }
     }
 
+    /// <summary>Checks if the authenticated caller is following the specified user.</summary>
+    [HttpGet("{id:guid}/is-following")]
+    [Authorize]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> CheckFollowStatus(Guid id)
+    {
+        var callerId = User.FindFirst("sub")?.Value;
+        if (!Guid.TryParse(callerId, out var followerGuid))
+            return Unauthorized();
+
+        var isFollowing = await mediator.Send(new CheckFollowStatusQuery(followerGuid, id));
+        return Ok(isFollowing);
+    }
+
     /// <summary>Gets the followers list for a user (paginated).</summary>
     [HttpGet("{id:guid}/followers")]
     [AllowAnonymous]

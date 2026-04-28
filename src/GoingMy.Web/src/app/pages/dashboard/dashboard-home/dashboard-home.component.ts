@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { PostApiService } from '../../../services/post-api.service';
 import { AuthService } from '../../../services/auth.service';
@@ -16,7 +15,7 @@ import { Post, Comment, PostCommentsState } from '../../../models/post.model';
 
 @Component({
   selector: 'app-dashboard-home',
-  imports: [CommonModule, CardModule, ButtonModule, SkeletonModule, ToastModule, ComposePostComponent, PostCardComponent, EmptyStateComponent],
+  imports: [CommonModule, CardModule, ButtonModule, SkeletonModule, ComposePostComponent, PostCardComponent, EmptyStateComponent],
   providers: [MessageService],
   templateUrl: './dashboard-home.component.html',
   styleUrl: './dashboard-home.component.css'
@@ -33,9 +32,6 @@ export class DashboardHomeComponent implements OnInit {
   readonly posts = signal<Post[]>([]);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
-
-  /** Post IDs liked by the current user (populated lazily on like action) */
-  private readonly _likedPostIds = signal<Set<string>>(new Set());
 
   /** Per-post comment state keyed by post ID */
   private readonly _commentStates = signal<Map<string, PostCommentsState>>(new Map());
@@ -81,37 +77,63 @@ export class DashboardHomeComponent implements OnInit {
   }
 
   // ── 6. Actions — Likes ────────────────────────────────────────
-  isLiked(postId: string): boolean {
-    return this._likedPostIds().has(postId);
+  isLiked(post: Post): boolean {
+    return post.userHasLiked ?? false;
   }
 
   toggleLike(post: Post): void {
-    const wasLiked = this.isLiked(post.id);
+    const wasLiked = this.isLiked(post);
     const prevCount = post.likes ?? 0;
 
-    this._likedPostIds.update(set => {
-      const next = new Set(set);
-      wasLiked ? next.delete(post.id) : next.add(post.id);
-      return next;
-    });
+    // Optimistic update
     this.posts.update(prev => prev.map(p =>
-      p.id === post.id ? { ...p, likes: wasLiked ? Math.max(0, prevCount - 1) : prevCount + 1 } : p
+      p.id === post.id
+        ? { ...p, userHasLiked: !wasLiked, likes: wasLiked ? Math.max(0, prevCount - 1) : prevCount + 1 }
+        : p
     ));
 
-    const action$: Observable<unknown> = wasLiked ? this._postApi.unlikePost(post.id) : this._postApi.likePost(post.id);
-    action$.subscribe({
-      error: () => {
-        this._likedPostIds.update(set => {
-          const next = new Set(set);
-          wasLiked ? next.add(post.id) : next.delete(post.id);
-          return next;
-        });
-        this.posts.update(prev => prev.map(p =>
-          p.id === post.id ? { ...p, likes: prevCount } : p
-        ));
-        this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update like.' });
-      }
-    });
+    if (wasLiked) {
+      this._postApi.unlikePost(post.id).subscribe({
+        error: () => this.revertLike(post, wasLiked, prevCount)
+      });
+    } else {
+      this._postApi.likePost(post.id).subscribe({
+        error: () => this.revertLike(post, wasLiked, prevCount)
+      });
+    }
+  }
+
+  private revertLike(post: Post, wasLiked: boolean, prevCount: number): void {
+    this.posts.update(prev => prev.map(p =>
+      p.id === post.id
+        ? { ...p, userHasLiked: wasLiked, likes: prevCount }
+        : p
+    ));
+    this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update like.' });
+  }
+
+  editPost(post: Post): void {
+    // TODO: Implement edit mode or navigate to edit page
+    this._messageService.add({ severity: 'info', summary: 'Edit', detail: 'Edit functionality coming soon!' });
+  }
+
+  deletePost(post: Post): void {
+    if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+      this._postApi.deletePost(post.id).subscribe({
+        next: () => {
+          this.posts.update(prev => prev.filter(p => p.id !== post.id));
+          this._commentStates.update(map => {
+            const next = new Map(map);
+            next.delete(post.id);
+            return next;
+          });
+          this._messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Post deleted successfully.' });
+        },
+        error: () => {
+          this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete post.' });
+        }
+      });
+    }
   }
 
   // ── 7. Actions — Comments ─────────────────────────────────────

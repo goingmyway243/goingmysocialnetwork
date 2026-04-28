@@ -1,5 +1,5 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, forkJoin, map, catchError, of } from 'rxjs';
 import { UserApiService } from './user-api.service';
 import { AuthService } from './auth.service';
 import { PostApiService } from './post-api.service';
@@ -47,11 +47,34 @@ export class UserProfileService {
 
   // ── Profile ───────────────────────────────────────────────────
 
-  /** Fetches a profile by ID and stores it in the signal. */
+  /** Fetches a profile by ID and stores it in the signal. Also checks if current user is following. */
   loadProfile(id: string): Observable<UserProfile> {
-    return this._api.getUserProfile(id).pipe(
-      tap(p => this._profile.set(p))
-    );
+    const currentUserId = this._authService.getCurrentUserId();
+    const profileObs = this._api.getUserProfile(id);
+
+    // If user is logged in, also check follow status; otherwise just get profile
+    if (currentUserId) {
+      return forkJoin({
+        profile: profileObs,
+        isFollowing: this._api.checkIsFollowing(id).pipe(
+          catchError(() => of(false)) // Default to false if check fails (e.g., 401)
+        )
+      }).pipe(
+        tap(({ profile, isFollowing }) => {
+          this._profile.set(profile);
+          this._isFollowing.set(isFollowing);
+        }),
+        map(({ profile }) => profile)
+      );
+    } else {
+      // Not logged in: just get profile and set isFollowing to false
+      return profileObs.pipe(
+        tap(profile => {
+          this._profile.set(profile);
+          this._isFollowing.set(false);
+        })
+      );
+    }
   }
 
   /** Updates the authenticated user's profile. */

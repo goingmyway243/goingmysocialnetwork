@@ -25,23 +25,6 @@
   styleClass="glass-dialog compose-content"
   (onHide)="closeDialog()">
 
-  <!-- Title field -->
-  <div class="dialog-field">
-
-    <input
-      pInputText
-      type="text"
-      placeholder="Give your post a title..."
-      class="dialog-title-input"
-      [value]="title()"
-      (input)="onTitleChange($any($event.target).value)"
-      [class.invalid]="titleTooLong()"
-      [disabled]="submitting()" />
-    @if (titleTooLong()) {
-      <span class="char-warn">{{ titleLength() }}/200 — title is too long</span>
-    }
-  </div>
-
   <!-- Content field -->
   <div class="dialog-field">
     <textarea

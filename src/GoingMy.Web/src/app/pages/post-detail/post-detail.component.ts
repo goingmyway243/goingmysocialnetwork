@@ -9,14 +9,16 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { TooltipModule } from 'primeng/tooltip';
+import { MenuModule } from 'primeng/menu';
+import { MessageService, ConfirmationService, MenuItem } from 'primeng/api';
 import { PostApiService } from '../../services/post-api.service';
 import { AuthService } from '../../services/auth.service';
 import { Post, Comment } from '../../models/post.model';
 
 @Component({
   selector: 'app-post-detail',
-  imports: [CommonModule, FormsModule, CardModule, ButtonModule, SkeletonModule, TextareaModule, ToastModule, ConfirmDialogModule],
+  imports: [CommonModule, FormsModule, CardModule, ButtonModule, SkeletonModule, TextareaModule, ToastModule, ConfirmDialogModule, TooltipModule, MenuModule],
   providers: [MessageService, ConfirmationService],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.css'
@@ -42,11 +44,14 @@ export class PostDetailComponent implements OnInit {
   readonly commentSubmitting = signal(false);
   readonly editingCommentId = signal<string | null>(null);
   readonly editingContent = signal('');
-  readonly editSubmitting = signal(false);
-
+  readonly editSubmitting = signal(false);  readonly menuItems = signal<MenuItem[]>([]);
   // ── 3. Derived State ─────────────────────────────────────────
   readonly currentUserId = computed(() => this._authService.getCurrentUserId());
   readonly canSubmitComment = computed(() => this.newComment().trim().length > 0 && !this.commentSubmitting());
+  readonly isPostOwner = computed(() => {
+    const p = this.post();
+    return p && p.userId === this.currentUserId();
+  });
 
   // ── 4. Lifecycle ─────────────────────────────────────────────
   ngOnInit(): void {
@@ -66,6 +71,7 @@ export class PostDetailComponent implements OnInit {
     this._postApi.getPostById(id).subscribe({
       next: (post) => {
         this.post.set(post);
+        this.menuItems.set(this.getPostMenuItems());
         this.loadingPost.set(false);
       },
       error: () => {
@@ -73,6 +79,23 @@ export class PostDetailComponent implements OnInit {
         this.loadingPost.set(false);
       }
     });
+  }
+
+  private getPostMenuItems(): MenuItem[] {
+    if (!this.isPostOwner()) return [];
+    return [
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => this.editPost()
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash',
+        styleClass: 'p-menuitem-danger',
+        command: () => this.deletePost()
+      }
+    ];
   }
 
   private loadComments(postId: string): void {
@@ -90,13 +113,12 @@ export class PostDetailComponent implements OnInit {
   }
 
   private loadLikeStatus(postId: string): void {
-    this._postApi.getPostLikes(postId).subscribe({
-      next: (likes) => {
-        const uid = this.currentUserId();
-        this.liked.set(likes.some(l => l.userId === uid));
-      },
-      error: () => { /* non-critical, ignore */ }
-    });
+    // Like status is now provided by the API in post.userHasLiked
+    // No need to make a separate call
+    const p = this.post();
+    if (p) {
+      this.liked.set(p.userHasLiked ?? false);
+    }
   }
 
   // ── 6. Actions — Likes ────────────────────────────────────────
@@ -235,12 +257,43 @@ export class PostDetailComponent implements OnInit {
     this.newComment.set(value);
   }
 
-  // ── 8. Navigation ─────────────────────────────────────────────
+  // ── 8. Actions — Edit ─────────────────────────────────────────────
+  editPost(): void {
+    const p = this.post();
+    if (!p) return;
+    // TODO: Navigate to edit mode or open edit modal
+    this._messageService.add({ severity: 'info', summary: 'Edit', detail: 'Edit functionality coming soon!' });
+  }
+
+  // ── 9. Actions — Delete ───────────────────────────────────────────────
+  deletePost(): void {
+    const p = this.post();
+    if (!p) return;
+
+    this._confirmationService.confirm({
+      message: 'Are you sure you want to delete this post? This action cannot be undone.',
+      header: 'Confirm Delete',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this._postApi.deletePost(p.id).subscribe({
+          next: () => {
+            this._messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Post deleted successfully.' });
+            setTimeout(() => this._router.navigate(['/dashboard/home']), 1000);
+          },
+          error: () => {
+            this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete post.' });
+          }
+        });
+      }
+    });
+  }
+
+  // ── 10. Navigation ───────────────────────────────────────────────
   goBack(): void {
     this._router.navigate(['/dashboard/home']);
   }
 
-  // ── 9. Utilities ───────────────────────────────────────────────
+  // ── 11. Utilities ───────────────────────────────────────────────
   isOwnComment(comment: Comment): boolean {
     return comment.userId === this.currentUserId();
   }

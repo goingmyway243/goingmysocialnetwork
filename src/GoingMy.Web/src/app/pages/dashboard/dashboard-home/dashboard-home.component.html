@@ -1,5 +1,3 @@
-<p-toast></p-toast>
-
 <div class="dashboard-home">
   <!-- Compose Post -->
   <app-compose-post (postCreated)="onPostCreated($event)"></app-compose-post>
@@ -44,12 +42,14 @@
           <app-post-card
             [post]="post"
             [commentState]="getCommentState(post.id)"
-            [liked]="isLiked(post.id)"
+            [liked]="isLiked(post)"
             (likeToggle)="toggleLike($event)"
             (commentsToggle)="toggleComments($event)"
             (newCommentInput)="onNewCommentChange($event.postId, $event.value)"
             (commentSubmit)="submitComment($event)"
             (detailView)="viewPostDetail($event)"
+            (editPost)="editPost($event)"
+            (deletePost)="deletePost($event)"
             (authorClick)="navigateToProfile($event)">
           </app-post-card>
         }

@@ -107,14 +107,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
       next: (p) => {
         this.loading.set(false);
         this.loadPostsTab();
-
-        // Check follow status for non-own profiles
-        const currentId = this._authService.getCurrentUserId();
-        if (currentId && currentId !== p.id) {
-          // Check if current user is following — by loading followers and checking presence
-          // Simplified: rely on backend for follow status check during first load
-          // Full implementation could add a dedicated isFollowing endpoint
-        }
       },
       error: () => {
         this.error.set('Could not load this profile. Please try again later.');

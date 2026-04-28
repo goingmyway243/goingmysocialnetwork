@@ -34,7 +34,6 @@
       </div>
 
       <div class="post-content">
-        <h1 class="post-title">{{ post()!.title }}</h1>
         <p class="post-text">{{ post()!.content }}</p>
       </div>
 
@@ -44,8 +43,7 @@
           [label]="(post()!.likes ?? 0).toString()"
           [text]="true"
           [loading]="likeSubmitting()"
-          styleClass="action-btn"
-          [class.liked]="liked()"
+          [styleClass]="liked() ? 'action-btn liked' : 'action-btn'"
           (onClick)="toggleLike()">
         </p-button>
         <p-button
@@ -54,6 +52,16 @@
           [text]="true"
           styleClass="action-btn">
         </p-button>
+        @if (isPostOwner()) {
+          <p-button
+            #postMenuBtn
+            icon="pi pi-ellipsis-v"
+            [text]="true"
+            styleClass="action-btn"
+            (onClick)="postMenu.toggle($event)">
+          </p-button>
+          <p-menu #postMenu [model]="menuItems()" [popup]="true" appendTo="body"></p-menu>
+        }
       </div>
     </p-card>
   }

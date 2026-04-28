@@ -86,7 +86,35 @@
   border-top: 1px solid var(--glass-border-base);
 }
 
-/* ===== INLINE COMMENTS PANEL ===== */
+/* Style for action buttons */
+.action-btn {
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px;
+}
+
+/* Like button styling - when liked */
+.action-btn.liked {
+  color: #ef4444;
+}
+
+.action-btn.liked:hover {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Active comments button */
+.action-btn.active {
+  color: rgba(139, 92, 246, 0.8);
+  background: rgba(139, 92, 246, 0.08) !important;
+}
+
+/* INLINE COMMENTS PANEL ===== */
 
 .comments-panel {
   border-top: 1px solid var(--glass-border-base);

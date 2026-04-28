@@ -9,7 +9,6 @@ namespace GoingMy.Post.Application.Commands;
 /// Command to create a new post.
 /// </summary>
 public record CreatePostCommand(
-    string Title,
     string Content,
     string UserId,
     string Username
@@ -31,7 +30,6 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostD
     {
         var post = new Domain.Entities.Post(
             id: ObjectId.GenerateNewId().ToString(),
-            title: request.Title,
             content: request.Content,
             userId: request.UserId,
             username: request.Username,
@@ -45,7 +43,6 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostD
 
     internal static PostDto MapToDto(Domain.Entities.Post p) => new(
         Id: p.Id,
-        Title: p.Title,
         Content: p.Content,
         UserId: p.UserId,
         Username: p.Username,

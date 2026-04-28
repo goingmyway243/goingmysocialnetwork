@@ -1,5 +1,5 @@
 import {
-  Component, Input, OnInit, OnChanges, inject, signal, computed
+  Component, Input, effect, inject, signal, computed
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -19,9 +19,16 @@ type ListMode = 'followers' | 'following';
   templateUrl: './follow-list.component.html',
   styleUrl: './follow-list.component.css'
 })
-export class FollowListComponent implements OnInit, OnChanges {
-  @Input({ required: true }) userId!: string;
-  @Input() mode: ListMode = 'followers';
+export class FollowListComponent {
+  @Input({ required: true })
+  set userId(value: string) {
+    this._userId.set(value);
+  }
+
+  @Input()
+  set mode(value: ListMode) {
+    this._mode.set(value);
+  }
 
   // ── 1. Dependencies ─────────────────────────────────────────
   private readonly _profileService = inject(UserProfileService);
@@ -30,6 +37,8 @@ export class FollowListComponent implements OnInit, OnChanges {
   private readonly _router = inject(Router);
 
   // ── 2. State ────────────────────────────────────────────────
+  private readonly _userId = signal<string>('');
+  private readonly _mode = signal<ListMode>('followers');
   private readonly _list = signal<UserProfile[]>([]);
   private readonly _loading = signal(false);
   private readonly _followLoading = signal<Set<string>>(new Set());
@@ -41,21 +50,25 @@ export class FollowListComponent implements OnInit, OnChanges {
   readonly currentUserId = computed(() => this._authService.getCurrentUserId());
   readonly isEmpty = computed(() => !this._loading() && this._list().length === 0);
 
-  // ── 4. Lifecycle ─────────────────────────────────────────────
-  ngOnInit(): void {
-    this.loadList();
-  }
-
-  ngOnChanges(): void {
-    if (this.userId) this.loadList();
+  // ── 4. Constructor ──────────────────────────────────────────
+  constructor() {
+    // Watch for userId or mode changes and reload list
+    effect(() => {
+      const userId = this._userId();
+      if (userId) {
+        this.loadList();
+      }
+    });
   }
 
   // ── 5. Actions ───────────────────────────────────────────────
   private loadList(): void {
     this._loading.set(true);
-    const obs = this.mode === 'followers'
-      ? this._profileService.loadFollowers(this.userId)
-      : this._profileService.loadFollowing(this.userId);
+    const userId = this._userId();
+
+    const obs = this._mode() === 'followers'
+      ? this._profileService.loadFollowers(userId)
+      : this._profileService.loadFollowing(userId);
 
     obs.subscribe({
       next: list => { this._list.set(list); this._loading.set(false); },

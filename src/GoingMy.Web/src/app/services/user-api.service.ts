@@ -98,6 +98,11 @@ export class UserApiService {
     return this._http.delete<void>(`${this._userBaseUrl}/${id}/follow`);
   }
 
+  /** GET /api/userprofiles/{id}/is-following (UserService) */
+  checkIsFollowing(id: string): Observable<boolean> {
+    return this._http.get<boolean>(`${this._userBaseUrl}/${id}/is-following`);
+  }
+
   /** GET /api/userprofiles/{id}/followers (UserService) */
   getFollowers(id: string, page = 1, pageSize = 20): Observable<UserProfile[]> {
     return this._http.get<UserProfile[]>(

@@ -23,18 +23,15 @@ export class ComposePostComponent {
 
   // ── 3. State ─────────────────────────────────────────────────
   readonly dialogVisible = signal(false);
-  readonly title = signal('');
   readonly content = signal('');
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
 
-  // ── 4. Derived State ─────────────────────────────────────────
-  readonly isValid = computed(() => this.title().trim().length > 0 && this.content().trim().length > 0);
+  // ── 4. Derived State ─────────────────────────────────────────────────
+  readonly isValid = computed(() => this.content().trim().length > 0);
   readonly contentLength = computed(() => this.content().length);
-  readonly titleLength = computed(() => this.title().length);
   readonly contentTooLong = computed(() => this.contentLength() > 2000);
-  readonly titleTooLong = computed(() => this.titleLength() > 200);
-  readonly canSubmit = computed(() => this.isValid() && !this.contentTooLong() && !this.titleTooLong() && !this.submitting());
+  readonly canSubmit = computed(() => this.isValid() && !this.contentTooLong() && !this.submitting());
 
   // ── 5. Actions ───────────────────────────────────────────────
   openDialog(): void {
@@ -43,7 +40,6 @@ export class ComposePostComponent {
 
   closeDialog(): void {
     this.dialogVisible.set(false);
-    this.title.set('');
     this.content.set('');
     this.error.set(null);
   }
@@ -54,7 +50,7 @@ export class ComposePostComponent {
     this.submitting.set(true);
     this.error.set(null);
 
-    this._postApi.createPost({ title: this.title().trim(), content: this.content().trim() }).subscribe({
+    this._postApi.createPost({ content: this.content().trim() }).subscribe({
       next: (response) => {
         this.postCreated.emit(response.post);
         this.submitting.set(false);
@@ -65,10 +61,6 @@ export class ComposePostComponent {
         this.submitting.set(false);
       }
     });
-  }
-
-  onTitleChange(value: string): void {
-    this.title.set(value);
   }
 
   onContentChange(value: string): void {

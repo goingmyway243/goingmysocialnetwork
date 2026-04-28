@@ -6,13 +6,11 @@ import { Post, Comment, Like } from '../models/post.model';
 
 /** Request DTO for creating a post. */
 export interface CreatePostRequest {
-  title: string;
   content: string;
 }
 
 /** Request DTO for updating a post. */
 export interface UpdatePostRequest {
-  title: string;
   content: string;
 }
 

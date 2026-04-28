@@ -17,7 +17,6 @@ public record UserDto(
 /// </summary>
 public record PostDto(
     string Id,
-    string Title,
     string Content,
     string UserId,
     string Username,
@@ -25,14 +24,14 @@ public record PostDto(
     int Comments,
     UserDto? Author,
     DateTime CreatedAt,
-    DateTime? UpdatedAt
+    DateTime? UpdatedAt,
+    bool UserHasLiked = false
 );
 
 /// <summary>
 /// Request DTO for creating a new post.
 /// </summary>
 public record CreatePostRequestDto(
-    string Title,
     string Content
 );
 
@@ -40,7 +39,6 @@ public record CreatePostRequestDto(
 /// Request DTO for updating an existing post.
 /// </summary>
 public record UpdatePostRequestDto(
-    string Title,
     string Content
 );
 

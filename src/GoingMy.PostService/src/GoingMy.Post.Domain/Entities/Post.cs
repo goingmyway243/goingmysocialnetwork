@@ -6,7 +6,6 @@ namespace GoingMy.Post.Domain.Entities;
 public class Post
 {
     public string Id { get; set; } = null!;
-    public string Title { get; set; } = null!;
     public string Content { get; set; } = null!;
     public string UserId { get; set; } = null!;
     public string Username { get; set; } = null!;
@@ -19,10 +18,9 @@ public class Post
     /// <summary>
     /// Creates a new post instance.
     /// </summary>
-    public Post(string id, string title, string content, string userId, string username, DateTime createdAt)
+    public Post(string id, string content, string userId, string username, DateTime createdAt)
     {
         Id = id;
-        Title = title;
         Content = content;
         UserId = userId;
         Username = username;
@@ -34,9 +32,8 @@ public class Post
     /// <summary>
     /// Updates the post content.
     /// </summary>
-    public void Update(string title, string content)
+    public void Update(string content)
     {
-        Title = title;
         Content = content;
         UpdatedAt = DateTime.UtcNow;
     }

@@ -14,7 +14,7 @@ public record GetUserPostsQuery(string UserId, int Page = 1, int PageSize = 20)
 /// <summary>
 /// Handler for the GetUserPostsQuery.
 /// </summary>
-public class GetUserPostsQueryHandler(IPostRepository postRepository)
+public class GetUserPostsQueryHandler(IPostRepository postRepository, ILikeRepository likeRepository)
     : IRequestHandler<GetUserPostsQuery, IEnumerable<PostDto>>
 {
     public async Task<IEnumerable<PostDto>> Handle(GetUserPostsQuery request, CancellationToken cancellationToken)
@@ -22,6 +22,16 @@ public class GetUserPostsQueryHandler(IPostRepository postRepository)
         var posts = await postRepository.GetByUserIdAsync(
             request.UserId, request.Page, request.PageSize, cancellationToken);
 
-        return posts.Select(CreatePostCommandHandler.MapToDto);
+        var dtos = posts.Select(CreatePostCommandHandler.MapToDto).ToList();
+
+        // Populate UserHasLiked for each post
+        var result = new List<PostDto>();
+        foreach (var dto in dtos)
+        {
+            var userHasLiked = await likeRepository.ExistsAsync(dto.Id, request.UserId, cancellationToken);
+            result.Add(dto with { UserHasLiked = userHasLiked });
+        }
+
+        return result;
     }
 }

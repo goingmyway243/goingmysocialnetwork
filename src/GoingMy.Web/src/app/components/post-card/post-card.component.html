@@ -13,7 +13,6 @@
 
   <!-- Post Content -->
   <div class="post-content" (click)="onViewDetail()">
-    <h2 class="post-title">{{ post().title }}</h2>
     <p class="post-text">{{ post().content }}</p>
   </div>
 
@@ -23,8 +22,7 @@
       [icon]="liked() ? 'pi pi-heart-fill' : 'pi pi-heart'"
       [label]="(post().likes ?? 0).toString()"
       [text]="true"
-      styleClass="action-btn"
-      [class.liked]="liked()"
+      [styleClass]="liked() ? 'action-btn liked' : 'action-btn'"
       (onClick)="onLikeClick()">
     </p-button>
 
@@ -44,6 +42,17 @@
       styleClass="action-btn"
       (onClick)="onViewDetail()">
     </p-button>
+
+    @if (isPostOwner()) {
+      <p-button
+        #postMenuBtn
+        icon="pi pi-ellipsis-v"
+        [text]="true"
+        styleClass="action-btn"
+        (onClick)="postMenu.toggle($event)">
+      </p-button>
+      <p-menu #postMenu [model]="getPostMenuItems()" [popup]="true" appendTo="body"></p-menu>
+    }
   </div>
 
   <!-- Inline Comments Panel -->

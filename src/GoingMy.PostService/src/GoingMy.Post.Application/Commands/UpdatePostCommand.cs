@@ -9,7 +9,6 @@ namespace GoingMy.Post.Application.Commands;
 /// </summary>
 public record UpdatePostCommand(
     string Id,
-    string Title,
     string Content,
     string UserId
 ) : IRequest<PostDto>;
@@ -37,7 +36,7 @@ public class UpdatePostCommandHandler : IRequestHandler<UpdatePostCommand, PostD
             throw new UnauthorizedAccessException("You can only update your own posts");
         }
 
-        post.Update(request.Title, request.Content);
+        post.Update(request.Content);
         var updatedPost = await _postRepository.UpdateAsync(post, cancellationToken);
 
         return CreatePostCommandHandler.MapToDto(updatedPost);

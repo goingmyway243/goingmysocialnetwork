@@ -9,12 +9,12 @@ namespace GoingMy.Post.API.Controllers;
 /// <summary>
 /// Request DTO for creating a post through the API.
 /// </summary>
-public record CreatePostRequest(string Title, string Content);
+public record CreatePostRequest(string Content);
 
 /// <summary>
 /// Request DTO for updating a post through the API.
 /// </summary>
-public record UpdatePostRequest(string Title, string Content);
+public record UpdatePostRequest(string Content);
 
 /// <summary>
 /// API controller for managing posts.
@@ -46,7 +46,7 @@ public class PostsController : ControllerBase
         var userId = User.FindFirst("sub")?.Value ?? "unknown";
         var username = User.FindFirst("name")?.Value ?? "unknown";
 
-        var posts = await _mediator.Send(new GetPostsQuery());
+        var posts = await _mediator.Send(new GetPostsQuery(userId));
 
         return Ok(new { userId, username, posts });
     }
@@ -62,7 +62,8 @@ public class PostsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> GetPostById(string id)
     {
-        var post = await _mediator.Send(new GetPostByIdQuery(id));
+        var userId = User.FindFirst("sub")?.Value;
+        var post = await _mediator.Send(new GetPostByIdQuery(id, userId));
 
         if (post is null)
         {
@@ -86,7 +87,7 @@ public class PostsController : ControllerBase
         var userId = User.FindFirst("sub")?.Value ?? "unknown";
         var username = User.FindFirst("name")?.Value ?? "unknown";
 
-        var command = new CreatePostCommand(request.Title, request.Content, userId, username);
+        var command = new CreatePostCommand(request.Content, userId, username);
         var newPost = await _mediator.Send(command);
 
         return CreatedAtAction(nameof(GetPostById), new { id = newPost.Id }, new { message = "Post created successfully", post = newPost });
@@ -108,7 +109,7 @@ public class PostsController : ControllerBase
         try
         {
             var userId = User.FindFirst("sub")?.Value ?? "unknown";
-            var command = new UpdatePostCommand(id, request.Title, request.Content, userId);
+            var command = new UpdatePostCommand(id, request.Content, userId);
             var updatedPost = await _mediator.Send(command);
 
             return Ok(new { message = "Post updated successfully", post = updatedPost });

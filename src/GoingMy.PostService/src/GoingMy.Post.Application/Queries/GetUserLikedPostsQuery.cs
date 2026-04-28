@@ -34,6 +34,7 @@ public class GetUserLikedPostsQueryHandler(ILikeRepository likeRepository, IPost
             .Where(id => postsById.ContainsKey(id))
             .Select(id => postsById[id]);
 
-        return ordered.Select(CreatePostCommandHandler.MapToDto);
+        // All posts in this query are liked by the user, so set UserHasLiked = true
+        return ordered.Select(p => CreatePostCommandHandler.MapToDto(p) with { UserHasLiked = true });
     }
 }

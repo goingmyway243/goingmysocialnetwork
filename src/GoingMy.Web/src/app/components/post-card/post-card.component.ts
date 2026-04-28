@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -6,29 +6,61 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TextareaModule } from 'primeng/textarea';
+import { TooltipModule } from 'primeng/tooltip';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
 import { Post, PostCommentsState } from '../../models/post.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-post-card',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, CardModule, ButtonModule, SkeletonModule, TextareaModule],
+  imports: [CommonModule, FormsModule, RouterModule, CardModule, ButtonModule, SkeletonModule, TextareaModule, TooltipModule, MenuModule],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css'
 })
 export class PostCardComponent {
 
-  // ── 1. Inputs ────────────────────────────────────────────────
+  // ── 0. Dependencies ───────────────────────────────────────────
+  private readonly _authService = inject(AuthService);
+
+  // ── 1. Inputs ─────────────────────────────────────────────────
   readonly post = input.required<Post>();
   readonly commentState = input.required<PostCommentsState>();
   readonly liked = input<boolean>(false);
 
-  // ── 2. Outputs ───────────────────────────────────────────────
+  // ── 2. Outputs ─────────────────────────────────────────────────
   readonly likeToggle = output<Post>();
   readonly commentsToggle = output<Post>();
   readonly newCommentInput = output<{ postId: string; value: string }>();
   readonly commentSubmit = output<Post>();
   readonly detailView = output<string>();
+  readonly deletePost = output<Post>();
+  readonly editPost = output<Post>();
   readonly authorClick = output<string>();
+
+  // ── 3. Utilities ─────────────────────────────────────────────────
+  isPostOwner(): boolean {
+    const currentUserId = this._authService.getCurrentUserId();
+    return currentUserId === this.post().userId;
+  }
+
+  getPostMenuItems(): MenuItem[] {
+    if (!this.isPostOwner()) return [];
+    return [
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => this.onEditPost()
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash',
+        styleClass: 'p-menuitem-danger',
+        command: () => this.onDeletePost()
+      }
+    ];
+  }
 
   // ── 3. Actions ───────────────────────────────────────────────
   onLikeClick(): void {
@@ -49,6 +81,14 @@ export class PostCardComponent {
 
   onViewDetail(): void {
     this.detailView.emit(this.post().id);
+  }
+
+  onDeletePost(): void {
+    this.deletePost.emit(this.post());
+  }
+
+  onEditPost(): void {
+    this.editPost.emit(this.post());
   }
 
   onAuthorClick(): void {

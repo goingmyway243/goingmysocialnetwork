@@ -967,7 +967,7 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
 
 /* ── p-menu: Glass Dropdown ───────────────────────────────── */
 
-.p-menu.glass-menu {
+.p-menu.p-menu-overlay {
   background: var(--glass-overlay-bg);
   backdrop-filter: var(--glass-blur-lg) saturate(180%);
   -webkit-backdrop-filter: var(--glass-blur-lg) saturate(180%);
@@ -978,7 +978,7 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
     inset 0 1px 2px var(--glass-highlight-inner);
 }
 
-.p-menu.glass-menu .p-menuitem-link {
+.p-menu.p-menu-overlay .p-menuitem-link {
   color: #ffffff;
   padding: 0.75rem 1rem;
   transition: var(--transition-smooth);
@@ -986,15 +986,123 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
   margin: 0.25rem 0.5rem;
 }
 
-.p-menu.glass-menu .p-menuitem-link:hover {
+.p-menu.p-menu-overlay .p-menuitem-link:hover {
   background: var(--glass-elevated-hover);
   box-shadow: var(--glass-shadow-sm),
     var(--glass-glow-sm);
 }
 
-.p-menu.glass-menu .p-menuitem-icon {
+.p-menu.p-menu-overlay .p-menuitem-icon {
   color: var(--color-accent-blue);
   margin-right: 0.75rem;
+}
+
+/* ── p-toast: Glass Toast Container ──────────────────────── */
+
+.app-toast-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 9999 !important;
+  pointer-events: none;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 1rem !important;
+}
+
+.app-toast-container .p-toast-message {
+  pointer-events: auto;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 450px;
+  background: var(--glass-elevated-bg);
+  backdrop-filter: var(--glass-blur-md) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
+  border: 1px solid var(--glass-border-base);
+  box-shadow: var(--glass-shadow-lg),
+    inset 0 1px 2px var(--glass-highlight-inner);
+  border-radius: 12px;
+  animation: toastSlideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1rem 1.5rem !important;
+}
+
+/* ── Toast Message Variants ─────────────────────────────── */
+
+.app-toast-container .p-toast-message.p-toast-message-success {
+  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.app-toast-container .p-toast-message.p-toast-message-success .p-toast-message-icon {
+  color: rgba(34, 197, 94, 0.8);
+}
+
+.app-toast-container .p-toast-message.p-toast-message-error {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.app-toast-container .p-toast-message.p-toast-message-error .p-toast-message-icon {
+  color: rgba(239, 68, 68, 0.8);
+}
+
+.app-toast-container .p-toast-message.p-toast-message-info {
+  border-color: rgba(96, 165, 250, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.app-toast-container .p-toast-message.p-toast-message-info .p-toast-message-icon {
+  color: rgba(96, 165, 250, 0.8);
+}
+
+.app-toast-container .p-toast-message.p-toast-message-warning {
+  border-color: rgba(251, 146, 60, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.app-toast-container .p-toast-message.p-toast-message-warning .p-toast-message-icon {
+  color: rgba(251, 146, 60, 0.8);
+}
+
+/* ── Toast Content Styling ──────────────────────────────── */
+
+.app-toast-container .p-toast-message .p-toast-detail {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.app-toast-container .p-toast-message .p-toast-summary {
+  color: rgba(255, 255, 255, 1);
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+/* ── Toast Close Button ─────────────────────────────────── */
+
+.app-toast-container .p-toast-message .p-toast-close-icon {
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.2s ease;
+}
+
+.app-toast-container .p-toast-message:hover .p-toast-close-icon {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ── Toast Animation ────────────────────────────────────── */
+
+@keyframes toastSlideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 /* ===== PRIMENG GLASS DIALOG ===== */

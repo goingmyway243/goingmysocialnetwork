@@ -2,6 +2,32 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.11.0] - 2026-04-28
+
+### Added
+- **Follow status check endpoint** in `GoingMy.UserService`:
+  - New `CheckFollowStatusQuery` (Application/Queries/CheckFollowStatusQuery.cs): `record CheckFollowStatusQuery(Guid FollowerId, Guid FolloweeId) : IRequest<bool>` with handler using `IUserFollowRepository.ExistsAsync()`
+  - New `CheckFollowStatus()` endpoint in `UserProfilesController`: `[HttpGet("{id:guid}/is-following")]` [Authorize] returns `bool`
+  - Validates that caller is authenticated; extracts follower ID from JWT "sub" claim; returns true/false follow status
+
+### Changed
+- **UserProfileService.loadProfile()** (`GoingMy.Web` Angular service):
+  - Enhanced to automatically check follow status when loading a profile
+  - Uses `forkJoin()` to fetch profile + follow status in parallel
+  - For authenticated users: both calls executed concurrently; `_isFollowing` signal updated with result
+  - For anonymous users: profile-only fetch; `_isFollowing` defaults to false
+  - Follow check errors gracefully handled with `catchError()` → defaults to false
+  - Returns profile to maintain backward compatibility
+- **UserApiService** Angular service: Added `checkIsFollowing(id: string): Observable<boolean>` method calling `/api/userprofiles/{id}/is-following`
+
+### Architecture Notes
+- **Zero cognitive load on consumers**: Profile loading automatically resolves follow status; UI components simply read the `isFollowing` computed signal
+- **Parallel fetching**: forkJoin prevents additional round-trip latency—both HTTP requests sent concurrently
+- **Graceful degradation**: Auth errors on follow-status check don't break profile load; defaults to false (user appears unfollowed if service fails)
+- **Backward compatible**: loadProfile() still returns the profile Observable; follow status available via separate signal
+
+---
+
 ## [0.10.0] - 2026-04-21
 
 ### Added
