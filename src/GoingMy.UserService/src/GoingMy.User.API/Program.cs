@@ -37,7 +37,6 @@ builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddScoped<IUserFollowRepository, UserFollowRepository>();
 
 // ── MassTransit + RabbitMQ (Event consumer & outbox publisher) ─
-// ── MassTransit + RabbitMQ (Event consumer & outbox publisher) ─
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<UserRegisteredEventConsumer>();

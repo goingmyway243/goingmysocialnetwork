@@ -33,7 +33,7 @@
       [rounded]="true"
       styleClass="icon-btn"></p-button>
 
-    <div class="icon-btn-wrapper">
+    <!-- <div class="icon-btn-wrapper">
       <p-button 
         icon="pi pi-comments" 
         [text]="true" 
@@ -41,8 +41,16 @@
         styleClass="icon-btn"
         title="Messages"
         (onClick)="navigateToMessages()"></p-button>
-    </div>
+    </div> -->
     
+    <p-button 
+      [icon]="themeService.theme() === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"
+      [text]="true" 
+      [rounded]="true"
+      styleClass="icon-btn theme-toggle-btn"
+      [title]="themeService.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+      (onClick)="themeService.toggle()"></p-button>
+
     <p-button 
       icon="pi pi-user" 
       [text]="true" 

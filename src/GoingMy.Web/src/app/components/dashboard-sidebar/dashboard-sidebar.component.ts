@@ -49,12 +49,6 @@ export class DashboardSidebarComponent {
       icon: 'pi pi-bookmark',
       id: 'bookmarks',
       command: () => this.setActiveMenu('bookmarks', '/dashboard/bookmarks')
-    },
-    {
-      label: 'Theme',
-      icon: 'pi pi-palette',
-      id: 'theme',
-      command: () => this.setActiveMenu('theme', '/dashboard/theme')
     }
   ];
 

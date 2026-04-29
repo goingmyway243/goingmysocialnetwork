@@ -50,7 +50,7 @@
   border-radius: 12px;
   cursor: pointer;
   transition: var(--transition-smooth);
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-color-secondary);
   font-size: 1rem;
   font-weight: 500;
   position: relative;
@@ -90,7 +90,7 @@
 
 .menu-item:hover {
   background: var(--glass-surface-hover);
-  color: #ffffff;
+  color: var(--text-color);
   transform: translateX(4px);
   box-shadow: var(--glass-shadow-sm),
     inset 0 1px 2px var(--glass-highlight-inner);
@@ -105,7 +105,7 @@
 
 .menu-item.active {
   background: var(--glass-surface-active);
-  color: #ffffff;
+  color: var(--text-color);
 }
 
 .menu-item.active i::after {
@@ -131,7 +131,7 @@
 
 .sidebar-footer {
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--glass-border-base);
   margin-top: 1rem;
 }
 
@@ -181,7 +181,7 @@
     padding: 0.5rem;
     z-index: 999;
     border-right: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+border-top: 1px solid var(--glass-border-base);
   }
 
   .sidebar-content {

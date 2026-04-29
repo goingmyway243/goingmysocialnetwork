@@ -15,7 +15,8 @@
 
 .empty-icon {
   font-size: 4rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-color-secondary);
+  opacity: 0.5;
   margin-bottom: 1rem;
 }
 
@@ -31,6 +32,6 @@
 
 .empty-state p {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-color-secondary);
   margin: 0;
 }

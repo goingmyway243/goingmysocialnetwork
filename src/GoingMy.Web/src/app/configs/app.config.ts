@@ -5,7 +5,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 import { routes } from '../app.routes';
 import { providePrimeNG } from 'primeng/config';
-import MyPreset from './app.theme';
+import { DarkGlassPreset } from './app.theme';
 import { authInterceptor } from '../interceptors/auth.interceptor';
 import { refreshTokenInterceptor } from '../interceptors/refresh-token.interceptor';
 import { provideOAuthClient } from 'angular-oauth2-oidc';
@@ -32,7 +32,7 @@ export const appConfig: ApplicationConfig = {
     }),
     providePrimeNG({
       theme: {
-        preset: MyPreset
+        preset: DarkGlassPreset
       }
     })
   ]

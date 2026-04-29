@@ -1,0 +1,13 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "type": "command",
+        "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File .github/hooks/scripts/inject-context7-reminder.ps1",
+        "linux": "bash .github/hooks/scripts/inject-context7-reminder.sh",
+        "osx": "bash .github/hooks/scripts/inject-context7-reminder.sh",
+        "timeout": 10
+      }
+    ]
+  }
+}

@@ -56,7 +56,8 @@
   background: var(--glass-surface-bg);
   border: 1px solid var(--glass-border-subtle);
   border-radius: 999px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-color-secondary);
+  opacity: 0.7;
   font-size: 0.9375rem;
   user-select: none;
   transition: border-color 0.2s ease, background 0.2s ease;
@@ -65,7 +66,7 @@
 .compose-trigger:hover .trigger-input-mock {
   border-color: var(--glass-border-accent);
   background: var(--glass-surface-hover);
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--text-color-secondary);
 }
 
 
@@ -80,7 +81,8 @@
 .char-counter {
   align-self: flex-end;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--text-color-secondary);
+  opacity: 0.6;
   margin-top: 0.25rem;
 }
 

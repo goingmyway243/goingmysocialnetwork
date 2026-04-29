@@ -8,6 +8,7 @@ import { MenuModule } from 'primeng/menu';
 import { Menu } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-dashboard-header',
@@ -19,6 +20,7 @@ export class DashboardHeaderComponent {
   @ViewChild('userMenu') userMenu!: Menu;
   
   private readonly _authService = inject(AuthService);
+  readonly themeService = inject(ThemeService);
   
   searchValue = signal('');
   userMenuItems: MenuItem[] = [];

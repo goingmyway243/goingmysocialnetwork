@@ -11,7 +11,7 @@ import Lara from '@primeuix/themes/lara';
  * Note: Specific component styling is handled via CSS overrides in styles.css
  * to maintain full control over glassmorphism effects.
  */
-const MyPreset = definePreset(Lara, {
+const sharedPresetConfig = {
   semantic: {
     colorScheme: {
       light: {
@@ -68,7 +68,10 @@ const MyPreset = definePreset(Lara, {
       xl: '1.5rem'
     }
   }
-});
+};
+
+export const DarkGlassPreset = definePreset(Lara, sharedPresetConfig);
+export const LightGlassPreset = definePreset(Lara, sharedPresetConfig);
 
 // ── PrimeNG v20 Pass Through (pt) Configurations ──────────────────
 // Replaces deprecated ::ng-deep styling for PrimeNG components.
@@ -83,7 +86,7 @@ export const GLASS_BTN_PT = {
       backdropFilter: 'blur(16px)',
       WebkitBackdropFilter: 'blur(16px)',
       border: '1px solid var(--glass-border-strong)',
-      color: '#ffffff',
+      color: 'var(--text-color)',
       borderRadius: '20px',
       padding: '0.5rem 1.25rem',
       fontWeight: '600',
@@ -111,7 +114,7 @@ export const FOLLOW_BTN_PT = {
 export const CANCEL_BTN_PT = {
   root: {
     style: {
-      color: 'rgba(255, 255, 255, 0.6)',
+      color: 'var(--text-color-secondary)',
       background: 'transparent',
       border: 'none',
       cursor: 'pointer'
@@ -142,10 +145,8 @@ export const SELECT_PT = {
       border: '1px solid var(--glass-border-base)',
       borderRadius: '10px',
       width: '100%',
-      color: '#ffffff'
+      color: 'var(--text-color)'
     }
   },
-  label: { style: { color: '#ffffff' } }
+  label: { style: { color: 'var(--text-color)' } }
 };
-
-export default MyPreset;
