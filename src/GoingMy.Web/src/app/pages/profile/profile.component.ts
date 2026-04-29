@@ -9,7 +9,8 @@ import { MessageService } from 'primeng/api';
 import { UserProfileService } from '../../services/user-profile.service';
 import { PostApiService } from '../../services/post-api.service';
 import { AuthService } from '../../services/auth.service';
-import { DashboardHeaderComponent } from '../../components/dashboard-header/dashboard-header.component';
+import { ChatStateService } from '../../services/chat-state.service';
+import { LayoutService } from '../../services/layout.service';
 import { ProfileHeaderComponent } from '../../components/profile-header/profile-header.component';
 import { ProfileAboutComponent } from '../../components/profile-about/profile-about.component';
 import { UserListModalComponent } from '../../components/followers-modal/followers-modal.component';
@@ -28,7 +29,6 @@ import { Post, PostCommentsState } from '../../models/post.model';
     TabsModule,
     SkeletonModule,
     ToastModule,
-    DashboardHeaderComponent,
     ProfileHeaderComponent,
     ProfileAboutComponent,
     UserListModalComponent,
@@ -51,6 +51,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private readonly _route = inject(ActivatedRoute);
   private readonly _router = inject(Router);
   private readonly _messageService = inject(MessageService);
+  private readonly _chatState = inject(ChatStateService);
+  private readonly _layout = inject(LayoutService);
 
   // ── 2. State ─────────────────────────────────────────────────
   readonly loading = signal(true);
@@ -83,6 +85,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   // ── 4. Lifecycle ─────────────────────────────────────────────
   ngOnInit(): void {
+    this._layout.hideSidebar.set(true);
     this._sub = this._route.paramMap.subscribe(params => {
       const userId = params.get('userId');
       if (userId) {
@@ -164,6 +167,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   }
 
+  // ── 6b. Message ───────────────────────────────────────────────
+  onMessageClick(): void {
+    const p = this.profile();
+    if (!p) return;
+    this._chatState.openConversationWith(p.id, p.username);
+  }
+
   // ── 7. Followers / Following Modals ──────────────────────────
   onFollowersClick(): void {
     this._profileService.loadFollowers(this._userId).subscribe();
@@ -176,7 +186,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   onUserSelected(userId: string): void {
-    this._router.navigate(['/profile', userId]);
+    this._router.navigate(['/dashboard/profile', userId]);
   }
 
   // ── 8. Edit Profile Modal ────────────────────────────────────

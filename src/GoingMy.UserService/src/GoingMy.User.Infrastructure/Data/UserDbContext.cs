@@ -11,6 +11,7 @@ public class UserDbContext(DbContextOptions<UserDbContext> options) : DbContext(
 {
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
     public DbSet<UserFollow> UserFollows => Set<UserFollow>();
+    public DbSet<UserBlock> UserBlocks => Set<UserBlock>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,6 +44,14 @@ public class UserDbContext(DbContextOptions<UserDbContext> options) : DbContext(
             entity.HasKey(e => new { e.FollowerId, e.FolloweeId });
             entity.HasIndex(e => e.FolloweeId);
             entity.HasIndex(e => e.FollowerId);
+        });
+
+        modelBuilder.Entity<UserBlock>(entity =>
+        {
+            entity.ToTable("UserBlocks");
+            entity.HasKey(e => new { e.BlockerId, e.BlockeeId });
+            entity.HasIndex(e => e.BlockerId);
+            entity.HasIndex(e => e.BlockeeId);
         });
 
         modelBuilder.Entity<OutboxMessage>(entity =>

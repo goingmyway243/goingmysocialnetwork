@@ -272,4 +272,92 @@ public class UserProfilesController(IMediator mediator) : ControllerBase
                 callerGuid == Guid.Empty ? null : callerGuid));
         return Ok(results);
     }
+
+    // ── Blocking ──────────────────────────────────────────────
+
+    /// <summary>Blocks a user. The authenticated caller becomes the blocker.</summary>
+    [HttpPost("{id:guid}/block")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> BlockUser(Guid id)
+    {
+        var callerId = User.FindFirst("sub")?.Value;
+        if (!Guid.TryParse(callerId, out var blockerGuid))
+            return Unauthorized();
+
+        try
+        {
+            await mediator.Send(new BlockUserCommand(blockerGuid, id));
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    /// <summary>Unblocks a user.</summary>
+    [HttpDelete("{id:guid}/block")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UnblockUser(Guid id)
+    {
+        var callerId = User.FindFirst("sub")?.Value;
+        if (!Guid.TryParse(callerId, out var blockerGuid))
+            return Unauthorized();
+
+        try
+        {
+            await mediator.Send(new UnblockUserCommand(blockerGuid, id));
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Checks if the authenticated caller has blocked the specified user.
+    /// Returns true if caller → {id} block exists.
+    /// </summary>
+    [HttpGet("{id:guid}/is-blocked")]
+    [Authorize]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> CheckBlockStatus(Guid id)
+    {
+        var callerId = User.FindFirst("sub")?.Value;
+        if (!Guid.TryParse(callerId, out var blockerGuid))
+            return Unauthorized();
+
+        var isBlocked = await mediator.Send(new CheckBlockStatusQuery(blockerGuid, id));
+        return Ok(isBlocked);
+    }
+
+    /// <summary>
+    /// Checks if the specified user has blocked the authenticated caller.
+    /// Returns true if {id} → caller block exists (caller is blocked by {id}).
+    /// Used by ChatService for internal permission checks.
+    /// </summary>
+    [HttpGet("{id:guid}/has-blocked-me")]
+    [Authorize]
+    [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> HasBlockedMe(Guid id)
+    {
+        var callerId = User.FindFirst("sub")?.Value;
+        if (!Guid.TryParse(callerId, out var callerGuid))
+            return Unauthorized();
+
+        var isBlockedByTarget = await mediator.Send(new CheckBlockStatusQuery(id, callerGuid));
+        return Ok(isBlockedByTarget);
+    }
 }

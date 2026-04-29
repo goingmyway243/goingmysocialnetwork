@@ -35,6 +35,10 @@ This skill helps testers create comprehensive Playwright automation tests for UI
    - Analyze test failures with screenshot context
    - Validate UI behavior through video playback
 
+## Login Credentials
+- username: `playwright-mcp`
+- password: `Pass@word123`
+
 ## Common Patterns
 
 ### Basic Test with Evidence
@@ -83,7 +87,4 @@ export default {
 - `templates/basic-test.js` - Starter test template with evidence capture
 - `configs/playwright.config.js` - Configuration for evidence recording
 - `examples/login-test.js` - Complete login flow test example
-
-## Credentials
-- username: `playwright-mcp`
-- password: `Pass@word123`
+- `.playwright-mcp/` - Directory for storing generated test logs and evidence

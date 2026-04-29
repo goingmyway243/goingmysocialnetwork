@@ -46,19 +46,20 @@ var postService = builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.P
     .WaitFor(rabbitmq)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
-var chatService = builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.ChatApi)
-    .WithReference(chatDb)
-    .WithReference(rabbitmq)
-    .WaitFor(identityService)
-    .WaitFor(chatDb)
-    .WaitFor(rabbitmq)
-    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
-
 var userService = builder.AddProject<Projects.GoingMy_User_API>(SharedServices.UserApi)
     .WithReference(userDb)
     .WithReference(rabbitmq)
     .WaitFor(identityService)
     .WaitFor(userDb)
+    .WaitFor(rabbitmq)
+    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
+
+var chatService = builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.ChatApi)
+    .WithReference(chatDb)
+    .WithReference(rabbitmq)
+    .WithReference(userService)
+    .WaitFor(identityService)
+    .WaitFor(chatDb)
     .WaitFor(rabbitmq)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 

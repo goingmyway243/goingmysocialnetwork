@@ -49,13 +49,12 @@ export const routes: Routes = [
       {
         path: 'profile',
         loadComponent: () => import('./pages/dashboard/dashboard-home/dashboard-home.component').then(m => m.DashboardHomeComponent)
+      },
+      {
+        path: 'profile/:userId',
+        loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
       }
     ]
-  },
-  {
-    path: 'profile/:userId',
-    loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent),
-    canActivate: [authGuard]
   },
   {
     path: 'discover',

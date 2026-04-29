@@ -1,8 +1,5 @@
 <p-toast position="top-right"></p-toast>
 
-<!-- App Header with Navigation -->
-<app-dashboard-header></app-dashboard-header>
-
 <div class="profile-page">
 
   @if (error()) {
@@ -21,7 +18,8 @@
     (followToggle)="onFollowToggle()"
     (editClick)="onEditClick()"
     (followersClick)="onFollowersClick()"
-    (followingClick)="onFollowingClick()">
+    (followingClick)="onFollowingClick()"
+    (messageClick)="onMessageClick()">
   </app-profile-header>
 
   <!-- Two Column Layout -->

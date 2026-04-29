@@ -63,7 +63,7 @@ export class DashboardHeaderComponent {
   navigateToProfile(): void {
     const userId = this._authService.getCurrentUserId();
     if (userId) {
-      this.router.navigate(['/profile', userId]);
+      this.router.navigate(['/dashboard/profile', userId]);
     }
   }
 

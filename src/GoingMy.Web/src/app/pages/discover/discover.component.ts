@@ -146,7 +146,7 @@ export class DiscoverComponent implements OnInit, OnDestroy {
 
   // ── 6. Navigation ────────────────────────────────────────────
   navigateToProfile(userId: string): void {
-    this._router.navigate(['/profile', userId]);
+    this._router.navigate(['/dashboard/profile', userId]);
   }
 
   getUserInitials(user: UserProfile): string {

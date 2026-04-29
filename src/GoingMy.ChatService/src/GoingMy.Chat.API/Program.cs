@@ -75,6 +75,12 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 
+// ── HTTP client for UserService (Aspire service discovery) ──────
+builder.Services.AddHttpClient("user-api", client =>
+{
+    client.BaseAddress = new Uri($"https+http://{SharedServices.UserApi}");
+});
+
 var app = builder.Build();
 
 // Initialize MongoDB indexes

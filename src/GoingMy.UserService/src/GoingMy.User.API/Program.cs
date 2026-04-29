@@ -35,6 +35,7 @@ builder.Services.AddUserApplicationServices();
 // ── Repositories ─────────────────────────────────────────────
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddScoped<IUserFollowRepository, UserFollowRepository>();
+builder.Services.AddScoped<IUserBlockRepository, UserBlockRepository>();
 
 // ── MassTransit + RabbitMQ (Event consumer & outbox publisher) ─
 builder.Services.AddMassTransit(x =>

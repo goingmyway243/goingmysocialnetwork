@@ -2,7 +2,9 @@
   <app-dashboard-header></app-dashboard-header>
   
   <div class="dashboard-body">
-    <app-dashboard-sidebar></app-dashboard-sidebar>
+    @if (!layout.hideSidebar()) {
+      <app-dashboard-sidebar></app-dashboard-sidebar>
+    }
     
     <main class="dashboard-content">
       <router-outlet></router-outlet>

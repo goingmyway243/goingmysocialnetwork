@@ -2,6 +2,54 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.12.0] - 2026-04-29
+
+### Added
+- **User blocking feature** in `GoingMy.UserService`:
+  - `UserBlock` domain entity (`User.Domain/Entities/UserBlock.cs`): composite key `(BlockerId, BlockeeId)`, `CreatedAt`, private parameterless constructor for EF Core
+  - `IUserBlockRepository` interface: `ExistsAsync`, `CreateAsync`, `DeleteAsync`, `GetBlockedUserIdsAsync`
+  - `UserBlockRepository` EF Core implementation using `context.UserBlocks`
+  - `BlockUserCommand` / `UnblockUserCommand` CQRS commands (validate self-block, validate existence, delegate to repository)
+  - `CheckBlockStatusQuery` returning `bool` for a given `(BlockerId, BlockeeId)` pair
+  - EF Core migration `AddUserBlocks` — `UserBlocks` table with composite PK and indexes on both FK columns
+  - `UserDbContext` updated with `DbSet<UserBlock> UserBlocks` and entity configuration
+  - 4 new REST endpoints on `UserProfilesController`: `POST /{id}/block`, `DELETE /{id}/block`, `GET /{id}/is-blocked`, `GET /{id}/has-blocked-me`
+  - `IUserBlockRepository` registered as scoped in `UserService Program.cs`
+- **Follow & block validation** in `GoingMy.ChatService`:
+  - `ChatController` now requires mutual follow relationship and rejects blocked users before allowing conversation creation (returns `403 Forbidden`)
+  - Private helpers `IsFollowingAsync()` and `IsBlockedByAsync()` call `UserService` via named HTTP client with Bearer token forwarding
+  - Named HTTP client `"user-api"` registered in `ChatService Program.cs` using Aspire service discovery address
+- **Frontend blocking API** in `GoingMy.Web`:
+  - `UserApiService`: added `blockUser()`, `unblockUser()`, `isBlocked()`, `hasBlockedMe()` methods
+- **Direct messaging integration** in `GoingMy.Web`:
+  - `ChatStateService`: added `NewMessageNotification` interface, `requestedConversationId` signal, `newMessageNotification` signal, and `openConversationWith()` method (joins SignalR conversation + loads messages + sets requested ID)
+  - `MiniChatComponent`: two `effect()` calls using `untracked()` — one reacts to `requestedConversationId` to open the chatbox, one shows a PrimeNG Toast for background new-message notifications; `MessageService` provided locally
+  - `ProfileHeaderComponent`: "Message" button shown when `isFollowing()` is true; emits `messageClick` output event
+- **Dashboard layout control** via new `LayoutService` (`src/GoingMy.Web/src/app/services/layout.service.ts`):
+  - `hideSidebar = signal(false)` — allows any child page to opt out of the sidebar
+  - `DashboardComponent` subscribes to `NavigationStart` to reset `hideSidebar` to `false` on every navigation
+  - Sidebar in `dashboard.component.html` wrapped in `@if (!layout.hideSidebar())` block
+
+### Changed
+- **AppHost.cs**: `userService` declaration moved before `chatService`; `.WithReference(userService)` added to `chatService` — fixes Aspire service discovery so `ChatService` can resolve `user-api` address
+- **Angular routing** (`app.routes.ts`): `/profile/:userId` moved inside `dashboard` children as `profile/:userId` so the profile page renders within the dashboard shell (header + mini-chat widget); profile URL is now `/dashboard/profile/:userId`
+- **Navigation calls updated** in 4 files (`profile.component.ts`, `discover.component.ts`, `dashboard-header.component.ts`, `dashboard-home.component.ts`): `/profile` → `/dashboard/profile`
+- **ProfileComponent**: removed self-rendered `<app-dashboard-header>` (was causing duplicate header); injected `ChatStateService` and `LayoutService`; `ngOnInit` sets `hideSidebar.set(true)`; bound `(messageClick)="onMessageClick()"` to profile header
+
+### Fixed
+- **ChatService service discovery**: `user-api` address was never injected by Aspire because `chatService` was declared before `userService` in `AppHost.cs` and `.WithReference(userService)` was missing
+- **Message button not opening mini-chat**: `openConversationWith()` was not calling `selectConversation()`, so SignalR was never joined and messages never loaded
+- **Effect re-scheduling race**: `effect()` signal writes in `MiniChatComponent` wrapped with `untracked()` to prevent infinite re-scheduling
+- **Mini-chat widget not in DOM on profile**: Profile was a top-level route outside the dashboard layout shell — moved inside dashboard children so `<app-mini-chat>` is always rendered
+- **Duplicate header on profile page**: Profile component was rendering `<app-dashboard-header>` while the dashboard shell also rendered one
+
+### Architecture Notes
+- **Followers-only messaging**: Gateway enforces JWT; ChatService additionally validates mutual follow + no block before creating a conversation
+- **LayoutService pattern**: Provides a clean signal-based mechanism for child pages to control dashboard-level layout features without tight coupling
+- **`untracked()` in effects**: Required when an Angular `effect()` reads one signal and writes to another to prevent the effect from re-registering itself as a dependency on the write target
+
+---
+
 ## [0.11.0] - 2026-04-28
 
 ### Added

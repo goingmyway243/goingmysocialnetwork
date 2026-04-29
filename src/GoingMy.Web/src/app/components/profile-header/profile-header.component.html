@@ -45,6 +45,12 @@
         } @else {
           @if (isFollowing()) {
             <p-button
+              label="Message"
+              icon="pi pi-comment"
+              [pt]="glassBtnPt"
+              (onClick)="onMessageClick()">
+            </p-button>
+            <p-button
               label="Unfollow"
               icon="pi pi-user-minus"
               [pt]="glassBtnPt"

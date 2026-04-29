@@ -221,7 +221,7 @@ export class DashboardHomeComponent implements OnInit {
   }
 
   navigateToProfile(userId: string): void {
-    this._router.navigate(['/profile', userId]);
+    this._router.navigate(['/dashboard/profile', userId]);
   }
 
   // ── 9. Utilities ─────────────────────────────────────────────

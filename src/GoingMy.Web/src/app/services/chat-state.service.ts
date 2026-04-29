@@ -4,6 +4,12 @@ import { ConversationDto, MessageDto, PaginatedResult, ReadReceiptDto, TypingUse
 import { ChatApiService } from './chat-api.service';
 import { ChatSignalRService } from './chat-signalr.service';
 
+export interface NewMessageNotification {
+  senderUsername: string;
+  content: string;
+  conversationId: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ChatStateService implements OnDestroy {
 
@@ -25,6 +31,10 @@ export class ChatStateService implements OnDestroy {
   readonly searchResults = signal<MessageDto[] | null>(null);
   readonly searchQuery = signal('');
   readonly error = signal<string | null>(null);
+  /** Set when profile page requests opening a specific conversation in the mini-chat. */
+  readonly requestedConversationId = signal<string | null>(null);
+  /** Fires when a new inbound message arrives in a conversation the user is not viewing. */
+  readonly newMessageNotification = signal<NewMessageNotification | null>(null);
 
   // ── 3. Derived State ─────────────────────────────────────────
   readonly selectedConversation = computed(() =>
@@ -103,6 +113,32 @@ export class ChatStateService implements OnDestroy {
       },
       error: () => {
         this.error.set('Failed to create conversation.');
+      }
+    });
+  }
+
+  /**
+   * Creates (or retrieves) a conversation with the given user and signals the
+   * mini-chat widget to open it. Called from profile pages.
+   */
+  openConversationWith(recipientId: string, recipientUsername: string): void {
+    this._api.createConversation(recipientId, recipientUsername).subscribe({
+      next: conv => {
+        this.conversations.update(list => {
+          const exists = list.find(c => c.id === conv.id);
+          return exists ? list : [conv, ...list];
+        });
+        // Load messages + join SignalR group before signalling the mini-chat to open
+        this.selectConversation(conv.id);
+        this.requestedConversationId.set(conv.id);
+      },
+      error: (err) => {
+        const status = err?.status;
+        if (status === 403) {
+          this.error.set(err.error?.message ?? 'You cannot open a conversation with this user.');
+        } else {
+          this.error.set('Failed to open conversation.');
+        }
       }
     });
   }
@@ -262,6 +298,14 @@ export class ChatStateService implements OnDestroy {
         ? { ...c, lastMessagePreview: msg.content, lastMessageAt: msg.sentAt }
         : c)
     );
+    // Emit notification if message is from another user and not the active conversation
+    if (msg.conversationId !== this.selectedConversationId()) {
+      this.newMessageNotification.set({
+        senderUsername: msg.senderUsername,
+        content: msg.content,
+        conversationId: msg.conversationId
+      });
+    }
   }
 
   private _markMessageDeleted(conversationId: string, messageId: string): void {

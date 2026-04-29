@@ -1,6 +1,8 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { ConversationDto, MessageDto } from '../../models/chat.models';
 import { ChatStateService } from '../../services/chat-state.service';
 import { AuthService } from '../../services/auth.service';
@@ -8,8 +10,10 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-mini-chat',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, ToastModule],
+  providers: [MessageService],
   template: `
+    <p-toast position="bottom-right" key="mini-chat-toast"></p-toast>
     <div class="mini-chat-host">
 
       <!-- Mini conversations panel -->
@@ -124,6 +128,7 @@ export class MiniChatComponent {
   readonly _state = inject(ChatStateService);
   private readonly _auth = inject(AuthService);
   private readonly _router = inject(Router);
+  private readonly _messageService = inject(MessageService);
 
   // ── 2. State ────────────────────────────────────────────────
   readonly _showPanel = signal(false);
@@ -147,7 +152,41 @@ export class MiniChatComponent {
     this._state.conversations().reduce((sum, c) => sum + (c.unreadCount ?? 0), 0)
   );
 
-  // ── 4. Actions ───────────────────────────────────────────────
+  constructor() {
+    // React to profile page requesting a specific conversation to be opened.
+    // untracked() isolates signal writes so the set(null) doesn't re-schedule
+    // this effect before the _activeConvId change is committed.
+    effect(() => {
+      const id = this._state.requestedConversationId();
+      if (id) {
+        untracked(() => {
+          this._activeConvId.set(id);
+          this._showPanel.set(false);
+          this._state.requestedConversationId.set(null);
+        });
+      }
+    });
+
+    // Show toast notification for inbound messages from non-active conversations
+    effect(() => {
+      const notification = this._state.newMessageNotification();
+      if (notification) {
+        untracked(() => {
+          const truncated = notification.content.length > 60
+            ? notification.content.substring(0, 60) + '…'
+            : notification.content;
+          this._messageService.add({
+            key: 'mini-chat-toast',
+            severity: 'info',
+            summary: `@${notification.senderUsername}`,
+            detail: truncated,
+            life: 4000
+          });
+          this._state.newMessageNotification.set(null);
+        });
+      }
+    });
+  }
   togglePanel(): void {
     if (this._activeConvId()) {
       this._activeConvId.set(null);

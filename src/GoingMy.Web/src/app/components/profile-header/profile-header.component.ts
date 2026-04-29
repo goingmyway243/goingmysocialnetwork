@@ -26,6 +26,7 @@ export class ProfileHeaderComponent {
   readonly editClick = output<void>();
   readonly followersClick = output<void>();
   readonly followingClick = output<void>();
+  readonly messageClick = output<void>();
 
   // ── 3. Actions ───────────────────────────────────────────────
   onFollowToggle(): void {
@@ -42,6 +43,10 @@ export class ProfileHeaderComponent {
 
   onFollowingClick(): void {
     this.followingClick.emit();
+  }
+
+  onMessageClick(): void {
+    this.messageClick.emit();
   }
 
   // ── 4. Actions ───────────────────────────────────────────────

@@ -115,6 +115,28 @@ export class UserApiService {
       `${this._userBaseUrl}/${id}/following?page=${page}&pageSize=${pageSize}`);
   }
 
+  // ── User Service — Blocking ──────────────────────────────────
+
+  /** POST /api/userprofiles/{id}/block — block user {id} */
+  blockUser(id: string): Observable<void> {
+    return this._http.post<void>(`${this._userBaseUrl}/${id}/block`, {});
+  }
+
+  /** DELETE /api/userprofiles/{id}/block — unblock user {id} */
+  unblockUser(id: string): Observable<void> {
+    return this._http.delete<void>(`${this._userBaseUrl}/${id}/block`);
+  }
+
+  /** GET /api/userprofiles/{id}/is-blocked — have I blocked {id}? */
+  isBlocked(id: string): Observable<boolean> {
+    return this._http.get<boolean>(`${this._userBaseUrl}/${id}/is-blocked`);
+  }
+
+  /** GET /api/userprofiles/{id}/has-blocked-me — has {id} blocked me? */
+  hasBlockedMe(id: string): Observable<boolean> {
+    return this._http.get<boolean>(`${this._userBaseUrl}/${id}/has-blocked-me`);
+  }
+
   // ── User Service — Search ────────────────────────────────────
 
   /** GET /api/userprofiles/search (UserService) */
