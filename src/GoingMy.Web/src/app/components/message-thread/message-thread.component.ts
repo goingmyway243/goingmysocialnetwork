@@ -19,7 +19,7 @@ import { MessageBubbleComponent } from '../message-bubble/message-bubble.compone
             <div class="recipient-avatar online">
               {{ getRecipientName(conv).charAt(0).toUpperCase() }}
             </div>
-            <div class="recipient-details">
+            <div class="recipient-details" [hidden]="_showSearch()">
               <div class="recipient-name">{{ getRecipientName(conv) }}</div>
               <div class="recipient-status">Active now</div>
             </div>
