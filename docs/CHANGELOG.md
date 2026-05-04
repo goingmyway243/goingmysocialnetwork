@@ -2,6 +2,17 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.13.0] - 2026-05-04
+
+### Added
+- **AI Post Writing Assistant** — Integrated Google Gemini (via OpenAI-compatible endpoint) into post compose dialog
+  - Backend: `IAiWritingService` + `AiAssistController` at `POST /api/posts/ai/assist`
+  - 6 AI actions: Suggest, Improve, Grammar, Tone, Shorten, Lengthen
+  - Frontend: `AiApiService`, AI toolbar in compose dialog with tone selector, suggestion panel with glass styling
+  - Configuration-driven provider support (OpenAI/Gemini/Any OpenAI-compatible via `OpenAI:BaseUrl`)
+
+---
+
 ## [0.12.0] - 2026-04-29
 
 ### Added

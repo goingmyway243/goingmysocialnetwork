@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="MongoDB.Driver" />
+    <PackageReference Include="OpenAI" />
   </ItemGroup>
 
 </Project>

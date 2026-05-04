@@ -1,8 +1,10 @@
 using GoingMy.Post.Application.Consumers;
 using GoingMy.Post.Application.Extensions;
+using GoingMy.Post.Application.Services;
 using GoingMy.Post.Domain.Repositories;
 using GoingMy.Post.Infrastructure.Data;
 using GoingMy.Post.Infrastructure.Repositories;
+using GoingMy.Post.Infrastructure.Services;
 using GoingMy.ServiceDefaults;
 using GoingMy.Shared;
 using GoingMy.Shared.Events;
@@ -29,6 +31,9 @@ builder.Services.AddScoped<MongoDbContext>(provider =>
 
 // Register Post.Application services (includes MediatR)
 builder.Services.AddPostApplicationServices();
+
+// Register AI writing service
+builder.Services.AddScoped<IAiWritingService, AiWritingService>();
 
 // Register repositories
 builder.Services.AddScoped<IPostRepository, PostRepository>();

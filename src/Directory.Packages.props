@@ -72,6 +72,10 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
   </ItemGroup>
+  <!--OpenAI Packages-->
+  <ItemGroup>
+    <PackageVersion Include="OpenAI" Version="2.2.0" />
+  </ItemGroup>
   <!--Swagger/OpenAPI Packages-->
   <ItemGroup>
     <PackageVersion Include="Scalar.AspNetCore" Version="2.13.14" />

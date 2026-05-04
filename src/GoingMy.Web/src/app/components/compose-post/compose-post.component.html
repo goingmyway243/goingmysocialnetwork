@@ -43,6 +43,76 @@
     </span>
   </div>
 
+  <!-- AI Writing Assistant -->
+  <div class="ai-toolbar-wrapper">
+    <button
+      class="ai-toggle-btn"
+      type="button"
+      [class.active]="aiPanelVisible()"
+      (click)="toggleAiPanel()"
+      [disabled]="submitting()">
+      <span class="ai-icon">✦</span>
+      <span>AI Assistant</span>
+    </button>
+
+    @if (aiPanelVisible()) {
+      <div class="ai-panel">
+        <!-- Action buttons -->
+        <div class="ai-actions">
+          <button class="ai-action-btn" type="button" (click)="runAiAction('suggest')" [disabled]="aiLoading()">Suggest</button>
+          <button class="ai-action-btn" type="button" (click)="runAiAction('improve')" [disabled]="aiLoading() || !isValid()">Improve</button>
+          <button class="ai-action-btn" type="button" (click)="runAiAction('grammar')" [disabled]="aiLoading() || !isValid()">Grammar</button>
+          <button class="ai-action-btn" type="button" (click)="runAiAction('shorten')" [disabled]="aiLoading() || !isValid()">Shorten</button>
+          <button class="ai-action-btn" type="button" (click)="runAiAction('lengthen')" [disabled]="aiLoading() || !isValid()">Lengthen</button>
+        </div>
+
+        <!-- Tone row -->
+        <div class="ai-tone-row">
+          <p-select
+            [options]="toneOptions"
+            [(ngModel)]="selectedTone"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+            styleClass="ai-tone-select">
+          </p-select>
+          <button class="ai-action-btn tone-btn" type="button" (click)="runAiAction('tone')" [disabled]="aiLoading() || !isValid()">Apply Tone</button>
+        </div>
+
+        <!-- Loading -->
+        @if (aiLoading()) {
+          <div class="ai-loading">
+            <i class="pi pi-spin pi-spinner"></i>
+            <span>Generating suggestion…</span>
+          </div>
+        }
+
+        <!-- AI Error -->
+        @if (aiError()) {
+          <div class="ai-error">
+            <i class="pi pi-exclamation-circle"></i>
+            {{ aiError() }}
+          </div>
+        }
+
+        <!-- Suggestion result -->
+        @if (hasAiSuggestion()) {
+          <div class="ai-suggestion">
+            <p class="ai-suggestion-text">{{ aiSuggestion() }}</p>
+            <div class="ai-suggestion-actions">
+              <button class="ai-use-btn" type="button" (click)="applySuggestion()">
+                <i class="pi pi-check"></i> Use this
+              </button>
+              <button class="ai-dismiss-btn" type="button" (click)="dismissSuggestion()">
+                <i class="pi pi-times"></i> Dismiss
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
   <!-- Error -->
   @if (error()) {
     <div class="dialog-error">
