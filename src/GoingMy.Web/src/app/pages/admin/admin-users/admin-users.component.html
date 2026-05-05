@@ -1,0 +1,102 @@
+<div class="users-page">
+  <p-toast position="top-right" />
+  <p-confirmDialog>
+    <ng-template pTemplate="message" let-message>
+      <div class="confirm-message" [innerHTML]="message.message"></div>
+    </ng-template>
+  </p-confirmDialog>
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Users</h1>
+      <p class="page-subtitle">{{ totalCount() }} total users</p>
+    </div>
+    <div class="search-box">
+      <i class="pi pi-search search-icon"></i>
+      <input
+        pInputText
+        class="search-input"
+        type="text"
+        placeholder="Search by name, email or username…"
+        [value]="searchTerm()"
+        (input)="onSearch($any($event.target).value)" />
+    </div>
+  </div>
+
+  <div class="table-card">
+    <p-table
+      [value]="users()"
+      [loading]="isLoading()"
+      [lazy]="true"
+      [totalRecords]="totalCount()"
+      [rows]="pageSize"
+      [paginator]="true"
+      (onPage)="onPageChange($event)"
+      styleClass="p-datatable-sm"
+      [rowHover]="true">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>User</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Joined</th>
+          <th>Last Login</th>
+          <th class="text-center">Active</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-user>
+        <tr [class.row-inactive]="!user.isActive">
+          <td>
+            <div class="user-cell">
+              <div class="avatar">{{ user.firstName[0] }}{{ user.lastName[0] }}</div>
+              <div class="user-info">
+                <span class="username">{{ user.username }}</span>
+                <span class="full-name">{{ user.firstName }} {{ user.lastName }}</span>
+              </div>
+            </div>
+          </td>
+          <td class="email-cell">{{ user.email }}</td>
+          <td>
+            <p-tag
+              [value]="isRoleAdmin(user) ? 'Admin' : 'User'"
+              [severity]="isRoleAdmin(user) ? 'warn' : 'secondary'"
+              [rounded]="true" />
+          </td>
+          <td class="date-cell">{{ user.createdAt | date:'mediumDate' }}</td>
+          <td class="date-cell">{{ user.lastLoginAt ? (user.lastLoginAt | date:'mediumDate') : '—' }}</td>
+          <td class="text-center">
+            <p-toggleswitch
+              [ngModel]="user.isActive"
+              [disabled]="isToggling(user.id)"
+              (onChange)="toggleStatus(user)" />
+          </td>
+          <td class="text-center">
+            <button
+              class="action-btn revoke-btn"
+              [disabled]="isRevoking(user.id)"
+              (click)="revokeTokens(user)"
+              title="Revoke all active tokens">
+              @if (isRevoking(user.id)) {
+                <i class="pi pi-spin pi-spinner"></i>
+              } @else {
+                <i class="pi pi-key"></i>
+              }
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7" class="empty-message">
+            <i class="pi pi-users"></i>
+            No users found
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

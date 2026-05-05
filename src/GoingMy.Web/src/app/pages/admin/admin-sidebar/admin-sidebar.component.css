@@ -1,0 +1,132 @@
+.admin-sidebar {
+  width: 260px;
+  min-height: calc(100vh - 64px);
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-md) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
+  border-right: 1px solid var(--glass-border-base);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  position: sticky;
+  top: 64px;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem 1.5rem;
+  border-bottom: 1px solid var(--glass-border-subtle);
+  margin-bottom: 1rem;
+}
+
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.brand-label {
+  font-weight: 700;
+  font-size: 1rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.02em;
+}
+
+.nav-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-color-secondary);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item i {
+  font-size: 1.125rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  min-width: 1.25rem;
+}
+
+.nav-item:hover {
+  background: var(--glass-surface-hover);
+  color: var(--text-color);
+}
+
+.nav-item.active {
+  background: var(--glass-elevated-bg);
+  color: var(--text-color);
+  box-shadow: var(--glass-shadow-sm);
+  border: 1px solid var(--glass-border-accent);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  height: 60%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--gradient-primary);
+}
+
+.sidebar-footer {
+  padding-top: 1rem;
+  border-top: 1px solid var(--glass-border-subtle);
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border-base);
+  background: transparent;
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.back-btn:hover {
+  background: var(--glass-surface-hover);
+  color: var(--text-color);
+}
+
+.back-btn i {
+  font-size: 0.875rem;
+}

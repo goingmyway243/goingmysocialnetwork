@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" />
     <PackageReference Include="OpenIddict.Validation.AspNetCore" />
     <PackageReference Include="OpenIddict.Validation.SystemNetHttp" />
+    <PackageReference Include="StackExchange.Redis" />
     <PackageReference Include="Yarp.ReverseProxy" />
   </ItemGroup>
 

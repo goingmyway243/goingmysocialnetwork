@@ -1,0 +1,73 @@
+.admin-header {
+  height: 64px;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  background: var(--glass-elevated-bg);
+  backdrop-filter: var(--glass-blur-md) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
+  border-bottom: 1px solid var(--glass-border-base);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.admin-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.admin-badge i {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.separator {
+  color: var(--glass-border-strong);
+  font-weight: 300;
+}
+
+.app-name {
+  color: var(--text-color-secondary);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 1rem;
+  border-radius: 20px;
+  background: var(--glass-surface-bg);
+  border: 1px solid var(--glass-border-base);
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+}
+
+.user-chip i {
+  font-size: 0.875rem;
+}

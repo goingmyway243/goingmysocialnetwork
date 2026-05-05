@@ -1,0 +1,104 @@
+<div class="dashboard-page">
+  <div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Platform overview and statistics</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <i class="pi pi-spin pi-spinner loading-icon"></i>
+      <span>Loading statistics…</span>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <i class="pi pi-exclamation-triangle"></i>
+      <span>{{ error() }}</span>
+    </div>
+  } @else {
+    <!-- User Stats -->
+    <section class="stats-section">
+      <h2 class="section-title"><i class="pi pi-users"></i> Users</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="pi pi-users"></i></div>
+          <div class="stat-info">
+            <span class="stat-value">{{ userStats()?.totalUsers ?? 0 }}</span>
+            <span class="stat-label">Total Users</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="pi pi-check-circle"></i></div>
+          <div class="stat-info">
+            <span class="stat-value">{{ userStats()?.activeUsers ?? 0 }}</span>
+            <span class="stat-label">Active Users</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="pi pi-shield"></i></div>
+          <div class="stat-info">
+            <span class="stat-value">{{ userStats()?.adminUsers ?? 0 }}</span>
+            <span class="stat-label">Admins</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><i class="pi pi-ban"></i></div>
+          <div class="stat-info">
+            <span class="stat-value">{{ (userStats()?.totalUsers ?? 0) - (userStats()?.activeUsers ?? 0) }}</span>
+            <span class="stat-label">Inactive Users</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Post Stats -->
+    <section class="stats-section">
+      <h2 class="section-title"><i class="pi pi-file-edit"></i> Content</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="pi pi-file-edit"></i></div>
+          <div class="stat-info">
+            <span class="stat-value">{{ postStats()?.totalPosts ?? 0 }}</span>
+            <span class="stat-label">Total Posts</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><i class="pi pi-heart"></i></div>
+          <div class="stat-info">
+            <span class="stat-value">{{ postStats()?.totalLikes ?? 0 }}</span>
+            <span class="stat-label">Total Likes</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="pi pi-comment"></i></div>
+          <div class="stat-info">
+            <span class="stat-value">{{ postStats()?.totalComments ?? 0 }}</span>
+            <span class="stat-label">Total Comments</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="pi pi-calendar"></i></div>
+          <div class="stat-info">
+            <span class="stat-value">{{ postStats()?.postsLast7Days ?? 0 }}</span>
+            <span class="stat-label">Posts (7 days)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Registration chart -->
+    <section class="stats-section">
+      <h2 class="section-title"><i class="pi pi-chart-line"></i> User Registrations (Last 30 Days)</h2>
+      <div class="chart-card">
+        @if (registrationChartData(); as chartData) {
+          <p-chart
+            type="line"
+            [data]="chartData"
+            [options]="chartOptions"
+            height="240px" />
+        } @else {
+          <div class="chart-empty">No registration data available</div>
+        }
+      </div>
+    </section>
+  }
+</div>

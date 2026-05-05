@@ -1,6 +1,9 @@
+using GoingMy.ApiGateway.Middleware;
 using GoingMy.ServiceDefaults;
+using GoingMy.Shared;
 using Microsoft.AspNetCore.RateLimiting;
 using OpenIddict.Validation.AspNetCore;
+using StackExchange.Redis;
 using System.Security.Claims;
 using System.Threading.RateLimiting;
 using Yarp.ReverseProxy.Transforms;
@@ -53,7 +56,17 @@ builder.Services.AddOpenIddict()
     });
 
 builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    // admin-policy: used by /api/admin/** and /api/posts/admin/** gateway routes
+    options.AddPolicy("admin-policy", policy =>
+        policy.RequireAuthenticatedUser()
+              .RequireClaim("role", "Admin"));
+});
+
+// ── Redis (for token revocation middleware) ───────────────────
+var redisConnectionString = builder.Configuration.GetConnectionString(SharedServices.Redis) ?? "localhost:6379";
+builder.Services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(redisConnectionString));
 
 // ── CORS ──────────────────────────────────────────────────────
 builder.Services.AddCors(options =>
@@ -86,6 +99,7 @@ var app = builder.Build();
 app.UseWebSockets(); // must precede YARP for SignalR WebSocket proxying
 app.UseCors();
 app.UseAuthentication();
+app.UseMiddleware<UserRevocationMiddleware>();
 app.UseAuthorization();
 app.UseRateLimiter();
 

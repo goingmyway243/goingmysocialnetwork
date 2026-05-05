@@ -128,6 +128,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 // Register custom services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRefreshTokenBlacklistService, RefreshTokenBlacklistService>();
+builder.Services.AddScoped<IUserRevocationService, UserRevocationService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 // Register Redis connection (Aspire provides connection string via configuration)
 var redisConnectionString = builder.Configuration.GetConnectionString(SharedServices.Redis) ?? "localhost:6379";

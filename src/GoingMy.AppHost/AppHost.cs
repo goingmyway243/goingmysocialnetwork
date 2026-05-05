@@ -68,7 +68,9 @@ builder.AddProject<Projects.GoingMy_ApiGateway>("api-gateway")
     .WithReference(userService)
     .WithReference(postService)
     .WithReference(chatService)
+    .WithReference(redis)
     .WaitFor(identityService)
+    .WaitFor(redis)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 builder.Build().Run();

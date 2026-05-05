@@ -2,6 +2,40 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.14.0] - 2026-05-05
+
+### Added
+- **Admin Page** — Full admin section at `/admin` covering user management, token revocation, and platform reporting
+  - **AuthService** — `IUserRevocationService` / `UserRevocationService`: stores `user:{id}:tokens_revoked_at` in Redis (30-day TTL); used by both `AdminService` and the gateway middleware
+  - **AuthService** — `IAdminService` / `AdminService`: paginated + filtered user list, activate/deactivate accounts (also auto-revokes tokens on deactivation), per-user token revocation, 30-day daily registration statistics
+  - **AuthService** — `AdminController` at `[Authorize(Roles="Admin")]` exposing four endpoints:
+    - `GET /api/admin/users` — paginated list with `search`, `isActive` query filters
+    - `PATCH /api/admin/users/{id}/status` — activate or deactivate a user
+    - `POST /api/admin/users/{id}/revoke-tokens` — immediate token revocation (forces re-login on next API request)
+    - `GET /api/admin/stats/users` — total users, active users, admin count, daily registration histogram (last 30 days)
+  - **PostService** — `GetPostStatsQuery` + `PostStatsDto`: aggregates total posts, total likes, total comments, posts last 7 days, posts last 30 days from MongoDB
+  - **PostService** — `IPostRepository.GetStatsAsync()` implementation using MongoDB `CountDocuments` + `Aggregate().Group()` for atomic sum of likes/comments
+  - **PostService** — `GET /api/posts/admin/stats` at `[Authorize(Roles="Admin")]`
+  - **ApiGateway** — `UserRevocationMiddleware`: post-authentication middleware that reads `user:{userId}:tokens_revoked_at` from Redis and rejects tokens whose `iat` (issued-at Unix timestamp) is ≤ the stored revocation timestamp with HTTP 401
+  - **ApiGateway** — `admin-policy` authorization policy (requires `role=Admin` claim); applied to `/api/admin/**` (auth-cluster) and `/api/posts/admin/**` (post-cluster) routes in `appsettings.json`
+  - **ApiGateway** — `StackExchange.Redis` dependency added; Redis connection injected via Aspire service discovery
+  - **AppHost** — gateway now references and waits for Redis (`WithReference(redis)`, `WaitFor(redis)`)
+  - **Frontend** — `AuthService.hasRole(role)`: reads `role` claim from OIDC identity token, handles both single-value and array claim formats
+  - **Frontend** — `adminGuard`: redirects unauthenticated users to OIDC login, non-admin users to `/dashboard`
+  - **Frontend** — `AdminApiService`: typed HTTP client for all six admin endpoints (user list, set status, revoke tokens, user stats, post stats)
+  - **Frontend** — Separate `/admin` route section (lazy-loaded) with its own glassmorphism layout:
+    - `AdminLayoutComponent` + `AdminHeaderComponent` + `AdminSidebarComponent` (links: Dashboard, Users; Back to App button)
+    - `AdminDashboardComponent`: stats cards for users (total, active, admin, inactive) and content (posts, likes, comments, 7-day posts), plus PrimeNG Chart.js line chart for 30-day registration trend
+    - `AdminUsersComponent`: PrimeNG DataTable with server-side pagination (20/page), debounced search, role badge, activate/deactivate toggle with confirmation dialog, revoke-tokens button with confirmation dialog
+  - **Dependencies** — `chart.js` npm package added (required by PrimeNG `ChartModule`)
+
+### Architecture Notes
+- **Revocation strategy**: User-level timestamp in Redis eliminates per-JTI tracking; new tokens issued after revocation have a higher `iat` and are accepted automatically
+- **Defense-in-depth**: Gateway enforces `admin-policy` at the edge; downstream services also require `[Authorize(Roles="Admin")]` on admin controllers
+- **Default admin credentials**: `admin / admin123` (seeded by `UserSeeder`)
+
+---
+
 ## [0.13.0] - 2026-05-04
 
 ### Added

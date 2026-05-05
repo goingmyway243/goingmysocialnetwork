@@ -1,4 +1,5 @@
 using GoingMy.Post.Application.Commands;
+using GoingMy.Post.Application.Dtos;
 using GoingMy.Post.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -231,5 +232,19 @@ public class PostsController : ControllerBase
     {
         var posts = await _mediator.Send(new GetUserLikedPostsQuery(userId, page, pageSize));
         return Ok(posts);
+    }
+
+    // ── Admin ─────────────────────────────────────────────────
+
+    /// <summary>Returns aggregate post statistics (total posts, likes, comments, recent activity).</summary>
+    [HttpGet("admin/stats")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(PostStatsDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult> GetAdminStats(CancellationToken ct = default)
+    {
+        var stats = await _mediator.Send(new GetPostStatsQuery(), ct);
+        return Ok(stats);
     }
 }

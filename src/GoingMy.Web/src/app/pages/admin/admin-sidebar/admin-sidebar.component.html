@@ -1,0 +1,25 @@
+<aside class="admin-sidebar">
+  <div class="sidebar-brand">
+    <span class="brand-icon"><i class="pi pi-shield"></i></span>
+    <span class="brand-label">Admin Panel</span>
+  </div>
+
+  <nav class="nav-list">
+    @for (item of navItems; track item.id) {
+      <button
+        class="nav-item"
+        [class.active]="activeItem() === item.id"
+        (click)="navigate(item)">
+        <i [class]="item.icon"></i>
+        <span>{{ item.label }}</span>
+      </button>
+    }
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="back-btn" (click)="backToDashboard()">
+      <i class="pi pi-arrow-left"></i>
+      <span>Back to App</span>
+    </button>
+  </div>
+</aside>

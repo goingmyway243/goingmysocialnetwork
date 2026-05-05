@@ -232,6 +232,8 @@ dotnet add package Moq
 - Bootstraps a `UserProfile` in UserService after every signup
 - Password management
 - **Refresh token blacklist** via Redis (revoked tokens stored with TTL-based auto-expiry)
+- **Admin management** — user list/search, activate/deactivate, user-level token revocation, registration stats (see `/api/admin/*`)
+- Default admin account: `admin / admin123` (seeded on first run)
 
 **Default API Port**: 5001
 
@@ -275,14 +277,16 @@ dotnet add package Moq
 - **WebSocket Proxying**: Enables SignalR hub communication through gateway
 
 **Routes**:
-| Path | Destination | Auth Required |
-|------|-------------|---------------|
-| `/connect/*` | Auth Service | No |
-| `/api/user/*` | Auth Service (signup) | No |
-| `/api/userprofiles/*` | User Service | Yes |
-| `/api/posts/*` | Post Service | Yes |
-| `/api/chat/*` | Chat Service | Yes |
-| `/hubs/*` | Chat Service (SignalR) | Yes |
+| Path | Destination | Auth Required | Policy |
+|------|-------------|---------------|--------|
+| `/connect/*` | Auth Service | No | anonymous |
+| `/api/user/*` | Auth Service | No | anonymous |
+| `/api/userprofiles/*` | User Service | Yes | default |
+| `/api/posts/*` | Post Service | Yes | default |
+| `/api/chat/*` | Chat Service | Yes | default |
+| `/hubs/*` | Chat Service (SignalR) | Yes | default |
+| `/api/admin/*` | Auth Service | Yes | admin-policy |
+| `/api/posts/admin/*` | Post Service | Yes | admin-policy |
 
 **Default Gateway Port**: **7000** (HTTPS) / 5000 (HTTP)
 
@@ -461,7 +465,7 @@ For questions or issues:
 ---
 
 **Created**: March 19, 2026  
-**Last Updated**: April 21, 2026  
+**Last Updated**: May 5, 2026  
 **Backend Technology**: .NET 10.0, PostgreSQL, MongoDB, Redis, RabbitMQ, xUnit, MediatR, OpenIddict, Scalar.AspNetCore, MassTransit, Aspire
 **Frontend Technology**: Angular 20, PrimeNG, TypeScript, CSS  
 **Architecture Pattern**: Clean Architecture with Microservices (Backend) + Signals & Code Flow Blocks (Frontend) + Event-Driven (RabbitMQ/MassTransit)

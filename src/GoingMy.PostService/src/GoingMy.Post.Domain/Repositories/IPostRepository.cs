@@ -1,5 +1,13 @@
 namespace GoingMy.Post.Domain.Repositories;
 
+/// <summary>Aggregate statistics returned by <see cref="IPostRepository.GetStatsAsync"/>.</summary>
+public record PostStats(
+    long TotalPosts,
+    long TotalLikes,
+    long TotalComments,
+    long PostsLast7Days,
+    long PostsLast30Days);
+
 /// <summary>
 /// Interface for Post repository operations.
 /// </summary>
@@ -77,5 +85,10 @@ public interface IPostRepository
     /// Retrieves posts whose IDs are in the provided collection. Used for liked-posts lookups.
     /// </summary>
     Task<IEnumerable<Entities.Post>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns aggregate statistics for admin reporting: total counts and per-day post counts for the last 30 days.
+    /// </summary>
+    Task<PostStats> GetStatsAsync(CancellationToken cancellationToken = default);
 }
 

@@ -153,4 +153,34 @@ public class PostRepository : IPostRepository
             .SortByDescending(p => p.CreatedAt)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<Domain.Repositories.PostStats> GetStatsAsync(CancellationToken cancellationToken = default)
+    {
+        var now = DateTime.UtcNow;
+        var sevenDaysAgo = now.AddDays(-7);
+        var thirtyDaysAgo = now.AddDays(-30);
+
+        var totalPosts = await _context.Posts.CountDocumentsAsync(_ => true, cancellationToken: cancellationToken);
+        var postsLast7Days = await _context.Posts.CountDocumentsAsync(
+            p => p.CreatedAt >= sevenDaysAgo, cancellationToken: cancellationToken);
+        var postsLast30Days = await _context.Posts.CountDocumentsAsync(
+            p => p.CreatedAt >= thirtyDaysAgo, cancellationToken: cancellationToken);
+
+        // Aggregate sum of Likes and Comments across all posts
+        var aggregate = await _context.Posts
+            .Aggregate()
+            .Group(p => true, g => new
+            {
+                TotalLikes = g.Sum(p => p.Likes),
+                TotalComments = g.Sum(p => p.Comments)
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return new Domain.Repositories.PostStats(
+            TotalPosts: totalPosts,
+            TotalLikes: aggregate?.TotalLikes ?? 0,
+            TotalComments: aggregate?.TotalComments ?? 0,
+            PostsLast7Days: postsLast7Days,
+            PostsLast30Days: postsLast30Days);
+    }
 }

@@ -1,0 +1,171 @@
+.users-page {
+  max-width: 1400px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+  margin: 0;
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+}
+
+/* Search */
+.search-box {
+  position: relative;
+  min-width: 300px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding-left: 2.5rem !important;
+  background: var(--glass-surface-bg) !important;
+  border: 1px solid var(--glass-border-base) !important;
+  border-radius: 12px !important;
+  color: var(--text-color) !important;
+  font-size: 0.9375rem;
+}
+
+.search-input::placeholder {
+  color: var(--text-color-secondary);
+}
+
+/* Table card */
+.table-card {
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
+  border: 1px solid var(--glass-border-base);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* User cell */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.username {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--text-color);
+}
+
+.full-name {
+  font-size: 0.8125rem;
+  color: var(--text-color-secondary);
+}
+
+.email-cell {
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+}
+
+.date-cell {
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+/* Inactive row */
+.row-inactive {
+  opacity: 0.55;
+}
+
+/* Action buttons */
+.action-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border-base);
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  color: var(--text-color-secondary);
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.revoke-btn:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+/* Empty state */
+.empty-message {
+  text-align: center !important;
+  padding: 3rem !important;
+  color: var(--text-color-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.confirm-message {
+  padding: 0.25rem 0;
+  line-height: 1.6;
+  color: var(--text-color);
+}

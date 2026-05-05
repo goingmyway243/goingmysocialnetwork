@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -60,6 +61,11 @@ export const routes: Routes = [
     path: 'discover',
     loadComponent: () => import('./pages/discover/discover.component').then(m => m.DiscoverComponent),
     canActivate: [authGuard]
+  },
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadChildren: () => import('./pages/admin/admin.routes').then(m => m.adminRoutes)
   },
   {
     // Default: go to dashboard (authGuard will redirect to Blazor login if not authenticated)

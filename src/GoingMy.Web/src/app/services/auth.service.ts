@@ -59,6 +59,18 @@ export class AuthService {
   }
 
   /**
+   * Returns true if the current user has the given role claim.
+   * Handles both single-value (string) and multi-value (string[]) role claims.
+   */
+  hasRole(role: string): boolean {
+    const claims = this._oauthService.getIdentityClaims() as Record<string, unknown> | null;
+    if (!claims) return false;
+    const roles = claims['role'];
+    if (Array.isArray(roles)) return (roles as string[]).includes(role);
+    return roles === role;
+  }
+
+  /**
    * Manually refresh the access token (fallback mechanism).
    * Normally the library handles this automatically via setupAutomaticSilentRefresh().
    */
