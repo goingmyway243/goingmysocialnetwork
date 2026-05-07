@@ -7,7 +7,7 @@ namespace GoingMy.Auth.API.Controllers;
 
 [ApiController]
 [Route("api/admin")]
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = "admin-bearer-policy")]
 public class AdminController : ControllerBase
 {
     private readonly IAdminService _adminService;

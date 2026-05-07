@@ -2441,3 +2441,161 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
   border: 2px solid rgba(10,14,39,1);
   pointer-events: none;
 }
+
+/* ===== PRIMENG GLASS TABLE ===== */
+/* Scoped by styleClass="glass-table" on <p-table>.
+   PrimeNG renders the root as .p-datatable — all selectors
+   below use .glass-table as the scope anchor. */
+
+/* Strip PrimeNG default background from the table wrapper */
+.glass-table {
+  background: transparent !important;
+}
+
+.glass-table .p-datatable-table-container {
+  background: transparent;
+}
+
+/* ── Thead ─────────────────────────────────────────────────── */
+.glass-table thead tr {
+  background: transparent;
+}
+
+.glass-table thead tr th {
+  background: var(--glass-surface-bg) !important;
+  border-bottom: 1px solid var(--glass-border-base) !important;
+  border-top: none !important;
+  color: var(--text-color-secondary) !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  padding: 0.875rem 1rem !important;
+  white-space: nowrap;
+}
+
+.glass-table thead tr th:first-child {
+  border-radius: 0 !important;
+}
+
+/* ── Tbody rows ─────────────────────────────────────────────── */
+.glass-table tbody tr {
+  background: transparent !important;
+  border-bottom: 1px solid var(--glass-border-subtle) !important;
+  transition: background 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.glass-table tbody tr:last-child {
+  border-bottom: none !important;
+}
+
+.glass-table tbody tr:hover {
+  background: var(--glass-surface-hover) !important;
+  box-shadow: inset 0 0 0 1px var(--glass-border-accent) !important;
+}
+
+.glass-table tbody tr td {
+  background: transparent !important;
+  border: none !important;
+  padding: 0.875rem 1rem !important;
+  color: var(--text-color) !important;
+  vertical-align: middle;
+}
+
+/* Even row subtle tint */
+.glass-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.025) !important;
+}
+
+/* ── Loading overlay ────────────────────────────────────────── */
+.glass-table .p-datatable-loading-overlay {
+  background: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
+.glass-table .p-datatable-loading-icon {
+  color: var(--color-accent-blue) !important;
+  font-size: 2rem !important;
+}
+
+/* ── Paginator ──────────────────────────────────────────────── */
+.glass-table .p-paginator {
+  background: var(--glass-surface-bg) !important;
+  border-top: 1px solid var(--glass-border-base) !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  padding: 0.625rem 1rem !important;
+}
+
+.glass-table .p-paginator-page,
+.glass-table .p-paginator-first,
+.glass-table .p-paginator-prev,
+.glass-table .p-paginator-next,
+.glass-table .p-paginator-last {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: var(--text-color-secondary) !important;
+  border-radius: 8px !important;
+  min-width: 2rem !important;
+  height: 2rem !important;
+  transition: var(--transition-fast) !important;
+}
+
+.glass-table .p-paginator-page:hover,
+.glass-table .p-paginator-first:hover,
+.glass-table .p-paginator-prev:hover,
+.glass-table .p-paginator-next:hover,
+.glass-table .p-paginator-last:hover {
+  background: var(--glass-elevated-bg) !important;
+  border-color: var(--glass-border-base) !important;
+  color: var(--text-color) !important;
+}
+
+.glass-table .p-paginator-page.p-paginator-page-selected,
+.glass-table .p-paginator-page[aria-current="page"],
+.glass-table .p-paginator-page.p-highlight {
+  background: var(--gradient-primary) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  box-shadow: var(--glass-shadow-sm), var(--glass-glow-sm) !important;
+}
+
+.glass-table .p-paginator-current {
+  color: var(--text-color-secondary) !important;
+  font-size: 0.875rem !important;
+}
+
+/* ── Sort icons ─────────────────────────────────────────────── */
+.glass-table .p-datatable-sort-icon {
+  color: var(--text-color-secondary) !important;
+  font-size: 0.75rem !important;
+}
+
+/* ── ToggleSwitch inside table ─────────────────────────────── */
+.glass-table .p-toggleswitch .p-toggleswitch-slider {
+  background: var(--glass-elevated-bg) !important;
+  border: 1px solid var(--glass-border-base) !important;
+}
+
+.glass-table .p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider {
+  background: var(--gradient-primary) !important;
+  border-color: transparent !important;
+}
+
+/* ── User detail dialog extras ─────────────────────────────── */
+/* glass-dialog base applies the container styles; these extend it
+   specifically for the user detail view. */
+.user-detail-dialog .p-dialog-header {
+  padding: 1.25rem 1.5rem 1rem !important;
+}
+
+.user-detail-dialog .p-dialog-content {
+  padding: 0.75rem 0 !important;
+}
+
+.user-detail-dialog .p-dialog-footer {
+  padding: 0.875rem 1.5rem !important;
+}

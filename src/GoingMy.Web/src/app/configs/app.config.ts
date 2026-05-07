@@ -20,12 +20,7 @@ export const appConfig: ApplicationConfig = {
       withFetch(),
       withInterceptors([authInterceptor, refreshTokenInterceptor])
     ),
-    provideOAuthClient({
-      resourceServer: {
-        allowedUrls: ['http://localhost:5133/api'],
-        sendAccessToken: true
-      }
-    }),
+    provideOAuthClient(),
     provideAppInitializer(() => {
       const authService = inject(AuthService);
       authService.initAuth();

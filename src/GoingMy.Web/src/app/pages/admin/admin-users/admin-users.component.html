@@ -32,7 +32,7 @@
       [rows]="pageSize"
       [paginator]="true"
       (onPage)="onPageChange($event)"
-      styleClass="p-datatable-sm"
+      styleClass="p-datatable-sm glass-table"
       [rowHover]="true">
 
       <ng-template pTemplate="header">
@@ -75,6 +75,12 @@
           </td>
           <td class="text-center">
             <button
+              class="action-btn view-btn"
+              (click)="viewUser(user)"
+              title="View user details">
+              <i class="pi pi-eye"></i>
+            </button>
+            <button
               class="action-btn revoke-btn"
               [disabled]="isRevoking(user.id)"
               (click)="revokeTokens(user)"
@@ -100,3 +106,89 @@
     </p-table>
   </div>
 </div>
+
+<!-- ── User Detail Dialog ─────────────────────────────────── -->
+@if (selectedUser(); as user) {
+  <p-dialog
+    [visible]="showDetail()"
+    (visibleChange)="$event ? null : closeDetail()"
+    [modal]="true"
+    [closable]="true"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="glass-dialog user-detail-dialog"
+    [style]="{ width: '520px' }">
+
+    <ng-template pTemplate="header">
+      <div class="detail-dialog-header">
+        <div class="detail-avatar">{{ user.firstName[0] }}{{ user.lastName[0] }}</div>
+        <div>
+          <div class="detail-username">{{ user.username }}</div>
+          <div class="detail-fullname">{{ user.firstName }} {{ user.lastName }}</div>
+        </div>
+        <p-tag
+          [value]="isRoleAdmin(user) ? 'Admin' : 'User'"
+          [severity]="isRoleAdmin(user) ? 'warn' : 'secondary'"
+          [rounded]="true"
+          styleClass="detail-role-tag" />
+      </div>
+    </ng-template>
+
+    <div class="detail-body">
+      <div class="detail-section">
+        <div class="detail-row">
+          <span class="detail-label"><i class="pi pi-envelope"></i> Email</span>
+          <span class="detail-value">{{ user.email }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label"><i class="pi pi-id-card"></i> User ID</span>
+          <span class="detail-value detail-id">{{ user.id }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label"><i class="pi pi-calendar"></i> Joined</span>
+          <span class="detail-value">{{ user.createdAt | date:'longDate' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label"><i class="pi pi-clock"></i> Last Login</span>
+          <span class="detail-value">{{ user.lastLoginAt ? (user.lastLoginAt | date:'medium') : 'Never' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label"><i class="pi pi-circle-fill" [style.color]="user.isActive ? 'var(--green-400)' : 'var(--red-400)'"></i> Status</span>
+          <p-tag
+            [value]="user.isActive ? 'Active' : 'Inactive'"
+            [severity]="user.isActive ? 'success' : 'danger'"
+            [rounded]="true" />
+        </div>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="detail-footer">
+        <button
+          class="action-btn revoke-btn detail-action-btn"
+          [disabled]="isRevoking(user.id)"
+          (click)="revokeTokens(user)"
+          title="Revoke all active tokens">
+          @if (isRevoking(user.id)) {
+            <i class="pi pi-spin pi-spinner"></i>
+          } @else {
+            <i class="pi pi-key"></i>
+          }
+          <span>Revoke Tokens</span>
+        </button>
+        <button
+          class="action-btn toggle-status-btn detail-action-btn"
+          [disabled]="isToggling(user.id)"
+          (click)="toggleStatus(user)"
+          [title]="user.isActive ? 'Deactivate user' : 'Activate user'">
+          @if (isToggling(user.id)) {
+            <i class="pi pi-spin pi-spinner"></i>
+          } @else {
+            <i [class]="user.isActive ? 'pi pi-ban' : 'pi pi-check-circle'"></i>
+          }
+          <span>{{ user.isActive ? 'Deactivate' : 'Activate' }}</span>
+        </button>
+      </div>
+    </ng-template>
+  </p-dialog>
+}

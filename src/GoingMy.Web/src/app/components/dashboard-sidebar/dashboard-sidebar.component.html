@@ -10,6 +10,14 @@
           <span class="menu-label">{{ item.label }}</span>
         </div>
       }
+
+      @if (isAdmin) {
+        <div class="menu-divider"></div>
+        <div class="menu-item menu-item-admin" (click)="goToAdmin()">
+          <i class="pi pi-shield"></i>
+          <span class="menu-label">Admin Panel</span>
+        </div>
+      }
     </nav>
 
     <div class="sidebar-footer">

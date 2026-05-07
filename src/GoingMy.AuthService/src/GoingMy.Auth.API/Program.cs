@@ -103,6 +103,14 @@ builder.Services.AddOpenIddict()
 
 builder.Services.AddControllers();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("admin-bearer-policy", policy =>
+        policy.AddAuthenticationSchemes(OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)
+              .RequireAuthenticatedUser()
+              .RequireRole("Admin"));
+});
+
 // Register ASP.NET Core Identity services
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {

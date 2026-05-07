@@ -94,6 +94,14 @@ public static class Extensions
     {
         app.Use(async (context, next) =>
         {
+            if (context.Request.Path.StartsWithSegments("/health") 
+                || context.Request.Path.StartsWithSegments("/connect"))
+            {
+                // Skip authentication for health checks
+                await next();
+                return;
+            }
+
             var isGatewayAuthenticated = context.Request.Headers["X-Gateway-Authenticated"] == "true";
             
             if (isGatewayAuthenticated)

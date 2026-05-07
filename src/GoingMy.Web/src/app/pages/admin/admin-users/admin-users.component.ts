@@ -8,6 +8,7 @@ import { TagModule } from 'primeng/tag';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { AdminApiService, AdminUser, PagedResult } from '../../../services/admin-api.service';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
@@ -17,7 +18,7 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
   imports: [
     CommonModule, FormsModule,
     TableModule, InputTextModule, ButtonModule, TagModule,
-    ToggleSwitchModule, ToastModule, ConfirmDialogModule
+    ToggleSwitchModule, ToastModule, ConfirmDialogModule, DialogModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin-users.component.html',
@@ -42,6 +43,8 @@ export class AdminUsersComponent implements OnInit {
 
   readonly revoking = signal<Set<string>>(new Set());
   readonly toggling = signal<Set<string>>(new Set());
+  readonly selectedUser = signal<AdminUser | null>(null);
+  readonly showDetail = signal(false);
 
   // ── Lifecycle ─────────────────────────────────────────────────
   ngOnInit(): void {
@@ -91,6 +94,10 @@ export class AdminUsersComponent implements OnInit {
           ...r,
           items: r.items.map(u => u.id === updated.id ? updated : u)
         } : r);
+        // Keep detail modal in sync if the updated user is currently selected
+        if (this.selectedUser()?.id === updated.id) {
+          this.selectedUser.set(updated);
+        }
         const t = new Set(this.toggling());
         t.delete(user.id);
         this.toggling.set(t);
@@ -133,6 +140,16 @@ export class AdminUsersComponent implements OnInit {
         this._toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to revoke tokens' });
       }
     });
+  }
+
+  viewUser(user: AdminUser): void {
+    this.selectedUser.set(user);
+    this.showDetail.set(true);
+  }
+
+  closeDetail(): void {
+    this.showDetail.set(false);
+    this.selectedUser.set(null);
   }
 
   // ── Helpers ───────────────────────────────────────────────────

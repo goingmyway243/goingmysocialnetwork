@@ -116,13 +116,13 @@ Each service follows **Clean Architecture**:
 | **Chat** | 5004 | `/hubs/chat` | Private conversations, real-time messaging (SignalR) |
 | **API Gateway** | 5000 (HTTP) / 7000 (HTTPS) | `/api/*` | Centralized entry point, JWT validation, rate limiting |
 | **Web (Angular SPA)** | 4200 | — | Glassmorphic UI, dashboard, feeds |
-| **Aspire Dashboard** | 15178 | — | Service orchestration & monitoring |
+| **Aspire Dashboard** | 17277 (HTTPS) | — | Service orchestration & monitoring |
 
 ## Quick Start
 
 ### Prerequisites
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
-- [Node.js 22+](https://nodejs.org/) and npm
+- [Node.js 22+](https://nodejs.org/)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 ### Setup

@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-dashboard-sidebar',
@@ -11,7 +12,11 @@ import { CommonModule } from '@angular/common';
   styleUrl: './dashboard-sidebar.component.css'
 })
 export class DashboardSidebarComponent {
+  private readonly _authService = inject(AuthService);
+
   readonly activeMenu = signal('home');
+
+  get isAdmin(): boolean { return this._authService.hasRole('Admin'); }
 
   menuItems: MenuItem[] = [
     {
@@ -52,13 +57,17 @@ export class DashboardSidebarComponent {
     }
   ];
 
-  constructor(private router: Router) {}
+  private readonly _router = inject(Router);
 
   setActiveMenu(menuId: string, route?: string): void {
     this.activeMenu.set(menuId);
     if (route) {
-      this.router.navigate([route]);
+      this._router.navigate([route]);
     }
+  }
+
+  goToAdmin(): void {
+    this._router.navigate(['/admin']);
   }
 
   isActive(menuId: string): boolean {

@@ -7,6 +7,7 @@ using StackExchange.Redis;
 using System.Security.Claims;
 using System.Threading.RateLimiting;
 using Yarp.ReverseProxy.Transforms;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,7 +62,7 @@ builder.Services.AddAuthorization(options =>
     // admin-policy: used by /api/admin/** and /api/posts/admin/** gateway routes
     options.AddPolicy("admin-policy", policy =>
         policy.RequireAuthenticatedUser()
-              .RequireClaim("role", "Admin"));
+              .RequireClaim(Claims.Role, "Admin"));
 });
 
 // ── Redis (for token revocation middleware) ───────────────────
