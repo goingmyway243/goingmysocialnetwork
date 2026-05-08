@@ -19,6 +19,7 @@ var mongodb = builder.AddMongoDB(SharedServices.MongoDB)
 
 var postDb = mongodb.AddDatabase(SharedServices.PostDb);
 var chatDb = mongodb.AddDatabase(SharedServices.ChatDb);
+var uploadDb = mongodb.AddDatabase(SharedServices.UploadDb);
 
 var rabbitmq = builder.AddRabbitMQ(SharedServices.RabbitMQ)
     .WithManagementPlugin()
@@ -63,11 +64,20 @@ var chatService = builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.C
     .WaitFor(rabbitmq)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
+var uploadService = builder.AddProject<Projects.GoingMy_Upload_API>(SharedServices.UploadApi)
+    .WithReference(uploadDb)
+    .WithReference(rabbitmq)
+    .WaitFor(identityService)
+    .WaitFor(uploadDb)
+    .WaitFor(rabbitmq)
+    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
+
 builder.AddProject<Projects.GoingMy_ApiGateway>("api-gateway")
     .WithReference(identityService)
     .WithReference(userService)
     .WithReference(postService)
     .WithReference(chatService)
+    .WithReference(uploadService)
     .WithReference(redis)
     .WaitFor(identityService)
     .WaitFor(redis)

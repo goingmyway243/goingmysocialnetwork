@@ -29,13 +29,14 @@
   </ItemGroup>
   <!--MongoDB Packages-->
   <ItemGroup>
-    <PackageVersion Include="MongoDB.Driver" Version="3.2.0" />
+    <PackageVersion Include="MongoDB.Driver" Version="3.3.0" />
   </ItemGroup>
   <!--MassTransit Packages-->
   <ItemGroup>
     <PackageVersion Include="MassTransit" Version="8.4.1" />
     <PackageVersion Include="MassTransit.RabbitMQ" Version="8.4.1" />
     <PackageVersion Include="MassTransit.EntityFrameworkCore" Version="8.4.1" />
+    <PackageVersion Include="MassTransit.MongoDb" Version="8.4.1" />
   </ItemGroup>
   <!--MediatR Packages-->
   <ItemGroup>

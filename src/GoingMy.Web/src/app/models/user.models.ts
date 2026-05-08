@@ -45,6 +45,7 @@ export interface UpdateProfileRequest {
 
 export interface UpdateAvatarRequest {
   avatarUrl: string;
+  oldAvatarFileId?: string;
 }
 
 export interface UpdateCoverRequest {

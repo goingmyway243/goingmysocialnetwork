@@ -86,8 +86,8 @@ export class UserProfileService {
 
   // ── Media ─────────────────────────────────────────────────────
 
-  updateAvatar(id: string, avatarUrl: string): Observable<UserProfile> {
-    return this._api.updateAvatar(id, { avatarUrl } as UpdateAvatarRequest).pipe(
+  updateAvatar(id: string, avatarUrl: string, oldAvatarFileId?: string): Observable<UserProfile> {
+    return this._api.updateAvatar(id, { avatarUrl, oldAvatarFileId }).pipe(
       tap(p => this._profile.set(p))
     );
   }

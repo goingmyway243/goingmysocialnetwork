@@ -1,6 +1,5 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -16,7 +15,6 @@ import { Post, Comment, PostCommentsState } from '../../../models/post.model';
 @Component({
   selector: 'app-dashboard-home',
   imports: [CommonModule, CardModule, ButtonModule, SkeletonModule, ComposePostComponent, PostCardComponent, EmptyStateComponent],
-  providers: [MessageService],
   templateUrl: './dashboard-home.component.html',
   styleUrl: './dashboard-home.component.css'
 })

@@ -18,6 +18,12 @@ public record CreatePostRequest(string Content);
 public record UpdatePostRequest(string Content);
 
 /// <summary>
+/// Request DTO for creating a post with media through the API.
+/// Initiates the post-with-media saga.
+/// </summary>
+public record CreatePostWithMediaRequest(string Content, IReadOnlyList<string> MediaFileIds);
+
+/// <summary>
 /// API controller for managing posts.
 /// </summary>
 [ApiController]
@@ -92,6 +98,26 @@ public class PostsController : ControllerBase
         var newPost = await _mediator.Send(command);
 
         return CreatedAtAction(nameof(GetPostById), new { id = newPost.Id }, new { message = "Post created successfully", post = newPost });
+    }
+
+    /// <summary>
+    /// Creates a new post with media attachments (initiates saga).
+    /// </summary>
+    /// <param name="request">The request containing post content and media file IDs.</param>
+    /// <returns>A response tracking the saga.</returns>
+    [HttpPost("with-media")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> CreatePostWithMedia([FromBody] CreatePostWithMediaRequest request)
+    {
+        var userId = User.FindFirst("sub")?.Value ?? "unknown";
+        var username = User.FindFirst("name")?.Value ?? "unknown";
+
+        var command = new CreatePostWithMediaCommand(request.Content, userId, username, request.MediaFileIds);
+        var post = await _mediator.Send(command);
+
+        return Accepted(new { message = "Post creation with media in progress", post });
     }
 
     /// <summary>

@@ -1,7 +1,6 @@
 using GoingMy.Post.Application.Consumers;
 using GoingMy.Post.Application.Extensions;
-using GoingMy.Post.Application.Services;
-using GoingMy.Post.Domain.Repositories;
+using GoingMy.Post.Application.Services;using GoingMy.Post.Domain.Repositories;
 using GoingMy.Post.Infrastructure.Data;
 using GoingMy.Post.Infrastructure.Repositories;
 using GoingMy.Post.Infrastructure.Services;
@@ -46,6 +45,8 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<UserCreatedEventConsumer>();
     x.AddConsumer<UserUpdatedEventConsumer>();
     x.AddConsumer<UserDeletedEventConsumer>();
+    x.AddConsumer<CreatePostSagaConsumer>();
+    x.AddConsumer<AttachMediaToPostSagaConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -59,6 +60,12 @@ builder.Services.AddMassTransit(x =>
 
         cfg.ReceiveEndpoint($"{nameof(UserDeletedEvent)}_consumer", e =>
             e.ConfigureConsumer<UserDeletedEventConsumer>(context));
+
+        cfg.ReceiveEndpoint("post-saga-create", e =>
+            e.ConfigureConsumer<CreatePostSagaConsumer>(context));
+
+        cfg.ReceiveEndpoint("post-saga-attach-media", e =>
+            e.ConfigureConsumer<AttachMediaToPostSagaConsumer>(context));
 
         cfg.ConfigureEndpoints(context);
     });

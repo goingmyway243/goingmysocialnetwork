@@ -1,5 +1,3 @@
-<p-toast position="top-right"></p-toast>
-
 <div class="profile-page">
 
   @if (error()) {
@@ -19,7 +17,8 @@
     (editClick)="onEditClick()"
     (followersClick)="onFollowersClick()"
     (followingClick)="onFollowingClick()"
-    (messageClick)="onMessageClick()">
+    (messageClick)="onMessageClick()"
+    (profileUpdated)="onProfileUpdated()">
   </app-profile-header>
 
   <!-- Two Column Layout -->

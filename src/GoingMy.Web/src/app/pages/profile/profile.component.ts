@@ -38,7 +38,6 @@ import { Post, PostCommentsState } from '../../models/post.model';
     EmptyStateComponent,
     FollowListComponent
   ],
-  providers: [MessageService],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })

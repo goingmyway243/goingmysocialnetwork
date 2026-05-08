@@ -9,6 +9,12 @@ export interface CreatePostRequest {
   content: string;
 }
 
+/** Request DTO for creating a post with media (initiates saga). */
+export interface CreatePostWithMediaRequest {
+  content: string;
+  mediaFileIds: string[];
+}
+
 /** Request DTO for updating a post. */
 export interface UpdatePostRequest {
   content: string;
@@ -53,6 +59,11 @@ export class PostApiService {
   /** POST /api/posts — Creates a new post. */
   createPost(request: CreatePostRequest): Observable<PostResponse> {
     return this._http.post<PostResponse>(this._baseUrl, request);
+  }
+
+  /** POST /api/posts/with-media — Creates a post with media (initiates saga). */
+  createPostWithMedia(request: CreatePostWithMediaRequest): Observable<PostResponse> {
+    return this._http.post<PostResponse>(`${this._baseUrl}/with-media`, request);
   }
 
   // ── 4. Update Post ───────────────────────────────────────────

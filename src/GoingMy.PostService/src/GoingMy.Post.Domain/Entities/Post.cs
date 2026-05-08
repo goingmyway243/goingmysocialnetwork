@@ -14,6 +14,7 @@ public class Post
     public int Likes { get; set; }
     public int Comments { get; set; }
     public User? Author { get; set; }
+    public List<MediaAttachment> MediaAttachments { get; set; } = [];
 
     /// <summary>
     /// Creates a new post instance.
@@ -27,6 +28,15 @@ public class Post
         CreatedAt = createdAt;
         Likes = 0;
         Comments = 0;
+    }
+
+    /// <summary>
+    /// Attaches media files to the post after the upload saga completes.
+    /// </summary>
+    public void AttachMedia(IEnumerable<MediaAttachment> attachments)
+    {
+        MediaAttachments.AddRange(attachments);
+        UpdatedAt = DateTime.UtcNow;
     }
 
     /// <summary>

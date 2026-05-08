@@ -33,7 +33,6 @@ import { UserProfile } from '../../models/user.models';
     DashboardHeaderComponent,
     EmptyStateComponent
   ],
-  providers: [MessageService],
   templateUrl: './discover.component.html',
   styleUrl: './discover.component.css'
 })

@@ -43,6 +43,13 @@
   <Folder Name="/GoingMy.ApiGateway/">
     <Project Path="GoingMy.ApiGateway/GoingMy.ApiGateway.csproj" />
   </Folder>
+  <Folder Name="/GoingMy.UploadService/" />
+  <Folder Name="/GoingMy.UploadService/src/">
+    <Project Path="GoingMy.UploadService/src/GoingMy.Upload.API/GoingMy.Upload.API.csproj" />
+    <Project Path="GoingMy.UploadService/src/GoingMy.Upload.Application/GoingMy.Upload.Application.csproj" />
+    <Project Path="GoingMy.UploadService/src/GoingMy.Upload.Domain/GoingMy.Upload.Domain.csproj" />
+    <Project Path="GoingMy.UploadService/src/GoingMy.Upload.Infrastructure/GoingMy.Upload.Infrastructure.csproj" />
+  </Folder>
   <Project Path="GoingMy.AppHost/GoingMy.AppHost.csproj" />
   <Project Path="GoingMy.ServiceDefaults/GoingMy.ServiceDefaults.csproj" />
   <Project Path="GoingMy.Shared/GoingMy.Shared.csproj" Id="96c540df-f207-4559-ad3b-016d3e76302e" />

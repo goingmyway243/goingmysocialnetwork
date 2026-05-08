@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { AuthService } from './services/auth.service';
@@ -14,7 +14,6 @@ import { AuthService } from './services/auth.service';
 export class AppComponent implements OnInit {
   // ── 1. Dependencies ─────────────────────────────────────────
   private readonly _authService = inject(AuthService);
-  private readonly _router = inject(Router);
 
   // ── 4. Lifecycle ─────────────────────────────────────────────
   ngOnInit(): void {

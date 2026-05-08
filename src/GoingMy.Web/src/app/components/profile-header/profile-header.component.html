@@ -23,7 +23,17 @@
 
     <!-- Avatar + Actions Row -->
     <div class="header-body">
-      <div class="avatar-wrap">
+      <label class="avatar-wrap" [class.clickable]="isOwnProfile()">
+        @if (isOwnProfile()) {
+          <input
+            type="file"
+            accept="image/*"
+            class="avatar-file-input"
+            (change)="onAvatarSelected($event)"
+            aria-label="Change avatar"
+            hidden
+          />
+        }
         @if (p.avatarUrl) {
           <img [src]="p.avatarUrl" [alt]="p.username" class="avatar-img" />
         } @else {
@@ -32,7 +42,14 @@
         @if (p.isVerified) {
           <span class="verified-badge" title="Verified"><i class="pi pi-verified"></i></span>
         }
-      </div>
+
+        @if (avatarUploading()) {
+          <p-progressSpinner strokeWidth="4" class="avatar-upload-spinner"></p-progressSpinner>
+        }
+        @else if (isOwnProfile()) {
+          <span class="avatar-edit-icon"><i class="pi pi-camera"></i></span>
+        }
+      </label>
 
       <div class="header-actions">
         @if (isOwnProfile()) {

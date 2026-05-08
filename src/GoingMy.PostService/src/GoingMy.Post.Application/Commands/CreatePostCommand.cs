@@ -56,5 +56,10 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostD
             AvatarUrl: p.Author.AvatarUrl,
             IsVerified: p.Author.IsVerified),
         CreatedAt: p.CreatedAt,
-        UpdatedAt: p.UpdatedAt);
+        UpdatedAt: p.UpdatedAt,
+        MediaAttachments: p.MediaAttachments is null || p.MediaAttachments.Count == 0
+            ? null
+            : p.MediaAttachments
+                .Select(m => new MediaAttachmentDto(m.FileId, m.Url, m.ContentType, m.Width, m.Height))
+                .ToList());
 }

@@ -27,7 +27,7 @@ public record UpdateUserProfileRequest(
     bool? IsPrivate,
     List<string>? Interests = null);
 
-public record UpdateAvatarRequest(string AvatarUrl);
+public record UpdateAvatarRequest(string AvatarUrl, string? OldAvatarFileId = null);
 
 public record UpdateCoverRequest(string CoverUrl);
 
@@ -128,7 +128,7 @@ public class UserProfilesController(IMediator mediator) : ControllerBase
 
         try
         {
-            var profile = await mediator.Send(new UpdateAvatarCommand(id, request.AvatarUrl));
+            var profile = await mediator.Send(new UpdateAvatarCommand(id, request.AvatarUrl, request.OldAvatarFileId));
             return Ok(profile);
         }
         catch (KeyNotFoundException ex)

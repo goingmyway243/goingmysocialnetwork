@@ -13,6 +13,17 @@ public record UserDto(
 );
 
 /// <summary>
+/// Media attachment embedded in post responses.
+/// </summary>
+public record MediaAttachmentDto(
+    string FileId,
+    string Url,
+    string ContentType,
+    int? Width,
+    int? Height
+);
+
+/// <summary>
 /// Data Transfer Object for Post.
 /// </summary>
 public record PostDto(
@@ -25,7 +36,8 @@ public record PostDto(
     UserDto? Author,
     DateTime CreatedAt,
     DateTime? UpdatedAt,
-    bool UserHasLiked = false
+    bool UserHasLiked = false,
+    IReadOnlyList<MediaAttachmentDto>? MediaAttachments = null
 );
 
 /// <summary>

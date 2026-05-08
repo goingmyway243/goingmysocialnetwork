@@ -97,6 +97,15 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
+// Allow large uploads to be proxied (440 MB = 4 × 100 MB video + overhead)
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/api/uploads"))
+        context.Features.Get<Microsoft.AspNetCore.Http.Features.IHttpMaxRequestBodySizeFeature>()!
+            .MaxRequestBodySize = 440 * 1024 * 1024;
+    await next(context);
+});
+
 app.UseWebSockets(); // must precede YARP for SignalR WebSocket proxying
 app.UseCors();
 app.UseAuthentication();

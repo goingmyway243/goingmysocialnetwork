@@ -6,8 +6,10 @@ import { TextareaModule } from 'primeng/textarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { PostApiService } from '../../services/post-api.service';
+import { UploadApiService } from '../../services/upload-api.service';
 import { AiApiService } from '../../services/ai-api.service';
 import { Post } from '../../models/post.model';
+import { MediaFile } from '../../models/media.model';
 import { AiAction } from '../../models/ai-assist.model';
 
 const TONES = ['Casual', 'Professional', 'Funny', 'Inspirational'] as const;
@@ -22,6 +24,7 @@ export class ComposePostComponent {
 
   // ── 1. Dependencies ─────────────────────────────────────────
   private readonly _postApi = inject(PostApiService);
+  private readonly _uploadApi = inject(UploadApiService);
   private readonly _aiApi = inject(AiApiService);
 
   // ── 2. Outputs ───────────────────────────────────────────────
@@ -32,6 +35,11 @@ export class ComposePostComponent {
   readonly content = signal('');
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
+
+  // ── Media State ───────────────────────────────────────────────
+  readonly selectedMediaFiles = signal<MediaFile[]>([]);
+  readonly mediaUploading = signal(false);
+  readonly mediaError = signal<string | null>(null);
 
   // ── AI State ──────────────────────────────────────────────────
   readonly aiPanelVisible = signal(false);
@@ -45,7 +53,8 @@ export class ComposePostComponent {
   readonly isValid = computed(() => this.content().trim().length > 0);
   readonly contentLength = computed(() => this.content().length);
   readonly contentTooLong = computed(() => this.contentLength() > 2000);
-  readonly canSubmit = computed(() => this.isValid() && !this.contentTooLong() && !this.submitting());
+  readonly hasMedia = computed(() => this.selectedMediaFiles().length > 0);
+  readonly canSubmit = computed(() => this.isValid() && !this.contentTooLong() && !this.submitting() && !this.mediaUploading());
   readonly hasAiSuggestion = computed(() => this.aiSuggestion() !== null);
 
   // ── 5. Actions ───────────────────────────────────────────────
@@ -60,6 +69,8 @@ export class ComposePostComponent {
     this.aiPanelVisible.set(false);
     this.aiSuggestion.set(null);
     this.aiError.set(null);
+    this.selectedMediaFiles.set([]);
+    this.mediaError.set(null);
   }
 
   submit(): void {
@@ -68,7 +79,11 @@ export class ComposePostComponent {
     this.submitting.set(true);
     this.error.set(null);
 
-    this._postApi.createPost({ content: this.content().trim() }).subscribe({
+    const mediaFileIds = this.selectedMediaFiles().map(m => m.id);
+    this._postApi.createPostWithMedia({
+      content: this.content().trim(),
+      mediaFileIds
+    }).subscribe({
       next: (response) => {
         this.postCreated.emit(response.post);
         this.submitting.set(false);
@@ -125,5 +140,35 @@ export class ComposePostComponent {
 
   dismissSuggestion(): void {
     this.aiSuggestion.set(null);
+  }
+
+  // ── Media Actions ────────────────────────────────────────────
+  onMediaFilesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const files = Array.from(input.files).slice(0, 4); // Max 4 files
+      this.uploadMediaFiles(files);
+    }
+    input.value = ''; // Reset input
+  }
+
+  private uploadMediaFiles(files: File[]): void {
+    this.mediaUploading.set(true);
+    this.mediaError.set(null);
+
+    this._uploadApi.uploadFileBatch(files, 'PostMedia').subscribe({
+      next: (uploadedFiles: MediaFile[]) => {
+        this.selectedMediaFiles.update(current => [...current, ...uploadedFiles]);
+        this.mediaUploading.set(false);
+      },
+      error: () => {
+        this.mediaError.set('Failed to upload media. Please try again.');
+        this.mediaUploading.set(false);
+      }
+    });
+  }
+
+  removeMedia(fileId: string): void {
+    this.selectedMediaFiles.update(files => files.filter(f => f.id !== fileId));
   }
 }

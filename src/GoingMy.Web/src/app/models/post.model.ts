@@ -1,4 +1,5 @@
 import { Author } from './author.model';
+import { MediaAttachment } from './media.model';
 
 export interface Post {
   id: string;
@@ -11,6 +12,7 @@ export interface Post {
   comments?: number;
   author?: Author;
   userHasLiked?: boolean;
+  mediaAttachments?: MediaAttachment[];
 }
 
 export interface Comment {

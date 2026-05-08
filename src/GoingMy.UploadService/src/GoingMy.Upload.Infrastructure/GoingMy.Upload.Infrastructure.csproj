@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" />
+    <PackageReference Include="MassTransit.MongoDb" />
+    <PackageReference Include="MassTransit.RabbitMQ" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GoingMy.Upload.Domain\GoingMy.Upload.Domain.csproj" />
+    <ProjectReference Include="..\GoingMy.Upload.Application\GoingMy.Upload.Application.csproj" />
+    <ProjectReference Include="..\..\..\GoingMy.Shared\GoingMy.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
