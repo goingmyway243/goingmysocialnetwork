@@ -5,8 +5,4 @@
     <Project Path="src/GoingMy.User.Domain/GoingMy.User.Domain.csproj" />
     <Project Path="src/GoingMy.User.Infrastructure/GoingMy.User.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/GoingMy.User.IntegrationTests/GoingMy.User.IntegrationTests.csproj" />
-    <Project Path="tests/GoingMy.User.Tests/GoingMy.User.Tests.csproj" />
-  </Folder>
 </Solution>

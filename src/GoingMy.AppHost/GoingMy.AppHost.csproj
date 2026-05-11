@@ -14,6 +14,7 @@
 		<ProjectReference Include="..\GoingMy.ChatService\src\GoingMy.Chat.API\GoingMy.Chat.API.csproj" />
 		<ProjectReference Include="..\GoingMy.UserService\src\GoingMy.User.API\GoingMy.User.API.csproj" />
 		<ProjectReference Include="..\GoingMy.UploadService\src\GoingMy.Upload.API\GoingMy.Upload.API.csproj" />
+		<ProjectReference Include="..\GoingMy.NotificationService\src\GoingMy.Notification.API\GoingMy.Notification.API.csproj" />
 		<ProjectReference Include="..\GoingMy.ApiGateway\GoingMy.ApiGateway.csproj" />
 		<ProjectReference Include="..\GoingMy.Shared\GoingMy.Shared.csproj" IsAspireProjectResource="false" />
 	</ItemGroup>

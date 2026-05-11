@@ -1,5 +1,7 @@
+using GoingMy.Shared.Events;
 using GoingMy.User.Domain.Entities;
 using GoingMy.User.Domain.Repositories;
+using MassTransit;
 using MediatR;
 
 namespace GoingMy.User.Application.Commands;
@@ -8,7 +10,8 @@ public record FollowUserCommand(Guid FollowerId, Guid FolloweeId) : IRequest;
 
 public class FollowUserCommandHandler(
     IUserFollowRepository userFollowRepository,
-    IUserProfileRepository userProfileRepository)
+    IUserProfileRepository userProfileRepository,
+    IPublishEndpoint publishEndpoint)
     : IRequestHandler<FollowUserCommand>
 {
     public async Task Handle(FollowUserCommand request, CancellationToken cancellationToken)
@@ -36,5 +39,13 @@ public class FollowUserCommandHandler(
 
         await userProfileRepository.UpdateAsync(follower, cancellationToken);
         await userProfileRepository.UpdateAsync(followee, cancellationToken);
+
+        await publishEndpoint.Publish(
+            new UserFollowedEvent(
+                FollowedUserId: followee.Id.ToString(),
+                FollowedUsername: followee.Username,
+                FollowerUserId: follower.Id.ToString(),
+                FollowerUsername: follower.Username),
+            cancellationToken);
     }
 }
