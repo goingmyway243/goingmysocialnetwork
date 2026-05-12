@@ -69,7 +69,12 @@ public class MessageRepository(MongoDbContext context) : IMessageRepository
     public async Task<Message> UpdateAsync(Message message, CancellationToken cancellationToken = default)
     {
         var filter = Builders<Message>.Filter.Eq(m => m.Id, message.Id);
-        var result = await context.Messages.ReplaceOneAsync(filter, message, cancellationToken: cancellationToken);
+        var update = Builders<Message>.Update
+            .Set(m => m.IsDeleted, message.IsDeleted)
+            .Set(m => m.EditedContent, message.EditedContent)
+            .Set(m => m.EditedAt, message.EditedAt);
+
+        var result = await context.Messages.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
 
         if (result.MatchedCount == 0)
             throw new InvalidOperationException($"Message {message.Id} not found.");

@@ -1,0 +1,261 @@
+/* ── Bell button ─────────────────────────────────────────────── */
+.notification-bell-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.bell-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-color);
+  transition: var(--transition-smooth);
+}
+
+.bell-btn:hover {
+  background: var(--glass-surface-hover);
+  color: var(--primary-color);
+}
+
+.bell-btn.has-unread .bell-icon {
+  color: var(--primary-color);
+}
+
+.bell-icon {
+  font-size: 1.25rem;
+  transition: var(--transition-smooth);
+}
+
+.bell-btn.has-unread .bell-icon {
+  animation: bell-ring 2s ease-in-out infinite;
+}
+
+@keyframes bell-ring {
+  0%, 100% { transform: rotate(0deg); }
+  10%, 30% { transform: rotate(-12deg); }
+  20%, 40% { transform: rotate(12deg); }
+  50% { transform: rotate(0deg); }
+}
+
+.unread-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--color-accent-red);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 0 0 2px var(--surface-ground);
+}
+
+/* ── Dropdown panel override ─────────────────────────────────── */
+:host ::ng-deep .notification-panel .p-popover-content {
+  padding: 0;
+}
+
+:host ::ng-deep .notification-panel {
+  background: var(--glass-overlay-bg);
+  backdrop-filter: var(--glass-blur-lg) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-lg) saturate(180%);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow-xl);
+  overflow: hidden;
+  width: 360px;
+}
+
+/* ── Dropdown content ────────────────────────────────────────── */
+.notification-dropdown {
+  display: flex;
+  flex-direction: column;
+  max-height: 480px;
+}
+
+.notif-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid var(--glass-border-base);
+}
+
+.notif-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.mark-all-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--primary-color);
+  padding: 0;
+  transition: var(--transition-fast);
+}
+
+.mark-all-btn:hover {
+  opacity: 0.75;
+}
+
+/* ── Notification items ──────────────────────────────────────── */
+.notif-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: background 0.15s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.notif-item:hover {
+  background: var(--glass-surface-hover);
+}
+
+.notif-item.unread {
+  background: var(--glass-surface-bg);
+}
+
+.notif-item.unread:hover {
+  background: var(--glass-surface-hover);
+}
+
+/* ── Avatar ──────────────────────────────────────────────────── */
+.notif-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.notif-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.notif-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-primary);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.notif-type-icon {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  border: 2px solid var(--surface-ground);
+}
+
+/* ── Text content ────────────────────────────────────────────── */
+.notif-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-text {
+  margin: 0 0 0.2rem;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  line-height: 1.4;
+}
+
+.notif-text strong {
+  font-weight: 600;
+}
+
+.notif-preview {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notif-time {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+}
+
+/* ── Unread dot ──────────────────────────────────────────────── */
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+/* ── Empty state ─────────────────────────────────────────────── */
+.notif-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+}
+
+.notif-empty i {
+  font-size: 1.5rem;
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.notif-footer {
+  border-top: 1px solid var(--glass-border-base);
+  padding: 0.75rem 1.25rem;
+  text-align: center;
+}
+
+.see-all-link {
+  font-size: 0.875rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition-fast);
+}
+
+.see-all-link:hover {
+  opacity: 0.75;
+}

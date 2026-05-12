@@ -44,7 +44,13 @@ public class ConversationRepository(MongoDbContext context) : IConversationRepos
     public async Task<Conversation> UpdateAsync(Conversation conversation, CancellationToken cancellationToken = default)
     {
         var filter = Builders<Conversation>.Filter.Eq(c => c.Id, conversation.Id);
-        var result = await context.Conversations.ReplaceOneAsync(filter, conversation, cancellationToken: cancellationToken);
+        var update = Builders<Conversation>.Update
+            .Set(c => c.ParticipantIds, conversation.ParticipantIds)
+            .Set(c => c.ParticipantUsernames, conversation.ParticipantUsernames)
+            .Set(c => c.LastMessageAt, conversation.LastMessageAt)
+            .Set(c => c.LastMessagePreview, conversation.LastMessagePreview);
+
+        var result = await context.Conversations.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
 
         if (result.MatchedCount == 0)
             throw new InvalidOperationException($"Conversation {conversation.Id} not found.");

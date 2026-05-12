@@ -1,0 +1,87 @@
+<div class="notification-bell-wrapper">
+  <!-- Bell button with badge -->
+  <button
+    class="bell-btn"
+    [class.has-unread]="state.hasUnread()"
+    (click)="toggle($event)"
+    pTooltip="Notifications"
+    tooltipPosition="bottom">
+    <i class="pi pi-bell bell-icon"></i>
+    @if (state.hasUnread()) {
+      <span class="unread-badge">{{ state.displayCount() }}</span>
+    }
+  </button>
+
+  <!-- Dropdown panel -->
+  <p-popover #op styleClass="notification-panel" (onShow)="onOpen()">
+    <div class="notification-dropdown">
+
+      <!-- Header -->
+      <div class="notif-header">
+        <span class="notif-title">Notifications</span>
+        @if (state.hasUnread()) {
+          <button class="mark-all-btn" (click)="state.markAllAsRead()">
+            Mark all read
+          </button>
+        }
+      </div>
+
+      <!-- List -->
+      @if (state.isLoading() && state.notifications().length === 0) {
+        <div class="notif-empty">
+          <i class="pi pi-spin pi-spinner"></i>
+        </div>
+      } @else if (state.notifications().length === 0) {
+        <div class="notif-empty">
+          <i class="pi pi-bell-slash"></i>
+          <span>No notifications yet</span>
+        </div>
+      } @else {
+        <div class="notif-list">
+          @for (n of state.notifications().slice(0, 8); track n.id) {
+            <a
+              class="notif-item"
+              [class.unread]="!n.isRead"
+              [routerLink]="getRouterLink(n)"
+              (click)="onNotificationClick(n)">
+
+              <!-- Actor avatar -->
+              <div class="notif-avatar-wrap">
+                @if (n.actorAvatarUrl) {
+                  <img [src]="n.actorAvatarUrl" [alt]="n.actorUsername" class="notif-avatar" />
+                } @else {
+                  <div class="notif-avatar notif-avatar-fallback">{{ getInitial(n.actorUsername) }}</div>
+                }
+                <div class="notif-type-icon">
+                  <i [class]="getIcon(n)"></i>
+                </div>
+              </div>
+
+              <!-- Text -->
+              <div class="notif-content">
+                <p class="notif-text" [innerHTML]="getText(n)"></p>
+                @if (n.referencePreview) {
+                  <p class="notif-preview">{{ n.referencePreview }}</p>
+                }
+                <span class="notif-time">{{ timeAgo(n.createdAt) }}</span>
+              </div>
+
+              <!-- Unread dot -->
+              @if (!n.isRead) {
+                <div class="unread-dot"></div>
+              }
+            </a>
+          }
+        </div>
+
+        <!-- See all -->
+        <div class="notif-footer">
+          <a routerLink="/dashboard/notifications" class="see-all-link" (click)="popover.hide()">
+            See all notifications
+          </a>
+        </div>
+      }
+
+    </div>
+  </p-popover>
+</div>

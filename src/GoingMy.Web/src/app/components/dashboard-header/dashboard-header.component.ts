@@ -9,10 +9,11 @@ import { Menu } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 import { ThemeService } from '../../services/theme.service';
+import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-dashboard-header',
-  imports: [FormsModule, MenubarModule, ButtonModule, InputTextModule, MenuModule],
+  imports: [FormsModule, MenubarModule, ButtonModule, InputTextModule, MenuModule, NotificationBellComponent],
   templateUrl: './dashboard-header.component.html',
   styleUrl: './dashboard-header.component.css'
 })

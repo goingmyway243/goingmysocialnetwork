@@ -2,6 +2,37 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.15.0] - 2026-05-12
+
+### Added
+- **Notification Service** — New `GoingMy.NotificationService` microservice for real-time push notifications
+  - Clean architecture scaffold: `GoingMy.Notification.Domain`, `GoingMy.Notification.Application`, `GoingMy.Notification.Infrastructure`, `GoingMy.Notification.API`
+  - **Domain** — `Notification` entity (`Entities/Notification.cs`): Id, RecipientUserId, ActorUserId, ActorUsername, ActorAvatarUrl, Type (`NotificationType` enum), ReferenceId, ReferencePreview, IsRead, CreatedAt; `MarkAsRead()` method
+  - **Domain** — `NotificationType` enum: `PostLiked`, `PostCommented`, `NewFollower`, `Mentioned`, `PostShared`, `FollowRequestAccepted`
+  - **Application** — Commands: `CreateNotificationCommand`, `MarkNotificationAsReadCommand`, `MarkAllNotificationsAsReadCommand`, `DeleteNotificationCommand`
+  - **Application** — Queries: `GetNotificationsQuery` (paginated by `pageNumber`/`pageSize`), `GetUnreadCountQuery`
+  - **Application** — `INotificationPushService` abstraction for decoupled SignalR push (implemented in API layer by `NotificationPushService`)
+  - **Application** — RabbitMQ consumers: `PostLikedNotificationConsumer`, `CommentAddedNotificationConsumer`, `UserFollowedNotificationConsumer` — create notifications and push in real time on relevant events
+  - **API** — `NotificationsController` at `[Authorize]` `[Route("api/notifications")]` with endpoints:
+    - `GET /api/notifications` — paginated notification feed
+    - `GET /api/notifications/unread-count` — returns `{ count }` for bell badge
+    - `PUT /api/notifications/{id}/read` — mark single notification as read
+    - `PUT /api/notifications/read-all` — mark all as read
+    - `DELETE /api/notifications/{id}` — delete a notification
+  - **API** — `NotificationHub` at `/hubs/notification` (SignalR): groups connections by `userId` on connect/disconnect for targeted push delivery without broadcasting
+  - **API** — `NotificationPushService` implements `INotificationPushService`; sends events to user's SignalR group
+  - **Infrastructure** — MongoDB-backed `NotificationRepository` with indexes on `RecipientUserId` and `CreatedAt`
+  - **AppHost** — `notificationService` registered with `notification-db` (MongoDB) and RabbitMQ references; gateway references and waits for `notificationService`
+  - **SharedServices** — `NotificationApi = "notification-api"` and `NotificationDb = "notification-db"` constants already present
+
+### Architecture Notes
+- **Event-driven**: Notification Service consumes `PostLikedEvent`, `CommentAddedEvent`, `UserFollowedEvent` from RabbitMQ — zero coupling to Post or User services
+- **Targeted push delivery**: SignalR groups keyed by `userId` allow per-user delivery; group membership managed in `OnConnectedAsync` / `OnDisconnectedAsync`
+- **Read tracking**: Notifications are soft-marked as read (not deleted); `unread-count` endpoint enables fast badge queries without loading the full list
+- **`INotificationPushService` abstraction**: Application layer owns the interface; API layer provides the SignalR implementation — keeps Application project free of SignalR dependency
+
+---
+
 ## [0.14.0] - 2026-05-05
 
 ### Added

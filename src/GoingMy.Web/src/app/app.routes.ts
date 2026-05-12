@@ -37,7 +37,7 @@ export const routes: Routes = [
       },
       {
         path: 'notifications',
-        loadComponent: () => import('./pages/dashboard/dashboard-home/dashboard-home.component').then(m => m.DashboardHomeComponent)
+        loadComponent: () => import('./pages/dashboard/notifications/notifications-page.component').then(m => m.NotificationsPageComponent)
       },
       {
         path: 'bookmarks',

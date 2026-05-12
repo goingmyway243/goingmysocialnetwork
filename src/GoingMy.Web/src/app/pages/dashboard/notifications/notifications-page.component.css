@@ -1,0 +1,309 @@
+/* ── Page layout ─────────────────────────────────────────────── */
+.notifications-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.unread-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  background: var(--primary-color);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.mark-all-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border-base);
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  color: var(--primary-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.mark-all-btn:hover {
+  background: var(--glass-surface-hover);
+  border-color: var(--glass-border-strong);
+}
+
+/* ── Filters ─────────────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border-base);
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  color: var(--text-color-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.filter-chip:hover {
+  background: var(--glass-surface-hover);
+  color: var(--text-color);
+}
+
+.filter-chip.active {
+  background: var(--primary-color);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.3);
+}
+
+/* ── Cards ───────────────────────────────────────────────────── */
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-sm) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-sm) saturate(180%);
+  border: 1px solid var(--glass-border-base);
+  box-shadow: var(--glass-shadow-sm);
+  text-decoration: none;
+  color: var(--text-color);
+  transition: var(--transition-smooth);
+  position: relative;
+  cursor: pointer;
+}
+
+.notif-item:hover {
+  background: var(--glass-elevated-hover);
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--glass-shadow-md);
+  transform: translateY(-1px);
+}
+
+.notif-item.unread {
+  background: var(--glass-elevated-bg);
+  border-color: var(--glass-border-accent);
+}
+
+/* ── Avatar ──────────────────────────────────────────────────── */
+.avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.type-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  border: 2px solid var(--surface-ground);
+}
+
+/* ── Text ────────────────────────────────────────────────────── */
+.notif-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.notif-text {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--text-color);
+}
+
+.notif-text strong {
+  font-weight: 600;
+}
+
+.notif-preview {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-color-secondary);
+  font-style: italic;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notif-time {
+  font-size: 0.78rem;
+  color: var(--text-color-secondary);
+}
+
+/* ── Actions ─────────────────────────────────────────────────── */
+.notif-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.unread-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  box-shadow: 0 0 6px var(--primary-color);
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color-secondary);
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: var(--transition-fast);
+  font-size: 0.8rem;
+}
+
+.notif-item:hover .delete-btn {
+  opacity: 1;
+}
+
+.delete-btn:hover {
+  color: var(--color-accent-red);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* ── States ──────────────────────────────────────────────────── */
+.loading-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 4rem 1rem;
+  color: var(--text-color-secondary);
+  text-align: center;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  opacity: 0.4;
+}
+
+.empty-state h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.875rem;
+  max-width: 280px;
+}
+
+/* ── Load more ───────────────────────────────────────────────── */
+.load-more {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.5rem;
+}
+
+.load-more-btn {
+  padding: 0.6rem 2rem;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border-base);
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-blur-sm);
+  color: var(--primary-color);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.load-more-btn:hover:not(:disabled) {
+  background: var(--glass-surface-hover);
+}
+
+.load-more-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

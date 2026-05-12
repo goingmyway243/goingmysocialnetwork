@@ -26,6 +26,7 @@ applyTo: "src/**/*.{cs,csproj,slnx,http}"
 | UserService | User profiles, followers, avatar, cover | `src/GoingMy.UserService/` |
 | PostService | Social content & interactions | `src/GoingMy.PostService/` |
 | ChatService | Real-time chat & messaging | `src/GoingMy.ChatService/` |
+| NotificationService | Real-time push notifications via SignalR + RabbitMQ event consumers | `src/GoingMy.NotificationService/` |
 | ServiceDefaults | Shared configurations & extensions | `src/GoingMy.ServiceDefaults/` |
 | AppHost | Aspire orchestration host | `src/GoingMy.AppHost/` |
 

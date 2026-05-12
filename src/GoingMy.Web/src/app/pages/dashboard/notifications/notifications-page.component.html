@@ -1,0 +1,108 @@
+<div class="notifications-page">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1 class="page-title">Notifications</h1>
+      @if (state.hasUnread()) {
+        <span class="unread-chip">{{ state.displayCount() }} new</span>
+      }
+    </div>
+
+    @if (state.hasUnread()) {
+      <button
+        class="mark-all-btn"
+        (click)="state.markAllAsRead()">
+        <i class="pi pi-check-square"></i>
+        Mark all as read
+      </button>
+    }
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    @for (opt of filterOptions; track opt.value) {
+      <button
+        class="filter-chip"
+        [class.active]="activeFilter() === opt.value"
+        (click)="onFilterChange(opt.value)">
+        {{ opt.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Notification list -->
+  <div class="notif-list">
+
+    @if (state.isLoading() && filteredNotifications.length === 0) {
+      <div class="loading-state">
+        <i class="pi pi-spin pi-spinner"></i>
+        <span>Loading notifications...</span>
+      </div>
+    } @else if (filteredNotifications.length === 0) {
+      <div class="empty-state">
+        <i class="pi pi-bell-slash"></i>
+        <h3>No notifications</h3>
+        <p>When someone likes, comments, or follows you it'll show up here.</p>
+      </div>
+    } @else {
+      @for (n of filteredNotifications; track n.id) {
+        <a
+          class="notif-item"
+          [class.unread]="!n.isRead"
+          [routerLink]="getRouterLink(n)"
+          (click)="onNotificationClick(n)">
+
+          <!-- Avatar + type badge -->
+          <div class="avatar-wrap">
+            @if (n.actorAvatarUrl) {
+              <img [src]="n.actorAvatarUrl" [alt]="n.actorUsername" class="avatar" />
+            } @else {
+              <div class="avatar avatar-fallback">{{ getInitial(n.actorUsername) }}</div>
+            }
+            <div class="type-badge">
+              <i [class]="getIcon(n)"></i>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="notif-content">
+            <p class="notif-text" [innerHTML]="getText(n)"></p>
+            @if (n.referencePreview) {
+              <p class="notif-preview">"{{ n.referencePreview }}"</p>
+            }
+            <span class="notif-time">{{ timeAgo(n.createdAt) }}</span>
+          </div>
+
+          <!-- Right side: unread + delete -->
+          <div class="notif-actions">
+            @if (!n.isRead) {
+              <div class="unread-dot"></div>
+            }
+            <button
+              class="delete-btn"
+              title="Remove"
+              (click)="$event.preventDefault(); $event.stopPropagation(); state.deleteNotification(n.id)">
+              <i class="pi pi-times"></i>
+            </button>
+          </div>
+
+        </a>
+      }
+
+      <!-- Load more -->
+      @if (state.hasMore()) {
+        <div class="load-more">
+          <button class="load-more-btn" [disabled]="state.isLoading()" (click)="loadMore()">
+            @if (state.isLoading()) {
+              <i class="pi pi-spin pi-spinner"></i>
+            } @else {
+              Load more
+            }
+          </button>
+        </div>
+      }
+    }
+
+  </div>
+</div>

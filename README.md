@@ -27,6 +27,7 @@
 - **User Management**: Registration, profiles, followers, avatars, bios
 - **Social Posts**: Create, like, comment on posts with media support
 - **Real-Time Chat**: Private one-to-one messaging via SignalR
+- **Push Notifications**: Real-time in-app notifications for likes, comments, and follows via SignalR
 - **Admin Dashboard**: System-wide analytics and user management
 - **Authentication**: OpenIddict PKCE OAuth 2.0 with JWT tokens
 - **Rate Limiting**: 100 req/10 sec per IP at API Gateway
@@ -49,9 +50,9 @@
   ┌───────────┬───────────┼───────────┬──────────────┐
   ▼           ▼           ▼           ▼              ▼
  Auth      UserProfile  Posts       Chat        Notification
-(.API      (.API       (.API      (.API +       (.Worker
- :5001)     :5002)     :5003)    SignalR       Event Bus)
-                                   :5004)
+(.API      (.API       (.API      (.API +       (.API +
+ :5001)     :5002)     :5003)    SignalR       SignalR
+                                   :5004)        :5005)
   │           │           │           │              │
   └───────────┴───────────┴───────────┴──────┬───────┘
                                              ▼
@@ -114,6 +115,7 @@ Each service follows **Clean Architecture**:
 | **UserProfile** | 5002 | `/api/userprofiles` | User profiles, followers, avatars, bios |
 | **Posts** | 5003 | `/api/posts` | Posts, comments, likes, reactions |
 | **Chat** | 5004 | `/hubs/chat` | Private conversations, real-time messaging (SignalR) |
+| **Notification** | 5005 | `/api/notifications`, `/hubs/notification` | Real-time push notifications (SignalR); RabbitMQ consumers for likes, comments, follows |
 | **API Gateway** | 5000 (HTTP) / 7000 (HTTPS) | `/api/*` | Centralized entry point, JWT validation, rate limiting |
 | **Web (Angular SPA)** | 4200 | — | Glassmorphic UI, dashboard, feeds |
 | **Aspire Dashboard** | 17277 (HTTPS) | — | Service orchestration & monitoring |
