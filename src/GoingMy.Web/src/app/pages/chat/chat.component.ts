@@ -39,23 +39,17 @@ import { ComposeAreaComponent } from '../../components/compose-area/compose-area
     </div>
   `
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnInit {
 
   // ── 1. Dependencies ─────────────────────────────────────────
   readonly _state = inject(ChatStateService);
-  private readonly _signalR = inject(ChatSignalRService);
 
   // ── 2. State ────────────────────────────────────────────────
   readonly _editingMessage = signal<MessageDto | null>(null);
 
   // ── 3. Lifecycle ─────────────────────────────────────────────
   async ngOnInit(): Promise<void> {
-    await this._signalR.connect();
-    await this._state.loadConversations();
-  }
-
-  async ngOnDestroy(): Promise<void> {
-    await this._signalR.disconnect();
+    await this._state.connectAndLoadConversations();
   }
 
   // ── 4. Actions ───────────────────────────────────────────────

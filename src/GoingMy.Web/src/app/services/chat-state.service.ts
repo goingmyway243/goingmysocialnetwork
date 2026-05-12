@@ -70,6 +70,11 @@ export class ChatStateService implements OnDestroy {
   }
 
   // ── 5. Conversation Actions ──────────────────────────────────
+  async connectAndLoadConversations(): Promise<void> {
+    await this._signalR.connect();
+    this.loadConversations();
+  }
+
   loadConversations(): void {
     this.loadingConversations.set(true);
     this.error.set(null);
@@ -219,6 +224,7 @@ export class ChatStateService implements OnDestroy {
   }
 
   markConversationAsRead(conversationId: string): void {
+    console.log(conversationId);
     this._api.markAsRead(conversationId).subscribe({
       next: receipts => this._mergeReadReceipts(conversationId, receipts)
     });

@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
@@ -122,7 +122,7 @@ import { AuthService } from '../../services/auth.service';
     </div>
   `
 })
-export class MiniChatComponent {
+export class MiniChatComponent implements OnInit {
 
   // ── 1. Dependencies ─────────────────────────────────────────
   readonly _state = inject(ChatStateService);
@@ -167,6 +167,16 @@ export class MiniChatComponent {
       }
     });
 
+    // Connect to SignalR when a conversation is selected
+    effect(() => {
+      const convId = this._activeConvId();
+      if (convId) {
+        untracked(() => {
+          this._state.selectConversation(convId);
+        });
+      }
+    });
+
     // Show toast notification for inbound messages from non-active conversations
     effect(() => {
       const notification = this._state.newMessageNotification();
@@ -187,6 +197,11 @@ export class MiniChatComponent {
       }
     });
   }
+
+  async ngOnInit(): Promise<void> {
+    await this._state.connectAndLoadConversations();
+  }
+
   togglePanel(): void {
     if (this._activeConvId()) {
       this._activeConvId.set(null);
@@ -222,26 +237,30 @@ export class MiniChatComponent {
     const convId = this._activeConvId();
     if (!content || !convId) return;
 
-    // Optimistically add message to state for display
-    const optimistic: MessageDto = {
-      id: `mini-${Date.now()}`,
-      conversationId: convId,
-      senderId: this._currentUserId,
-      senderUsername: this._auth.getCurrentUsername(),
-      content,
-      sentAt: new Date().toISOString(),
-      isDeleted: false,
-      editedContent: null,
-      editedAt: null
-    };
+    // Ensure conversation is selected before sending
+    if (this._state.selectedConversationId() !== convId) {
+      this._state.selectConversation(convId);
+    }
 
-    this._state.messages.update(map => {
-      const existing = map.get(convId) ?? [];
-      map.set(convId, [...existing, optimistic]);
-      return new Map(map);
-    });
-
+    // Clear input immediately for responsive feel
     this._miniContent = '';
+
+    // Send message through ChatStateService (which handles SignalR + API call)
+    this._state.sendMessage(content).then(
+      () => {
+        // Message sent successfully; ChatStateService will handle adding it to the signal
+      },
+      (err) => {
+        console.error('Failed to send message:', err);
+        this._messageService.add({
+          key: 'mini-chat-toast',
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to send message',
+          life: 3000
+        });
+      }
+    );
   }
 
   // ── 5. Helpers ───────────────────────────────────────────────

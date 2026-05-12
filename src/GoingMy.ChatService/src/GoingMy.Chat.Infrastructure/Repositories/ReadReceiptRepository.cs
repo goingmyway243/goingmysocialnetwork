@@ -31,7 +31,14 @@ public class ReadReceiptRepository(MongoDbContext context) : IReadReceiptReposit
             Builders<ReadReceipt>.Filter.Eq(r => r.ReadByUserId, receipt.ReadByUserId)
         );
 
-        var options = new ReplaceOptions { IsUpsert = true };
-        await context.ReadReceipts.ReplaceOneAsync(filter, receipt, options, cancellationToken);
+        var update = Builders<ReadReceipt>.Update
+            .Set(r => r.ConversationId, receipt.ConversationId)
+            .Set(r => r.MessageId, receipt.MessageId)
+            .Set(r => r.ReadAt, receipt.ReadAt)
+            .Set(r => r.ReadByUserId, receipt.ReadByUserId)
+            .Set(r => r.ReadByUsername, receipt.ReadByUsername);
+
+        var options = new UpdateOptions { IsUpsert = true };
+        await context.ReadReceipts.UpdateOneAsync(filter, update, options, cancellationToken);
     }
 }

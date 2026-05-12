@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" />
-    <PackageReference Include="MongoDB.Driver" />
     <PackageReference Include="MassTransit.RabbitMQ" />
   </ItemGroup>
 

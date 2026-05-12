@@ -1,3 +1,6 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace GoingMy.Chat.Domain;
 
 /// <summary>
@@ -5,6 +8,8 @@ namespace GoingMy.Chat.Domain;
 /// </summary>
 public class Conversation
 {
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = null!;
 
     /// <summary>
