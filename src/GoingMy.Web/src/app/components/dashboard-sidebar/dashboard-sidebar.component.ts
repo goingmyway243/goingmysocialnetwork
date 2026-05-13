@@ -26,15 +26,9 @@ export class DashboardSidebarComponent {
       command: () => this.setActiveMenu('home', '/dashboard')
     },
     {
-      label: 'Explore',
+      label: 'Discover',
       icon: 'pi pi-compass',
       id: 'explore',
-      command: () => this.setActiveMenu('explore', '/dashboard/explore')
-    },
-    {
-      label: 'Discover',
-      icon: 'pi pi-users',
-      id: 'discover',
       command: () => this.setActiveMenu('discover', '/discover')
     },
     {
@@ -49,12 +43,12 @@ export class DashboardSidebarComponent {
       id: 'notifications',
       command: () => this.setActiveMenu('notifications', '/dashboard/notifications')
     },
-    {
-      label: 'Bookmarks',
-      icon: 'pi pi-bookmark',
-      id: 'bookmarks',
-      command: () => this.setActiveMenu('bookmarks', '/dashboard/bookmarks')
-    }
+    // {
+    //   label: 'Bookmarks',
+    //   icon: 'pi pi-bookmark',
+    //   id: 'bookmarks',
+    //   command: () => this.setActiveMenu('bookmarks', '/dashboard/bookmarks')
+    // }
   ];
 
   private readonly _router = inject(Router);

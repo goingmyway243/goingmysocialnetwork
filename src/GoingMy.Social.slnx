@@ -36,10 +36,6 @@
     <Project Path="GoingMy.UserService/src/GoingMy.User.Domain/GoingMy.User.Domain.csproj" />
     <Project Path="GoingMy.UserService/src/GoingMy.User.Infrastructure/GoingMy.User.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/GoingMy.UserService/tests/">
-    <Project Path="GoingMy.UserService/tests/GoingMy.User.IntegrationTests/GoingMy.User.IntegrationTests.csproj" />
-    <Project Path="GoingMy.UserService/tests/GoingMy.User.Tests/GoingMy.User.Tests.csproj" />
-  </Folder>
   <Folder Name="/GoingMy.ApiGateway/">
     <Project Path="GoingMy.ApiGateway/GoingMy.ApiGateway.csproj" />
   </Folder>

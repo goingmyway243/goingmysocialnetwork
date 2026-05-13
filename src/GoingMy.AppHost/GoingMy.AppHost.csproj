@@ -12,6 +12,7 @@
 		<ProjectReference Include="..\GoingMy.AuthService\src\GoingMy.Auth.API\GoingMy.Auth.API.csproj" />
 		<ProjectReference Include="..\GoingMy.PostService\src\GoingMy.Post.API\GoingMy.Post.API.csproj" />
 		<ProjectReference Include="..\GoingMy.ChatService\src\GoingMy.Chat.API\GoingMy.Chat.API.csproj" />
+		<ProjectReference Include="..\GoingMy.SearchService\src\GoingMy.Search.API\GoingMy.Search.API.csproj" />
 		<ProjectReference Include="..\GoingMy.UserService\src\GoingMy.User.API\GoingMy.User.API.csproj" />
 		<ProjectReference Include="..\GoingMy.UploadService\src\GoingMy.Upload.API\GoingMy.Upload.API.csproj" />
 		<ProjectReference Include="..\GoingMy.NotificationService\src\GoingMy.Notification.API\GoingMy.Notification.API.csproj" />

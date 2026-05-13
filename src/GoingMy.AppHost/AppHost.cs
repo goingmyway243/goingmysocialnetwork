@@ -81,6 +81,12 @@ var notificationService = builder.AddProject<Projects.GoingMy_Notification_API>(
     .WaitFor(rabbitmq)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
+var searchService = builder.AddProject<Projects.GoingMy_Search_API>(SharedServices.SearchApi)
+    .WithReference(rabbitmq)
+    .WaitFor(identityService)
+    .WaitFor(rabbitmq)
+    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
+
 builder.AddProject<Projects.GoingMy_ApiGateway>("api-gateway")
     .WithReference(identityService)
     .WithReference(userService)
@@ -88,6 +94,7 @@ builder.AddProject<Projects.GoingMy_ApiGateway>("api-gateway")
     .WithReference(chatService)
     .WithReference(uploadService)
     .WithReference(notificationService)
+    .WithReference(searchService)
     .WithReference(redis)
     .WaitFor(identityService)
     .WaitFor(redis)
