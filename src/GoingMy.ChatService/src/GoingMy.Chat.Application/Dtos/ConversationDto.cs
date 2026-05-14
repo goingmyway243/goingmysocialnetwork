@@ -9,5 +9,6 @@ public record ConversationDto(
     List<string> ParticipantUsernames,
     DateTime CreatedAt,
     DateTime? LastMessageAt,
-    string? LastMessagePreview
+    string? LastMessagePreview,
+    bool IsAiConversation = false
 );

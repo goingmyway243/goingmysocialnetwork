@@ -13,6 +13,7 @@
     <PackageReference Include="OpenIddict.Validation.SystemNetHttp" />
     <PackageReference Include="Scalar.AspNetCore" />
     <PackageReference Include="MediatR" />
+    <PackageReference Include="OpenAI" />
   </ItemGroup>
 
   <ItemGroup>

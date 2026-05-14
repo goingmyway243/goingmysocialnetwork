@@ -1,5 +1,6 @@
 using GoingMy.Chat.Application.Commands;
 using GoingMy.Chat.Application.Queries;
+using GoingMy.Chat.Application.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,7 @@ public record EditMessageRequest(string NewContent);
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class ChatController(IMediator mediator, IHttpClientFactory httpClientFactory) : ControllerBase
+public class ChatController(IMediator mediator, IHttpClientFactory httpClientFactory, IAiChatService aiChatService) : ControllerBase
 {
     private static readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
 
@@ -257,6 +258,70 @@ public class ChatController(IMediator mediator, IHttpClientFactory httpClientFac
         {
             var result = await mediator.Send(new SearchMessagesQuery(conversationId, userId, q, limit));
             return Ok(result);
+        }
+        catch (UnauthorizedAccessException) { return Unauthorized(); }
+        catch (InvalidOperationException) { return NotFound(); }
+    }
+
+    // ── AI Assistant Endpoints ───────────────────────────────────
+
+    /// <summary>
+    /// Creates or retrieves the AI assistant conversation for the authenticated user.
+    /// </summary>
+    [HttpPost("ai/conversations")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> CreateAiConversation()
+    {
+        var userId = User.FindFirstValue("sub")!;
+        var username = User.FindFirstValue("name") ?? userId;
+        var result = await mediator.Send(new CreateAiConversationCommand(userId, username));
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Lists all AI assistant conversations for the authenticated user.
+    /// </summary>
+    [HttpGet("ai/conversations")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetAiConversations()
+    {
+        var userId = User.FindFirstValue("sub")!;
+        var result = await mediator.Send(new GetAiConversationsQuery(userId));
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Sends a message to the AI assistant and returns the complete response (non-streaming REST path).
+    /// For the real-time streaming experience use the SignalR hub method <c>SendAiMessage</c>.
+    /// </summary>
+    [HttpPost("ai/conversations/{conversationId}/messages")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> SendAiMessage(string conversationId, [FromBody] SendMessageRequest request)
+    {
+        var userId = User.FindFirstValue("sub")!;
+        var username = User.FindFirstValue("name") ?? userId;
+
+        try
+        {
+            // Save user's message first
+            var userMessage = await mediator.Send(new SendMessageCommand(
+                ConversationId: conversationId,
+                SenderId: userId,
+                SenderUsername: username,
+                Content: request.Content
+            ));
+
+            // Get complete AI response and persist it
+            var aiMessage = await aiChatService.GetAndSaveAiResponseAsync(
+                conversationId, request.Content, HttpContext.RequestAborted);
+
+            return CreatedAtAction(nameof(GetMessages),
+                new { conversationId },
+                new { userMessage, aiMessage });
         }
         catch (UnauthorizedAccessException) { return Unauthorized(); }
         catch (InvalidOperationException) { return NotFound(); }

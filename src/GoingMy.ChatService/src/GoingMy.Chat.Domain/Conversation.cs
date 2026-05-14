@@ -26,12 +26,18 @@ public class Conversation
     public DateTime? LastMessageAt { get; set; }
     public string? LastMessagePreview { get; set; }
 
-    public Conversation(string id, List<string> participantIds, List<string> participantUsernames, DateTime createdAt)
+    /// <summary>
+    /// True when one participant is the AI assistant.
+    /// </summary>
+    public bool IsAiConversation { get; set; }
+
+    public Conversation(string id, List<string> participantIds, List<string> participantUsernames, DateTime createdAt, bool isAiConversation = false)
     {
         Id = id;
         ParticipantIds = participantIds;
         ParticipantUsernames = participantUsernames;
         CreatedAt = createdAt;
+        IsAiConversation = isAiConversation;
     }
 
     /// <summary>

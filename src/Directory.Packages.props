@@ -11,9 +11,10 @@
     <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.1.1" />
     <PackageVersion Include="Aspire.Hosting.RabbitMQ" Version="13.1.1" />
   </ItemGroup>
+
   <!--Aspire Client Packages-->
   <ItemGroup>
-    <PackageVersion Include="Aspire.MongoDB.Driver" Version="13.1.0" />
+    <PackageVersion Include="Aspire.MongoDB.Driver" Version="13.1.1" />
   </ItemGroup>
   <!--Microsoft.AspNetCore Packages-->
   <ItemGroup>
@@ -45,6 +46,10 @@
   <!--Redis Packages-->
   <ItemGroup>
     <PackageVersion Include="StackExchange.Redis" Version="2.7.27" />
+  </ItemGroup>
+  <!--Elasticsearch Packages-->
+  <ItemGroup>
+    <PackageVersion Include="Elastic.Clients.Elasticsearch" Version="9.4.0" />
   </ItemGroup>
   <!--YARP Packages-->
   <ItemGroup>

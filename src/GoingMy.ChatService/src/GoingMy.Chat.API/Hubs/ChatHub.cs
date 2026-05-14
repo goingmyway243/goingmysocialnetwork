@@ -1,8 +1,10 @@
 using GoingMy.Chat.Application.Commands;
+using GoingMy.Chat.Application.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
+using System.Text;
 
 namespace GoingMy.Chat.API.Hubs;
 
@@ -11,7 +13,7 @@ namespace GoingMy.Chat.API.Hubs;
 /// Clients join conversation groups to receive live message broadcasts.
 /// </summary>
 [Authorize]
-public class ChatHub(IMediator mediator) : Hub
+public class ChatHub(IMediator mediator, IAiChatService aiChatService) : Hub
 {
     /// <summary>
     /// Joins the SignalR group for a specific conversation.
@@ -123,6 +125,63 @@ public class ChatHub(IMediator mediator) : Hub
     {
         var (userId, _) = GetCallerIdentity();
         await Clients.OthersInGroup(conversationId).SendAsync("UserStoppedTyping", new { userId });
+    }
+
+    // ── AI Assistant ─────────────────────────────────────────────
+
+    /// <summary>
+    /// Creates (or retrieves) the AI assistant conversation for the caller.
+    /// </summary>
+    public async Task CreateAiConversation()
+    {
+        var (userId, username) = GetCallerIdentity();
+
+        try
+        {
+            var conversation = await mediator.Send(new CreateAiConversationCommand(userId, username));
+            await Clients.Caller.SendAsync("AiConversationCreated", conversation);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException)
+        {
+            throw new HubException(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// Sends a message to the AI assistant and streams token-by-token responses back to the caller.
+    /// Broadcasts the final saved AI message to all conversation participants.
+    /// </summary>
+    public async Task SendAiMessage(string conversationId, string content)
+    {
+        var (userId, username) = GetCallerIdentity();
+
+        try
+        {
+            // 1. Save and broadcast the user's message
+            var userMessage = await mediator.Send(new SendMessageCommand(
+                ConversationId: conversationId,
+                SenderId: userId,
+                SenderUsername: username,
+                Content: content
+            ));
+            await Clients.Group(conversationId).SendAsync("ReceiveMessage", userMessage);
+
+            // 2. Stream AI response tokens to the caller only
+            var sb = new StringBuilder();
+            await foreach (var token in aiChatService.StreamAiResponseAsync(conversationId, content, Context.ConnectionAborted))
+            {
+                sb.Append(token);
+                await Clients.Caller.SendAsync("ReceiveAiToken", token, Context.ConnectionAborted);
+            }
+
+            // 3. Persist and broadcast the complete AI message
+            var aiMessage = await aiChatService.SaveAiResponseAsync(conversationId, sb.ToString(), Context.ConnectionAborted);
+            await Clients.Group(conversationId).SendAsync("ReceiveAiMessageComplete", aiMessage);
+        }
+        catch (Exception ex) when (ex is UnauthorizedAccessException or InvalidOperationException)
+        {
+            throw new HubException(ex.Message);
+        }
     }
 
     private (string UserId, string Username) GetCallerIdentity()

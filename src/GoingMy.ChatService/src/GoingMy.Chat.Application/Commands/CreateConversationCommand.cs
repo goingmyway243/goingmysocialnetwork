@@ -49,6 +49,7 @@ public class CreateConversationCommandHandler(IConversationRepository conversati
         c.ParticipantUsernames,
         c.CreatedAt,
         c.LastMessageAt,
-        c.LastMessagePreview
+        c.LastMessagePreview,
+        c.IsAiConversation
     );
 }

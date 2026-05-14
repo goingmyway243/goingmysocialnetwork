@@ -5,7 +5,13 @@ export interface ConversationDto {
   lastMessagePreview: string | null;
   lastMessageAt: string | null;
   createdAt: string;
+  isAiConversation: boolean;
   unreadCount?: number;
+}
+
+export interface AiConversationResponse {
+  userMessage: MessageDto;
+  aiMessage: MessageDto;
 }
 
 export interface MessageDto {

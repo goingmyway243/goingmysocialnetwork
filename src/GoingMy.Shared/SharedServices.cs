@@ -22,6 +22,10 @@ public static class SharedServices
     public const string Kafka = "kafka";
     public const string RabbitMQ = "rabbitmq";
 
+    // AI
+    public const string AiAssistant = "ai-assistant";
+    public const string AiAssistantUsername = "AI Assistant";
+
     public static class KafkaTopics
     {
         public const string UserRegistered = "goingmy.user.registered";

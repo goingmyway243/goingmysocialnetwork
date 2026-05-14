@@ -2,7 +2,7 @@ import { inject, Injectable, OnDestroy } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { MessageDto, ReadReceiptDto, TypingUser } from '../models/chat.models';
+import { ConversationDto, MessageDto, ReadReceiptDto, TypingUser } from '../models/chat.models';
 import { AuthService } from './auth.service';
 
 export interface MessageDeletedEvent { messageId: string; deletedBy: string; }
@@ -24,6 +24,11 @@ export class ChatSignalRService implements OnDestroy {
   readonly messagesRead$ = new Subject<ReadReceiptDto[]>();
   readonly userTyping$ = new Subject<TypingUser>();
   readonly userStoppedTyping$ = new Subject<{ userId: string }>();
+
+  // AI streams
+  readonly aiConversationCreated$ = new Subject<ConversationDto>();
+  readonly aiTokenReceived$ = new Subject<string>();
+  readonly aiMessageComplete$ = new Subject<MessageDto>();
 
   // ── 4. Connection lifecycle ──────────────────────────────────
   async connect(): Promise<void> {
@@ -56,6 +61,9 @@ export class ChatSignalRService implements OnDestroy {
     this.messagesRead$.complete();
     this.userTyping$.complete();
     this.userStoppedTyping$.complete();
+    this.aiConversationCreated$.complete();
+    this.aiTokenReceived$.complete();
+    this.aiMessageComplete$.complete();
   }
 
   // ── 5. Group management ──────────────────────────────────────
@@ -92,6 +100,15 @@ export class ChatSignalRService implements OnDestroy {
     await this._invoke('SendStoppedTyping', conversationId);
   }
 
+  // AI assistant methods
+  async createAiConversation(): Promise<void> {
+    await this._invoke('CreateAiConversation');
+  }
+
+  async sendAiMessage(conversationId: string, content: string): Promise<void> {
+    await this._invoke('SendAiMessage', conversationId, content);
+  }
+
   // ── 7. Private helpers ───────────────────────────────────────
   private _registerHandlers(): void {
     if (!this._connection) return;
@@ -102,6 +119,9 @@ export class ChatSignalRService implements OnDestroy {
     this._connection.on('MessagesRead', (receipts: ReadReceiptDto[]) => this.messagesRead$.next(receipts));
     this._connection.on('UserTyping', (user: TypingUser) => this.userTyping$.next(user));
     this._connection.on('UserStoppedTyping', (evt: { userId: string }) => this.userStoppedTyping$.next(evt));
+    this._connection.on('AiConversationCreated', (conv: ConversationDto) => this.aiConversationCreated$.next(conv));
+    this._connection.on('ReceiveAiToken', (token: string) => this.aiTokenReceived$.next(token));
+    this._connection.on('ReceiveAiMessageComplete', (msg: MessageDto) => this.aiMessageComplete$.next(msg));
   }
 
   private async _invoke(method: string, ...args: unknown[]): Promise<void> {

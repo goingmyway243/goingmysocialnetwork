@@ -1,8 +1,10 @@
 using GoingMy.Chat.API.Hubs;
 using GoingMy.Chat.Application.Consumers;
+using GoingMy.Chat.Application.Services;
 using GoingMy.Chat.Domain.Repositories;
 using GoingMy.Chat.Infrastructure.Data;
 using GoingMy.Chat.Infrastructure.Repositories;
+using GoingMy.Chat.Infrastructure.Services;
 using GoingMy.ServiceDefaults;
 using GoingMy.Shared;
 using GoingMy.Shared.Events;
@@ -39,6 +41,9 @@ builder.Services.AddMediatR(config =>
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IReadReceiptRepository, ReadReceiptRepository>();
+
+// Register AI chat service (Gemini via OpenAI-compatible API)
+builder.Services.AddScoped<IAiChatService, AiChatService>();
 
 // ── MassTransit + RabbitMQ (event consumers) ────────────────────
 builder.Services.AddMassTransit(x =>

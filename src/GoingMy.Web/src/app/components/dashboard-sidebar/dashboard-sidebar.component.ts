@@ -38,6 +38,12 @@ export class DashboardSidebarComponent {
       command: () => this.setActiveMenu('messages', '/dashboard/messages')
     },
     {
+      label: 'AI Assistant',
+      icon: 'pi pi-sparkles',
+      id: 'ai-assistant',
+      command: () => this.setActiveMenu('ai-assistant', '/dashboard/ai-assistant')
+    },
+    {
       label: 'Notifications',
       icon: 'pi pi-bell',
       id: 'notifications',
