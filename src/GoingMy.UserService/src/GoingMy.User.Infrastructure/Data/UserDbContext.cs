@@ -102,8 +102,9 @@ public class UserProfileOutboxInterceptor : SaveChangesInterceptor
                     Username = entry.Entity.Username,
                     FirstName = entry.Entity.FirstName,
                     LastName = entry.Entity.LastName,
-                    AvatarUrl = entry.Entity.AvatarUrl,
+                    Gender = (int)entry.Entity.Gender,
                     IsVerified = entry.Entity.IsVerified,
+                    IsActive = entry.Entity.IsActive,
                     CreatedAt = entry.Entity.CreatedAt
                 }),
                 EntityState.Modified => CreateMessage("UserUpdatedEvent", new UserUpdatedEvent
@@ -112,8 +113,20 @@ public class UserProfileOutboxInterceptor : SaveChangesInterceptor
                     Username = entry.Entity.Username,
                     FirstName = entry.Entity.FirstName,
                     LastName = entry.Entity.LastName,
+                    Bio = entry.Entity.Bio,
                     AvatarUrl = entry.Entity.AvatarUrl,
+                    CoverUrl = entry.Entity.CoverUrl,
+                    DateOfBirth = entry.Entity.DateOfBirth,
+                    Gender = (int)entry.Entity.Gender,
+                    Location = entry.Entity.Location,
+                    WebsiteUrl = entry.Entity.WebsiteUrl,
+                    FollowersCount = entry.Entity.FollowersCount,
+                    FollowingCount = entry.Entity.FollowingCount,
+                    PostsCount = entry.Entity.PostsCount,
                     IsVerified = entry.Entity.IsVerified,
+                    IsPrivate = entry.Entity.IsPrivate,
+                    IsActive = entry.Entity.IsActive,
+                    Interests = entry.Entity.Interests,
                     UpdatedAt = entry.Entity.UpdatedAt ?? DateTime.UtcNow
                 }),
                 EntityState.Deleted => CreateMessage("UserDeletedEvent", new UserDeletedEvent

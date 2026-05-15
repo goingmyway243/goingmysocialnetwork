@@ -10,7 +10,8 @@ public record UserCreatedEvent
     public string Username { get; init; } = null!;
     public string FirstName { get; init; } = null!;
     public string LastName { get; init; } = null!;
-    public string? AvatarUrl { get; init; }
+    public int Gender { get; init; }
     public bool IsVerified { get; init; }
+    public bool IsActive { get; init; }
     public DateTime CreatedAt { get; init; }
 }

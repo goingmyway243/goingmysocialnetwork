@@ -25,7 +25,7 @@ public class UserProfile
 
     public DateTime? DateOfBirth { get; set; }
 
-    public Gender Gender { get; set; }
+    public Gender Gender { get; set; } = Gender.Other;
 
     public string? Location { get; set; }
 
