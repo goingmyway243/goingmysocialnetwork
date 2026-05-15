@@ -7,17 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Elastic.Clients.Elasticsearch" />
+    <PackageReference Include="MassTransit.RabbitMQ" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Scalar.AspNetCore" />
-    <PackageReference Include="MassTransit.RabbitMQ" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Consumers\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Enums\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
