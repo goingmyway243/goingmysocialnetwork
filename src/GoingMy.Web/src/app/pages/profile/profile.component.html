@@ -49,6 +49,21 @@
           </div>
         </div>
       </div>
+
+      <!-- Security Card (own profile only) -->
+      @if (isOwnProfile()) {
+        <div class="glass-card security-card">
+          <div class="card-header">
+            <h3 class="card-title">Security</h3>
+          </div>
+          <button class="security-action" (click)="onChangePasswordClick()" type="button">
+            <i class="pi pi-lock"></i>
+            <span>Change Password</span>
+            <i class="pi pi-chevron-right security-chevron"></i>
+          </button>
+        </div>
+      }
+
     </aside>
 
     <!-- Right Content Section -->
@@ -203,3 +218,11 @@
   (close)="showEditModal.set(false)"
   (profileUpdated)="onProfileUpdated()">
 </app-edit-profile-modal>
+
+@if (isOwnProfile() && currentUserId()) {
+  <app-change-password-modal
+    [userId]="currentUserId()!"
+    [isVisible]="showChangePasswordModal()"
+    (close)="showChangePasswordModal.set(false)">
+  </app-change-password-modal>
+}

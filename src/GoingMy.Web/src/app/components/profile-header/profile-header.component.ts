@@ -99,8 +99,7 @@ export class ProfileHeaderComponent {
   }
 
   onEditClick(): void {
-    // this.editClick.emit();
-    this.profileUpdated.emit();
+    this.editClick.emit();
   }
 
   onFollowersClick(): void {

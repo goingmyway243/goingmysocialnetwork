@@ -135,4 +135,18 @@ public class UserService : IUserService
             throw new InvalidOperationException($"Failed to deactivate user: {errors}");
         }
     }
+
+    public async Task ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+    {
+        var user = await _userManager.FindByIdAsync(userId)
+            ?? throw new KeyNotFoundException($"User with ID '{userId}' not found.");
+
+        var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+        if (!result.Succeeded)
+        {
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            throw new InvalidOperationException(errors);
+        }
+    }
 }

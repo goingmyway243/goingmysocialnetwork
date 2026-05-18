@@ -1,9 +1,12 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
+import { DialogModule } from 'primeng/dialog';
+import { TextareaModule } from 'primeng/textarea';
 import { MessageService } from 'primeng/api';
 import { PostApiService } from '../../../services/post-api.service';
 import { AuthService } from '../../../services/auth.service';
@@ -14,7 +17,7 @@ import { Post, Comment, PostCommentsState } from '../../../models/post.model';
 
 @Component({
   selector: 'app-dashboard-home',
-  imports: [CommonModule, CardModule, ButtonModule, SkeletonModule, ComposePostComponent, PostCardComponent, EmptyStateComponent],
+  imports: [CommonModule, FormsModule, CardModule, ButtonModule, SkeletonModule, DialogModule, TextareaModule, ComposePostComponent, PostCardComponent, EmptyStateComponent],
   templateUrl: './dashboard-home.component.html',
   styleUrl: './dashboard-home.component.css'
 })
@@ -30,6 +33,9 @@ export class DashboardHomeComponent implements OnInit {
   readonly posts = signal<Post[]>([]);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+  readonly editingPost = signal<Post | null>(null);
+  readonly editPostContent = signal('');
+  readonly editPostSubmitting = signal(false);
 
   /** Per-post comment state keyed by post ID */
   private readonly _commentStates = signal<Map<string, PostCommentsState>>(new Map());
@@ -111,8 +117,39 @@ export class DashboardHomeComponent implements OnInit {
   }
 
   editPost(post: Post): void {
-    // TODO: Implement edit mode or navigate to edit page
-    this._messageService.add({ severity: 'info', summary: 'Edit', detail: 'Edit functionality coming soon!' });
+    this.editPostContent.set(post.content);
+    this.editingPost.set(post);
+  }
+
+  cancelEditPost(): void {
+    this.editingPost.set(null);
+    this.editPostContent.set('');
+  }
+
+  saveEditPost(): void {
+    const post = this.editingPost();
+    if (!post || this.editPostSubmitting()) return;
+
+    const content = this.editPostContent().trim();
+    if (!content || content === post.content) {
+      this.cancelEditPost();
+      return;
+    }
+
+    this.editPostSubmitting.set(true);
+    this._postApi.updatePost(post.id, { content }).subscribe({
+      next: (res) => {
+        this.posts.update(prev => prev.map(p => p.id === post.id ? { ...p, content: res.post.content } : p));
+        this.editingPost.set(null);
+        this.editPostContent.set('');
+        this.editPostSubmitting.set(false);
+        this._messageService.add({ severity: 'success', summary: 'Saved', detail: 'Post updated successfully.' });
+      },
+      error: () => {
+        this.editPostSubmitting.set(false);
+        this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update post.' });
+      }
+    });
   }
 
   deletePost(post: Post): void {

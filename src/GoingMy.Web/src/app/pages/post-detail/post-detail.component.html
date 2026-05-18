@@ -33,7 +33,38 @@
       </div>
 
       <div class="post-content">
-        <p class="post-text">{{ post()!.content }}</p>
+        @if (editingPost()) {
+          <div class="post-edit-form">
+            <textarea
+              pTextarea
+              [autoResize]="true"
+              rows="4"
+              class="post-edit-textarea"
+              [value]="editPostContent()"
+              (input)="onEditPostContentChange($any($event.target).value)"
+              [disabled]="editPostSubmitting()">
+            </textarea>
+            <div class="post-edit-actions">
+              <p-button
+                label="Cancel"
+                [text]="true"
+                severity="secondary"
+                (onClick)="cancelEditPost()"
+                [disabled]="editPostSubmitting()">
+              </p-button>
+              <p-button
+                label="Save"
+                icon="pi pi-check"
+                [loading]="editPostSubmitting()"
+                [disabled]="!editPostContent().trim()"
+                styleClass="save-edit-btn"
+                (onClick)="saveEditPost()">
+              </p-button>
+            </div>
+          </div>
+        } @else {
+          <p class="post-text">{{ post()!.content }}</p>
+        }
       </div>
 
       <div class="post-actions">

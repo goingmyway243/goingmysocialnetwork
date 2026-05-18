@@ -58,3 +58,48 @@
   }
 </div>
 
+<!-- Edit Post Dialog -->
+<p-dialog
+  header="Edit Post"
+  [visible]="!!editingPost()"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="glass-dialog"
+  [style]="{ width: '520px' }"
+  (onHide)="cancelEditPost()">
+
+  <div class="edit-post-form">
+    <textarea
+      pTextarea
+      [autoResize]="true"
+      rows="5"
+      class="edit-post-textarea"
+      [value]="editPostContent()"
+      (input)="editPostContent.set($any($event.target).value)"
+      [disabled]="editPostSubmitting()"
+      placeholder="What's on your mind?">
+    </textarea>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="edit-post-footer">
+      <p-button
+        label="Cancel"
+        [text]="true"
+        severity="secondary"
+        (onClick)="cancelEditPost()"
+        [disabled]="editPostSubmitting()">
+      </p-button>
+      <p-button
+        label="Save"
+        icon="pi pi-check"
+        [loading]="editPostSubmitting()"
+        [disabled]="!editPostContent().trim()"
+        (onClick)="saveEditPost()">
+      </p-button>
+    </div>
+  </ng-template>
+</p-dialog>
+

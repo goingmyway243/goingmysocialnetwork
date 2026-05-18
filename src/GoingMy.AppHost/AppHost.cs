@@ -22,7 +22,10 @@ var chatDb = mongodb.AddDatabase(SharedServices.ChatDb);
 var uploadDb = mongodb.AddDatabase(SharedServices.UploadDb);
 var notificationDb = mongodb.AddDatabase(SharedServices.NotificationDb);
 
-var rabbitmq = builder.AddRabbitMQ(SharedServices.RabbitMQ)
+var simplePassword = builder.AddParameter("password", "123456", secret: true);
+var openAiApiKey = "123456789";
+
+var rabbitmq = builder.AddRabbitMQ(SharedServices.RabbitMQ, password: simplePassword)
     .WithManagementPlugin()
     .WithLifetime(ContainerLifetime.Persistent);
 
@@ -30,6 +33,10 @@ var redis = builder.AddRedis(SharedServices.Redis)
     .WithImage("redis", "7-alpine")
     .WithRedisInsight(containerName: "redis-insight")
     .WithDataVolume("goingmysocial-redis")
+    .WithLifetime(ContainerLifetime.Persistent);
+
+var elasticearch = builder.AddElasticsearch(SharedServices.Elasticsearch, password: simplePassword)
+    .WithDataVolume("goingmysocial-elasticsearch")
     .WithLifetime(ContainerLifetime.Persistent);
 
 var identityService = builder.AddProject<Projects.GoingMy_Auth_API>(SharedServices.IdentityApi)
@@ -46,7 +53,8 @@ var postService = builder.AddProject<Projects.GoingMy_Post_API>(SharedServices.P
     .WaitFor(identityService)
     .WaitFor(postDb)
     .WaitFor(rabbitmq)
-    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
+    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"))
+    .WithEnvironment("OpenAI:ApiKey", openAiApiKey);
 
 var userService = builder.AddProject<Projects.GoingMy_User_API>(SharedServices.UserApi)
     .WithReference(userDb)
@@ -63,7 +71,8 @@ var chatService = builder.AddProject<Projects.GoingMy_Chat_API>(SharedServices.C
     .WaitFor(identityService)
     .WaitFor(chatDb)
     .WaitFor(rabbitmq)
-    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
+    .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"))
+    .WithEnvironment("OpenAI:ApiKey", openAiApiKey);
 
 var uploadService = builder.AddProject<Projects.GoingMy_Upload_API>(SharedServices.UploadApi)
     .WithReference(uploadDb)
@@ -83,8 +92,10 @@ var notificationService = builder.AddProject<Projects.GoingMy_Notification_API>(
 
 var searchService = builder.AddProject<Projects.GoingMy_Search_API>(SharedServices.SearchApi)
     .WithReference(rabbitmq)
+    .WithReference(elasticearch)
     .WaitFor(identityService)
     .WaitFor(rabbitmq)
+    .WaitFor(elasticearch)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 builder.AddProject<Projects.GoingMy_ApiGateway>("api-gateway")

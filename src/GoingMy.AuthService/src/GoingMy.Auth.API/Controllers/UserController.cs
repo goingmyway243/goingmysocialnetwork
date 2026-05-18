@@ -172,16 +172,31 @@ public class UserController : ControllerBase
     [HttpPost("{id:guid}/change-password")]
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ChangePassword(Guid id, [FromBody] ChangePasswordRequest request)
     {
         var callerId = User.FindFirst("sub")?.Value;
         if (callerId != id.ToString())
             return Forbid();
 
-        // TODO: Implement password change via UserManager
-        await Task.CompletedTask;
-        return Ok(new { message = "Password change endpoint - implementation pending" });
+        try
+        {
+            await _userService.ChangePasswordAsync(id.ToString(), request.CurrentPassword, request.NewPassword);
+            _logger.LogInformation("Password changed for user {UserId}", id);
+            return Ok(new { message = "Password changed successfully" });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            _logger.LogWarning("User not found during password change: {Message}", ex.Message);
+            return NotFound(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning("Password change failed for user {UserId}: {Message}", id, ex.Message);
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     private static UserResponse MapToUserResponse(ApplicationUser user) => new()

@@ -18,6 +18,7 @@ public static class SharedServices
     public const string ChatDb = "chat-db";
     public const string UploadDb = "upload-db";
     public const string NotificationDb = "notification-db";
+    public const string Elasticsearch = "elasticsearch";
     public const string Redis = "redis";
     public const string Kafka = "kafka";
     public const string RabbitMQ = "rabbitmq";

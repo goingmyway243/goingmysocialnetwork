@@ -12,4 +12,5 @@ public interface IUserService
     Task<IEnumerable<ApplicationUser>> GetAllUsersAsync();
     Task<ApplicationUser> UpdateUserAsync(string userId, UpdateUserDto dto);
     Task DeactivateUserAsync(string userId);
+    Task ChangePasswordAsync(string userId, string currentPassword, string newPassword);
 }

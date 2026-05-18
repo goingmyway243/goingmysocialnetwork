@@ -44,7 +44,11 @@ export class PostDetailComponent implements OnInit {
   readonly commentSubmitting = signal(false);
   readonly editingCommentId = signal<string | null>(null);
   readonly editingContent = signal('');
-  readonly editSubmitting = signal(false);  readonly menuItems = signal<MenuItem[]>([]);
+  readonly editSubmitting = signal(false);
+  readonly editingPost = signal(false);
+  readonly editPostContent = signal('');
+  readonly editPostSubmitting = signal(false);
+  readonly menuItems = signal<MenuItem[]>([]);
   // ── 3. Derived State ─────────────────────────────────────────
   readonly currentUserId = computed(() => this._authService.getCurrentUserId());
   readonly canSubmitComment = computed(() => this.newComment().trim().length > 0 && !this.commentSubmitting());
@@ -261,8 +265,43 @@ export class PostDetailComponent implements OnInit {
   editPost(): void {
     const p = this.post();
     if (!p) return;
-    // TODO: Navigate to edit mode or open edit modal
-    this._messageService.add({ severity: 'info', summary: 'Edit', detail: 'Edit functionality coming soon!' });
+    this.editPostContent.set(p.content);
+    this.editingPost.set(true);
+  }
+
+  cancelEditPost(): void {
+    this.editingPost.set(false);
+    this.editPostContent.set('');
+  }
+
+  saveEditPost(): void {
+    const p = this.post();
+    if (!p || this.editPostSubmitting()) return;
+
+    const content = this.editPostContent().trim();
+    if (!content || content === p.content) {
+      this.cancelEditPost();
+      return;
+    }
+
+    this.editPostSubmitting.set(true);
+    this._postApi.updatePost(p.id, { content }).subscribe({
+      next: (res) => {
+        this.post.set(res.post);
+        this.editingPost.set(false);
+        this.editPostContent.set('');
+        this.editPostSubmitting.set(false);
+        this._messageService.add({ severity: 'success', summary: 'Saved', detail: 'Post updated successfully.' });
+      },
+      error: () => {
+        this.editPostSubmitting.set(false);
+        this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update post.' });
+      }
+    });
+  }
+
+  onEditPostContentChange(value: string): void {
+    this.editPostContent.set(value);
   }
 
   // ── 9. Actions — Delete ───────────────────────────────────────────────

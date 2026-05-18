@@ -19,6 +19,7 @@ import { PostCardComponent } from '../../components/post-card/post-card.componen
 import { ComposePostComponent } from '../../components/compose-post/compose-post.component';
 import { EmptyStateComponent } from '../../components/empty-state/empty-state.component';
 import { FollowListComponent } from '../../components/follow-list/follow-list.component';
+import { ChangePasswordModalComponent } from '../../components/change-password-modal/change-password-modal.component';
 import { Post, PostCommentsState } from '../../models/post.model';
 
 @Component({
@@ -36,7 +37,8 @@ import { Post, PostCommentsState } from '../../models/post.model';
     PostCardComponent,
     ComposePostComponent,
     EmptyStateComponent,
-    FollowListComponent
+    FollowListComponent,
+    ChangePasswordModalComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
@@ -61,6 +63,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   readonly showFollowersModal = signal(false);
   readonly showFollowingModal = signal(false);
   readonly showEditModal = signal(false);
+  readonly showChangePasswordModal = signal(false);
 
   private readonly _likedPostIds = signal<Set<string>>(new Set());
   private readonly _commentStates = signal<Map<string, PostCommentsState>>(new Map());
@@ -195,6 +198,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onProfileUpdated(): void {
     this._messageService.add({ severity: 'success', summary: 'Saved!', detail: 'Your profile has been updated.' });
+  }
+
+  // ── 8b. Change Password Modal ────────────────────────────────
+  onChangePasswordClick(): void {
+    this.showChangePasswordModal.set(true);
   }
 
   // ── 9. Post Interactions ─────────────────────────────────────

@@ -1242,7 +1242,8 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
 }
 
 /* Edit profile dialog — has form padding inside content */
-.glass-dialog.edit-dialog .p-dialog-content {
+.glass-dialog.edit-dialog .p-dialog-content,
+.glass-dialog.change-password-dialog .p-dialog-content {
   padding: 1.25rem 1.5rem;
 }
 
