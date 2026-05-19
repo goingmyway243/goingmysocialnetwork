@@ -1,4 +1,6 @@
 using GoingMy.Post.Domain.Repositories;
+using GoingMy.Shared.Events;
+using MassTransit;
 using MediatR;
 
 namespace GoingMy.Post.Application.Commands;
@@ -14,18 +16,12 @@ public record DeletePostCommand(
 /// <summary>
 /// Handler for the DeletePostCommand.
 /// </summary>
-public class DeletePostCommandHandler : IRequestHandler<DeletePostCommand, bool>
+public class DeletePostCommandHandler(IPostRepository postRepository, IPublishEndpoint publishEndpoint)
+    : IRequestHandler<DeletePostCommand, bool>
 {
-    private readonly IPostRepository _postRepository;
-
-    public DeletePostCommandHandler(IPostRepository postRepository)
-    {
-        _postRepository = postRepository;
-    }
-
     public async Task<bool> Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
-        var post = await _postRepository.GetByIdAsync(request.Id, cancellationToken)
+        var post = await postRepository.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new InvalidOperationException($"Post with ID {request.Id} not found");
 
         // Verify ownership
@@ -34,6 +30,18 @@ public class DeletePostCommandHandler : IRequestHandler<DeletePostCommand, bool>
             throw new UnauthorizedAccessException("You can only delete your own posts");
         }
 
-        return await _postRepository.DeleteAsync(request.Id, cancellationToken);
+        var deleted = await postRepository.DeleteAsync(request.Id, cancellationToken);
+
+        if (deleted)
+        {
+            await publishEndpoint.Publish(new PostDeletedEvent
+            {
+                PostId = request.Id,
+                UserId = request.UserId,
+                DeletedAt = DateTime.UtcNow
+            }, cancellationToken);
+        }
+
+        return deleted;
     }
 }

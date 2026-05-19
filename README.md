@@ -28,6 +28,8 @@
 - **Social Posts**: Create, like, comment on posts with media support
 - **Real-Time Chat**: Private one-to-one messaging via SignalR
 - **Push Notifications**: Real-time in-app notifications for likes, comments, and follows via SignalR
+- **Media Uploads**: File upload, validation, and storage management with saga-based validation orchestration
+- **Search**: Full-text search on users and posts via Elasticsearch; trending posts and suggestions
 - **Admin Dashboard**: System-wide analytics and user management
 - **Authentication**: OpenIddict PKCE OAuth 2.0 with JWT tokens
 - **Rate Limiting**: 100 req/10 sec per IP at API Gateway
@@ -47,17 +49,17 @@
 │     JWT Validation · Rate Limiting · CORS · Claim Forward   │
 └─────────────────────────┬────────────────────────────────────┘
                           │
-  ┌───────────┬───────────┼───────────┬──────────────┐
-  ▼           ▼           ▼           ▼              ▼
- Auth      UserProfile  Posts       Chat        Notification
-(.API      (.API       (.API      (.API +       (.API +
- :5001)     :5002)     :5003)    SignalR       SignalR
+  ┌───────────┬───────────┼───────────┬──────────────┬──────────┬─────────┐
+  ▼           ▼           ▼           ▼              ▼          ▼         ▼
+ Auth      UserProfile  Posts       Chat        Notification  Upload   Search
+(.API      (.API       (.API      (.API +       (.API +       (.API    (.API
+ :5001)     :5002)     :5003)    SignalR       SignalR        :5006)   :5007)
                                    :5004)        :5005)
-  │           │           │           │              │
-  └───────────┴───────────┴───────────┴──────┬───────┘
+  │           │           │           │              │          │         │
+  └───────────┴───────────┴───────────┴──────┬───────┴──────────┴─────────┘
                                              ▼
                                     RabbitMQ EventBus
-                                    PostgreSQL + MongoDB
+                    PostgreSQL + MongoDB + Elasticsearch
 ```
 
 **Architecture Principles:**
@@ -83,6 +85,7 @@ Each service follows **Clean Architecture**:
 | Framework | .NET 10 + ASP.NET Core | MIT |
 | Architecture | Microservices + CQRS (MediatR) | MIT |
 | Database | PostgreSQL 17 + MongoDB | Open Source |
+| Search | Elasticsearch | Elastic License 2.0 |
 | ORM | Entity Framework Core + Efcore.MongoDb | MIT |
 | Auth | OpenIddict PKCE OAuth 2.0 | MIT |
 | Messaging | RabbitMQ + MassTransit | Apache 2.0 |
@@ -116,6 +119,8 @@ Each service follows **Clean Architecture**:
 | **Posts** | 5003 | `/api/posts` | Posts, comments, likes, reactions |
 | **Chat** | 5004 | `/hubs/chat` | Private conversations, real-time messaging (SignalR) |
 | **Notification** | 5005 | `/api/notifications`, `/hubs/notification` | Real-time push notifications (SignalR); RabbitMQ consumers for likes, comments, follows |
+| **Upload** | 5006 | `/api/uploads` | Media file upload, validation, storage management; saga-based post-with-media orchestration |
+| **Search** | 5007 | `/api/search` | Full-text search, suggestions, trending posts; Elasticsearch index consumer |
 | **API Gateway** | 5000 (HTTP) / 7000 (HTTPS) | `/api/*` | Centralized entry point, JWT validation, rate limiting |
 | **Web (Angular SPA)** | 4200 | — | Glassmorphic UI, dashboard, feeds |
 | **Aspire Dashboard** | 17277 (HTTPS) | — | Service orchestration & monitoring |

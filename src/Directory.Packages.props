@@ -49,7 +49,7 @@
   </ItemGroup>
   <!--Elasticsearch Packages-->
   <ItemGroup>
-    <PackageVersion Include="Elastic.Clients.Elasticsearch" Version="9.4.0" />
+    <PackageVersion Include="Elastic.Clients.Elasticsearch" Version="8.17.3" />
   </ItemGroup>
   <!--YARP Packages-->
   <ItemGroup>

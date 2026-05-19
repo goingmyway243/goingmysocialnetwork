@@ -59,6 +59,9 @@ Go directly to the service location � do not search the solution explorer.
 | UserService | User profiles, followers, avatar, cover | `src/GoingMy.UserService/` |
 | PostService | Social content & interactions | `src/GoingMy.PostService/` |
 | ChatService | Real-time chat & messaging | `src/GoingMy.ChatService/` |
+| NotificationService | Real-time push notifications via SignalR | `src/GoingMy.NotificationService/` |
+| UploadService | Media file upload, validation, storage management | `src/GoingMy.UploadService/` |
+| SearchService | Full-text search, suggestions, trending posts via Elasticsearch | `src/GoingMy.SearchService/` |
 | ServiceDefaults | Shared configurations & extensions | `src/GoingMy.ServiceDefaults/` |
 | AppHost | Aspire orchestration host | `src/GoingMy.AppHost/` |
 | Web | Angular frontend application | `src/GoingMy.Web/` |
@@ -84,7 +87,7 @@ Go directly to the service location � do not search the solution explorer.
 - **Workspace Root**: repository root
 - **Source**: `src/`
 - **API Gateway**: `src/GoingMy.ApiGateway/` (YARP reverse proxy, JWT validation, rate limiting)
-- **Backend Services**: `src/GoingMy.AuthService/`, `src/GoingMy.UserService/`, `src/GoingMy.PostService/`, `src/GoingMy.ChatService/`
+- **Backend Services**: `src/GoingMy.AuthService/`, `src/GoingMy.UserService/`, `src/GoingMy.PostService/`, `src/GoingMy.ChatService/`, `src/GoingMy.NotificationService/`, `src/GoingMy.UploadService/`, `src/GoingMy.SearchService/`
 - **Frontend**: `src/GoingMy.Web/`
 - **Shared Defaults**: `src/GoingMy.ServiceDefaults/`
 - **Orchestration**: `src/GoingMy.AppHost/`

@@ -79,10 +79,9 @@ export class ComposePostComponent {
     this.submitting.set(true);
     this.error.set(null);
 
-    const mediaFileIds = this.selectedMediaFiles().map(m => m.id);
-    this._postApi.createPostWithMedia({
-      content: this.content().trim(),
-      mediaFileIds
+    // const mediaFileIds = this.selectedMediaFiles().map(m => m.id);
+    this._postApi.createPost({
+      content: this.content().trim()
     }).subscribe({
       next: (response) => {
         this.postCreated.emit(response.post);

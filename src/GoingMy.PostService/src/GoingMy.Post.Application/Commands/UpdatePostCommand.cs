@@ -1,5 +1,7 @@
 using GoingMy.Post.Application.Dtos;
 using GoingMy.Post.Domain.Repositories;
+using GoingMy.Shared.Events;
+using MassTransit;
 using MediatR;
 
 namespace GoingMy.Post.Application.Commands;
@@ -16,18 +18,12 @@ public record UpdatePostCommand(
 /// <summary>
 /// Handler for the UpdatePostCommand.
 /// </summary>
-public class UpdatePostCommandHandler : IRequestHandler<UpdatePostCommand, PostDto>
+public class UpdatePostCommandHandler(IPostRepository postRepository, IPublishEndpoint publishEndpoint)
+    : IRequestHandler<UpdatePostCommand, PostDto>
 {
-    private readonly IPostRepository _postRepository;
-
-    public UpdatePostCommandHandler(IPostRepository postRepository)
-    {
-        _postRepository = postRepository;
-    }
-
     public async Task<PostDto> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
-        var post = await _postRepository.GetByIdAsync(request.Id, cancellationToken)
+        var post = await postRepository.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new InvalidOperationException($"Post with ID {request.Id} not found");
 
         // Verify ownership
@@ -37,7 +33,16 @@ public class UpdatePostCommandHandler : IRequestHandler<UpdatePostCommand, PostD
         }
 
         post.Update(request.Content);
-        var updatedPost = await _postRepository.UpdateAsync(post, cancellationToken);
+        var updatedPost = await postRepository.UpdateAsync(post, cancellationToken);
+
+        await publishEndpoint.Publish(new PostUpdatedEvent
+        {
+            PostId = updatedPost.Id,
+            UserId = updatedPost.UserId,
+            Content = updatedPost.Content,
+            MediaAttachments = updatedPost.MediaAttachments?.Select(m => m.Url).ToList() ?? [],
+            UpdatedAt = updatedPost.UpdatedAt ?? DateTime.UtcNow
+        }, cancellationToken);
 
         return CreatePostCommandHandler.MapToDto(updatedPost);
     }

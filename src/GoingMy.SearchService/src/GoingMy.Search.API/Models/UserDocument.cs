@@ -24,4 +24,5 @@ public class UserDoc
     public List<string> Interests { get; set; } = new List<string>();
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    public SuggestField? Suggest { get; set; }
 }

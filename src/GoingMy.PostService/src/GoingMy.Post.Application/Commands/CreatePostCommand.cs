@@ -1,5 +1,7 @@
 using GoingMy.Post.Application.Dtos;
 using GoingMy.Post.Domain.Repositories;
+using GoingMy.Shared.Events;
+using MassTransit;
 using MediatR;
 using MongoDB.Bson;
 
@@ -17,15 +19,9 @@ public record CreatePostCommand(
 /// <summary>
 /// Handler for the CreatePostCommand.
 /// </summary>
-public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostDto>
+public class CreatePostCommandHandler(IPostRepository postRepository, IPublishEndpoint publishEndpoint)
+    : IRequestHandler<CreatePostCommand, PostDto>
 {
-    private readonly IPostRepository _postRepository;
-
-    public CreatePostCommandHandler(IPostRepository postRepository)
-    {
-        _postRepository = postRepository;
-    }
-
     public async Task<PostDto> Handle(CreatePostCommand request, CancellationToken cancellationToken)
     {
         var post = new Domain.Entities.Post(
@@ -36,7 +32,17 @@ public class CreatePostCommandHandler : IRequestHandler<CreatePostCommand, PostD
             createdAt: DateTime.UtcNow
         );
 
-        var createdPost = await _postRepository.AddAsync(post, cancellationToken);
+        var createdPost = await postRepository.AddAsync(post, cancellationToken);
+
+        await publishEndpoint.Publish(new PostCreatedEvent
+        {
+            PostId = createdPost.Id,
+            UserId = createdPost.UserId,
+            Username = createdPost.Username,
+            Content = createdPost.Content,
+            MediaAttachments = createdPost.MediaAttachments?.Select(m => m.Url).ToList() ?? [],
+            CreatedAt = createdPost.CreatedAt
+        }, cancellationToken);
 
         return MapToDto(createdPost);
     }

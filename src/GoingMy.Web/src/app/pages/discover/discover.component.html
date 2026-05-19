@@ -6,9 +6,9 @@
     <div class="hero-content">
       <h1 class="hero-title">
         <i class="pi pi-compass"></i>
-        Discover People
+        Discover
       </h1>
-      <p class="hero-subtitle">Find and connect with people who share your interests</p>
+      <p class="hero-subtitle">Search people and posts, explore what's trending</p>
     </div>
   </div>
 
@@ -20,21 +20,34 @@
         <input
           class="glass-search-input"
           type="text"
-          placeholder="Search by name or username..."
-          [ngModel]="searchTerm()"
-          (ngModelChange)="searchTerm.set($event)"
+          placeholder="Search people, posts..."
+          [value]="searchTerm()"
+          (input)="onSearchInputChange($any($event.target).value)"
           (keydown)="onSearchKeydown($event)"
+          autocomplete="off"
         />
         @if (searchTerm()) {
-          <button class="clear-btn" (click)="searchTerm.set('')">
+          <button class="clear-btn" (click)="onClearSearch()">
             <i class="pi pi-times"></i>
           </button>
+        }
+        <!-- Suggestions dropdown -->
+        @if (suggestions().length > 0) {
+          <div class="suggestions-dropdown glass-elevated">
+            @for (s of suggestions(); track s.text) {
+              <button class="suggestion-item" type="button" (click)="onSearchInputChange(s.text); onSearch()">
+                <i [class]="s.type === 'user' ? 'pi pi-user' : 'pi pi-file-edit'"></i>
+                <span>{{ s.text }}</span>
+                <span class="suggestion-type">{{ s.type }}</span>
+              </button>
+            }
+          </div>
         }
       </div>
       <p-button
         label="Search"
         icon="pi pi-search"
-        [loading]="searchLoading()"
+        [loading]="isLoading()"
         (onClick)="onSearch()"
         styleClass="glass-search-btn"
       />
@@ -54,15 +67,16 @@
         />
       </div>
 
-      <button
-        class="verified-toggle"
-        [class.active]="verifiedOnly()"
-        (click)="verifiedOnly.set(!verifiedOnly())"
-        type="button"
-      >
-        <i class="pi pi-verified"></i>
-        Verified only
-      </button>
+      <div class="sort-wrapper">
+        <p-selectButton
+          [options]="sortOptions"
+          [ngModel]="sortBy()"
+          (ngModelChange)="sortBy.set($event)"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="glass-select-btn"
+        />
+      </div>
 
       @if (hasSearched()) {
         <button class="clear-all-btn" (click)="onClearSearch()" type="button">
@@ -73,128 +87,239 @@
     </div>
   </div>
 
-  <!-- ── Results ────────────────────────────────────────────── -->
+  <!-- ── Tabs ───────────────────────────────────────────────── -->
   <div class="results-section">
-
-    <!-- Loading Skeletons -->
-    @if (searchLoading()) {
-      <div class="results-grid">
-        @for (_ of [1,2,3,4,5,6]; track $index) {
-          <div class="user-card glass-elevated skeleton-card">
-            <p-skeleton shape="circle" size="4rem" />
-            <div class="skeleton-info">
-              <p-skeleton width="120px" height="1rem" />
-              <p-skeleton width="80px" height="0.8rem" styleClass="mt-1" />
-            </div>
-          </div>
+    <div class="tab-bar">
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === 'users'"
+        (click)="activeTab.set('users')"
+        type="button"
+      >
+        <i class="pi pi-users"></i>
+        People
+        @if (hasUserResults()) {
+          <span class="tab-count">{{ userResults().length }}</span>
         }
-      </div>
-    }
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === 'posts'"
+        (click)="activeTab.set('posts')"
+        type="button"
+      >
+        <i class="pi pi-file-edit"></i>
+        Posts
+        @if (hasPostResults()) {
+          <span class="tab-count">{{ postResults().length }}</span>
+        }
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab() === 'trending'"
+        (click)="activeTab.set('trending')"
+        type="button"
+      >
+        <i class="pi pi-chart-line"></i>
+        Trending
+      </button>
+    </div>
 
-    <!-- Empty State -->
-    @if (isEmpty()) {
-      <app-empty-state
-        icon="pi-users"
-        title="No users found"
-        message="Try a different search term or adjust your filters"
-      />
-    }
+    <!-- ── Users Tab ─────────────────────────────────────────── -->
+    @if (activeTab() === 'users') {
 
-    <!-- Not searched yet -->
-    @if (!hasSearched() && !searchLoading()) {
-      <div class="placeholder-state">
-        <div class="placeholder-icon glass-surface">
-          <i class="pi pi-users"></i>
-        </div>
-        <p class="placeholder-text">Search for people to connect with</p>
-      </div>
-    }
-
-    <!-- Results Grid -->
-    @if (!searchLoading() && hasResults()) {
-      <div class="results-header">
-        <span class="results-count">{{ searchResults().length }} user{{ searchResults().length !== 1 ? 's' : '' }} found</span>
-      </div>
-
-      <div class="results-grid">
-        @for (user of searchResults(); track user.id) {
-          <div class="user-card glass-elevated" [class.own-profile]="user.id === currentUserId()">
-            <!-- Avatar -->
-            <div class="card-avatar-area" (click)="navigateToProfile(user.id)">
-              @if (user.avatarUrl) {
-                <img class="user-avatar" [src]="user.avatarUrl" [alt]="user.username" />
-              } @else {
-                <div class="user-avatar-placeholder">{{ getUserInitials(user) }}</div>
-              }
-              @if (user.isVerified) {
-                <span class="verified-badge" title="Verified">
-                  <i class="pi pi-verified"></i>
-                </span>
-              }
+      @if (isLoading()) {
+        <div class="results-grid">
+          @for (_ of [1,2,3,4,5,6]; track $index) {
+            <div class="user-card glass-elevated skeleton-card">
+              <p-skeleton shape="circle" size="4rem" />
+              <div class="skeleton-info">
+                <p-skeleton width="120px" height="1rem" />
+                <p-skeleton width="80px" height="0.8rem" styleClass="mt-1" />
+              </div>
             </div>
+          }
+        </div>
+      }
 
-            <!-- Info -->
-            <div class="card-info" (click)="navigateToProfile(user.id)">
-              <h3 class="user-fullname">{{ user.firstName }} {{ user.lastName }}</h3>
-              <span class="user-handle">&#64;{{ user.username }}</span>
-              @if (user.bio) {
-                <p class="user-bio">{{ user.bio }}</p>
-              }
-              @if (user.location) {
-                <span class="user-location">
-                  <i class="pi pi-map-marker"></i>
-                  {{ user.location }}
-                </span>
-              }
-              @if (user.interests && user.interests.length > 0) {
-                <div class="interests-tags">
-                  @for (interest of user.interests.slice(0, 3); track interest) {
-                    <span class="interest-tag">{{ interest }}</span>
-                  }
-                  @if (user.interests.length > 3) {
-                    <span class="interest-tag more-tag">+{{ user.interests.length - 3 }}</span>
-                  }
+      @if (!isLoading() && hasSearched() && !hasUserResults()) {
+        <app-empty-state
+          icon="pi-users"
+          title="No people found"
+          message="Try a different search term or check Posts"
+        />
+      }
+
+      @if (!hasSearched() && !isLoading()) {
+        <div class="placeholder-state">
+          <div class="placeholder-icon glass-surface"><i class="pi pi-users"></i></div>
+          <p class="placeholder-text">Search for people to connect with</p>
+        </div>
+      }
+
+      @if (!isLoading() && hasUserResults()) {
+        <div class="results-header">
+          <span class="results-count">{{ userResults().length }} people found</span>
+        </div>
+        <div class="results-grid">
+          @for (user of userResults(); track user.id) {
+            <div class="user-card glass-elevated" [class.own-profile]="user.id === currentUserId()">
+              <div class="card-avatar-area" (click)="navigateToProfile(user.id)">
+                @if (user.avatarUrl) {
+                  <img class="user-avatar" [src]="user.avatarUrl" [alt]="user.username" />
+                } @else {
+                  <div class="user-avatar-placeholder">{{ getUserInitials(user) }}</div>
+                }
+                @if (user.isVerified) {
+                  <span class="verified-badge" title="Verified"><i class="pi pi-verified"></i></span>
+                }
+              </div>
+              <div class="card-info" (click)="navigateToProfile(user.id)">
+                <h3 class="user-fullname">{{ user.firstName }} {{ user.lastName }}</h3>
+                <span class="user-handle">&#64;{{ user.username }}</span>
+                @if (user.bio) { <p class="user-bio">{{ user.bio }}</p> }
+                @if (user.location) {
+                  <span class="user-location">
+                    <i class="pi pi-map-marker"></i> {{ user.location }}
+                  </span>
+                }
+              </div>
+              <div class="card-stats">
+                <div class="stat-item">
+                  <span class="stat-value">{{ user.followersCount }}</span>
+                  <span class="stat-label">Followers</span>
+                </div>
+              </div>
+              @if (user.id !== currentUserId()) {
+                <div class="card-action">
+                  <button
+                    class="follow-btn"
+                    [class.following]="isFollowing(user.id)"
+                    [disabled]="isFollowLoading(user.id)"
+                    (click)="toggleFollow(user)"
+                    type="button"
+                  >
+                    @if (isFollowLoading(user.id)) {
+                      <i class="pi pi-spinner pi-spin"></i>
+                    } @else if (isFollowing(user.id)) {
+                      <i class="pi pi-user-minus"></i> Unfollow
+                    } @else {
+                      <i class="pi pi-user-plus"></i> Follow
+                    }
+                  </button>
                 </div>
               }
             </div>
+          }
+        </div>
+      }
+    }
 
-            <!-- Stats -->
-            <div class="card-stats">
-              <div class="stat-item">
-                <span class="stat-value">{{ user.followersCount }}</span>
-                <span class="stat-label">Followers</span>
+    <!-- ── Posts Tab ─────────────────────────────────────────── -->
+    @if (activeTab() === 'posts') {
+
+      @if (isLoading()) {
+        <div class="posts-list">
+          @for (_ of [1,2,3,4]; track $index) {
+            <div class="post-card glass-elevated skeleton-card">
+              <p-skeleton width="100%" height="5rem" />
+            </div>
+          }
+        </div>
+      }
+
+      @if (!isLoading() && hasSearched() && !hasPostResults()) {
+        <app-empty-state
+          icon="pi-file-edit"
+          title="No posts found"
+          message="Try a different search term"
+        />
+      }
+
+      @if (!hasSearched() && !isLoading()) {
+        <div class="placeholder-state">
+          <div class="placeholder-icon glass-surface"><i class="pi pi-file-edit"></i></div>
+          <p class="placeholder-text">Search to find posts</p>
+        </div>
+      }
+
+      @if (!isLoading() && hasPostResults()) {
+        <div class="results-header">
+          <span class="results-count">{{ postResults().length }} posts found</span>
+        </div>
+        <div class="posts-list">
+          @for (post of postResults(); track post.id) {
+            <div class="post-card glass-elevated" (click)="navigateToPost(post.id)">
+              <div class="post-meta">
+                <span class="post-author">&#64;{{ post.username }}</span>
+                <span class="post-time">{{ formatRelativeTime(post.createdAt) }}</span>
               </div>
-              <div class="stat-item">
-                <span class="stat-value">{{ user.followingCount }}</span>
-                <span class="stat-label">Following</span>
+              <p class="post-content">{{ post.content }}</p>
+              <div class="post-stats">
+                <span class="post-stat"><i class="pi pi-heart"></i> {{ post.likes }}</span>
+                <span class="post-stat"><i class="pi pi-comment"></i> {{ post.comments }}</span>
               </div>
             </div>
+          }
+        </div>
+      }
+    }
 
-            <!-- Follow Button -->
-            @if (user.id !== currentUserId()) {
-              <div class="card-action">
-                <button
-                  class="follow-btn"
-                  [class.following]="isFollowing(user.id)"
-                  [disabled]="isFollowLoading(user.id)"
-                  (click)="toggleFollow(user)"
-                  type="button"
-                >
-                  @if (isFollowLoading(user.id)) {
-                    <i class="pi pi-spinner pi-spin"></i>
-                  } @else if (isFollowing(user.id)) {
-                    <i class="pi pi-user-minus"></i>
-                    Unfollow
-                  } @else {
-                    <i class="pi pi-user-plus"></i>
-                    Follow
-                  }
-                </button>
-              </div>
-            }
-          </div>
-        }
+    <!-- ── Trending Tab ───────────────────────────────────────── -->
+    @if (activeTab() === 'trending') {
+      <div class="trending-controls">
+        <span class="trending-label"><i class="pi pi-fire"></i> Trending in</span>
+        <div class="trending-window-btns">
+          @for (opt of trendingWindowOptions; track opt.value) {
+            <button
+              class="window-btn"
+              [class.active]="trendingWindow() === opt.value"
+              (click)="onTrendingWindowChange($any(opt.value))"
+              type="button"
+            >{{ opt.label }}</button>
+          }
+        </div>
       </div>
+
+      @if (isTrendingLoading()) {
+        <div class="posts-list">
+          @for (_ of [1,2,3]; track $index) {
+            <div class="post-card glass-elevated skeleton-card">
+              <p-skeleton width="100%" height="5rem" />
+            </div>
+          }
+        </div>
+      }
+
+      @if (!isTrendingLoading() && !hasTrending()) {
+        <app-empty-state
+          icon="pi-chart-line"
+          title="No trending posts yet"
+          message="Check back later"
+        />
+      }
+
+      @if (!isTrendingLoading() && hasTrending()) {
+        <div class="posts-list">
+          @for (post of trendingPosts(); track post.postId; let i = $index) {
+            <div class="post-card glass-elevated trending-post" (click)="navigateToPost(post.postId)">
+              <span class="trending-rank">#{{ i + 1 }}</span>
+              <div class="post-body">
+                <div class="post-meta">
+                  <span class="post-author">&#64;{{ post.username }}</span>
+                  <span class="post-time">{{ formatRelativeTime(post.createdAt) }}</span>
+                </div>
+                <p class="post-content">{{ post.content }}</p>
+                <div class="post-stats">
+                  <span class="post-stat"><i class="pi pi-heart"></i> {{ post.likes }}</span>
+                  <span class="post-stat"><i class="pi pi-comment"></i> {{ post.comments }}</span>
+                  <span class="post-stat engagement"><i class="pi pi-bolt"></i> {{ post.engagementScore }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
     }
   </div>
 </div>

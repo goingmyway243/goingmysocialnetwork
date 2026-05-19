@@ -2,6 +2,25 @@
 
 All notable changes to the GoingMy Social Network project are documented in this file.
 
+## [0.16.0] - 2026-05-19
+
+### Fixed
+- **SearchService RabbitMQ Consumer Configuration** — Resolved missing explicit queue bindings for event consumers
+  - **Issue**: Multi-interface consumers (`PostEventConsumer`, `UserEventConsumer`, `PostInteractionConsumer`) were not being triggered by published events due to ambiguous auto-generated queue names from `cfg.ConfigureEndpoints(context)` alone
+  - **Solution**: Added explicit named `cfg.ReceiveEndpoint()` registrations in `Program.cs` for each consumer:
+    - `search-post-events` → `PostEventConsumer` (handles `PostCreatedEvent`, `PostUpdatedEvent`, `PostDeletedEvent`)
+    - `search-user-events` → `UserEventConsumer` (handles `UserRegisteredEvent`, `UserCreatedEvent`, `UserUpdatedEvent`, `UserDeletedEvent`)
+    - `search-post-interactions` → `PostInteractionConsumer` (handles `PostLikedEvent`, `CommentAddedEvent`)
+  - **Pattern**: Follows `NotificationService` methodology of explicit endpoint configuration for reliable RabbitMQ fanout exchange binding
+  - **Result**: Elasticsearch indexes now properly updated in real-time when users are created, posts are published, or interactions occur
+
+### Architecture Notes
+- **Explicit queue naming** ensures consistent RabbitMQ exchange binding across multi-interface consumers
+- **MassTransit pattern**: Kept `cfg.ConfigureEndpoints(context)` as fallback for future consumers
+- **Event parity**: SearchService now maintains Elasticsearch documents in sync with domain events published by AuthService, UserService, and PostService
+
+---
+
 ## [0.15.0] - 2026-05-12
 
 ### Added

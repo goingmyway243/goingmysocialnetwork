@@ -1,6 +1,70 @@
-@GoingMy.Search.API_HostAddress = http://localhost:5070
+@GoingMy.Search.API_HostAddress = https://localhost:7070
+@token = Bearer YOUR_JWT_TOKEN_HERE
 
-GET {{GoingMy.Search.API_HostAddress}}/weatherforecast/
+### Search all (users + posts)
+GET {{GoingMy.Search.API_HostAddress}}/api/search?q=john&page=1&pageSize=20
 Accept: application/json
+Authorization: {{token}}
 
 ###
+
+### Search users only
+GET {{GoingMy.Search.API_HostAddress}}/api/search?q=john&type=users&page=1&pageSize=20
+Accept: application/json
+Authorization: {{token}}
+
+###
+
+### Search posts only
+GET {{GoingMy.Search.API_HostAddress}}/api/search?q=hello&type=posts&page=1&pageSize=20
+Accept: application/json
+Authorization: {{token}}
+
+###
+
+### Search with filters (date range + location + sort by recent)
+GET {{GoingMy.Search.API_HostAddress}}/api/search?q=travel&type=posts&dateFrom=2026-01-01&dateTo=2026-12-31&sortBy=recent&page=1&pageSize=10
+Accept: application/json
+Authorization: {{token}}
+
+###
+
+### Autocomplete suggestions (all types)
+GET {{GoingMy.Search.API_HostAddress}}/api/search/suggest?q=dan
+Accept: application/json
+Authorization: {{token}}
+
+###
+
+### Autocomplete suggestions (users only)
+GET {{GoingMy.Search.API_HostAddress}}/api/search/suggest?q=dan&type=users
+Accept: application/json
+Authorization: {{token}}
+
+###
+
+### Autocomplete suggestions (posts only)
+GET {{GoingMy.Search.API_HostAddress}}/api/search/suggest?q=hel&type=posts
+Accept: application/json
+Authorization: {{token}}
+
+###
+
+### Trending posts (last week, top 10)
+GET {{GoingMy.Search.API_HostAddress}}/api/search/trending?timeWindow=week&size=10
+Accept: application/json
+Authorization: {{token}}
+
+###
+
+### Trending posts (last 24 hours)
+GET {{GoingMy.Search.API_HostAddress}}/api/search/trending?timeWindow=day&size=5
+Accept: application/json
+Authorization: {{token}}
+
+###
+
+### Trending posts (last month, top 20)
+GET {{GoingMy.Search.API_HostAddress}}/api/search/trending?timeWindow=month&size=20
+Accept: application/json
+Authorization: {{token}}
