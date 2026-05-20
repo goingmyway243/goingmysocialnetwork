@@ -14,6 +14,30 @@
   <!-- Post Content -->
   <div class="post-content" (click)="onViewDetail()">
     <p class="post-text">{{ post().content }}</p>
+
+    @if ((post().mediaAttachments?.length ?? 0) > 0) {
+      <div class="post-media-grid" (click)="$event.stopPropagation()">
+        @for (attachment of post().mediaAttachments; track attachment.fileId) {
+          <div class="post-media-item">
+            @if (isVideoAttachment(attachment.contentType)) {
+              <video
+                class="post-media-video"
+                [src]="attachment.url"
+                controls
+                preload="metadata">
+              </video>
+            } @else {
+              <img
+                class="post-media-image"
+                [src]="attachment.url"
+                alt="Post attachment"
+                loading="lazy"
+                (click)="onViewDetail()" />
+            }
+          </div>
+        }
+      </div>
+    }
   </div>
 
   <!-- Post Actions -->

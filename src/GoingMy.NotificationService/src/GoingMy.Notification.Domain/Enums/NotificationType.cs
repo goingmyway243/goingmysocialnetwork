@@ -7,5 +7,7 @@ public enum NotificationType
     NewFollower,
     Mentioned,
     PostShared,
-    FollowRequestAccepted
+    FollowRequestAccepted,
+    PostWithMediaCreated,
+    PostWithMediaFailed
 }

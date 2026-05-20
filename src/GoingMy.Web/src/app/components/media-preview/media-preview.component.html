@@ -1,0 +1,88 @@
+<!-- ── Media Preview Gallery ──────────────────────────────── -->
+<div class="media-preview-container" *ngIf="hasFiles()">
+  <div class="media-preview-header">
+    <span class="media-count">{{ fileCount() }} {{ fileCount() === 1 ? 'file' : 'files' }} attached</span>
+  </div>
+
+  <div class="media-gallery">
+    @for (file of mediaFiles(); track file.id) {
+      <div class="media-item" [class.uploading]="isFileUploading(file.id) || isValidating()" [class.validating]="isFileValidating(file.id)">
+        <!-- ── Thumbnail ────────────────────────────────────── -->
+        <div class="media-thumbnail">
+          @switch (getFileType(file.contentType)) {
+            @case ('image') {
+              <img [src]="file.url" [alt]="file.originalFileName" class="thumbnail-image" />
+            }
+            @case ('video') {
+              <div class="video-placeholder">
+                <i class="pi pi-play"></i>
+              </div>
+            }
+          }
+
+          <!-- ── Overlay Spinner (during upload/validation) ────── -->
+          @if (isFileUploading(file.id) || isFileValidating(file.id)) {
+            <div class="overlay-spinner">
+              <i class="pi pi-spin pi-spinner"></i>
+              <span class="spinner-label">{{ isFileValidating(file.id) ? 'Validating...' : 'Uploading...' }}</span>
+            </div>
+          }
+
+          <!-- ── Error Overlay ──────────────────────────────────── -->
+          @if (isFileFailed(file.id)) {
+            <div class="overlay-error">
+              <i class="pi pi-exclamation-circle"></i>
+              <span class="error-label">Failed</span>
+            </div>
+          }
+        </div>
+
+        <!-- ── File Info ──────────────────────────────────────── -->
+        <div class="media-info">
+          <div class="file-name-wrapper">
+            <span class="file-name" [title]="file.originalFileName">{{ file.originalFileName }}</span>
+            <span class="file-size">{{ getFileSize(file.fileSizeBytes) }}</span>
+          </div>
+
+          <!-- ── Progress Bar ──────────────────────────────────── -->
+          @if (isFileUploading(file.id)) {
+            <p-progressBar
+              [value]="getFileProgress(file.id)"
+              [showValue]="false"
+              class="upload-progress"
+              styleClass="media-progress-bar">
+            </p-progressBar>
+          }
+
+          <!-- ── Validating Indicator ──────────────────────────── -->
+          @if (isFileValidating(file.id)) {
+            <div class="validating-indicator">
+              <span>Validating...</span>
+            </div>
+          }
+
+          <!-- ── File Dimensions (images only) ─────────────────── -->
+          @if (getFileType(file.contentType) === 'image' && file.width && file.height) {
+            <span class="file-dimensions">{{ file.width }} × {{ file.height }}px</span>
+          }
+
+          <!-- ── Video Duration ─────────────────────────────────── -->
+          @if (getFileType(file.contentType) === 'video' && file.durationSeconds) {
+            <span class="file-duration">{{ (file.durationSeconds / 60) | number: '1.0-0' }}m video</span>
+          }
+        </div>
+
+        <!-- ── Remove Button ──────────────────────────────────── -->
+        <button
+          class="remove-btn"
+          type="button"
+          (click)="onRemoveClick(file.id)"
+          [disabled]="isFileUploading(file.id) || isFileValidating(file.id)"
+          [attr.aria-label]="'Remove ' + file.originalFileName"
+          title="Remove">
+          <i class="pi pi-trash"></i>
+        </button>
+      </div>
+    }
+  </div>
+</div>

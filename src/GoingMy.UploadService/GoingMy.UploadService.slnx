@@ -5,4 +5,7 @@
     <Project Path="src/GoingMy.Upload.Domain/GoingMy.Upload.Domain.csproj" />
     <Project Path="src/GoingMy.Upload.Infrastructure/GoingMy.Upload.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GoingMy.Upload.Tests/GoingMy.Upload.Tests.csproj" />
+  </Folder>
 </Solution>

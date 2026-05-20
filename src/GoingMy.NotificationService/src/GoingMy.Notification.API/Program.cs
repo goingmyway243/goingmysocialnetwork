@@ -44,6 +44,7 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<PostLikedNotificationConsumer>();
     x.AddConsumer<CommentAddedNotificationConsumer>();
     x.AddConsumer<UserFollowedNotificationConsumer>();
+    x.AddConsumer<PostWithMediaSagaCompletedNotificationConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -57,6 +58,9 @@ builder.Services.AddMassTransit(x =>
 
         cfg.ReceiveEndpoint($"{nameof(UserFollowedEvent)}_notification", e =>
             e.ConfigureConsumer<UserFollowedNotificationConsumer>(context));
+
+        cfg.ReceiveEndpoint($"{nameof(PostWithMediaSagaCompletedEvent)}_notification", e =>
+            e.ConfigureConsumer<PostWithMediaSagaCompletedNotificationConsumer>(context));
 
         cfg.ConfigureEndpoints(context);
     });

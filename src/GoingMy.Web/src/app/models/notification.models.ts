@@ -4,7 +4,9 @@ export enum NotificationType {
   NewFollower = 'NewFollower',
   Mentioned = 'Mentioned',
   PostShared = 'PostShared',
-  FollowRequestAccepted = 'FollowRequestAccepted'
+  FollowRequestAccepted = 'FollowRequestAccepted',
+  PostWithMediaCreated = 'PostWithMediaCreated',
+  PostWithMediaFailed = 'PostWithMediaFailed'
 }
 
 export interface NotificationDto {

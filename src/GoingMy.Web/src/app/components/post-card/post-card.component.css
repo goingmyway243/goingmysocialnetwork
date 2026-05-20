@@ -75,6 +75,30 @@
   line-height: 1.6;
   color: var(--text-color-secondary);
   margin: 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.post-media-grid {
+  margin-top: 0.875rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.625rem;
+}
+
+.post-media-item {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border-subtle);
+  background: var(--glass-surface-bg);
+}
+
+.post-media-image,
+.post-media-video {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  max-height: 340px;
 }
 
 /* ===== POST ACTIONS ===== */

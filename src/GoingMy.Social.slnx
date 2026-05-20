@@ -50,12 +50,18 @@
     <Project Path="GoingMy.UploadService/src/GoingMy.Upload.Domain/GoingMy.Upload.Domain.csproj" />
     <Project Path="GoingMy.UploadService/src/GoingMy.Upload.Infrastructure/GoingMy.Upload.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/GoingMy.UploadService/tests/">
+    <Project Path="GoingMy.UploadService/tests/GoingMy.Upload.Tests/GoingMy.Upload.Tests.csproj" />
+  </Folder>
   <Folder Name="/GoingMy.NotificationService/" />
   <Folder Name="/GoingMy.NotificationService/src/">
     <Project Path="GoingMy.NotificationService/src/GoingMy.Notification.API/GoingMy.Notification.API.csproj" />
     <Project Path="GoingMy.NotificationService/src/GoingMy.Notification.Application/GoingMy.Notification.Application.csproj" />
     <Project Path="GoingMy.NotificationService/src/GoingMy.Notification.Domain/GoingMy.Notification.Domain.csproj" />
     <Project Path="GoingMy.NotificationService/src/GoingMy.Notification.Infrastructure/GoingMy.Notification.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/GoingMy.NotificationService/tests/">
+    <Project Path="GoingMy.NotificationService/tests/GoingMy.Notification.Tests/GoingMy.Notification.Tests.csproj" />
   </Folder>
   <Project Path="GoingMy.AppHost/GoingMy.AppHost.csproj" />
   <Project Path="GoingMy.ServiceDefaults/GoingMy.ServiceDefaults.csproj" />

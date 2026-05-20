@@ -8,7 +8,6 @@ public class PostMediaStateMachine : MassTransitStateMachine<PostMediaSagaState>
     public State Validating { get; private set; } = null!;
     public State CreatingPost { get; private set; } = null!;
     public State AttachingMedia { get; private set; } = null!;
-    public State Compensating { get; private set; } = null!;
 
     public Event<PostWithMediaRequestedEvent> PostWithMediaRequested { get; private set; } = null!;
     public Event<MediaValidatedEvent> MediaValidated { get; private set; } = null!;
@@ -63,6 +62,15 @@ public class PostMediaStateMachine : MassTransitStateMachine<PostMediaSagaState>
 
             When(MediaValidationFailed)
                 .Then(ctx => ctx.Saga.ErrorMessage = ctx.Message.Reason)
+                .ThenAsync(ctx => PublishOrphanedFileEventsAsync(ctx))
+                .PublishAsync(ctx => ctx.Init<PostWithMediaSagaCompletedEvent>(new PostWithMediaSagaCompletedEvent
+                {
+                    CorrelationId = ctx.Message.CorrelationId,
+                    UserId = ctx.Saga.UserId,
+                    PostId = null,
+                    IsSuccess = false,
+                    ErrorMessage = ctx.Message.Reason
+                }))
                 .Finalize());
 
         During(CreatingPost,
@@ -78,18 +86,40 @@ public class PostMediaStateMachine : MassTransitStateMachine<PostMediaSagaState>
 
             When(PostCreationFailed)
                 .Then(ctx => ctx.Saga.ErrorMessage = ctx.Message.Reason)
-                .TransitionTo(Compensating));
+                .ThenAsync(ctx => PublishOrphanedFileEventsAsync(ctx))
+                .PublishAsync(ctx => ctx.Init<PostWithMediaSagaCompletedEvent>(new PostWithMediaSagaCompletedEvent
+                {
+                    CorrelationId = ctx.Message.CorrelationId,
+                    UserId = ctx.Saga.UserId,
+                    PostId = null,
+                    IsSuccess = false,
+                    ErrorMessage = ctx.Message.Reason
+                }))
+                .Finalize());
 
         During(AttachingMedia,
             When(MediaAttachedToPost)
-                .Finalize());
-
-        During(Compensating,
-            // Publish event to mark media files as orphaned so the cleanup worker handles them
-            When(PostCreationFailed)
-                .Then(ctx => ctx.Saga.ErrorMessage = ctx.Message.Reason)
+                .PublishAsync(ctx => ctx.Init<PostWithMediaSagaCompletedEvent>(new PostWithMediaSagaCompletedEvent
+                {
+                    CorrelationId = ctx.Message.CorrelationId,
+                    UserId = ctx.Saga.UserId,
+                    PostId = ctx.Message.PostId,
+                    IsSuccess = true,
+                    ErrorMessage = null
+                }))
                 .Finalize());
 
         SetCompletedWhenFinalized();
+    }
+
+    private static async Task PublishOrphanedFileEventsAsync(BehaviorContext<PostMediaSagaState> context)
+    {
+        foreach (var fileId in context.Saga.MediaFileIds)
+        {
+            await context.Publish(new FileOrphanedEvent
+            {
+                FileId = fileId
+            });
+        }
     }
 }

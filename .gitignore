@@ -103,3 +103,6 @@ karma-*.js
 
 # ===== MCP workspace files =====
 .playwright-mcp
+
+# ===== Local uploaded files =====
+uploads

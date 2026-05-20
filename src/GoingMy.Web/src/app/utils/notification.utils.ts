@@ -14,6 +14,10 @@ export function getNotificationText(n: NotificationDto): string {
       return `<strong>${n.actorUsername}</strong> shared your post`;
     case NotificationType.FollowRequestAccepted:
       return `<strong>${n.actorUsername}</strong> accepted your follow request`;
+    case NotificationType.PostWithMediaCreated:
+      return 'Your post with attachments has been published successfully';
+    case NotificationType.PostWithMediaFailed:
+      return n.referencePreview ?? 'Your post with attachments could not be published';
     default:
       return `<strong>${n.actorUsername}</strong> interacted with you`;
   }
@@ -27,6 +31,8 @@ export function getNotificationIcon(type: NotificationType): string {
     case NotificationType.Mentioned: return 'pi pi-at';
     case NotificationType.PostShared: return 'pi pi-share-alt';
     case NotificationType.FollowRequestAccepted: return 'pi pi-check-circle';
+    case NotificationType.PostWithMediaCreated: return 'pi pi-images';
+    case NotificationType.PostWithMediaFailed: return 'pi pi-exclamation-triangle';
     default: return 'pi pi-bell';
   }
 }
@@ -41,6 +47,10 @@ export function getNotificationRouterLink(n: NotificationDto): string[] {
     case NotificationType.NewFollower:
     case NotificationType.FollowRequestAccepted:
       return n.referenceId ? ['/dashboard/profile', n.referenceId] : ['/dashboard/home'];
+    case NotificationType.PostWithMediaCreated:
+      return n.referenceId ? ['/posts', n.referenceId] : ['/dashboard/home'];
+    case NotificationType.PostWithMediaFailed:
+      return ['/dashboard/create-post'];
     default:
       return ['/dashboard/notifications'];
   }

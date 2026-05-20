@@ -96,6 +96,10 @@ export class PostCardComponent {
     if (userId) this.authorClick.emit(userId);
   }
 
+  isVideoAttachment(contentType: string): boolean {
+    return contentType.startsWith('video/');
+  }
+
   // ── 4. Utilities ─────────────────────────────────────────────
   formatDate(dateString: string): string {
     const date = new Date(dateString);

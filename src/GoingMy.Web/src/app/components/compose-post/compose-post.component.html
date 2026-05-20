@@ -14,6 +14,15 @@
   </p-button>
 </div>
 
+<!-- ── Hidden File Input ────────────────────────────────── -->
+<input
+  #fileInput
+  type="file"
+  multiple
+  accept="image/*,video/mp4,video/webm"
+  style="display: none"
+  (change)="onMediaFilesSelected($event)" />
+
 <!-- ── Compose Modal ────────────────────────────────────── -->
 <p-dialog
   header="Create Post"
@@ -36,12 +45,28 @@
       [value]="content()"
       (input)="onContentChange($any($event.target).value)"
       [class.invalid]="contentTooLong()"
-      [disabled]="submitting()">
+      [disabled]="submitting() || mediaUploading() || mediaValidating()">
     </textarea>
     <span class="char-counter" [class.warn]="contentTooLong()">
       {{ contentLength() }}/2000
     </span>
   </div>
+
+  <!-- Media Preview Gallery -->
+  <app-media-preview
+    [mediaFiles]="selectedMediaFiles()"
+    [uploadProgress]="uploadProgress()"
+    [isValidating]="mediaValidating()"
+    (removeMedia)="removeMedia($event)">
+  </app-media-preview>
+
+  <!-- Media Error -->
+  @if (mediaError()) {
+    <div class="dialog-error media-error">
+      <i class="pi pi-exclamation-circle"></i>
+      {{ mediaError() }}
+    </div>
+  }
 
   <!-- AI Writing Assistant -->
   <div class="ai-toolbar-wrapper">
@@ -50,7 +75,7 @@
       type="button"
       [class.active]="aiPanelVisible()"
       (click)="toggleAiPanel()"
-      [disabled]="submitting()">
+      [disabled]="submitting() || mediaUploading()">
       <span class="ai-icon">✦</span>
       <span>AI Assistant</span>
     </button>
@@ -121,6 +146,9 @@
     </div>
   }
 
+  <!-- Toast Notifications -->
+  <p-toast position="top-right"></p-toast>
+
   <!-- Footer actions -->
   <ng-template pTemplate="footer">
     <div class="dialog-footer">
@@ -128,13 +156,24 @@
         label="Cancel"
         [text]="true"
         styleClass="cancel-btn"
-        [disabled]="submitting()"
+        [disabled]="submitting() || mediaUploading() || mediaValidating()"
         (onClick)="closeDialog()">
       </p-button>
+
+      <p-button
+        icon="pi pi-paperclip"
+        [text]="true"
+        styleClass="attach-btn"
+        [disabled]="!canAttachMore() || mediaUploading()"
+        pTooltip="Attach images or videos"
+        tooltipPosition="top"
+        (onClick)="onAttachClick()">
+      </p-button>
+
       <p-button
         label="Post"
         icon="pi pi-send"
-        [loading]="submitting()"
+        [loading]="submitting() || mediaValidating()"
         [disabled]="!canSubmit()"
         styleClass="post-btn"
         (onClick)="submit()">

@@ -294,3 +294,25 @@
   background: var(--glass-surface-hover);
   color: var(--text-color);
 }
+
+/* ── Media Error ───────────────────────────────────────────── */
+
+.media-error {
+  margin-top: 0.75rem;
+}
+
+/* ── Attach Button ─────────────────────────────────────────── */
+
+.attach-btn {
+  transition: var(--transition-fast);
+}
+
+.attach-btn:not(:disabled):hover {
+  color: var(--text-color);
+  background: var(--glass-surface-bg);
+}
+
+.attach-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
