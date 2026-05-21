@@ -14,7 +14,7 @@ applyTo: "src/GoingMy.Web/**/*.{ts,html,css,scss,json}"
 - **Framework**: Angular 20 (standalone components)
 - **UI Library**: PrimeNG
 - **State Management**: Angular Signals
-- **Design System**: Apple glassmorphism aesthetic
+- **Design System**: Apple liquid glass aesthetic
 - **Language**: TypeScript (strict mode)
 
 ---
@@ -168,9 +168,9 @@ Define custom classes in `styles.css` and apply them via `styleClass`:
 
 ---
 
-## Glassmorphism Design System
+## Liquid Glass Design System
 
-Apply the Apple glassmorphism aesthetic consistently across all components.
+Apply the Apple liquid glass aesthetic consistently across all components.
 
 ### Core Properties
 ```css

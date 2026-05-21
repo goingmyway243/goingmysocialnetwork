@@ -1,7 +1,7 @@
 # GoingMy Social Network - AI Agent Instructions
 
 ## Project Overview
-GoingMy is a modern social network platform built with microservice architecture principles. The project emphasizes scalability, maintainability, and contemporary UI/UX design patterns inspired by Apple's glassmorphism aesthetic.
+GoingMy is a modern social network platform built with microservice architecture principles. The project emphasizes scalability, maintainability, and contemporary UI/UX design patterns inspired by Apple's liquid glass aesthetic.
 
 ---
 
@@ -44,7 +44,7 @@ The project has dedicated instruction files per tech stack. **Always load the re
 - **Framework**: Angular 20
 - **UI Library**: PrimeNG
 - **State Management**: Angular Signals
-- **Design System**: Apple glassmorphism aesthetic
+- **Design System**: Apple liquid glass aesthetic
 
 ---
 

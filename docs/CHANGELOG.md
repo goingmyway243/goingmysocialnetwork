@@ -73,7 +73,7 @@ All notable changes to the GoingMy Social Network project are documented in this
   - **Frontend** — `AuthService.hasRole(role)`: reads `role` claim from OIDC identity token, handles both single-value and array claim formats
   - **Frontend** — `adminGuard`: redirects unauthenticated users to OIDC login, non-admin users to `/dashboard`
   - **Frontend** — `AdminApiService`: typed HTTP client for all six admin endpoints (user list, set status, revoke tokens, user stats, post stats)
-  - **Frontend** — Separate `/admin` route section (lazy-loaded) with its own glassmorphism layout:
+  - **Frontend** — Separate `/admin` route section (lazy-loaded) with its own liquid glass layout:
     - `AdminLayoutComponent` + `AdminHeaderComponent` + `AdminSidebarComponent` (links: Dashboard, Users; Back to App button)
     - `AdminDashboardComponent`: stats cards for users (total, active, admin, inactive) and content (posts, likes, comments, 7-day posts), plus PrimeNG Chart.js line chart for 30-day registration trend
     - `AdminUsersComponent`: PrimeNG DataTable with server-side pagination (20/page), debounced search, role badge, activate/deactivate toggle with confirmation dialog, revoke-tokens button with confirmation dialog
@@ -376,7 +376,7 @@ All notable changes to the GoingMy Social Network project are documented in this
 ## [0.5.0] - 2026-04-03
 
 ### Added
-- **Liquid Glass Design System**: Complete Apple-inspired glassmorphism aesthetic for dashboard UI
+- **Liquid Glass Design System**: Complete Apple-inspired liquid glass aesthetic for dashboard UI
   - 3-tier elevation system with CSS variables: `--glass-surface-bg` (0.08), `--glass-elevated-bg` (0.12), `--glass-overlay-bg` (0.18)
   - Performance-optimized blur scale: 8px/16px/24px with automatic performance mode for low-end devices
   - Comprehensive shadow elevation scale (sm/md/lg/xl) for depth hierarchy
@@ -414,7 +414,7 @@ All notable changes to the GoingMy Social Network project are documented in this
   - Keyboard focus rings with gradient styling
   - Full `prefers-reduced-motion` support
 - **PrimeNG Theme Integration**: ([app.theme.ts](../src/GoingMy.Web/src/app/configs/app.theme.ts))
-  - Extended Lara theme with glassmorphism tokens
+  - Extended Lara theme with liquid glass tokens
   - Mapped surface tokens to CSS variables for consistency
   - Global styling properties for border radius and transitions
 - **Accessibility & Performance**:
@@ -499,7 +499,7 @@ All notable changes to the GoingMy Social Network project are documented in this
 - **Documentation structure**: New `./docs/` folder for extended guidelines and architectural decisions
 - **.instruction.md file**: Comprehensive AI agent instructions for working on GoingMy project
 - **Code Flow Blocks pattern guidance**: Modern structured approach for Angular components
-- **Glassmorphism design system reference**: Integration guidelines for Apple UI aesthetic in PrimeNG
+- **liquid glass design system reference**: Integration guidelines for Apple UI aesthetic in PrimeNG
 
 ### Changed
 - **Project initialization**: Updated to use .NET 10 as the primary framework

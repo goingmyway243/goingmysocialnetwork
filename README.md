@@ -34,7 +34,7 @@
 - **Authentication**: OpenIddict PKCE OAuth 2.0 with JWT tokens
 - **Rate Limiting**: 100 req/10 sec per IP at API Gateway
 - **Event-Driven**: RabbitMQ-powered service integration
-- **Glassmorphism UI**: Apple-inspired design system with PrimeNG
+- **Liquid glass UI**: Apple-inspired design system with PrimeNG
 
 ## Architecture
 
@@ -100,7 +100,7 @@ Each service follows **Clean Architecture**:
 | State | Angular Signals | MIT |
 | HTTP | Angular HttpClient | MIT |
 | Language | TypeScript (strict mode) | Apache 2.0 |
-| Styling | CSS + Glassmorphism design tokens | Custom |
+| Styling | CSS + Liquid Glass design tokens | Custom |
 
 ### Infrastructure
 | Component | Technology | License |
