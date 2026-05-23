@@ -375,19 +375,6 @@ html {
   -webkit-backdrop-filter: var(--glass-blur-md) saturate(150%);
 }
 
-/* Legacy glass class - for backward compatibility */
-.glass {
-  position: relative;
-  background: var(--glass-elevated-bg);
-  backdrop-filter: var(--glass-blur-md) saturate(180%);
-  -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
-  border: 1px solid var(--glass-border-base);
-  border-radius: 2rem;
-  padding: 1.25rem;
-  box-shadow: var(--glass-shadow-md),
-    inset 0 1px 2px var(--glass-highlight-inner);
-}
-
 /* ===== FORM INPUTS WITH GLASS EFFECT ===== */
 
 input.p-inputtext {
@@ -591,6 +578,7 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
 .p-card.comment-compose-card,
 .p-card.loading-card {
   background: var(--glass-elevated-bg);
+  color: var(--text-color);
   backdrop-filter: var(--glass-blur-md) saturate(180%);
   -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
   border: 1px solid var(--glass-border-base);

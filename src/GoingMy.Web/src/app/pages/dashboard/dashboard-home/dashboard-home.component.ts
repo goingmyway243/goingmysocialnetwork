@@ -56,7 +56,15 @@ export class DashboardHomeComponent implements OnInit {
       next: (data) => {
         const raw = Array.isArray((data as any).posts) ? (data as any).posts : (Array.isArray(data) ? data : []);
         const posts: Post[] = (raw as Post[]).map(p => ({ ...p, likes: p.likes ?? 0, comments: p.comments ?? 0 }));
-        this.posts.set(posts);
+        this.posts.set([{
+    id: 'temp-1',
+    userId: 'temp-user',
+    username: 'Loading...',
+    content: 'Loading posts...',
+    createdAt: new Date().toISOString(),
+    likes: 0,
+    comments: 0
+  }]);
         this.loading.set(false);
         const map = new Map<string, PostCommentsState>();
         posts.forEach(p => map.set(p.id, { expanded: false, loading: false, comments: [], newComment: '', submitting: false }));

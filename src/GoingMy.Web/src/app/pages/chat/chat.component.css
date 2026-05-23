@@ -85,19 +85,6 @@
 }
 
 /* Search inside header */
-.chat-search-wrapper {
-  margin-left: auto;
-  position: relative;
-}
-.chat-search-wrapper .pi-search {
-  position: absolute;
-  left: 11px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: rgba(255,255,255,0.35);
-  font-size: 0.78rem;
-  pointer-events: none;
-}
 
 /* Message stream */
 .message-stream {

@@ -86,14 +86,8 @@
   margin-top: 0.25rem;
 }
 
-.char-counter.warn,
-.char-warn {
+.char-counter.warn {
   color: rgba(239, 68, 68, 0.8);
-}
-
-.char-warn {
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
 }
 
 /* ── Error ─────────────────────────────────────────────────── */

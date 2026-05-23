@@ -26,6 +26,7 @@ export class AiChatService {
   // ── 3. Derived State ─────────────────────────────────────────
   readonly hasConversations = computed(() => this.conversations().length > 0);
   readonly selectedId = computed(() => this.selectedConversation()?.id ?? null);
+  readonly latestConversation = computed(() => this.conversations().length > 0 ? this.conversations()[0] : null);
 
   // ── 4. Lifecycle ─────────────────────────────────────────────
   constructor() {

@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { ConversationDto, MessageDto, PaginatedResult, ReadReceiptDto, TypingUser } from '../models/chat.models';
 import { ChatApiService } from './chat-api.service';
 import { ChatSignalRService } from './chat-signalr.service';
+import { AiChatService } from './ai-chat.service';
 
 export interface NewMessageNotification {
   senderUsername: string;
@@ -16,6 +17,7 @@ export class ChatStateService implements OnDestroy {
   // ── 1. Dependencies ─────────────────────────────────────────
   private readonly _api = inject(ChatApiService);
   private readonly _signalR = inject(ChatSignalRService);
+  private readonly _aiChat = inject(AiChatService);
   private readonly _subs: Subscription[] = [];
 
   // ── 2. State ────────────────────────────────────────────────
@@ -80,7 +82,8 @@ export class ChatStateService implements OnDestroy {
     this.error.set(null);
     this._api.getConversations().subscribe({
       next: convs => {
-        this.conversations.set(convs);
+        this.conversations.set(convs.filter(c => !c.isAiConversation));
+        this._aiChat.conversations.set(convs.filter(c => c.isAiConversation));
         this.loadingConversations.set(false);
       },
       error: () => {
