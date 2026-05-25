@@ -153,6 +153,57 @@
 .empty-title { font-size: 1.25rem; font-weight: 700; color: #fff; margin: 0; }
 .empty-subtitle { font-size: 0.88rem; color: rgba(255,255,255,0.48); margin: 0; line-height: 1.6; max-width: 300px; }
 
+/* ── AI chat states ─────────────────────────────────────────── */
+.ai-recipient-avatar {
+  background: linear-gradient(135deg, rgba(92, 133, 245, 0.9), rgba(74, 220, 186, 0.8));
+  color: #fff;
+}
+
+.recipient-status.ai-status {
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.recipient-status.ai-status::before {
+  background: rgba(132, 227, 255, 0.9);
+}
+
+.ai-streaming-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 8px;
+}
+
+.ai-streaming-bubble {
+  max-width: 65%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  background: rgba(255,255,255,0.09);
+  color: var(--text-primary, #fff);
+}
+
+.ai-typing-bubble {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.ai-streaming-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: currentColor;
+  animation: aiCursorBlink 0.8s step-end infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}
+
+@keyframes aiCursorBlink {
+  50% { opacity: 0; }
+}
+
 /* ── Scrollbars ──────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

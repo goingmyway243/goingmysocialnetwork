@@ -23,6 +23,7 @@ export class ChatStateService implements OnDestroy {
   // ── 2. State ────────────────────────────────────────────────
   readonly conversations = signal<ConversationDto[]>([]);
   readonly selectedConversationId = signal<string | null>(null);
+  readonly isAiMode = signal(false);
   readonly messages = signal<Map<string, MessageDto[]>>(new Map());
   readonly readReceipts = signal<Map<string, ReadReceiptDto[]>>(new Map());
   readonly typingUsers = signal<Map<string, TypingUser[]>>(new Map());
@@ -83,7 +84,7 @@ export class ChatStateService implements OnDestroy {
     this._api.getConversations().subscribe({
       next: convs => {
         this.conversations.set(convs.filter(c => !c.isAiConversation));
-        this._aiChat.conversations.set(convs.filter(c => c.isAiConversation));
+        this._aiChat.setConversationFromList(convs.find(c => c.isAiConversation) ?? null);
         this.loadingConversations.set(false);
       },
       error: () => {
@@ -94,6 +95,8 @@ export class ChatStateService implements OnDestroy {
   }
 
   async selectConversation(conversationId: string): Promise<void> {
+    await this.exitAiMode();
+
     const prev = this.selectedConversationId();
     if (prev === conversationId) return;
 
@@ -108,6 +111,30 @@ export class ChatStateService implements OnDestroy {
     this.loadMessages(conversationId, 0);
     this._loadReadReceipts(conversationId);
     this.markConversationAsRead(conversationId);
+  }
+
+  async enterAiMode(): Promise<void> {
+    if (this.isAiMode()) return;
+
+    const previousConversationId = this.selectedConversationId();
+    if (previousConversationId) {
+      await this._signalR.leaveConversation(previousConversationId);
+    }
+
+    this.selectedConversationId.set(null);
+    this.searchResults.set(null);
+    this.searchQuery.set('');
+    this.pagination.set({ pageNumber: 0, hasMore: false });
+    this.isAiMode.set(true);
+
+    await this._aiChat.selectAiConversation();
+  }
+
+  async exitAiMode(): Promise<void> {
+    if (!this.isAiMode()) return;
+
+    this.isAiMode.set(false);
+    await this._aiChat.deselectAiConversation();
   }
 
   createConversation(recipientId: string, recipientUsername: string): void {

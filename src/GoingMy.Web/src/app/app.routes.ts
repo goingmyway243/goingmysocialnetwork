@@ -36,10 +36,6 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/chat/chat.component').then(m => m.ChatComponent)
       },
       {
-        path: 'ai-assistant',
-        loadComponent: () => import('./pages/ai-chat/ai-chat.component').then(m => m.AiChatComponent)
-      },
-      {
         path: 'notifications',
         loadComponent: () => import('./pages/dashboard/notifications/notifications-page.component').then(m => m.NotificationsPageComponent)
       },

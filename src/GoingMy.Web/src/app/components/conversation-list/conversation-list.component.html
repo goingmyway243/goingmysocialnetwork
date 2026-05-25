@@ -36,7 +36,7 @@
     } @else {
         <div
             class="conversation-item"
-            [ngClass]="{ active: _isAiConversationSelected() }"
+            [ngClass]="{ active: _state.isAiMode() }"
             (click)="selectAiConversation()"
         >
             <div class="conversation-avatar online"><i class="pi pi-sparkles"></i></div>

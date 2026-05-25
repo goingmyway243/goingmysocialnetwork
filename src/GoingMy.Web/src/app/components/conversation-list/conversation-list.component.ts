@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { DatePipe, NgClass } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormsModule } from '@angular/forms';
@@ -18,18 +18,9 @@ export class ConversationListComponent {
   readonly _aiState = inject(AiChatService);
   private readonly _auth = inject(AuthService);
 
-  readonly _aiConv = computed(() => this._aiState.latestConversation());
+  readonly _aiConv = computed(() => this._aiState.aiConversation());
 
   _searchTerm = '';
-  _isAiConversationSelected = signal(false);
-
-  constructor() {
-    effect(() => {
-      if (this._isAiConversationSelected()){
-        this._state.selectConversation('');
-      }
-    });
-  }
 
   filteredConversations() {
     const term = this._searchTerm.toLowerCase();
@@ -44,12 +35,7 @@ export class ConversationListComponent {
   }
 
   selectAiConversation(): void {
-    if (this._aiConv()) {
-      this._isAiConversationSelected.set(true);
-    }
-    else {
-      this._aiState.createNewConversation();
-    }
+    this._state.enterAiMode();
   }
 
   getRecipientName(conv: ConversationDto): string {

@@ -1,19 +1,31 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { ConversationDto, MessageDto } from '../../models/chat.models';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { MessageDto } from '../../models/chat.models';
 import { ChatStateService } from '../../services/chat-state.service';
-import { ChatSignalRService } from '../../services/chat-signalr.service';
 import { ConversationListComponent } from '../../components/conversation-list/conversation-list.component';
 import { MessageThreadComponent } from '../../components/message-thread/message-thread.component';
 import { ComposeAreaComponent } from '../../components/compose-area/compose-area.component';
+import { AiMessageThreadComponent } from '../../components/ai-message-thread/ai-message-thread.component';
+import { AiComposeAreaComponent } from '../../components/ai-compose-area/ai-compose-area.component';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [ConversationListComponent, MessageThreadComponent, ComposeAreaComponent],
+  imports: [
+    ConversationListComponent,
+    MessageThreadComponent,
+    ComposeAreaComponent,
+    AiMessageThreadComponent,
+    AiComposeAreaComponent
+  ],
   styleUrl: './chat.component.css',
   template: `
     <div class="chat-container">
-      @if (_state.selectedConversationId()) {
+      @if (_state.isAiMode()) {
+        <div class="message-wrapper">
+          <app-ai-message-thread />
+          <app-ai-compose-area />
+        </div>
+      } @else if (_state.selectedConversationId()) {
         <div class="message-wrapper">
           <app-message-thread
             (editMessageRequested)="onEditRequested($event)"

@@ -1,10 +1,9 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { AiConversationResponse, ConversationDto, MessageDto, PaginatedResult } from '../models/chat.models';
+import { ConversationDto, MessageDto, PaginatedResult } from '../models/chat.models';
 import { ChatSignalRService } from './chat-signalr.service';
-import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AiChatService {
@@ -12,21 +11,18 @@ export class AiChatService {
   // ── 1. Dependencies ─────────────────────────────────────────
   private readonly _http = inject(HttpClient);
   private readonly _signalR = inject(ChatSignalRService);
-  private readonly _auth = inject(AuthService);
   private readonly _baseUrl = `${environment.apiGatewayUrl}/api/chat`;
 
   // ── 2. State ─────────────────────────────────────────────────
-  readonly conversations = signal<ConversationDto[]>([]);
-  readonly selectedConversation = signal<ConversationDto | null>(null);
+  readonly aiConversation = signal<ConversationDto | null>(null);
   readonly messages = signal<MessageDto[]>([]);
   readonly isLoading = signal(false);
   readonly isAiResponding = signal(false);
   readonly streamingContent = signal('');
+  readonly isSelected = signal(false);
 
   // ── 3. Derived State ─────────────────────────────────────────
-  readonly hasConversations = computed(() => this.conversations().length > 0);
-  readonly selectedId = computed(() => this.selectedConversation()?.id ?? null);
-  readonly latestConversation = computed(() => this.conversations().length > 0 ? this.conversations()[0] : null);
+  readonly selectedId = computed(() => this.aiConversation()?.id ?? null);
 
   // ── 4. Lifecycle ─────────────────────────────────────────────
   constructor() {
@@ -36,68 +32,87 @@ export class AiChatService {
   private _registerSignalRListeners(): void {
     // User's own message echoed back via ReceiveMessage
     this._signalR.messageReceived$.subscribe(msg => {
-      if (this.selectedId() === msg.conversationId) {
+      if (this.isSelected() && this.selectedId() === msg.conversationId) {
         this.messages.update(msgs => [...msgs, msg]);
       }
     });
 
     // AI is streaming: accumulate tokens into streamingContent
     this._signalR.aiTokenReceived$.subscribe(token => {
-      this.streamingContent.update(current => current + token);
+      if (this.isSelected()) {
+        this.streamingContent.update(current => current + token);
+      }
     });
 
     // AI stream finished: swap streaming buffer for the real persisted message
     this._signalR.aiMessageComplete$.subscribe(msg => {
       this.isAiResponding.set(false);
       this.streamingContent.set('');
-      if (this.selectedId() === msg.conversationId) {
+      if (this.isSelected() && this.selectedId() === msg.conversationId) {
         this.messages.update(msgs => [...msgs, msg]);
       }
       // Refresh conversation list so lastMessagePreview updates
-      this._refreshConversations();
+      this._refreshConversation();
     });
 
     // New AI conversation created via hub
     this._signalR.aiConversationCreated$.subscribe(conv => {
-      this.conversations.update(convs => {
-        const exists = convs.find(c => c.id === conv.id);
-        return exists ? convs : [conv, ...convs];
-      });
-      this.selectConversation(conv);
+      this.aiConversation.set(conv);
     });
   }
 
   // ── 5. Actions ───────────────────────────────────────────────
 
-  async loadConversations(): Promise<void> {
+  async loadOrCreateConversation(): Promise<void> {
     this.isLoading.set(true);
     try {
       const result = await firstValueFrom(
         this._http.get<ConversationDto[]>(`${this._baseUrl}/ai/conversations`)
       );
-      this.conversations.set(result);
+      if (result.length > 0) {
+        this.aiConversation.set(result[0]);
+        return;
+      }
+
+      await this._signalR.connect();
+      await this._signalR.createAiConversation();
     } finally {
       this.isLoading.set(false);
     }
   }
 
-  async createNewConversation(): Promise<void> {
-    await this._signalR.connect();
-    await this._signalR.createAiConversation();
-    // Response handled by aiConversationCreated$ stream above
+  setConversationFromList(conv: ConversationDto | null): void {
+    this.aiConversation.set(conv);
   }
 
-  async selectConversation(conv: ConversationDto): Promise<void> {
-    if (this.selectedId() === conv.id) return;
+  async selectAiConversation(): Promise<void> {
+    this.isSelected.set(true);
 
-    const previous = this.selectedId();
-    if (previous) await this._signalR.leaveConversation(previous);
+    if (!this.aiConversation()) {
+      await this.loadOrCreateConversation();
+    }
 
-    this.selectedConversation.set(conv);
+    const conversationId = this.selectedId();
+    if (!conversationId) return;
+
     this.messages.set([]);
     this.streamingContent.set('');
-    await this._loadMessages(conv.id);
-    await this._signalR.joinConversation(conv.id);
+
+    await this._signalR.connect();
+    await this._signalR.joinConversation(conversationId);
+    await this._loadMessages(conversationId);
+  }
+
+  async deselectAiConversation(): Promise<void> {
+    const conversationId = this.selectedId();
+    this.isSelected.set(false);
+    this.isAiResponding.set(false);
+    this.streamingContent.set('');
+    this.messages.set([]);
+
+    if (conversationId) {
+      await this._signalR.leaveConversation(conversationId);
+    }
   }
 
   async sendMessage(content: string): Promise<void> {
@@ -133,10 +148,10 @@ export class AiChatService {
     }
   }
 
-  private async _refreshConversations(): Promise<void> {
+  private async _refreshConversation(): Promise<void> {
     const result = await firstValueFrom(
       this._http.get<ConversationDto[]>(`${this._baseUrl}/ai/conversations`)
     );
-    this.conversations.set(result);
+    this.aiConversation.set(result[0] ?? this.aiConversation());
   }
 }

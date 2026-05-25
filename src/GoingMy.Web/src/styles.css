@@ -1381,6 +1381,7 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  max-width: 90%;
 }
 .message-row.sent .bubble-wrapper { align-items: flex-end; }
 .message-row.received .bubble-wrapper { align-items: flex-start; }
@@ -1391,7 +1392,7 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
   line-height: 1.5;
   word-break: break-word;
   transition: filter 0.12s ease;
-  max-width: 100%;
+  white-space: pre-wrap;
 }
 .message-bubble:hover { filter: brightness(1.1); }
 

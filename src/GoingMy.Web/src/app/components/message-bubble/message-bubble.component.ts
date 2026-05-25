@@ -9,7 +9,7 @@ import { MessageDto, ReadReceiptDto } from '../../models/chat.models';
   template: `
     <div class="message-row" [ngClass]="isSent() ? 'sent' : 'received'">
       <!-- Actions (edit/delete) - only for sender, not deleted -->
-      @if (isSent() && !message().isDeleted) {
+      @if (allowActions() && isSent() && !message().isDeleted) {
         <div class="message-actions">
           <button class="action-btn" title="Edit" (click)="edit.emit(message())">
             <i class="pi pi-pencil"></i>
@@ -66,6 +66,7 @@ export class MessageBubbleComponent {
   message = input.required<MessageDto>();
   currentUserId = input.required<string>();
   readReceipts = input<ReadReceiptDto[]>([]);
+  allowActions = input(true);
 
   // ── 2. Outputs ───────────────────────────────────────────────
   edit = output<MessageDto>();
