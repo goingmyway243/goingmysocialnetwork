@@ -459,6 +459,71 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
   box-shadow: var(--glass-shadow-md), var(--glass-glow-md) !important;
 }
 
+/* Discover SelectButton - segmented liquid glass */
+.glass-select-group.p-selectbutton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem;
+  border-radius: 0.9rem;
+  background: linear-gradient(160deg, rgba(8, 26, 66, 0.82), rgba(24, 40, 84, 0.68));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 8px 24px rgba(3, 10, 26, 0.25);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+}
+
+.glass-select-group.p-selectbutton .glass-select-btn.p-togglebutton {
+  min-width: 6.5rem;
+  min-height: 2.3rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.7rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(238, 244, 255, 0.85);
+  box-shadow: none;
+  transition: var(--transition-smooth);
+}
+
+.glass-select-group.p-selectbutton .glass-select-btn.p-togglebutton:hover:not(.p-disabled):not(.p-togglebutton-checked) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.glass-select-group.p-selectbutton .glass-select-btn.p-togglebutton.p-togglebutton-checked {
+  background: linear-gradient(135deg, rgba(111, 201, 255, 0.95) 0%, rgba(153, 114, 255, 0.9) 100%);
+  border-color: rgba(173, 199, 255, 0.92);
+  color: #f6f7ff;
+  text-shadow: 0 1px 0 rgba(22, 20, 56, 0.35);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 8px 18px rgba(68, 74, 201, 0.34);
+}
+
+.glass-select-group.p-selectbutton .glass-select-btn.p-togglebutton .p-togglebutton-content {
+  gap: 0;
+}
+
+.glass-select-group.p-selectbutton .glass-select-btn.p-togglebutton .p-togglebutton-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.glass-select-group.p-selectbutton .glass-select-btn.p-togglebutton:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(139, 160, 255, 0.55);
+}
+
+@media (max-width: 768px) {
+  .glass-select-group.p-selectbutton {
+    width: 100%;
+  }
+
+  .glass-select-group.p-selectbutton .glass-select-btn.p-togglebutton {
+    min-width: 0;
+    flex: 1;
+  }
+}
+
 /* ===== OTHER PRIMENG COMPONENTS ===== */
 
 .p-password .p-password-toggle-mask-icon {

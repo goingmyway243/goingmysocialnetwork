@@ -78,7 +78,7 @@ export class DashboardHeaderComponent {
 
   onSearch(): void {
     if (this.searchValue().trim()) {
-      this.router.navigate(['/discover'], { queryParams: { search: this.searchValue().trim() } });
+      this.router.navigate(['/dashboard/discover'], { queryParams: { search: this.searchValue().trim() } });
       this.searchValue.set('');
     }
   }

@@ -11,7 +11,6 @@ import { TabsModule } from 'primeng/tabs';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { AvatarModule } from 'primeng/avatar';
 import { MessageService } from 'primeng/api';
-import { DashboardHeaderComponent } from '../../components/dashboard-header/dashboard-header.component';
 import { EmptyStateComponent } from '../../components/empty-state/empty-state.component';
 import { SearchApiService } from '../../services/search-api.service';
 import { UserApiService } from '../../services/user-api.service';
@@ -37,7 +36,6 @@ import {
     SkeletonModule,
     ToastModule,
     AvatarModule,
-    DashboardHeaderComponent,
     EmptyStateComponent
   ],
   templateUrl: './discover.component.html',
@@ -135,6 +133,9 @@ export class DiscoverComponent implements OnInit, OnDestroy {
         this.activeTab.set(
           (result.users?.length ?? 0) === 0 && (result.posts?.length ?? 0) > 0 ? 'posts' : 'users'
         );
+        if ((result.users?.length ?? 0) > 0) {
+          this._loadFollowingIds(result.users!.map(u => u.id));
+        }
       },
       error: () => {
         this.isLoading.set(false);
@@ -234,5 +235,11 @@ export class DiscoverComponent implements OnInit, OnDestroy {
         },
         error: () => this.isTrendingLoading.set(false)
       });
+  }
+
+  private _loadFollowingIds(userIds: string[]): void {
+    this._userApi.getFollowingStatusBatch(userIds)
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(ids => this._followingIds.set(new Set(ids)));
   }
 }

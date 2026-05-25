@@ -231,6 +231,24 @@ public class UserProfilesController(IMediator mediator) : ControllerBase
         return Ok(isFollowing);
     }
 
+    /// <summary>
+    /// Batch follow-status check. Returns the subset of the provided user IDs that the
+    /// authenticated caller is following. Designed for post-search follow state hydration.
+    /// </summary>
+    [HttpPost("following-status/batch")]
+    [Authorize]
+    [ProducesResponseType(typeof(IEnumerable<Guid>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> GetFollowingStatusBatch([FromBody] IEnumerable<Guid> userIds)
+    {
+        var callerId = User.FindFirst("sub")?.Value;
+        if (!Guid.TryParse(callerId, out var followerGuid))
+            return Unauthorized();
+
+        var followingIds = await mediator.Send(new GetFollowingIdsFromSetQuery(followerGuid, userIds));
+        return Ok(followingIds);
+    }
+
     /// <summary>Gets the followers list for a user (paginated).</summary>
     [HttpGet("{id:guid}/followers")]
     [AllowAnonymous]

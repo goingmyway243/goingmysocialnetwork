@@ -103,6 +103,13 @@ export class UserApiService {
     return this._http.get<boolean>(`${this._userBaseUrl}/${id}/is-following`);
   }
 
+  /** POST /api/userprofiles/following-status/batch (UserService)
+   * Returns the subset of the given IDs that the current user is following.
+   */
+  getFollowingStatusBatch(userIds: string[]): Observable<string[]> {
+    return this._http.post<string[]>(`${this._userBaseUrl}/following-status/batch`, userIds);
+  }
+
   /** GET /api/userprofiles/{id}/followers (UserService) */
   getFollowers(id: string, page = 1, pageSize = 20): Observable<UserProfile[]> {
     return this._http.get<UserProfile[]>(

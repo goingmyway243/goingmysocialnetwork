@@ -80,17 +80,6 @@
               title="View user details">
               <i class="pi pi-eye"></i>
             </button>
-            <button
-              class="action-btn revoke-btn"
-              [disabled]="isRevoking(user.id)"
-              (click)="revokeTokens(user)"
-              title="Revoke all active tokens">
-              @if (isRevoking(user.id)) {
-                <i class="pi pi-spin pi-spinner"></i>
-              } @else {
-                <i class="pi pi-key"></i>
-              }
-            </button>
           </td>
         </tr>
       </ng-template>

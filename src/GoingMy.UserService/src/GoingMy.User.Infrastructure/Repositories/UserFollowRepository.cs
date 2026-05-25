@@ -10,6 +10,15 @@ public class UserFollowRepository(UserDbContext context) : IUserFollowRepository
     public async Task<bool> ExistsAsync(Guid followerId, Guid followeeId, CancellationToken ct = default)
         => await context.UserFollows.AnyAsync(f => f.FollowerId == followerId && f.FolloweeId == followeeId, ct);
 
+    public async Task<IEnumerable<Guid>> GetFollowingIdsFromSetAsync(Guid followerId, IEnumerable<Guid> candidateIds, CancellationToken ct = default)
+    {
+        var candidateList = candidateIds.ToList();
+        return await context.UserFollows
+            .Where(f => f.FollowerId == followerId && candidateList.Contains(f.FolloweeId))
+            .Select(f => f.FolloweeId)
+            .ToListAsync(ct);
+    }
+
     public async Task CreateAsync(UserFollow follow, CancellationToken ct = default)
     {
         context.UserFollows.Add(follow);

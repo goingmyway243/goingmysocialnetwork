@@ -54,13 +54,12 @@ export const routes: Routes = [
       {
         path: 'profile/:userId',
         loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
+      },
+      {
+        path: 'discover',
+        loadComponent: () => import('./pages/discover/discover.component').then(m => m.DiscoverComponent)
       }
     ]
-  },
-  {
-    path: 'discover',
-    loadComponent: () => import('./pages/discover/discover.component').then(m => m.DiscoverComponent),
-    canActivate: [authGuard]
   },
   {
     path: 'admin',

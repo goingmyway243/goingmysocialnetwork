@@ -29,7 +29,7 @@ export class DashboardSidebarComponent {
       label: 'Discover',
       icon: 'pi pi-compass',
       id: 'explore',
-      command: () => this.setActiveMenu('discover', '/discover')
+      command: () => this.setActiveMenu('discover', '/dashboard/discover')
     },
     {
       label: 'Messages',
