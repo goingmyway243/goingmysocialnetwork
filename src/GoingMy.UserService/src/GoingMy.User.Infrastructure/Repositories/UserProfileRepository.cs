@@ -10,6 +10,19 @@ public class UserProfileRepository(UserDbContext context) : IUserProfileReposito
     public async Task<UserProfile?> GetByIdAsync(Guid id, CancellationToken ct = default)
         => await context.UserProfiles.FindAsync([id], ct);
 
+    public async Task<IEnumerable<UserProfile>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default)
+    {
+        var distinctIds = ids.Distinct().ToList();
+        if (distinctIds.Count == 0)
+        {
+            return [];
+        }
+
+        return await context.UserProfiles
+            .Where(p => distinctIds.Contains(p.Id))
+            .ToListAsync(ct);
+    }
+
     public async Task<UserProfile> CreateAsync(UserProfile profile, CancellationToken ct = default)
     {
         context.UserProfiles.Add(profile);

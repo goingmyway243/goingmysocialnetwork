@@ -5,35 +5,6 @@
   align-items: center;
 }
 
-.bell-btn {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--text-color);
-  transition: var(--transition-smooth);
-}
-
-.bell-btn:hover {
-  background: var(--glass-surface-hover);
-  color: var(--primary-color);
-}
-
-.bell-btn.has-unread .bell-icon {
-  color: var(--primary-color);
-}
-
-.bell-icon {
-  font-size: 1.25rem;
-  transition: var(--transition-smooth);
-}
-
 .bell-btn.has-unread .bell-icon {
   animation: bell-ring 2s ease-in-out infinite;
 }
@@ -47,8 +18,8 @@
 
 .unread-badge {
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 0px;
+  right: 0px;
   min-width: 18px;
   height: 18px;
   padding: 0 4px;
@@ -61,23 +32,6 @@
   align-items: center;
   justify-content: center;
   line-height: 1;
-  box-shadow: 0 0 0 2px var(--surface-ground);
-}
-
-/* ── Dropdown panel override ─────────────────────────────────── */
-:host ::ng-deep .notification-panel .p-popover-content {
-  padding: 0;
-}
-
-:host ::ng-deep .notification-panel {
-  background: var(--glass-overlay-bg);
-  backdrop-filter: var(--glass-blur-lg) saturate(180%);
-  -webkit-backdrop-filter: var(--glass-blur-lg) saturate(180%);
-  border: 1px solid var(--glass-border-strong);
-  border-radius: 16px;
-  box-shadow: var(--glass-shadow-xl);
-  overflow: hidden;
-  width: 360px;
 }
 
 /* ── Dropdown content ────────────────────────────────────────── */

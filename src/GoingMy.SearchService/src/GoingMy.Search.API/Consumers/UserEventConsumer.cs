@@ -23,6 +23,7 @@ public class UserEventConsumer(ElasticsearchClient esClient)
             FirstName = evt.FirstName,
             LastName = evt.LastName,
             IsActive = true,
+            IsVerified = evt.IsVerified,
             CreatedAt = evt.RegisteredAt,
             Suggest = BuildSuggest(evt.Username, evt.FirstName, evt.LastName)
         };

@@ -9,7 +9,9 @@ public record CreatePostWithMediaCommand(
     string Content,
     string UserId,
     string Username,
-    IReadOnlyList<string> MediaFileIds
+    IReadOnlyList<string> MediaFileIds,
+    string? FirstName,
+    string? LastName
 ) : IRequest<PostDto>;
 
 public class CreatePostWithMediaCommandHandler(IPublishEndpoint publishEndpoint)
@@ -26,7 +28,9 @@ public class CreatePostWithMediaCommandHandler(IPublishEndpoint publishEndpoint)
             UserId = request.UserId,
             Username = request.Username,
             Content = request.Content,
-            MediaFileIds = request.MediaFileIds
+            MediaFileIds = request.MediaFileIds,
+            FirstName = request.FirstName,
+            LastName = request.LastName
         }, ct);
 
         // Return a placeholder response with pending status
@@ -39,7 +43,13 @@ public class CreatePostWithMediaCommandHandler(IPublishEndpoint publishEndpoint)
             Username: request.Username,
             Likes: 0,
             Comments: 0,
-            Author: null,
+            Author: new UserDto(
+                Id: request.UserId,
+                UserName: request.Username,
+                FirstName: string.IsNullOrWhiteSpace(request.FirstName) ? request.Username : request.FirstName,
+                LastName: request.LastName ?? string.Empty,
+                AvatarUrl: null,
+                IsVerified: false),
             CreatedAt: DateTime.UtcNow,
             UpdatedAt: null);
     }

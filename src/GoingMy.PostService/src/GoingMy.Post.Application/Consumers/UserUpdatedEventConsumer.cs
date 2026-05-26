@@ -7,7 +7,7 @@ namespace GoingMy.Post.Application.Consumers;
 
 /// <summary>
 /// Handles <see cref="UserUpdatedEvent"/> from UserService.
-/// Propagates profile changes (username, avatar, verification status) to all denormalized
+/// Propagates profile changes (username, first/last names) to all denormalized
 /// Author fields on the user's posts via a single MongoDB bulk update.
 /// </summary>
 public class UserUpdatedEventConsumer(
@@ -24,8 +24,6 @@ public class UserUpdatedEventConsumer(
             username: evt.Username,
             firstName: evt.FirstName,
             lastName: evt.LastName,
-            avatarUrl: evt.AvatarUrl,
-            isVerified: evt.IsVerified,
             cancellationToken: context.CancellationToken);
 
         logger.LogInformation(

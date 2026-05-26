@@ -249,6 +249,19 @@ public class UserProfilesController(IMediator mediator) : ControllerBase
         return Ok(followingIds);
     }
 
+    /// <summary>
+    /// Batch profile lookup. Returns lightweight profile data keyed by user ID.
+    /// Intended for feed hydration in a single request.
+    /// </summary>
+    [HttpPost("profiles/batch")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(IDictionary<Guid, UserProfileSummaryDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetUserProfilesByIdsBatch([FromBody] IEnumerable<Guid> userIds)
+    {
+        var profiles = await mediator.Send(new GetUserProfilesByIdsQuery(userIds));
+        return Ok(profiles);
+    }
+
     /// <summary>Gets the followers list for a user (paginated).</summary>
     [HttpGet("{id:guid}/followers")]
     [AllowAnonymous]

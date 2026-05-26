@@ -1,16 +1,17 @@
 <div class="notification-bell-wrapper">
   <!-- Bell button with badge -->
-  <button
-    class="bell-btn"
+  <p-button
+    styleClass="bell-btn icon-btn"
+    icon="pi pi-bell"
+    [rounded]="true"
     [class.has-unread]="state.hasUnread()"
     (click)="toggle($event)"
     pTooltip="Notifications"
     tooltipPosition="bottom">
-    <i class="pi pi-bell bell-icon"></i>
     @if (state.hasUnread()) {
-      <span class="unread-badge">{{ state.displayCount() }}</span>
     }
-  </button>
+    <span class="unread-badge">{{ state.displayCount() }}</span>
+  </p-button>
 
   <!-- Dropdown panel -->
   <p-popover #op styleClass="notification-panel" (onShow)="onOpen()">

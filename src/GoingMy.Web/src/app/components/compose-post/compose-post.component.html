@@ -26,11 +26,14 @@
 <!-- ── Compose Modal ────────────────────────────────────── -->
 <p-dialog
   header="Create Post"
+  appendTo="body"
   [modal]="true"
   [(visible)]="dialogVisible"
   [style]="{ width: '560px' }"
+  [maskStyleClass]="'glass-dialog-mask'"
   [draggable]="false"
   [resizable]="false"
+  [dismissableMask]="true"
   styleClass="glass-dialog compose-content"
   (onHide)="closeDialog()">
 
@@ -69,16 +72,27 @@
   }
 
   <!-- AI Writing Assistant -->
-  <div class="ai-toolbar-wrapper">
-    <button
-      class="ai-toggle-btn"
-      type="button"
-      [class.active]="aiPanelVisible()"
-      (click)="toggleAiPanel()"
-      [disabled]="submitting() || mediaUploading()">
-      <span class="ai-icon">✦</span>
-      <span>AI Assistant</span>
-    </button>
+  <div class="toolbar-wrapper">
+    <div class="toolbar">
+      <button
+        class="ai-toggle-btn"
+        type="button"
+        [class.active]="aiPanelVisible()"
+        (click)="toggleAiPanel()"
+        [disabled]="submitting() || mediaUploading()">
+        <span class="ai-icon">✦</span>
+        <span>AI Assistant</span>
+      </button>
+  
+      <button
+        class="attach-btn"
+        [disabled]="!canAttachMore() || mediaUploading()"
+        pTooltip="Attach images or videos"
+        tooltipPosition="top"
+        (click)="onAttachClick()">
+        <i class="pi pi-paperclip"></i>
+      </button>
+    </div>
 
     @if (aiPanelVisible()) {
       <div class="ai-panel">
@@ -146,30 +160,9 @@
     </div>
   }
 
-  <!-- Toast Notifications -->
-  <p-toast position="top-right"></p-toast>
-
   <!-- Footer actions -->
   <ng-template pTemplate="footer">
     <div class="dialog-footer">
-      <p-button
-        label="Cancel"
-        [text]="true"
-        styleClass="cancel-btn"
-        [disabled]="submitting() || mediaUploading() || mediaValidating()"
-        (onClick)="closeDialog()">
-      </p-button>
-
-      <p-button
-        icon="pi pi-paperclip"
-        [text]="true"
-        styleClass="attach-btn"
-        [disabled]="!canAttachMore() || mediaUploading()"
-        pTooltip="Attach images or videos"
-        tooltipPosition="top"
-        (onClick)="onAttachClick()">
-      </p-button>
-
       <p-button
         label="Post"
         icon="pi pi-send"

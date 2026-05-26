@@ -37,6 +37,15 @@ export interface ChangePasswordRequest {
   newPassword: string;
 }
 
+export interface UserProfileSummary {
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  avatarUrl: string | null;
+  isVerified: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -108,6 +117,13 @@ export class UserApiService {
    */
   getFollowingStatusBatch(userIds: string[]): Observable<string[]> {
     return this._http.post<string[]>(`${this._userBaseUrl}/following-status/batch`, userIds);
+  }
+
+  /** POST /api/userprofiles/profiles/batch (UserService)
+   * Returns a dictionary map of userId -> lightweight profile summary.
+   */
+  getUserProfilesByIdsBatch(userIds: string[]): Observable<Record<string, UserProfileSummary>> {
+    return this._http.post<Record<string, UserProfileSummary>>(`${this._userBaseUrl}/profiles/batch`, userIds);
   }
 
   /** GET /api/userprofiles/{id}/followers (UserService) */

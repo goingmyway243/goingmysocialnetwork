@@ -95,8 +95,6 @@ public class PostRepository : IPostRepository
         string username,
         string firstName,
         string lastName,
-        string? avatarUrl,
-        bool isVerified,
         CancellationToken cancellationToken = default)
     {
         // Filter by nested Author.Id — MongoDB driver handles nullable Author correctly in expression trees
@@ -105,9 +103,7 @@ public class PostRepository : IPostRepository
         var update = Builders<Domain.Entities.Post>.Update
             .Set("Author.UserName", username)
             .Set("Author.FirstName", firstName)
-            .Set("Author.LastName", lastName)
-            .Set("Author.AvatarUrl", avatarUrl)
-            .Set("Author.IsVerified", isVerified);
+            .Set("Author.LastName", lastName);
 
         var result = await _context.Posts.UpdateManyAsync(filter, update, cancellationToken: cancellationToken);
         return result.ModifiedCount;
@@ -121,9 +117,7 @@ public class PostRepository : IPostRepository
         var update = b.Combine(
             b.Set("Author.UserName", "[deleted]"),
             b.Set("Author.FirstName", "Deleted"),
-            b.Set("Author.LastName", "User"),
-            b.Unset("Author.AvatarUrl"),
-            b.Set("Author.IsVerified", false));
+            b.Set("Author.LastName", "User"));
 
         var result = await _context.Posts.UpdateManyAsync(filter, update, cancellationToken: cancellationToken);
         return result.ModifiedCount;

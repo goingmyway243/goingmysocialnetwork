@@ -56,7 +56,7 @@ public class UserController : ControllerBase
                 Email = user.Email!,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                RegisteredAt = user.CreatedAt
+                RegisteredAt = user.CreatedAt,
             });
 
             return CreatedAtAction(

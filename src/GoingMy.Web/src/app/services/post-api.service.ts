@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, map, of, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Post, Comment, Like } from '../models/post.model';
+import { UserApiService, UserProfileSummary } from './user-api.service';
 
 /** Request DTO for creating a post. */
 export interface CreatePostRequest {
@@ -38,20 +39,30 @@ export interface PostResponse {
 })
 export class PostApiService {
   private readonly _http = inject(HttpClient);
+  private readonly _userApi = inject(UserApiService);
   private readonly _baseUrl = `${environment.apiGatewayUrl}/api/posts`;
+  private readonly _profileCache = new Map<string, UserProfileSummary | null>();
 
   // ── 1. Get Posts ─────────────────────────────────────────────
 
   /** GET /api/posts — Retrieves all posts for the authenticated user. */
   getPosts(): Observable<GetPostsResponse> {
-    return this._http.get<GetPostsResponse>(this._baseUrl);
+    return this._http.get<GetPostsResponse>(this._baseUrl).pipe(
+      switchMap(response => this._hydratePostsWithAuthorProfiles(response.posts).pipe(
+        map(posts => ({ ...response, posts }))
+      ))
+    );
   }
 
   // ── 2. Get Post by ID ────────────────────────────────────────
 
   /** GET /api/posts/{id} — Retrieves a specific post by ID. */
   getPostById(id: string): Observable<Post> {
-    return this._http.get<Post>(`${this._baseUrl}/${id}`);
+    return this._http.get<Post>(`${this._baseUrl}/${id}`).pipe(
+      switchMap(post => this._hydratePostsWithAuthorProfiles([post]).pipe(
+        map(posts => posts[0])
+      ))
+    );
   }
 
   // ── 3. Create Post ───────────────────────────────────────────
@@ -123,12 +134,66 @@ export class PostApiService {
 
   /** GET /api/posts/user/{userId} — Retrieves paginated posts by a specific user. */
   getUserPosts(userId: string, page = 1, pageSize = 20): Observable<Post[]> {
-    return this._http.get<Post[]>(`${this._baseUrl}/user/${userId}?page=${page}&pageSize=${pageSize}`);
+    return this._http.get<Post[]>(`${this._baseUrl}/user/${userId}?page=${page}&pageSize=${pageSize}`).pipe(
+      switchMap(posts => this._hydratePostsWithAuthorProfiles(posts))
+    );
   }
 
   /** GET /api/posts/user/{userId}/likes — Retrieves posts liked by a specific user. */
   getUserLikedPosts(userId: string, page = 1, pageSize = 20): Observable<Post[]> {
-    return this._http.get<Post[]>(`${this._baseUrl}/user/${userId}/likes?page=${page}&pageSize=${pageSize}`);
+    return this._http.get<Post[]>(`${this._baseUrl}/user/${userId}/likes?page=${page}&pageSize=${pageSize}`).pipe(
+      switchMap(posts => this._hydratePostsWithAuthorProfiles(posts))
+    );
+  }
+
+  private _hydratePostsWithAuthorProfiles(posts: Post[]): Observable<Post[]> {
+    if (posts.length === 0) {
+      return of(posts);
+    }
+
+    const userIds = [...new Set(posts.map(p => p.author?.id ?? p.userId).filter(Boolean))];
+    const uncachedUserIds = userIds.filter(id => !this._profileCache.has(id));
+
+    if (uncachedUserIds.length === 0) {
+      return of(this._applyCachedProfiles(posts));
+    }
+
+    return this._userApi.getUserProfilesByIdsBatch(uncachedUserIds).pipe(
+      catchError(() => of({} as Record<string, UserProfileSummary>)),
+      map(results => {
+        uncachedUserIds.forEach(userId => {
+          this._profileCache.set(userId, results[userId] ?? null);
+        });
+        return this._applyCachedProfiles(posts);
+      })
+    );
+  }
+
+  private _applyCachedProfiles(posts: Post[]): Post[] {
+    return posts.map(post => {
+      const authorId = post.author?.id ?? post.userId;
+      const cachedProfile = this._profileCache.get(authorId);
+
+      if (cachedProfile === undefined) {
+        return post;
+      }
+
+      const firstName = cachedProfile?.firstName ?? post.author?.firstName ?? post.username;
+      const lastName = cachedProfile?.lastName ?? post.author?.lastName ?? '';
+      const userName = cachedProfile?.username ?? post.author?.userName ?? post.username;
+
+      return {
+        ...post,
+        author: {
+          id: post.author?.id ?? post.userId,
+          userName,
+          firstName,
+          lastName,
+          avatarUrl: cachedProfile?.avatarUrl ?? undefined,
+          isVerified: cachedProfile?.isVerified ?? false
+        }
+      };
+    });
   }
 }
 

@@ -113,10 +113,17 @@
   gap: 0.625rem;
 }
 
+
+/* ── Toolbar ──────────────────────────────────────────── */
+
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+}
+
 /* ── AI Writing Assistant ──────────────────────────────────── */
 
-.ai-toolbar-wrapper {
-  margin-top: 0.75rem;
+.toolbar-wrapper {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -298,15 +305,24 @@
 /* ── Attach Button ─────────────────────────────────────────── */
 
 .attach-btn {
+  padding: 0.4rem 0.875rem;
+  background: transparent;
+  border: 1px solid var(--glass-border-accent);
+  border-radius: 999px;
+  color: var(--text-color-secondary);
   transition: var(--transition-fast);
+  cursor: pointer;
 }
 
-.attach-btn:not(:disabled):hover {
+.attach-btn:hover:not(:disabled),
+.attach-btn.active {
+  background: var(--glass-elevated-bg);
   color: var(--text-color);
-  background: var(--glass-surface-bg);
+  box-shadow: var(--glass-glow-sm);
+  border-color: var(--glass-border-strong);
 }
 
 .attach-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
 }

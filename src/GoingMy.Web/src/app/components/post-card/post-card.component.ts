@@ -96,6 +96,24 @@ export class PostCardComponent {
     if (userId) this.authorClick.emit(userId);
   }
 
+  getAuthorDisplayName(): string {
+    const author = this.post().author;
+    if (!author) {
+      return this.post().username;
+    }
+
+    const fullName = `${author.firstName ?? ''} ${author.lastName ?? ''}`.trim();
+    return fullName || author.userName || this.post().username;
+  }
+
+  getAuthorAvatarUrl(): string | null {
+    return this.post().author?.avatarUrl ?? null;
+  }
+
+  isAuthorVerified(): boolean {
+    return this.post().author?.isVerified ?? false;
+  }
+
   isVideoAttachment(contentType: string): boolean {
     return contentType.startsWith('video/');
   }

@@ -11,5 +11,6 @@ public record UserRegisteredEvent
     public string Email { get; init; } = null!;
     public string FirstName { get; init; } = null!;
     public string LastName { get; init; } = null!;
+    public bool IsVerified { get; init; }
     public DateTime RegisteredAt { get; init; }
 }

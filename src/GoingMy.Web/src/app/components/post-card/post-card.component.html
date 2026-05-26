@@ -3,10 +3,23 @@
   <!-- Post Header -->
   <div class="post-header">
     <div class="author-avatar" (click)="onAuthorClick()" style="cursor:pointer">
-      <i class="pi pi-user"></i>
+      @if (getAuthorAvatarUrl()) {
+        <img
+          class="author-avatar-image"
+          [src]="getAuthorAvatarUrl()!"
+          [alt]="getAuthorDisplayName()"
+          loading="lazy" />
+      } @else {
+        <i class="pi pi-user"></i>
+      }
     </div>
     <div class="post-meta">
-      <h3 class="author-name" (click)="onAuthorClick()" style="cursor:pointer">{{ post().author?.firstName }} {{ post().author?.lastName }}</h3>
+      <h4 class="author-name" (click)="onAuthorClick()" style="cursor:pointer">
+        {{ getAuthorDisplayName() }}
+        @if (isAuthorVerified()) {
+          <i class="pi pi-verified verified-badge" aria-label="Verified account"></i>
+        }
+      </h4>
       <span class="post-time">{{ formatDate(post().createdAt) }}</span>
     </div>
   </div>

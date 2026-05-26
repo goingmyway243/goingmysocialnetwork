@@ -12,7 +12,8 @@ public record CreateUserProfileCommand(
     Guid Id,
     string Username,
     string FirstName,
-    string LastName
+    string LastName,
+    bool IsVerified = false
 ) : IRequest<UserProfileDto>;
 
 public class CreateUserProfileCommandHandler(IUserProfileRepository userProfileRepository)
@@ -30,7 +31,10 @@ public class CreateUserProfileCommandHandler(IUserProfileRepository userProfileR
             username: request.Username,
             firstName: request.FirstName,
             lastName: request.LastName
-        );
+        )
+        {
+          IsVerified = request.IsVerified
+        };
 
         var created = await userProfileRepository.CreateAsync(profile, cancellationToken);
 

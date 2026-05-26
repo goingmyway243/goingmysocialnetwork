@@ -35,7 +35,7 @@ var redis = builder.AddRedis(SharedServices.Redis)
     .WithDataVolume("goingmysocial-redis")
     .WithLifetime(ContainerLifetime.Persistent);
 
-var elasticearch = builder.AddElasticsearch(SharedServices.Elasticsearch, password: simplePassword)
+var elasticsearch = builder.AddElasticsearch(SharedServices.Elasticsearch, password: simplePassword)
     .WithDataVolume("goingmysocial-elasticsearch")
     .WithLifetime(ContainerLifetime.Persistent);
 
@@ -92,10 +92,10 @@ var notificationService = builder.AddProject<Projects.GoingMy_Notification_API>(
 
 var searchService = builder.AddProject<Projects.GoingMy_Search_API>(SharedServices.SearchApi)
     .WithReference(rabbitmq)
-    .WithReference(elasticearch)
+    .WithReference(elasticsearch)
     .WaitFor(identityService)
     .WaitFor(rabbitmq)
-    .WaitFor(elasticearch)
+    .WaitFor(elasticsearch)
     .WithEnvironment("OpenIddict:Issuer", identityService.GetEndpoint("https"));
 
 builder.AddProject<Projects.GoingMy_ApiGateway>("api-gateway")

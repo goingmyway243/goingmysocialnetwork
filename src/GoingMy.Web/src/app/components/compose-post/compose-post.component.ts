@@ -6,7 +6,6 @@ import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
-import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 import { PostApiService } from '../../services/post-api.service';
@@ -29,8 +28,7 @@ const MAX_FILES = 4;
 @Component({
   selector: 'app-compose-post',
   standalone: true,
-  imports: [FormsModule, CommonModule, ButtonModule, DialogModule, TextareaModule, InputTextModule, SelectModule, ToastModule, TooltipModule, MediaPreviewComponent],
-  providers: [MessageService],
+  imports: [FormsModule, CommonModule, ButtonModule, DialogModule, TextareaModule, InputTextModule, SelectModule, TooltipModule, MediaPreviewComponent],
   templateUrl: './compose-post.component.html',
   styleUrl: './compose-post.component.css'
 })
@@ -120,8 +118,8 @@ export class ComposePostComponent {
         this.submitting.set(false);
         this._messageService.add({
           severity: 'success',
-          summary: 'Success',
-          detail: 'Post created successfully',
+          summary: 'Posted!',
+          detail: 'Your post has been published.',
           life: 3000
         });
         this.closeDialog();

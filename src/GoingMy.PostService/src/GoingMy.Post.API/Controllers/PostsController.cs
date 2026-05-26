@@ -4,6 +4,7 @@ using GoingMy.Post.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace GoingMy.Post.API.Controllers;
 
@@ -93,8 +94,10 @@ public class PostsController : ControllerBase
     {
         var userId = User.FindFirst("sub")?.Value ?? "unknown";
         var username = User.FindFirst("name")?.Value ?? "unknown";
+        var firstName = User.FindFirst(Claims.GivenName)?.Value;
+        var lastName = User.FindFirst(Claims.FamilyName)?.Value;
 
-        var command = new CreatePostCommand(request.Content, userId, username);
+        var command = new CreatePostCommand(request.Content, userId, username, firstName, lastName);
         var newPost = await _mediator.Send(command);
 
         return CreatedAtAction(nameof(GetPostById), new { id = newPost.Id }, new { message = "Post created successfully", post = newPost });
@@ -113,8 +116,16 @@ public class PostsController : ControllerBase
     {
         var userId = User.FindFirst("sub")?.Value ?? "unknown";
         var username = User.FindFirst("name")?.Value ?? "unknown";
+        var firstName = User.FindFirst(Claims.GivenName)?.Value;
+        var lastName = User.FindFirst(Claims.FamilyName)?.Value;
 
-        var command = new CreatePostWithMediaCommand(request.Content, userId, username, request.MediaFileIds);
+        var command = new CreatePostWithMediaCommand(
+            request.Content,
+            userId,
+            username,
+            request.MediaFileIds,
+            firstName,
+            lastName);
         var post = await _mediator.Send(command);
 
         return Accepted(new { message = "Post creation with media in progress", post });

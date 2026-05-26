@@ -8,5 +8,7 @@ public record CreatePostForSagaCommand
     public Guid CorrelationId { get; init; }
     public string UserId { get; init; } = null!;
     public string Username { get; init; } = null!;
+    public string? FirstName { get; init; }
+    public string? LastName { get; init; }
     public string Content { get; init; } = null!;
 }

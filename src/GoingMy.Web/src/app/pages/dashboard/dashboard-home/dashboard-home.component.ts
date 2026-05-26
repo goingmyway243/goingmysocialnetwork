@@ -77,7 +77,6 @@ export class DashboardHomeComponent implements OnInit {
       next.set(post.id, { expanded: false, loading: false, comments: [], newComment: '', submitting: false });
       return next;
     });
-    this._messageService.add({ severity: 'success', summary: 'Posted!', detail: 'Your post has been shared.' });
   }
 
   // ── 6. Actions — Likes ────────────────────────────────────────

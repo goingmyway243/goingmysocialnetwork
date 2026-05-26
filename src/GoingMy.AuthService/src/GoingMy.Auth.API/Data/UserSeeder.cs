@@ -30,7 +30,6 @@ public static class UserSeeder
             NormalizedEmail = "ADMIN@SOCIALNETWORK.COM",
             FirstName = "Admin",
             LastName = "User",
-            // Bio, IsVerified and other profile fields moved to UserService.
             Roles = [UserRole.Admin],
             SecurityStamp = Guid.NewGuid().ToString()
         };
@@ -51,6 +50,7 @@ public static class UserSeeder
                 Email = user.Email!,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                IsVerified = true,
                 RegisteredAt = DateTime.UtcNow
             });
         }

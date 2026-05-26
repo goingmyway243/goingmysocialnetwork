@@ -33,6 +33,8 @@ public class PostMediaStateMachine : MassTransitStateMachine<PostMediaSagaState>
                 {
                     ctx.Saga.UserId = ctx.Message.UserId;
                     ctx.Saga.Username = ctx.Message.Username;
+                    ctx.Saga.FirstName = ctx.Message.FirstName;
+                    ctx.Saga.LastName = ctx.Message.LastName;
                     ctx.Saga.Content = ctx.Message.Content;
                     ctx.Saga.MediaFileIds = [.. ctx.Message.MediaFileIds];
                     ctx.Saga.CreatedAt = DateTime.UtcNow;
@@ -56,6 +58,8 @@ public class PostMediaStateMachine : MassTransitStateMachine<PostMediaSagaState>
                     CorrelationId = ctx.Message.CorrelationId,
                     UserId = ctx.Saga.UserId,
                     Username = ctx.Saga.Username,
+                    FirstName = ctx.Saga.FirstName,
+                    LastName = ctx.Saga.LastName,
                     Content = ctx.Saga.Content
                 }))
                 .TransitionTo(CreatingPost),

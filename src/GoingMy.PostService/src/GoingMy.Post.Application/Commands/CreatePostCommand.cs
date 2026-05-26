@@ -13,7 +13,9 @@ namespace GoingMy.Post.Application.Commands;
 public record CreatePostCommand(
     string Content,
     string UserId,
-    string Username
+    string Username,
+    string? FirstName,
+    string? LastName
 ) : IRequest<PostDto>;
 
 /// <summary>
@@ -31,6 +33,16 @@ public class CreatePostCommandHandler(IPostRepository postRepository, IPublishEn
             username: request.Username,
             createdAt: DateTime.UtcNow
         );
+
+        // Seed the denormalized author snapshot at creation time.
+        // UserUpdatedEvent will enrich/sync the remaining profile fields later.
+        post.Author = new Domain.Entities.User
+        {
+            Id = request.UserId,
+            UserName = request.Username,
+            FirstName = string.IsNullOrWhiteSpace(request.FirstName) ? request.Username : request.FirstName,
+            LastName = request.LastName ?? string.Empty
+        };
 
         var createdPost = await postRepository.AddAsync(post, cancellationToken);
 
@@ -59,8 +71,8 @@ public class CreatePostCommandHandler(IPostRepository postRepository, IPublishEn
             UserName: p.Author.UserName,
             FirstName: p.Author.FirstName,
             LastName: p.Author.LastName,
-            AvatarUrl: p.Author.AvatarUrl,
-            IsVerified: p.Author.IsVerified),
+            AvatarUrl: null,
+            IsVerified: false),
         CreatedAt: p.CreatedAt,
         UpdatedAt: p.UpdatedAt,
         MediaAttachments: p.MediaAttachments is null || p.MediaAttachments.Count == 0

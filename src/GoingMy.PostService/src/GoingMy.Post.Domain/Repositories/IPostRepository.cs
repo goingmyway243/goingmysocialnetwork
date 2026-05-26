@@ -60,15 +60,13 @@ public interface IPostRepository
 
     /// <summary>
     /// Bulk-updates the denormalized Author fields on all posts belonging to <paramref name="userId"/>.
-    /// Used to propagate user profile changes (username, avatar, verification) across all existing posts.
+    /// Used to propagate user profile changes (username, first/last names) across all existing posts.
     /// </summary>
     Task<long> BulkUpdateAuthorAsync(
         string userId,
         string username,
         string firstName,
         string lastName,
-        string? avatarUrl,
-        bool isVerified,
         CancellationToken cancellationToken = default);
 
     /// <summary>

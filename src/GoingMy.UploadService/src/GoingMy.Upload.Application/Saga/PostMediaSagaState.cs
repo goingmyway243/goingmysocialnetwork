@@ -11,6 +11,8 @@ public class PostMediaSagaState : SagaStateMachineInstance, ISagaVersion
 
     public string UserId { get; set; } = null!;
     public string Username { get; set; } = null!;
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
     public string Content { get; set; } = null!;
     public List<string> MediaFileIds { get; set; } = [];
     public List<MediaFileInfo> ValidatedMediaFiles { get; set; } = [];

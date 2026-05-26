@@ -21,6 +21,14 @@ public class CreatePostSagaConsumer(IPostRepository postRepository, IPublishEndp
                 username: msg.Username,
                 createdAt: DateTime.UtcNow);
 
+            post.Author = new Domain.Entities.User
+            {
+                Id = msg.UserId,
+                UserName = msg.Username,
+                FirstName = string.IsNullOrWhiteSpace(msg.FirstName) ? msg.Username : msg.FirstName,
+                LastName = msg.LastName ?? string.Empty
+            };
+
             await postRepository.AddAsync(post, context.CancellationToken);
 
             await publishEndpoint.Publish(new PostCreatedForSagaEvent

@@ -24,7 +24,7 @@ public class UserRegisteredEventConsumer(
             evt.UserId, evt.Username);
 
         await mediator.Send(
-            new CreateUserProfileCommand(evt.UserId, evt.Username, evt.FirstName, evt.LastName),
+            new CreateUserProfileCommand(evt.UserId, evt.Username, evt.FirstName, evt.LastName, evt.IsVerified),
             context.CancellationToken);
     }
 }

@@ -302,6 +302,5 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   onPostCreated(post: Post): void {
     this._profileService.prependPost(post);
-    this._messageService.add({ severity: 'success', summary: 'Posted!', detail: 'Your post has been published.' });
   }
 }
