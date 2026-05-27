@@ -74,7 +74,18 @@ public class ElasticsearchInitializer(ElasticsearchClient esClient, ILogger<Elas
                     ["comments"] = new IntegerNumberProperty(),
                     ["createdAt"] = new DateProperty(),
                     ["updatedAt"] = new DateProperty(),
-                    ["suggest"] = new CompletionProperty()
+                    ["suggest"] = new CompletionProperty(),
+                    ["mediaAttachments"] = new ObjectProperty
+                    {
+                        Properties = new Properties
+                        {
+                            ["fileId"] = new KeywordProperty(),
+                            ["url"] = new KeywordProperty(),
+                            ["contentType"] = new KeywordProperty(),
+                            ["width"] = new IntegerNumberProperty(),
+                            ["height"] = new IntegerNumberProperty()
+                        }
+                    }
                 })
             ), ct);
 

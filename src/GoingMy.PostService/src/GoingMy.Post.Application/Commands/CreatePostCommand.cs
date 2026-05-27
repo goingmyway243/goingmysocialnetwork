@@ -52,7 +52,7 @@ public class CreatePostCommandHandler(IPostRepository postRepository, IPublishEn
             UserId = createdPost.UserId,
             Username = createdPost.Username,
             Content = createdPost.Content,
-            MediaAttachments = createdPost.MediaAttachments?.Select(m => m.Url).ToList() ?? [],
+            MediaAttachments = createdPost.MediaAttachments?.Select(m => new GoingMy.Shared.Events.MediaAttachmentInfo(m.FileId, m.Url, m.ContentType, m.Width, m.Height)).ToList() ?? [],
             CreatedAt = createdPost.CreatedAt
         }, cancellationToken);
 

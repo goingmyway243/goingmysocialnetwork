@@ -1,3 +1,5 @@
+using GoingMy.Shared.Events;
+
 namespace GoingMy.Search.API.Models;
 
 public class PostDoc
@@ -10,6 +12,6 @@ public class PostDoc
     public int Comments { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
-    public IReadOnlyList<string>? MediaAttachments { get; set; }
+    public IReadOnlyList<MediaAttachmentInfo>? MediaAttachments { get; set; }
     public SuggestField? Suggest { get; set; }
 }

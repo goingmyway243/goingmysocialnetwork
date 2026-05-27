@@ -10,6 +10,6 @@ public record PostCreatedEvent
     public string UserId { get; init; } = null!;
     public string Username { get; init; } = null!;
     public string Content { get; init; } = null!;
-    public IReadOnlyList<string> MediaAttachments { get; init; } = [];
+    public IReadOnlyList<MediaAttachmentInfo> MediaAttachments { get; init; } = [];
     public DateTime CreatedAt { get; init; }
 }

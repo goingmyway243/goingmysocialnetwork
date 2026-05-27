@@ -350,4 +350,8 @@ export class PostDetailComponent implements OnInit {
     if (diffDays < 7) return `${diffDays}d ago`;
     return date.toLocaleDateString();
   }
+
+  isVideoAttachment(contentType: string): boolean {
+    return contentType.startsWith('video/');
+  }
 }

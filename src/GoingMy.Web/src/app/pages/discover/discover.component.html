@@ -248,17 +248,17 @@
         </div>
         <div class="posts-list">
           @for (post of postResults(); track post.id) {
-            <div class="post-card glass-elevated" (click)="navigateToPost(post.id)">
-              <div class="post-meta">
-                <span class="post-author">&#64;{{ post.username }}</span>
-                <span class="post-time">{{ formatRelativeTime(post.createdAt) }}</span>
-              </div>
-              <p class="post-content">{{ post.content }}</p>
-              <div class="post-stats">
-                <span class="post-stat"><i class="pi pi-heart"></i> {{ post.likes }}</span>
-                <span class="post-stat"><i class="pi pi-comment"></i> {{ post.comments }}</span>
-              </div>
-            </div>
+            <app-post-card
+              [post]="post"
+              [commentState]="getCommentState(post.id)"
+              [liked]="post.userHasLiked ?? false"
+              (likeToggle)="toggleLike($event)"
+              (commentsToggle)="toggleComments($event)"
+              (newCommentInput)="onNewCommentInput($event)"
+              (commentSubmit)="submitComment($event)"
+              (detailView)="navigateToPost($event)"
+              (authorClick)="navigateToProfile($event)"
+            />
           }
         </div>
       }
@@ -300,21 +300,20 @@
 
       @if (!isTrendingLoading() && hasTrending()) {
         <div class="posts-list">
-          @for (post of trendingPosts(); track post.postId; let i = $index) {
-            <div class="post-card glass-elevated trending-post" (click)="navigateToPost(post.postId)">
+          @for (post of trendingPosts(); track post.id; let i = $index) {
+            <div class="trending-post-wrapper">
               <span class="trending-rank">#{{ i + 1 }}</span>
-              <div class="post-body">
-                <div class="post-meta">
-                  <span class="post-author">&#64;{{ post.username }}</span>
-                  <span class="post-time">{{ formatRelativeTime(post.createdAt) }}</span>
-                </div>
-                <p class="post-content">{{ post.content }}</p>
-                <div class="post-stats">
-                  <span class="post-stat"><i class="pi pi-heart"></i> {{ post.likes }}</span>
-                  <span class="post-stat"><i class="pi pi-comment"></i> {{ post.comments }}</span>
-                  <span class="post-stat engagement"><i class="pi pi-bolt"></i> {{ post.engagementScore }}</span>
-                </div>
-              </div>
+              <app-post-card
+                [post]="post"
+                [commentState]="getCommentState(post.id)"
+                [liked]="post.userHasLiked ?? false"
+                (likeToggle)="toggleLike($event)"
+                (commentsToggle)="toggleComments($event)"
+                (newCommentInput)="onNewCommentInput($event)"
+                (commentSubmit)="submitComment($event)"
+                (detailView)="navigateToPost($event)"
+                (authorClick)="navigateToProfile($event)"
+              />
             </div>
           }
         </div>

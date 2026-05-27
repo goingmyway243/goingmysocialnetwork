@@ -40,7 +40,7 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, IPublishEn
             PostId = updatedPost.Id,
             UserId = updatedPost.UserId,
             Content = updatedPost.Content,
-            MediaAttachments = updatedPost.MediaAttachments?.Select(m => m.Url).ToList() ?? [],
+            MediaAttachments = updatedPost.MediaAttachments?.Select(m => new GoingMy.Shared.Events.MediaAttachmentInfo(m.FileId, m.Url, m.ContentType, m.Width, m.Height)).ToList() ?? [],
             UpdatedAt = updatedPost.UpdatedAt ?? DateTime.UtcNow
         }, cancellationToken);
 

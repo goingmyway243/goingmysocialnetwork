@@ -6,8 +6,9 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TextareaModule } from 'primeng/textarea';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { PostApiService } from '../../../services/post-api.service';
 import { AuthService } from '../../../services/auth.service';
 import { ComposePostComponent } from '../../../components/compose-post/compose-post.component';
@@ -17,7 +18,8 @@ import { Post, Comment, PostCommentsState } from '../../../models/post.model';
 
 @Component({
   selector: 'app-dashboard-home',
-  imports: [CommonModule, FormsModule, CardModule, ButtonModule, SkeletonModule, DialogModule, TextareaModule, ComposePostComponent, PostCardComponent, EmptyStateComponent],
+  imports: [CommonModule, FormsModule, CardModule, ButtonModule, SkeletonModule, DialogModule, ConfirmDialogModule, TextareaModule, ComposePostComponent, PostCardComponent, EmptyStateComponent],
+  providers: [ConfirmationService],
   templateUrl: './dashboard-home.component.html',
   styleUrl: './dashboard-home.component.css'
 })
@@ -28,6 +30,7 @@ export class DashboardHomeComponent implements OnInit {
   private readonly _authService = inject(AuthService);
   private readonly _router = inject(Router);
   private readonly _messageService = inject(MessageService);
+  private readonly _confirmationService = inject(ConfirmationService);
 
   // ── 2. State ─────────────────────────────────────────────────
   readonly posts = signal<Post[]>([]);
@@ -214,22 +217,30 @@ export class DashboardHomeComponent implements OnInit {
   }
 
   deletePost(post: Post): void {
-    if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
-      this._postApi.deletePost(post.id).subscribe({
-        next: () => {
-          this.posts.update(prev => prev.filter(p => p.id !== post.id));
-          this._commentStates.update(map => {
-            const next = new Map(map);
-            next.delete(post.id);
-            return next;
-          });
-          this._messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Post deleted successfully.' });
-        },
-        error: () => {
-          this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete post.' });
-        }
-      });
-    }
+    this._confirmationService.confirm({
+      message: 'Are you sure you want to delete this post? This action cannot be undone.',
+      header: 'Confirm Delete',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Delete',
+      rejectLabel: 'Cancel',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => {
+        this._postApi.deletePost(post.id).subscribe({
+          next: () => {
+            this.posts.update(prev => prev.filter(p => p.id !== post.id));
+            this._commentStates.update(map => {
+              const next = new Map(map);
+              next.delete(post.id);
+              return next;
+            });
+            this._messageService.add({ severity: 'success', summary: 'Deleted', detail: 'Post deleted successfully.' });
+          },
+          error: () => {
+            this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete post.' });
+          }
+        });
+      }
+    });
   }
 
   // ── 7. Actions — Comments ─────────────────────────────────────

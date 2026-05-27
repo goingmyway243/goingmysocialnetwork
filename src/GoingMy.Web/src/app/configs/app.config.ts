@@ -5,6 +5,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 
 import { routes } from '../app.routes';
 import { providePrimeNG } from 'primeng/config';
+import { MessageService } from 'primeng/api';
 import { DarkGlassPreset } from './app.theme';
 import { authInterceptor } from '../interceptors/auth.interceptor';
 import { refreshTokenInterceptor } from '../interceptors/refresh-token.interceptor';
@@ -29,6 +30,7 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: DarkGlassPreset
       }
-    })
+    }),
+    MessageService
   ]
 };

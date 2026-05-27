@@ -1058,16 +1058,17 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
 /* ── p-inputtext: Compose Textarea / Dialog Inputs ───────── */
 
 .comment-textarea {
+  width: 100%;
   background: var(--glass-surface-bg) !important;
   border: 1px solid var(--glass-border-subtle) !important;
   border-radius: 10px !important;
-  color: #ffffff !important;
+  color: var(--text-color) !important;
   resize: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .comment-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-color-secondary);
 }
 
 .comment-textarea:focus {
@@ -1145,6 +1146,81 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
   margin-right: 0.75rem;
 }
 
+/* ── p-select: Liquid Glass ────────────────────────────────── */
+
+.p-select {
+  background: var(--glass-surface-bg) !important;
+  border: 1px solid var(--glass-border-subtle) !important;
+  border-radius: 12px !important;
+  color: var(--text-color) !important;
+  backdrop-filter: var(--glass-blur-sm) saturate(160%);
+  -webkit-backdrop-filter: var(--glass-blur-sm) saturate(160%);
+  transition: var(--transition-smooth);
+}
+
+.p-select:not(.p-disabled):hover {
+  background: var(--glass-surface-hover) !important;
+  border-color: var(--glass-border-accent) !important;
+}
+
+.p-select.p-focus {
+  border-color: var(--glass-border-accent) !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2) !important;
+}
+
+.p-select .p-select-label,
+.p-select .p-select-label.p-placeholder {
+  color: var(--text-color) !important;
+}
+
+.p-select .p-select-dropdown,
+.p-select .p-select-dropdown .p-select-dropdown-icon,
+.p-select .p-select-clear-icon {
+  color: var(--text-color-secondary) !important;
+}
+
+.p-select-overlay {
+  background: var(--glass-overlay-bg) !important;
+  backdrop-filter: var(--glass-blur-lg) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-lg) saturate(180%);
+  border: 1px solid var(--glass-border-strong) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--glass-shadow-xl), inset 0 1px 2px var(--glass-highlight-inner) !important;
+}
+
+.p-select-overlay .p-select-list {
+  padding: 0.35rem;
+}
+
+.p-select-overlay .p-select-option {
+  color: var(--text-color) !important;
+  border-radius: 9px;
+  margin: 0.1rem 0;
+  transition: var(--transition-fast);
+}
+
+.p-select-overlay .p-select-option:hover,
+.p-select-overlay .p-select-option.p-focus {
+  background: var(--glass-elevated-hover) !important;
+  color: var(--text-color) !important;
+}
+
+.p-select-overlay .p-select-option.p-select-option-selected {
+  background: rgba(96, 165, 250, 0.24) !important;
+  color: #ffffff !important;
+}
+
+.p-select-overlay .p-select-option.p-select-option-selected:hover {
+  background: rgba(96, 165, 250, 0.32) !important;
+}
+
+.p-select-overlay .p-select-empty-message {
+  color: var(--text-color-secondary) !important;
+}
+
+.ai-tone-select .p-select-label {
+  padding: 0.25rem 0.5rem;
+}
 /* ── p-toast: Enhanced Liquid Glass Toast Container ──────────────────────── */
 .app-toast-container .p-toast-message {
   max-width: 500px;
@@ -1198,11 +1274,13 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
 }
 
 .app-toast-container .p-toast-summary {
+  color: white !important;
   font-weight: 600;
   letter-spacing: 0.4px;
 }
 
 .app-toast-container .p-toast-detail {
+  color: white !important;
   font-weight: 400;
   opacity: 0.85;
   font-size: 0.9rem;
@@ -1394,7 +1472,7 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
 
 .glass-dialog .p-dialog-content {
   background: transparent;
-  padding: 1rem 0;
+  padding: 1rem;
   overflow-y: auto;
   position: relative;
   z-index: 2;

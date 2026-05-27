@@ -1,6 +1,8 @@
 import { computed, inject, Injectable, OnDestroy, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { NotificationDto } from '../models/notification.models';
+import { MessageService } from 'primeng/api';
+import { NotificationDto, NotificationType } from '../models/notification.models';
+import { getNotificationText } from '../utils/notification.utils';
 import { NotificationApiService } from './notification-api.service';
 import { NotificationSignalRService } from './notification-signalr.service';
 
@@ -10,6 +12,7 @@ export class NotificationStateService implements OnDestroy {
   // ── 1. Dependencies ─────────────────────────────────────────
   private readonly _api = inject(NotificationApiService);
   private readonly _signalR = inject(NotificationSignalRService);
+  private readonly _messageService = inject(MessageService);
   private readonly _subs: Subscription[] = [];
 
   // ── 2. State ────────────────────────────────────────────────
@@ -111,10 +114,28 @@ export class NotificationStateService implements OnDestroy {
       this._signalR.notificationReceived$.subscribe(notification => {
         this.notifications.update(items => [notification, ...items]);
         this.unreadCount.update(c => c + 1);
+        this._showToast(notification);
       }),
       this._signalR.unreadCountUpdated$.subscribe(count => {
         this.unreadCount.set(count);
       })
     );
+  }
+
+  private _showToast(notification: NotificationDto): void {
+    const severity = notification.type === NotificationType.PostWithMediaFailed
+      ? 'error'
+      : notification.type === NotificationType.PostWithMediaCreated
+        ? 'success'
+        : 'info';
+    const summary = severity === 'error' ? 'Notification Failed' : 'New Notification';
+    const detail = notification.referencePreview || getNotificationText(notification).replace(/<[^>]*>/g, '');
+
+    this._messageService.add({
+      severity,
+      summary,
+      detail,
+      life: 5000
+    });
   }
 }

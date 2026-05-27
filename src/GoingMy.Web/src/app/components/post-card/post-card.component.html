@@ -81,14 +81,16 @@
     </p-button>
 
     @if (isPostOwner()) {
-      <p-button
-        #postMenuBtn
-        icon="pi pi-ellipsis-v"
-        [text]="true"
-        styleClass="action-btn"
-        (onClick)="postMenu.toggle($event)">
-      </p-button>
-      <p-menu #postMenu [model]="getPostMenuItems()" [popup]="true" appendTo="body"></p-menu>
+      <div class="owner-action-btn">
+        <p-button
+          #postMenuBtn
+          icon="pi pi-ellipsis-v"
+          [text]="true"
+          styleClass="action-btn"
+          (onClick)="postMenu.toggle($event)">
+        </p-button>
+        <p-menu #postMenu [model]="postMenuItems()" [popup]="true" appendTo="body"></p-menu>
+      </div>
     }
   </div>
 
@@ -112,14 +114,15 @@
             (input)="onCommentInput($any($event.target).value)"
             [disabled]="commentState().submitting">
           </textarea>
-          <p-button
+          <button
+            pButton
             icon="pi pi-send"
             [text]="true"
-            styleClass="send-btn"
+            class="comment-send-btn"
             [disabled]="!commentState().newComment.trim() || commentState().submitting"
             [loading]="commentState().submitting"
             (onClick)="onCommentSubmit()">
-          </p-button>
+          </button>
         </div>
       </div>
 
@@ -133,8 +136,6 @@
             </div>
           }
         </div>
-      } @else if (commentState().comments.length === 0) {
-        <p class="no-comments-hint">No comments yet.</p>
       } @else {
         <div class="comment-list">
           @for (comment of commentState().comments.slice(0, 3); track comment.id) {

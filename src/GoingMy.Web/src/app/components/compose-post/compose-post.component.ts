@@ -61,6 +61,10 @@ export class ComposePostComponent {
   readonly mediaValidating = signal(false);
   readonly mediaError = signal<string | null>(null);
   readonly uploadProgress = signal<MediaUploadProgress>({});
+  /** Maps MediaFile.id → local object URL created from the original File */
+  private readonly _localPreviewMap = new Map<string, string>();
+  /** Blob URLs already injected into emitted posts — kept alive until page unload so images stay visible. */
+  private readonly _committedPreviewUrls = new Set<string>();
 
   // ── AI State ──────────────────────────────────────────────────
   readonly aiPanelVisible = signal(false);
@@ -99,6 +103,11 @@ export class ComposePostComponent {
     this.mediaError.set(null);
     this.uploadProgress.set({});
     this.mediaValidating.set(false);
+    // Only revoke URLs that were NOT committed to an emitted post (i.e. user cancelled)
+    this._localPreviewMap.forEach(url => {
+      if (!this._committedPreviewUrls.has(url)) URL.revokeObjectURL(url);
+    });
+    this._localPreviewMap.clear();
   }
 
   /** Shows the waiting dialog for video posts */
@@ -139,6 +148,17 @@ export class ComposePostComponent {
     // ── Determine if post contains video ──────────────────────
     const hasVideo = this.selectedMediaFiles().some(m => m.contentType.startsWith('video/'));
 
+    // ── Snapshot image attachments with local blob URLs BEFORE the API call ──
+    // The server's WithMedia endpoint returns a placeholder with no mediaAttachments,
+    // so we must build them client-side for the optimistic post emit.
+    const imageAttachmentsSnapshot = this.selectedMediaFiles()
+      .filter(m => !m.contentType.startsWith('video/'))
+      .map(m => {
+        const localUrl = this._localPreviewMap.get(m.id) ?? m.url;
+        if (localUrl.startsWith('blob:')) this._committedPreviewUrls.add(localUrl);
+        return { fileId: m.id, url: localUrl, contentType: m.contentType, width: m.width, height: m.height };
+      });
+
     // ── Determine which endpoint to use ──────────────────────
     const postRequest = mediaFileIds.length > 0
       ? this._postApi.createPostWithMedia({ content: contentText, mediaFileIds })
@@ -150,7 +170,7 @@ export class ComposePostComponent {
 
         // ── If post has video, show waiting dialog ────────────
         if (hasVideo) {
-          this.showWaitingDialog();
+          // this.showWaitingDialog();
           this._messageService.add({
             severity: 'info',
             summary: 'Processing',
@@ -158,16 +178,23 @@ export class ComposePostComponent {
             life: 4000
           });
         } else {
-          // ── For text/image posts, emit immediately ──────────
-          this.postCreated.emit(response.post);
+          // ── For text/image posts, emit immediately with local preview URLs ──────────
+          // Prefer the snapshot over server response since server returns no mediaAttachments for WithMedia posts.
+          const postToEmit: Post = {
+            ...response.post,
+            mediaAttachments: imageAttachmentsSnapshot.length > 0
+              ? imageAttachmentsSnapshot
+              : response.post.mediaAttachments
+          };
+          this.postCreated.emit(postToEmit);
           this._messageService.add({
             severity: 'success',
             summary: 'Posted!',
             detail: 'Your post has been published.',
             life: 3000
           });
-          this.closeDialog();
         }
+        this.closeDialog();
       },
       error: () => {
         this.error.set('Failed to create post. Please try again.');
@@ -251,7 +278,7 @@ export class ComposePostComponent {
   }
 
   /**
-   * Validates files before upload and initiates upload
+   * Validates files before upload and creates local preview URLs, then initiates upload
    */
   private validateAndUploadFiles(files: File[]): void {
     // ── Check total file count ──────────────────────────
@@ -345,8 +372,21 @@ export class ComposePostComponent {
     };
 
     // ── Perform upload ──────────────────────────────────
+    // ── Create local preview URLs before upload ────────────
+    const filePreviewMap = new Map<string, string>();
+    files.forEach(f => { filePreviewMap.set(f.name, URL.createObjectURL(f)); });
+
     this._uploadApi.uploadFileBatch(files, 'PostMedia', onProgress).subscribe({
       next: (uploadedFiles: MediaFile[]) => {
+        // Map MediaFile.id → local blob URL by matching originalFileName
+        uploadedFiles.forEach(mf => {
+          const localUrl = filePreviewMap.get(mf.originalFileName);
+          if (localUrl) this._localPreviewMap.set(mf.id, localUrl);
+        });
+        // Clean up any unmatched previews
+        filePreviewMap.forEach((url, name) => {
+          if (!uploadedFiles.some(mf => mf.originalFileName === name)) URL.revokeObjectURL(url);
+        });
         // ── Update progress to validating ───────────────
         uploadedFiles.forEach(file => {
           this.uploadProgress.update(progress => ({
@@ -392,6 +432,26 @@ export class ComposePostComponent {
    * Removes a media file from the selection
    */
   removeMedia(fileId: string): void {
+    const url = this._localPreviewMap.get(fileId);
+    if (url) {
+      URL.revokeObjectURL(url);
+      this._localPreviewMap.delete(fileId);
+    }
     this.selectedMediaFiles.update(files => files.filter(f => f.id !== fileId));
+  }
+
+  /**
+   * Returns a copy of the post where image mediaAttachments use local blob URLs
+   * so the feed shows images immediately without waiting for CDN propagation.
+   */
+  private _applyLocalPreviews(post: Post): Post {
+    if (!post.mediaAttachments?.length || this._localPreviewMap.size === 0) return post;
+    return {
+      ...post,
+      mediaAttachments: post.mediaAttachments.map(a => {
+        const localUrl = this._localPreviewMap.get(a.fileId);
+        return localUrl ? { ...a, url: localUrl } : a;
+      })
+    };
   }
 }

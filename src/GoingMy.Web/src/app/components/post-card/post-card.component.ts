@@ -1,4 +1,4 @@
-import { Component, input, output, inject } from '@angular/core';
+import { Component, computed, input, output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -39,14 +39,9 @@ export class PostCardComponent {
   readonly editPost = output<Post>();
   readonly authorClick = output<string>();
 
-  // ── 3. Utilities ─────────────────────────────────────────────────
-  isPostOwner(): boolean {
-    const currentUserId = this._authService.getCurrentUserId();
-    return currentUserId === this.post().userId;
-  }
-
-  getPostMenuItems(): MenuItem[] {
+  readonly postMenuItems = computed<MenuItem[]>(() => {
     if (!this.isPostOwner()) return [];
+    // Keep menu model stable across change detection so first click executes commands reliably.
     return [
       {
         label: 'Edit',
@@ -60,6 +55,12 @@ export class PostCardComponent {
         command: () => this.onDeletePost()
       }
     ];
+  });
+
+  // ── 3. Utilities ─────────────────────────────────────────────────
+  isPostOwner(): boolean {
+    const currentUserId = this._authService.getCurrentUserId();
+    return currentUserId === this.post().userId;
   }
 
   // ── 3. Actions ───────────────────────────────────────────────

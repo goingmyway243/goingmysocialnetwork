@@ -1,3 +1,5 @@
+using GoingMy.Shared.Events;
+
 namespace GoingMy.Search.API.Dtos;
 
 public record UserSearchResultDto(
@@ -20,4 +22,4 @@ public record PostSearchResultDto(
     int Likes,
     int Comments,
     DateTime CreatedAt,
-    IReadOnlyList<string>? MediaAttachments);
+    IReadOnlyList<MediaAttachmentInfo>? MediaAttachments);

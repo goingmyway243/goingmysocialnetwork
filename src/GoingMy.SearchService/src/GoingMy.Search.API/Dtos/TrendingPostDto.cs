@@ -1,3 +1,5 @@
+using GoingMy.Shared.Events;
+
 namespace GoingMy.Search.API.Dtos;
 
 public record TrendingPostDto(
@@ -9,4 +11,4 @@ public record TrendingPostDto(
     int Comments,
     int EngagementScore,
     DateTime CreatedAt,
-    IReadOnlyList<string>? MediaAttachments);
+    IReadOnlyList<MediaAttachmentInfo>? MediaAttachments);

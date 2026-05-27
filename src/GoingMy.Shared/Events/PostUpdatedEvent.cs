@@ -9,6 +9,6 @@ public record PostUpdatedEvent
     public string PostId { get; init; } = null!;
     public string UserId { get; init; } = null!;
     public string Content { get; init; } = null!;
-    public IReadOnlyList<string> MediaAttachments { get; init; } = [];
+    public IReadOnlyList<MediaAttachmentInfo> MediaAttachments { get; init; } = [];
     public DateTime UpdatedAt { get; init; }
 }

@@ -195,7 +195,7 @@
   background: var(--glass-surface-bg);
   border: 1px solid var(--glass-border-subtle);
   border-radius: 999px;
-  color: var(--text-color-secondary);
+  color: var(--text-color);
   font-size: 0.8rem;
   cursor: pointer;
   transition: var(--transition-fast);
@@ -307,9 +307,9 @@
 .attach-btn {
   padding: 0.4rem 0.875rem;
   background: transparent;
-  border: 1px solid var(--glass-border-accent);
+  border: 1px solid var(--glass-border-base);
   border-radius: 999px;
-  color: var(--text-color-secondary);
+  color: var(--text-color);
   transition: var(--transition-fast);
   cursor: pointer;
 }

@@ -1,4 +1,5 @@
 // ── Search result models matching GoingMy.Search.API DTOs ────────
+import { MediaAttachment } from './media.model';
 
 export interface SearchResultDto<T> {
   items: T[];
@@ -29,7 +30,7 @@ export interface PostSearchResult {
   likes: number;
   comments: number;
   createdAt: string;
-  mediaAttachments?: string[];
+  mediaAttachments?: MediaAttachment[];
 }
 
 export interface TrendingPost {
@@ -41,7 +42,7 @@ export interface TrendingPost {
   comments: number;
   engagementScore: number;
   createdAt: string;
-  mediaAttachments?: string[];
+  mediaAttachments?: MediaAttachment[];
 }
 
 export interface SuggestionResult {
