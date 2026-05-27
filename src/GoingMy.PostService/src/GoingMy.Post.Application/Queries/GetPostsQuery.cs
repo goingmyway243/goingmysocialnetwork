@@ -6,14 +6,23 @@ using MediatR;
 namespace GoingMy.Post.Application.Queries;
 
 /// <summary>
-/// Query to retrieve all posts.
+/// Response DTO for paginated posts.
 /// </summary>
-public record GetPostsQuery(string? UserId = null) : IRequest<IEnumerable<PostDto>>;
+public record GetPostsResponseDto(IEnumerable<PostDto> Posts, bool HasMore);
 
 /// <summary>
-/// Handler for the GetPostsQuery.
+/// Query to retrieve paginated posts.
 /// </summary>
-public class GetPostsQueryHandler : IRequestHandler<GetPostsQuery, IEnumerable<PostDto>>
+public record GetPostsQuery(
+    string? UserId = null,
+    int PageNumber = 0,
+    int PageSize = 20
+) : IRequest<GetPostsResponseDto>;
+
+/// <summary>
+/// Handler for the GetPostsQuery with pagination support.
+/// </summary>
+public class GetPostsQueryHandler : IRequestHandler<GetPostsQuery, GetPostsResponseDto>
 {
     private readonly IPostRepository _postRepository;
     private readonly ILikeRepository _likeRepository;
@@ -24,23 +33,39 @@ public class GetPostsQueryHandler : IRequestHandler<GetPostsQuery, IEnumerable<P
         _likeRepository = likeRepository;
     }
 
-    public async Task<IEnumerable<PostDto>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
+    public async Task<GetPostsResponseDto> Handle(GetPostsQuery request, CancellationToken cancellationToken)
     {
         var posts = await _postRepository.GetAllAsync(cancellationToken);
-        var dtos = posts.Select(CreatePostCommandHandler.MapToDto).ToList();
+        
+        // Calculate pagination
+        var totalCount = posts.Count();
+        var skip = request.PageNumber * request.PageSize;
+        var take = request.PageSize;
+        var hasMore = skip + take < totalCount;
+        
+        // Apply pagination and mapping
+        var dtos = posts
+            .OrderByDescending(p => p.CreatedAt) // Sort by creation date, newest first
+            .Skip(skip)
+            .Take(take)
+            .Select(CreatePostCommandHandler.MapToDto)
+            .ToList();
 
-        // Populate UserHasLiked for each post if userId is provided
+        // Populate UserHasLiked in one query to avoid N+1 repository calls
         if (!string.IsNullOrEmpty(request.UserId))
         {
-            var result = new List<PostDto>();
-            foreach (var dto in dtos)
-            {
-                var userHasLiked = await _likeRepository.ExistsAsync(dto.Id, request.UserId, cancellationToken);
-                result.Add(dto with { UserHasLiked = userHasLiked });
-            }
-            return result;
+            var likedPostIds = await _likeRepository.GetLikedPostIdsAsync(
+                request.UserId,
+                dtos.Select(dto => dto.Id),
+                cancellationToken);
+
+            var result = dtos
+                .Select(dto => dto with { UserHasLiked = likedPostIds.Contains(dto.Id) })
+                .ToList();
+
+            return new GetPostsResponseDto(result, hasMore);
         }
 
-        return dtos;
+        return new GetPostsResponseDto(dtos, hasMore);
     }
 }

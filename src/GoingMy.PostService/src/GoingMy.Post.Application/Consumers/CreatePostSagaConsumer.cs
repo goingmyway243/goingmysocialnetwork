@@ -29,12 +29,22 @@ public class CreatePostSagaConsumer(IPostRepository postRepository, IPublishEndp
                 LastName = msg.LastName ?? string.Empty
             };
 
-            await postRepository.AddAsync(post, context.CancellationToken);
+            var createdPost = await postRepository.AddAsync(post, context.CancellationToken);
+
+            await publishEndpoint.Publish(new PostCreatedEvent
+            {
+                PostId = createdPost.Id,
+                UserId = createdPost.UserId,
+                Username = createdPost.Username,
+                Content = createdPost.Content,
+                MediaAttachments = createdPost.MediaAttachments?.Select(m => m.Url).ToList() ?? [],
+                CreatedAt = createdPost.CreatedAt
+            }, context.CancellationToken);
 
             await publishEndpoint.Publish(new PostCreatedForSagaEvent
             {
                 CorrelationId = msg.CorrelationId,
-                PostId = post.Id
+                PostId = createdPost.Id
             }, context.CancellationToken);
         }
         catch (Exception ex)

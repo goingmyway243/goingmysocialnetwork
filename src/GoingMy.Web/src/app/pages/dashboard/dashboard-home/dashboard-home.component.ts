@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -32,10 +32,16 @@ export class DashboardHomeComponent implements OnInit {
   // ── 2. State ─────────────────────────────────────────────────
   readonly posts = signal<Post[]>([]);
   readonly loading = signal(true);
+  readonly loadingMore = signal(false);
   readonly error = signal<string | null>(null);
   readonly editingPost = signal<Post | null>(null);
   readonly editPostContent = signal('');
   readonly editPostSubmitting = signal(false);
+
+  // ── Pagination State ──────────────────────────────────────────
+  readonly pageNumber = signal(0);
+  readonly pageSize = signal(20);
+  readonly hasMore = signal(true);
 
   /** Per-post comment state keyed by post ID */
   private readonly _commentStates = signal<Map<string, PostCommentsState>>(new Map());
@@ -52,11 +58,15 @@ export class DashboardHomeComponent implements OnInit {
   loadPosts(): void {
     this.loading.set(true);
     this.error.set(null);
-    this._postApi.getPosts().subscribe({
+    this.pageNumber.set(0);
+    this.hasMore.set(true);
+
+    this._postApi.getPostsPaginated(0, this.pageSize()).subscribe({
       next: (data) => {
         const raw = Array.isArray((data as any).posts) ? (data as any).posts : (Array.isArray(data) ? data : []);
         const posts: Post[] = (raw as Post[]).map(p => ({ ...p, likes: p.likes ?? 0, comments: p.comments ?? 0 }));
         this.posts.set(posts);
+        this.hasMore.set(data.hasMore);
         this.loading.set(false);
         const map = new Map<string, PostCommentsState>();
         posts.forEach(p => map.set(p.id, { expanded: false, loading: false, comments: [], newComment: '', submitting: false }));
@@ -69,8 +79,60 @@ export class DashboardHomeComponent implements OnInit {
     });
   }
 
+  /** Loads the next page of posts and appends to the list */
+  loadMorePosts(): void {
+    if (this.loadingMore() || !this.hasMore() || this.loading()) {
+      return;
+    }
+
+    this.loadingMore.set(true);
+    const nextPage = this.pageNumber() + 1;
+
+    this._postApi.getPostsPaginated(nextPage, this.pageSize()).subscribe({
+      next: (data) => {
+        const raw = Array.isArray((data as any).posts) ? (data as any).posts : (Array.isArray(data) ? data : []);
+        const newPosts: Post[] = (raw as Post[]).map(p => ({ ...p, likes: p.likes ?? 0, comments: p.comments ?? 0 }));
+        
+        // Append new posts to existing list
+        this.posts.update(prev => [...prev, ...newPosts]);
+        this.pageNumber.set(nextPage);
+        this.hasMore.set(data.hasMore);
+        this.loadingMore.set(false);
+
+        // Initialize comment states for new posts
+        this._commentStates.update(map => {
+          const next = new Map(map);
+          newPosts.forEach(p => {
+            if (!next.has(p.id)) {
+              next.set(p.id, { expanded: false, loading: false, comments: [], newComment: '', submitting: false });
+            }
+          });
+          return next;
+        });
+      },
+      error: () => {
+        this.loadingMore.set(false);
+        this._messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load more posts.' });
+      }
+    });
+  }
+
+  /** Detects scroll and loads more posts when near bottom */
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    // Check if user is near bottom of page
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const bottomThreshold = document.documentElement.scrollHeight - 500; // Load when 500px from bottom
+
+    if (scrollPosition >= bottomThreshold && this.hasMore() && !this.loadingMore() && !this.loading()) {
+      this.loadMorePosts();
+    }
+  }
+
   onPostCreated(post: Post): void {
     const normalized: Post = { ...post, likes: 0, comments: 0 };
+    // Only prepend if it's not a video post (will arrive via notification)
+    // For now, we'll just prepend text posts
     this.posts.update(prev => [normalized, ...prev]);
     this._commentStates.update(map => {
       const next = new Map(map);

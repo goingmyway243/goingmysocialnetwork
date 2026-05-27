@@ -46,7 +46,7 @@ builder.Services.AddMassTransit(x =>
     {
         cfg.Host(new Uri(builder.Configuration.GetConnectionString(SharedServices.RabbitMQ)!));
 
-        cfg.ReceiveEndpoint($"{nameof(UserRegisteredEvent)}_consumer", e =>
+        cfg.ReceiveEndpoint($"{nameof(UserRegisteredEvent)}_user_consumer", e =>
         {
             e.ConfigureConsumer<UserRegisteredEventConsumer>(context);
         });

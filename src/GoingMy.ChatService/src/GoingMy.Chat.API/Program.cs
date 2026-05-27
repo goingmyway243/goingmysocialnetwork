@@ -50,16 +50,20 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<UserUpdatedEventConsumer>();
     x.AddConsumer<UserDeletedEventConsumer>();
+    x.AddConsumer<MutualFollowConversationConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host(new Uri(builder.Configuration.GetConnectionString(SharedServices.RabbitMQ)!));
 
-        cfg.ReceiveEndpoint($"{nameof(UserUpdatedEvent)}_consumer", e =>
+        cfg.ReceiveEndpoint($"{nameof(UserUpdatedEvent)}_chat_consumer", e =>
             e.ConfigureConsumer<UserUpdatedEventConsumer>(context));
 
-        cfg.ReceiveEndpoint($"{nameof(UserDeletedEvent)}_consumer", e =>
+        cfg.ReceiveEndpoint($"{nameof(UserDeletedEvent)}_chat_consumer", e =>
             e.ConfigureConsumer<UserDeletedEventConsumer>(context));
+
+        cfg.ReceiveEndpoint($"{nameof(UserFollowedEvent)}_chat_consumer", e =>
+            e.ConfigureConsumer<MutualFollowConversationConsumer>(context));
 
         cfg.ConfigureEndpoints(context);
     });

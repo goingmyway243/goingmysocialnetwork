@@ -51,6 +51,9 @@ export class ComposePostComponent {
   readonly content = signal('');
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
+  readonly waitingDialogVisible = signal(false);
+  readonly waitingCountdown = signal(5);
+  private _waitingCountdownInterval: ReturnType<typeof setInterval> | null = null;
 
   // ── Media State ───────────────────────────────────────────────
   readonly selectedMediaFiles = signal<MediaFile[]>([]);
@@ -98,6 +101,32 @@ export class ComposePostComponent {
     this.mediaValidating.set(false);
   }
 
+  /** Shows the waiting dialog for video posts */
+  private showWaitingDialog(): void {
+    this.waitingCountdown.set(5);
+    this.waitingDialogVisible.set(true);
+
+    // Start countdown
+    this._waitingCountdownInterval = setInterval(() => {
+      const current = this.waitingCountdown();
+      if (current > 1) {
+        this.waitingCountdown.set(current - 1);
+      } else {
+        this.closeWaitingDialog();
+      }
+    }, 1000);
+  }
+
+  /** Closes the waiting dialog and cleans up resources */
+  closeWaitingDialog(): void {
+    if (this._waitingCountdownInterval) {
+      clearInterval(this._waitingCountdownInterval);
+      this._waitingCountdownInterval = null;
+    }
+    this.waitingDialogVisible.set(false);
+    this.closeDialog();
+  }
+
   submit(): void {
     if (!this.canSubmit()) return;
 
@@ -107,6 +136,9 @@ export class ComposePostComponent {
     const mediaFileIds = this.selectedMediaFiles().map(m => m.id);
     const contentText = this.content().trim();
 
+    // ── Determine if post contains video ──────────────────────
+    const hasVideo = this.selectedMediaFiles().some(m => m.contentType.startsWith('video/'));
+
     // ── Determine which endpoint to use ──────────────────────
     const postRequest = mediaFileIds.length > 0
       ? this._postApi.createPostWithMedia({ content: contentText, mediaFileIds })
@@ -114,15 +146,28 @@ export class ComposePostComponent {
 
     postRequest.subscribe({
       next: (response) => {
-        this.postCreated.emit(response.post);
         this.submitting.set(false);
-        this._messageService.add({
-          severity: 'success',
-          summary: 'Posted!',
-          detail: 'Your post has been published.',
-          life: 3000
-        });
-        this.closeDialog();
+
+        // ── If post has video, show waiting dialog ────────────
+        if (hasVideo) {
+          this.showWaitingDialog();
+          this._messageService.add({
+            severity: 'info',
+            summary: 'Processing',
+            detail: 'Your video post is being processed. We\'ll notify you when it\'s ready.',
+            life: 4000
+          });
+        } else {
+          // ── For text/image posts, emit immediately ──────────
+          this.postCreated.emit(response.post);
+          this._messageService.add({
+            severity: 'success',
+            summary: 'Posted!',
+            detail: 'Your post has been published.',
+            life: 3000
+          });
+          this.closeDialog();
+        }
       },
       error: () => {
         this.error.set('Failed to create post. Please try again.');

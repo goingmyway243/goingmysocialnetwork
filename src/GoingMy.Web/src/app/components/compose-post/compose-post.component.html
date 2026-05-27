@@ -175,3 +175,42 @@
   </ng-template>
 </p-dialog>
 
+<!-- ── Waiting for Video Processing Dialog ────────────────── -->
+<p-dialog
+  header="Processing Video Post"
+  appendTo="body"
+  [modal]="true"
+  [(visible)]="waitingDialogVisible"
+  [style]="{ width: '400px' }"
+  [maskStyleClass]="'glass-dialog-mask'"
+  [draggable]="false"
+  [resizable]="false"
+  [dismissableMask]="false"
+  [closable]="false"
+  styleClass="glass-dialog waiting-dialog">
+
+  <!-- Content -->
+  <div class="waiting-dialog-content">
+    <div class="waiting-spinner">
+      <i class="pi pi-spin pi-spinner"></i>
+    </div>
+    <p class="waiting-title">Your video post is being processed</p>
+    <p class="waiting-message">
+      We're converting and optimizing your video. You'll receive a notification when it's ready to share.
+    </p>
+    <p class="waiting-countdown">
+      Auto-closing in <strong>{{ waitingCountdown() }}s</strong>
+    </p>
+  </div>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <p-button
+        label="OK"
+        styleClass="ok-btn"
+        (onClick)="closeWaitingDialog()">
+      </p-button>
+    </div>
+  </ng-template>
+</p-dialog>

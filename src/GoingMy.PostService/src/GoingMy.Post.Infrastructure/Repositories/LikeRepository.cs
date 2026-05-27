@@ -18,6 +18,29 @@ public class LikeRepository(MongoDbContext context) : ILikeRepository
         return count > 0;
     }
 
+    public async Task<IReadOnlySet<string>> GetLikedPostIdsAsync(
+        string userId,
+        IEnumerable<string> postIds,
+        CancellationToken cancellationToken = default)
+    {
+        var postIdList = postIds.Distinct().ToList();
+        if (postIdList.Count == 0)
+        {
+            return new HashSet<string>();
+        }
+
+        var filter = Builders<Like>.Filter.And(
+            Builders<Like>.Filter.Eq(l => l.UserId, userId),
+            Builders<Like>.Filter.In(l => l.PostId, postIdList));
+
+        var likedPostIds = await context.Likes
+            .Find(filter)
+            .Project(l => l.PostId)
+            .ToListAsync(cancellationToken);
+
+        return likedPostIds.ToHashSet(StringComparer.Ordinal);
+    }
+
     public async Task<IEnumerable<Like>> GetByPostIdAsync(string postId, CancellationToken cancellationToken = default)
     {
         return await context.Likes

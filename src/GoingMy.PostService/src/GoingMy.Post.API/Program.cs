@@ -52,19 +52,19 @@ builder.Services.AddMassTransit(x =>
     {
         cfg.Host(new Uri(builder.Configuration.GetConnectionString(SharedServices.RabbitMQ)!));
 
-        cfg.ReceiveEndpoint($"{nameof(UserCreatedEvent)}_consumer", e =>
+        cfg.ReceiveEndpoint($"{nameof(UserCreatedEvent)}_post_consumer", e =>
             e.ConfigureConsumer<UserCreatedEventConsumer>(context));
 
-        cfg.ReceiveEndpoint($"{nameof(UserUpdatedEvent)}_consumer", e =>
+        cfg.ReceiveEndpoint($"{nameof(UserUpdatedEvent)}_post_consumer", e =>
             e.ConfigureConsumer<UserUpdatedEventConsumer>(context));
 
-        cfg.ReceiveEndpoint($"{nameof(UserDeletedEvent)}_consumer", e =>
+        cfg.ReceiveEndpoint($"{nameof(UserDeletedEvent)}_post_consumer", e =>
             e.ConfigureConsumer<UserDeletedEventConsumer>(context));
 
-        cfg.ReceiveEndpoint("post-saga-create", e =>
+        cfg.ReceiveEndpoint("post_saga_create", e =>
             e.ConfigureConsumer<CreatePostSagaConsumer>(context));
 
-        cfg.ReceiveEndpoint("post-saga-attach-media", e =>
+        cfg.ReceiveEndpoint("post_saga_attach_media", e =>
             e.ConfigureConsumer<AttachMediaToPostSagaConsumer>(context));
 
         cfg.ConfigureEndpoints(context);

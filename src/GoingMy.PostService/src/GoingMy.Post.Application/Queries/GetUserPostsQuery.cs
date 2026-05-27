@@ -24,13 +24,15 @@ public class GetUserPostsQueryHandler(IPostRepository postRepository, ILikeRepos
 
         var dtos = posts.Select(CreatePostCommandHandler.MapToDto).ToList();
 
-        // Populate UserHasLiked for each post
-        var result = new List<PostDto>();
-        foreach (var dto in dtos)
-        {
-            var userHasLiked = await likeRepository.ExistsAsync(dto.Id, request.UserId, cancellationToken);
-            result.Add(dto with { UserHasLiked = userHasLiked });
-        }
+        // Populate UserHasLiked in one repository query to avoid N+1 calls
+        var likedPostIds = await likeRepository.GetLikedPostIdsAsync(
+            request.UserId,
+            dtos.Select(dto => dto.Id),
+            cancellationToken);
+
+        var result = dtos
+            .Select(dto => dto with { UserHasLiked = likedPostIds.Contains(dto.Id) })
+            .ToList();
 
         return result;
     }

@@ -28,6 +28,14 @@ export interface GetPostsResponse {
   posts: Post[];
 }
 
+/** Response DTO from paginated GetPosts endpoint. */
+export interface GetPostsPaginatedResponse {
+  userId: string;
+  username: string;
+  posts: Post[];
+  hasMore: boolean;
+}
+
 /** Response DTO from CreatePost and UpdatePost endpoints. */
 export interface PostResponse {
   message: string;
@@ -48,6 +56,17 @@ export class PostApiService {
   /** GET /api/posts — Retrieves all posts for the authenticated user. */
   getPosts(): Observable<GetPostsResponse> {
     return this._http.get<GetPostsResponse>(this._baseUrl).pipe(
+      switchMap(response => this._hydratePostsWithAuthorProfiles(response.posts).pipe(
+        map(posts => ({ ...response, posts }))
+      ))
+    );
+  }
+
+  /** GET /api/posts?pageNumber={n}&pageSize={size} — Retrieves paginated posts. */
+  getPostsPaginated(pageNumber: number = 0, pageSize: number = 20): Observable<GetPostsPaginatedResponse> {
+    return this._http.get<GetPostsPaginatedResponse>(this._baseUrl, {
+      params: { pageNumber: pageNumber.toString(), pageSize: pageSize.toString() }
+    }).pipe(
       switchMap(response => this._hydratePostsWithAuthorProfiles(response.posts).pipe(
         map(posts => ({ ...response, posts }))
       ))

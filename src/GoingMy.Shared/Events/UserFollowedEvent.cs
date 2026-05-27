@@ -4,4 +4,5 @@ public record UserFollowedEvent(
     string FollowedUserId,
     string FollowedUsername,
     string FollowerUserId,
-    string FollowerUsername);
+    string FollowerUsername,
+    bool IsMutual);

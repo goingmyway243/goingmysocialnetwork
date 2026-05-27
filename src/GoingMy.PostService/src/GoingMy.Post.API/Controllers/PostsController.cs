@@ -43,20 +43,26 @@ public class PostsController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves all posts for the authenticated user.
+    /// Retrieves paginated posts for the authenticated user.
     /// </summary>
-    /// <returns>A list of all posts.</returns>
+    /// <param name="pageNumber">The page number (0-indexed). Defaults to 0.</param>
+    /// <param name="pageSize">The number of posts per page. Defaults to 20.</param>
+    /// <returns>A paginated list of posts with hasMore flag.</returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult> GetPosts()
+    public async Task<ActionResult> GetPosts([FromQuery] int pageNumber = 0, [FromQuery] int pageSize = 20)
     {
         var userId = User.FindFirst("sub")?.Value ?? "unknown";
         var username = User.FindFirst("name")?.Value ?? "unknown";
 
-        var posts = await _mediator.Send(new GetPostsQuery(userId));
+        // Validate pagination parameters
+        pageNumber = Math.Max(0, pageNumber);
+        pageSize = Math.Max(1, Math.Min(pageSize, 100)); // Cap at 100 max
 
-        return Ok(new { userId, username, posts });
+        var response = await _mediator.Send(new GetPostsQuery(userId, pageNumber, pageSize));
+
+        return Ok(new { userId, username, posts = response.Posts, hasMore = response.HasMore });
     }
 
     /// <summary>

@@ -40,12 +40,17 @@ public class FollowUserCommandHandler(
         await userProfileRepository.UpdateAsync(follower, cancellationToken);
         await userProfileRepository.UpdateAsync(followee, cancellationToken);
 
+        // Check if this follow makes the relationship mutual
+        var isMutual = await userFollowRepository.ExistsAsync(
+            request.FolloweeId, request.FollowerId, cancellationToken);
+
         await publishEndpoint.Publish(
             new UserFollowedEvent(
                 FollowedUserId: followee.Id.ToString(),
                 FollowedUsername: followee.Username,
                 FollowerUserId: follower.Id.ToString(),
-                FollowerUsername: follower.Username),
+                FollowerUsername: follower.Username,
+                IsMutual: isMutual),
             cancellationToken);
     }
 }

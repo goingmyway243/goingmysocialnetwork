@@ -50,16 +50,16 @@ builder.Services.AddMassTransit(x =>
     {
         cfg.Host(new Uri(builder.Configuration.GetConnectionString(SharedServices.RabbitMQ)!));
 
-        cfg.ReceiveEndpoint($"{nameof(PostLikedEvent)}_notification", e =>
+        cfg.ReceiveEndpoint($"{nameof(PostLikedEvent)}_notification_consumer", e =>
             e.ConfigureConsumer<PostLikedNotificationConsumer>(context));
 
-        cfg.ReceiveEndpoint($"{nameof(CommentAddedEvent)}_notification", e =>
+        cfg.ReceiveEndpoint($"{nameof(CommentAddedEvent)}_notification_consumer", e =>
             e.ConfigureConsumer<CommentAddedNotificationConsumer>(context));
 
-        cfg.ReceiveEndpoint($"{nameof(UserFollowedEvent)}_notification", e =>
+        cfg.ReceiveEndpoint($"{nameof(UserFollowedEvent)}_notification_consumer", e =>
             e.ConfigureConsumer<UserFollowedNotificationConsumer>(context));
 
-        cfg.ReceiveEndpoint($"{nameof(PostWithMediaSagaCompletedEvent)}_notification", e =>
+        cfg.ReceiveEndpoint($"{nameof(PostWithMediaSagaCompletedEvent)}_notification_consumer", e =>
             e.ConfigureConsumer<PostWithMediaSagaCompletedNotificationConsumer>(context));
 
         cfg.ConfigureEndpoints(context);
