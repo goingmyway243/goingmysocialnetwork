@@ -158,6 +158,7 @@ export class DiscoverComponent implements OnInit, OnDestroy {
     this.hasSearched.set(false);
     this.userResults.set([]);
     this.postResults.set([]);
+    this.suggestions.set([]);
   }
 
   onSearchKeydown(event: KeyboardEvent): void {

@@ -101,7 +101,10 @@ public class SearchService(ElasticsearchClient esClient) : ISearchService
             }
         }
 
-        return suggestions;
+        return suggestions
+            .GroupBy(s => s.Text, StringComparer.OrdinalIgnoreCase)
+            .Select(g => g.First())
+            .ToList();
     }
 
     public async Task<IReadOnlyList<TrendingPostDto>> GetTrendingAsync(

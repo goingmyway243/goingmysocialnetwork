@@ -90,6 +90,18 @@ public class PostMediaStateMachine : MassTransitStateMachine<PostMediaSagaState>
 
             When(PostCreationFailed)
                 .Then(ctx => ctx.Saga.ErrorMessage = ctx.Message.Reason)
+                .ThenAsync(async ctx =>
+                {
+                    if (!string.IsNullOrWhiteSpace(ctx.Saga.PostId))
+                    {
+                        await ctx.Publish(new PostDeletedEvent
+                        {
+                            PostId = ctx.Saga.PostId,
+                            UserId = ctx.Saga.UserId,
+                            DeletedAt = DateTime.UtcNow
+                        });
+                    }
+                })
                 .ThenAsync(ctx => PublishOrphanedFileEventsAsync(ctx))
                 .PublishAsync(ctx => ctx.Init<PostWithMediaSagaCompletedEvent>(new PostWithMediaSagaCompletedEvent
                 {

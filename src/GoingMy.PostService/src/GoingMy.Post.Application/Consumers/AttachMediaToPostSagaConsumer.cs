@@ -25,6 +25,15 @@ public class AttachMediaToPostSagaConsumer(IPostRepository postRepository, IPubl
         post.AttachMedia(attachments);
         await postRepository.UpdateAsync(post, context.CancellationToken);
 
+        await publishEndpoint.Publish(new PostUpdatedEvent
+        {
+            PostId = post.Id,
+            UserId = post.UserId,
+            Content = post.Content,
+            MediaAttachments = post.MediaAttachments.Select(m => new MediaAttachmentInfo(m.FileId, m.Url, m.ContentType, m.Width, m.Height)).ToList(),
+            UpdatedAt = post.UpdatedAt ?? DateTime.UtcNow
+        }, context.CancellationToken);
+
         await publishEndpoint.Publish(new MediaAttachedToPostEvent
         {
             CorrelationId = msg.CorrelationId,

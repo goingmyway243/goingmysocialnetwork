@@ -40,6 +40,14 @@ public class DeletePostCommandHandler(IPostRepository postRepository, IPublishEn
                 UserId = request.UserId,
                 DeletedAt = DateTime.UtcNow
             }, cancellationToken);
+
+            foreach (var media in post.MediaAttachments ?? [])
+            {
+                await publishEndpoint.Publish(new FileOrphanedEvent
+                {
+                    FileId = media.FileId
+                }, cancellationToken);
+            }
         }
 
         return deleted;
