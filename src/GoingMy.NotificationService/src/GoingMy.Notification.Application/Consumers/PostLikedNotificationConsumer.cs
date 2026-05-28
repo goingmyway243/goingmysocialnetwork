@@ -24,7 +24,7 @@ public class PostLikedNotificationConsumer(
             RecipientUserId: evt.PostAuthorUserId,
             ActorUserId: evt.LikerUserId,
             ActorUsername: evt.LikerUsername,
-            ActorAvatarUrl: null,
+            ActorAvatarUrl: evt.LikerAvatarUrl,
             Type: NotificationType.PostLiked,
             ReferenceId: evt.PostId,
             ReferencePreview: null),

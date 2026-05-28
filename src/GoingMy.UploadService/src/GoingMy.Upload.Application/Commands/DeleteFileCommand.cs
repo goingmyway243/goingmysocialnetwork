@@ -19,7 +19,7 @@ public class DeleteFileCommandHandler(
         if (mediaFile.UploadedByUserId != request.UserId)
             throw new UnauthorizedAccessException("You do not have permission to delete this file.");
 
-        await storage.DeleteAsync(mediaFile.FileKey, ct);
+        await storage.DeleteAsync(mediaFile.FileKey, mediaFile.Purpose.ToString(), ct);
         mediaFile.MarkAsDeleted();
         await repository.UpdateAsync(mediaFile, ct);
     }

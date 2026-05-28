@@ -5,4 +5,5 @@ public record CommentAddedEvent(
     string PostAuthorUserId,
     string CommenterId,
     string CommenterUsername,
-    string CommentPreview);
+    string CommentPreview,
+    string? CommenterAvatarUrl);

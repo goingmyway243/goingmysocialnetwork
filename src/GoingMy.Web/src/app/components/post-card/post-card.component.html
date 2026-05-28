@@ -101,7 +101,15 @@
       <!-- Comment Input -->
       <div class="comment-input-row">
         <div class="comment-avatar">
-          <i class="pi pi-user"></i>
+          @if (getCurrentUserCommentAvatarUrl()) {
+            <img
+              class="comment-avatar-image"
+              [src]="getCurrentUserCommentAvatarUrl()!"
+              alt="Your avatar"
+              loading="lazy" />
+          } @else {
+            <i class="pi pi-user"></i>
+          }
         </div>
         <div class="comment-input-wrap">
           <textarea
@@ -141,7 +149,15 @@
           @for (comment of commentState().comments.slice(0, 3); track comment.id) {
             <div class="comment-item">
               <div class="comment-avatar">
-                <i class="pi pi-user"></i>
+                @if (getCommentAvatarUrl(comment.userId)) {
+                  <img
+                    class="comment-avatar-image"
+                    [src]="getCommentAvatarUrl(comment.userId)!"
+                    [alt]="comment.username"
+                    loading="lazy" />
+                } @else {
+                  <i class="pi pi-user"></i>
+                }
               </div>
               <div class="comment-body">
                 <span class="comment-author">{{ comment.username }}</span>

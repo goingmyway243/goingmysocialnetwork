@@ -38,7 +38,7 @@ public class OrphanedMediaCleanupWorker(
             {
                 try
                 {
-                    await storage.DeleteAsync(file.FileKey, ct);
+                    await storage.DeleteAsync(file.FileKey, file.Purpose.ToString(), ct);
                     file.MarkAsDeleted();
                     await repository.UpdateAsync(file, ct);
                     logger.LogInformation("Deleted orphaned media file {FileId}", file.Id);

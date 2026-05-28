@@ -20,25 +20,8 @@
   </div>
 
   <div class="header-right">
-    <p-button 
-      icon="pi pi-plus" 
-      label="Create" 
-      styleClass="create-btn"
-      [text]="true"
-      [rounded]="true"></p-button>
-    
     <app-notification-bell></app-notification-bell>
 
-    <!-- <div class="icon-btn-wrapper">
-      <p-button 
-        icon="pi pi-comments" 
-        [text]="true" 
-        [rounded]="true"
-        styleClass="icon-btn"
-        title="Messages"
-        (onClick)="navigateToMessages()"></p-button>
-    </div> -->
-    
     <p-button 
       [icon]="themeService.theme() === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"
       [text]="true" 
@@ -47,12 +30,21 @@
       [title]="themeService.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
       (onClick)="themeService.toggle()"></p-button>
 
-    <p-button 
-      icon="pi pi-user" 
-      [text]="true" 
-      [rounded]="true"
-      styleClass="icon-btn"
-      (onClick)="toggleUserMenu($event)"></p-button>
+    @if (currentUserAvatarUrl()) {
+      <img 
+        class="header-user-avatar" 
+        [src]="currentUserAvatarUrl()!" 
+        alt="Your avatar" 
+        (click)="toggleUserMenu($event)" />
+    }
+    @else {
+      <p-button 
+        icon="pi pi-user" 
+        [text]="true" 
+        [rounded]="true"
+        styleClass="icon-btn"
+        (onClick)="toggleUserMenu($event)"></p-button>
+    }
     
     <p-menu #userMenu [model]="userMenuItems" [popup]="true" styleClass="glass-menu"></p-menu>
   </div>

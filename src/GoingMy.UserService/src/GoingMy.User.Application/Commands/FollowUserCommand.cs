@@ -50,7 +50,8 @@ public class FollowUserCommandHandler(
                 FollowedUsername: followee.Username,
                 FollowerUserId: follower.Id.ToString(),
                 FollowerUsername: follower.Username,
-                IsMutual: isMutual),
+                IsMutual: isMutual,
+                FollowerAvatarUrl: follower.AvatarUrl),
             cancellationToken);
     }
 }

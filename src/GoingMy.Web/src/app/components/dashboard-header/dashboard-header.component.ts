@@ -1,4 +1,4 @@
-import { Component, ViewChild, inject, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { MenubarModule } from 'primeng/menubar';
@@ -9,6 +9,7 @@ import { Menu } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
 import { ThemeService } from '../../services/theme.service';
+import { UserApiService } from '../../services/user-api.service';
 import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
 
 @Component({
@@ -21,9 +22,11 @@ export class DashboardHeaderComponent {
   @ViewChild('userMenu') userMenu!: Menu;
   
   private readonly _authService = inject(AuthService);
+  private readonly _userApi = inject(UserApiService);
   readonly themeService = inject(ThemeService);
   
   searchValue = signal('');
+  readonly currentUserAvatarUrl = signal<string | null>(null);
   userMenuItems: MenuItem[] = [];
 
   constructor(
@@ -31,6 +34,10 @@ export class DashboardHeaderComponent {
     private authService: AuthService
   ) {
     this.initializeUserMenu();
+  }
+
+  ngOnInit(): void {
+    this._loadCurrentUserAvatar();
   }
 
   private initializeUserMenu(): void {
@@ -81,5 +88,18 @@ export class DashboardHeaderComponent {
       this.router.navigate(['/dashboard/discover'], { queryParams: { search: this.searchValue().trim() } });
       this.searchValue.set('');
     }
+  }
+
+  private _loadCurrentUserAvatar(): void {
+    const currentUserId = this._authService.getCurrentUserId();
+    if (!currentUserId) {
+      this.currentUserAvatarUrl.set(null);
+      return;
+    }
+
+    this._userApi.getUserProfile(currentUserId).subscribe({
+      next: profile => this.currentUserAvatarUrl.set(profile.avatarUrl ?? null),
+      error: () => this.currentUserAvatarUrl.set(null)
+    });
   }
 }

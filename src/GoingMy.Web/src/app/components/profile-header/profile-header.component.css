@@ -108,6 +108,10 @@
   color: #ffffff;
 }
 
+.avatar-initials i {
+  font-size: 2.5rem;
+}
+
 .verified-badge {
   position: absolute;
   bottom: 0px;

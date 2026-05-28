@@ -30,7 +30,8 @@ public class CommentsController(IMediator mediator) : ControllerBase
         {
             var userId = User.FindFirst("sub")?.Value ?? "unknown";
             var username = User.FindFirst("name")?.Value ?? "unknown";
-            var comment = await mediator.Send(new AddCommentCommand(postId, userId, username, request.Content));
+            var avatarUrl = Request.Headers["X-User-Avatar-Url"].FirstOrDefault();
+            var comment = await mediator.Send(new AddCommentCommand(postId, userId, username, request.Content, avatarUrl));
             return CreatedAtAction(nameof(GetComments), new { postId }, comment);
         }
         catch (InvalidOperationException ex)

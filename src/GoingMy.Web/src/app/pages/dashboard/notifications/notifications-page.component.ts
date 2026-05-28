@@ -11,7 +11,7 @@ import { getNotificationIcon, getNotificationRouterLink, getNotificationText } f
 
 interface FilterOption {
   label: string;
-  value: string;
+  value: NotificationType | 'all';
 }
 
 @Component({
@@ -28,7 +28,7 @@ export class NotificationsPageComponent implements OnInit {
   readonly state = inject(NotificationStateService);
 
   // ── 2. State ────────────────────────────────────────────────
-  readonly activeFilter = signal<string>('all');
+  readonly activeFilter = signal<NotificationType | 'all'>('all');
 
   readonly filterOptions: FilterOption[] = [
     { label: 'All', value: 'all' },
@@ -47,11 +47,11 @@ export class NotificationsPageComponent implements OnInit {
   get filteredNotifications(): NotificationDto[] {
     const filter = this.activeFilter();
     if (filter === 'all') return this.state.notifications();
-    return this.state.notifications().filter(n => n.type === filter);
+    return this.state.notifications().filter(n => n.type === (filter as NotificationType));
   }
 
   // ── 5. Actions ───────────────────────────────────────────────
-  onFilterChange(value: string): void {
+  onFilterChange(value: NotificationType | 'all'): void {
     this.activeFilter.set(value);
   }
 

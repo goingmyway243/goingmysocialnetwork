@@ -10,25 +10,26 @@ public class LocalFileStorageProvider(IOptions<StorageSettings> options) : IFile
     public async Task<(string fileKey, string url)> UploadAsync(
         Stream stream,
         string fileName,
-        string contentType,
+        string baseFolder,
         CancellationToken ct = default)
     {
         var extension = Path.GetExtension(fileName);
         var fileKey = $"{Guid.NewGuid():N}{extension}";
-        var fullPath = Path.Combine(_settings.BasePath, fileKey);
+        var basePath = Path.Combine(_settings.BasePath, baseFolder);
+        var fullPath = Path.Combine(basePath, fileKey);
 
-        Directory.CreateDirectory(_settings.BasePath);
+        Directory.CreateDirectory(basePath);
 
         await using var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write, FileShare.None);
         await stream.CopyToAsync(fileStream, ct);
 
-        var url = $"{_settings.BaseUrl.TrimEnd('/')}/{fileKey}";
+        var url = $"{_settings.BaseUrl.TrimEnd('/')}/{baseFolder}/{fileKey}";
         return (fileKey, url);
     }
 
-    public Task DeleteAsync(string fileKey, CancellationToken ct = default)
+    public Task DeleteAsync(string fileKey, string baseFolder, CancellationToken ct = default)
     {
-        var fullPath = Path.Combine(_settings.BasePath, fileKey);
+        var fullPath = Path.Combine(_settings.BasePath, baseFolder, fileKey);
         if (File.Exists(fullPath))
             File.Delete(fullPath);
 

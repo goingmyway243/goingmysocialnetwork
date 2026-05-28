@@ -37,7 +37,7 @@
         @if (p.avatarUrl) {
           <img [src]="p.avatarUrl" [alt]="p.username" class="avatar-img" />
         } @else {
-          <div class="avatar-initials">{{ getInitials(p) }}</div>
+          <div class="avatar-initials"><i class="pi pi-user"></i></div>
         }
         @if (p.isVerified) {
           <span class="verified-badge" title="Verified"><i class="pi pi-verified"></i></span>

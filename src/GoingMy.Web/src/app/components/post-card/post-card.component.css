@@ -156,6 +156,13 @@
   flex-shrink: 0;
 }
 
+.comment-avatar-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .comment-input-wrap {
   flex: 1;
   display: flex;

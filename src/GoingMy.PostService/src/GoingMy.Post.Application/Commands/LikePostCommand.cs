@@ -7,7 +7,7 @@ using MediatR;
 
 namespace GoingMy.Post.Application.Commands;
 
-public record LikePostCommand(string PostId, string UserId, string Username) : IRequest<LikeDto>;
+public record LikePostCommand(string PostId, string UserId, string Username, string? AvatarUrl) : IRequest<LikeDto>;
 
 public class LikePostCommandHandler(
     IPostRepository postRepository,
@@ -34,7 +34,7 @@ public class LikePostCommandHandler(
         await postRepository.IncrementLikesAsync(request.PostId, cancellationToken);
 
         await publishEndpoint.Publish(
-            new PostLikedEvent(request.PostId, post.UserId, request.UserId, request.Username),
+            new PostLikedEvent(request.PostId, post.UserId, request.UserId, request.Username, request.AvatarUrl),
             cancellationToken);
 
         return new LikeDto(like.Id, like.PostId, like.UserId, like.Username, like.CreatedAt);

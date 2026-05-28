@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 import { MediaFile } from '../models/media.model';
 
-export type ProgressCallback = (fileName: string, loaded: number, total: number) => void;
+export type ProgressCallback = (fileIndex: number, loaded: number, total: number) => void;
 
 @Injectable({
   providedIn: 'root'
@@ -62,10 +62,14 @@ export class UploadApiService {
           const now = Date.now();
           // ── Throttle progress callbacks ─────────────
           if (now - lastProgressTime > progressThrottle) {
-            // ── Report overall progress ─────────────
-            const fileName = `batch-${files.length}`; // Generic name for batch
             if (onProgress) {
-              onProgress(fileName, event.loaded, event.total);
+              // Translate aggregate request progress into per-file progress by file order.
+              let loadedAcrossBatch = event.loaded;
+              files.forEach((file, fileIndex) => {
+                const loadedForFile = Math.max(0, Math.min(file.size, loadedAcrossBatch));
+                onProgress(fileIndex, loadedForFile, file.size);
+                loadedAcrossBatch = Math.max(0, loadedAcrossBatch - file.size);
+              });
             }
             lastProgressTime = now;
           }
@@ -115,18 +119,6 @@ export class UploadApiService {
         }
       };
     });
-  }
-
-  /**
-   * Legacy batch upload using HttpClient (without progress tracking)
-   * Kept for backward compatibility
-   */
-  uploadFileBatchLegacy(files: File[], purpose: 'Avatar' | 'Cover' | 'PostMedia' = 'PostMedia'): Observable<MediaFile[]> {
-    const formData = new FormData();
-    files.forEach(file => formData.append('files', file));
-    formData.append('purpose', purpose);
-
-    return this._http.post<MediaFile[]>(`${this._baseUrl}/batch`, formData);
   }
 
   // ── 3. Get File by ID ────────────────────────────────────────

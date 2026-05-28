@@ -30,7 +30,7 @@ public class UploadFileCommandHandler(
     {
         ValidateFile(request.ContentType, request.FileSizeBytes);
 
-        var (fileKey, url) = await storage.UploadAsync(request.FileStream, request.FileName, request.ContentType, ct);
+        var (fileKey, url) = await storage.UploadAsync(request.FileStream, request.FileName, request.Purpose.ToString(), ct);
 
         var mediaFile = new MediaFile(
             id: Guid.NewGuid().ToString("N"),

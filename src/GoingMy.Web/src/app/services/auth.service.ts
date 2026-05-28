@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { OAuthService, AuthConfig, OAuthEvent } from 'angular-oauth2-oidc';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,8 @@ export class AuthService {
 
   // ── 2. Private State ─────────────────────────────────────────
   private _refreshSubscription: any = null;
+  private _oauthEventsSubscription: Subscription | null = null;
+  private _isLoggingOut = false;
 
   get oauthEvents(): Observable<OAuthEvent> {
     return this._oauthService.events;
@@ -21,6 +23,7 @@ export class AuthService {
   initAuth(): void {
     const authConfig: AuthConfig = environment.authConfig;
     this._oauthService.configure(authConfig);
+    this._setupOAuthEventHandlers();
     this._oauthService.loadDiscoveryDocumentAndTryLogin();
 
     // Setup automatic silent token refresh
@@ -37,6 +40,26 @@ export class AuthService {
     // Configure automatic silent refresh
     // The library will proactively refresh the token before expiry (default: 30s margin)
     this._refreshSubscription = this._oauthService.setupAutomaticSilentRefresh();
+  }
+
+  private _setupOAuthEventHandlers(): void {
+    if (this._oauthEventsSubscription) {
+      this._oauthEventsSubscription.unsubscribe();
+    }
+
+    this._oauthEventsSubscription = this._oauthService.events.subscribe((event: OAuthEvent) => {
+      // Refresh/session failures are emitted by OAuthService and can happen without an API 401.
+      if (
+        event.type === 'token_refresh_error' ||
+        event.type === 'silent_refresh_error' ||
+        event.type === 'silent_refresh_timeout' ||
+        event.type === 'session_error' ||
+        event.type === 'session_terminated'
+      ) {
+        console.warn(`OAuth event '${event.type}' detected - forcing logout`);
+        this.logout();
+      }
+    });
   }
 
   // ── 4. Token Management ──────────────────────────────────────
@@ -126,10 +149,22 @@ export class AuthService {
    * Logs out the user, clears tokens and server-side cookies, then restarts PKCE flow.
    */
   logout(): void {
+    if (this._isLoggingOut) {
+      return;
+    }
+
+    this._isLoggingOut = true;
+
     // Stop automatic silent refresh
     if (this._refreshSubscription) {
       this._refreshSubscription.unsubscribe();
       this._refreshSubscription = null;
+    }
+
+    // Stop OAuth event listeners to avoid re-entrant logout triggers.
+    if (this._oauthEventsSubscription) {
+      this._oauthEventsSubscription.unsubscribe();
+      this._oauthEventsSubscription = null;
     }
 
     // Clear local OAuth tokens first

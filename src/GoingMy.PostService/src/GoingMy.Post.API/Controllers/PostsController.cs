@@ -211,7 +211,8 @@ public class PostsController : ControllerBase
         {
             var userId = User.FindFirst("sub")?.Value ?? "unknown";
             var username = User.FindFirst("name")?.Value ?? "unknown";
-            var like = await _mediator.Send(new LikePostCommand(id, userId, username));
+            var avatarUrl = Request.Headers["X-User-Avatar-Url"].FirstOrDefault();
+            var like = await _mediator.Send(new LikePostCommand(id, userId, username, avatarUrl));
             return CreatedAtAction(nameof(GetLikes), new { id }, like);
         }
         catch (InvalidOperationException ex) when (ex.Message.Contains("not found"))

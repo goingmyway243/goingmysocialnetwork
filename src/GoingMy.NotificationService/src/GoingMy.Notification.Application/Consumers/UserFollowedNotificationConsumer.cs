@@ -20,7 +20,7 @@ public class UserFollowedNotificationConsumer(
             RecipientUserId: evt.FollowedUserId,
             ActorUserId: evt.FollowerUserId,
             ActorUsername: evt.FollowerUsername,
-            ActorAvatarUrl: null,
+            ActorAvatarUrl: evt.FollowerAvatarUrl,
             Type: NotificationType.NewFollower,
             ReferenceId: evt.FollowerUserId,
             ReferencePreview: null),

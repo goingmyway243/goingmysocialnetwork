@@ -19,8 +19,6 @@ import { PostApiService } from '../../services/post-api.service';
 import { AuthService } from '../../services/auth.service';
 import {
   UserSearchResult,
-  PostSearchResult,
-  TrendingPost,
   SuggestionResult,
   TimeWindow
 } from '../../models/search.models';
@@ -127,16 +125,15 @@ export class DiscoverComponent implements OnInit, OnDestroy {
     this.userResults.set([]);
     this.postResults.set([]);
 
-    this._searchApi.searchAll({
+    this._searchApi.searchAllWithHydratedPosts({
       q: this.searchTerm().trim(),
       location: this.locationFilter() || undefined,
       sortBy: this.sortBy()
     }).pipe(takeUntil(this._destroy$)).subscribe({
       next: result => {
         this.userResults.set(result.users ?? []);
-        const posts = (result.posts ?? []).map(p => this._mapSearchResultToPost(p));
-        this.postResults.set(posts);
-        this._initCommentStates(posts);
+        this.postResults.set(result.posts ?? []);
+        this._initCommentStates(result.posts ?? []);
         this.isLoading.set(false);
         this.activeTab.set(
           (result.users?.length ?? 0) === 0 && (result.posts?.length ?? 0) > 0 ? 'posts' : 'users'
@@ -343,41 +340,14 @@ export class DiscoverComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _mapSearchResultToPost(r: PostSearchResult): Post {
-    return {
-      id: r.id,
-      content: r.content,
-      userId: r.userId,
-      username: r.username,
-      createdAt: r.createdAt,
-      likes: r.likes,
-      comments: r.comments,
-      mediaAttachments: r.mediaAttachments
-    };
-  }
-
-  private _mapTrendingToPost(t: TrendingPost): Post {
-    return {
-      id: t.postId,
-      content: t.content,
-      userId: t.userId,
-      username: t.username,
-      createdAt: t.createdAt,
-      likes: t.likes,
-      comments: t.comments,
-      mediaAttachments: t.mediaAttachments
-    };
-  }
-
   private _loadTrending(): void {
     this.isTrendingLoading.set(true);
-    this._searchApi.getTrending(this.trendingWindow(), 10)
+    this._searchApi.getTrendingHydrated(this.trendingWindow(), 10)
       .pipe(takeUntil(this._destroy$))
       .subscribe({
         next: posts => {
-          const mapped = posts.map(p => this._mapTrendingToPost(p));
-          this.trendingPosts.set(mapped);
-          this._initCommentStates(mapped);
+          this.trendingPosts.set(posts);
+          this._initCommentStates(posts);
           this.isTrendingLoading.set(false);
         },
         error: () => this.isTrendingLoading.set(false)

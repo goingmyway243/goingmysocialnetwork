@@ -1,4 +1,4 @@
-import { Component, output, inject, signal, computed, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, output, inject, signal, computed, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +11,8 @@ import { MessageService } from 'primeng/api';
 import { PostApiService } from '../../services/post-api.service';
 import { UploadApiService } from '../../services/upload-api.service';
 import { AiApiService } from '../../services/ai-api.service';
+import { UserApiService } from '../../services/user-api.service';
+import { AuthService } from '../../services/auth.service';
 import { MediaPreviewComponent, MediaUploadProgress } from '../media-preview/media-preview.component';
 import { Post } from '../../models/post.model';
 import { MediaFile } from '../../models/media.model';
@@ -32,12 +34,14 @@ const MAX_FILES = 4;
   templateUrl: './compose-post.component.html',
   styleUrl: './compose-post.component.css'
 })
-export class ComposePostComponent {
+export class ComposePostComponent implements OnInit {
 
   // ── 1. Dependencies ─────────────────────────────────────────
   private readonly _postApi = inject(PostApiService);
   private readonly _uploadApi = inject(UploadApiService);
   private readonly _aiApi = inject(AiApiService);
+  private readonly _userApi = inject(UserApiService);
+  private readonly _authService = inject(AuthService);
   private readonly _messageService = inject(MessageService);
 
   // ── 2. Template References ──────────────────────────────────
@@ -48,6 +52,7 @@ export class ComposePostComponent {
 
   // ── 4. State ─────────────────────────────────────────────────
   readonly dialogVisible = signal(false);
+  readonly currentUserAvatarUrl = signal<string | null>(null);
   readonly content = signal('');
   readonly submitting = signal(false);
   readonly error = signal<string | null>(null);
@@ -56,6 +61,7 @@ export class ComposePostComponent {
   private _waitingCountdownInterval: ReturnType<typeof setInterval> | null = null;
 
   // ── Media State ───────────────────────────────────────────────
+  readonly pendingMediaFiles = signal<MediaFile[]>([]);
   readonly selectedMediaFiles = signal<MediaFile[]>([]);
   readonly mediaUploading = signal(false);
   readonly mediaValidating = signal(false);
@@ -79,6 +85,7 @@ export class ComposePostComponent {
   readonly contentLength = computed(() => this.content().length);
   readonly contentTooLong = computed(() => this.contentLength() > 2000);
   readonly hasMedia = computed(() => this.selectedMediaFiles().length > 0);
+  readonly previewMediaFiles = computed(() => [...this.pendingMediaFiles(), ...this.selectedMediaFiles()]);
   readonly mediaCount = computed(() => this.selectedMediaFiles().length);
   readonly canAttachMore = computed(() => this.mediaCount() < MAX_FILES);
   readonly canSubmit = computed(() => {
@@ -88,6 +95,10 @@ export class ComposePostComponent {
   readonly hasAiSuggestion = computed(() => this.aiSuggestion() !== null);
 
   // ── 5. Actions ───────────────────────────────────────────────
+  ngOnInit(): void {
+    this._loadCurrentUserAvatar();
+  }
+
   openDialog(): void {
     this.dialogVisible.set(true);
   }
@@ -99,6 +110,7 @@ export class ComposePostComponent {
     this.aiPanelVisible.set(false);
     this.aiSuggestion.set(null);
     this.aiError.set(null);
+    this.pendingMediaFiles.set([]);
     this.selectedMediaFiles.set([]);
     this.mediaError.set(null);
     this.uploadProgress.set({});
@@ -343,26 +355,58 @@ export class ComposePostComponent {
    * Uploads media files with progress tracking
    */
   private uploadMediaFiles(files: File[]): void {
+    const isImageType = (contentType: string) => contentType.startsWith('image/');
+    const createPendingId = () => `pending-${crypto.randomUUID()}`;
+
+    const uploadEntries = files.map(file => {
+      const pendingId = createPendingId();
+      const previewUrl = URL.createObjectURL(file);
+
+      const pendingMedia: MediaFile = {
+        id: pendingId,
+        url: previewUrl,
+        originalFileName: file.name,
+        contentType: file.type,
+        fileSizeBytes: file.size,
+        width: isImageType(file.type) ? 0 : undefined,
+        height: isImageType(file.type) ? 0 : undefined,
+        purpose: 'PostMedia',
+        status: 'Uploading',
+        createdAt: new Date().toISOString()
+      };
+
+      return { pendingId, file, previewUrl, pendingMedia };
+    });
+
+    this.pendingMediaFiles.update(current => [...current, ...uploadEntries.map(entry => entry.pendingMedia)]);
+
+    uploadEntries.forEach(entry => {
+      this._localPreviewMap.set(entry.pendingId, entry.previewUrl);
+    });
+
     // ── Initialize progress tracking ────────────────────
     const progressMap: MediaUploadProgress = {};
-    files.forEach(file => {
-      progressMap[file.name] = {
+    uploadEntries.forEach(entry => {
+      progressMap[entry.pendingId] = {
         percentage: 0,
         loaded: 0,
-        total: file.size,
+        total: entry.file.size,
         status: 'uploading'
       };
     });
-    this.uploadProgress.set(progressMap);
+    this.uploadProgress.update(current => ({ ...current, ...progressMap }));
     this.mediaUploading.set(true);
     this.mediaError.set(null);
 
     // ── Progress callback ──────────────────────────────
-    const onProgress = (fileName: string, loaded: number, total: number) => {
+    const onProgress = (fileIndex: number, loaded: number, total: number) => {
+      const entry = uploadEntries[fileIndex];
+      if (!entry) return;
+
       const percentage = Math.round((loaded / total) * 100);
       this.uploadProgress.update(progress => ({
         ...progress,
-        [fileName]: {
+        [entry.pendingId]: {
           percentage,
           loaded,
           total,
@@ -371,28 +415,26 @@ export class ComposePostComponent {
       }));
     };
 
-    // ── Perform upload ──────────────────────────────────
-    // ── Create local preview URLs before upload ────────────
-    const filePreviewMap = new Map<string, string>();
-    files.forEach(f => { filePreviewMap.set(f.name, URL.createObjectURL(f)); });
-
     this._uploadApi.uploadFileBatch(files, 'PostMedia', onProgress).subscribe({
       next: (uploadedFiles: MediaFile[]) => {
-        // Map MediaFile.id → local blob URL by matching originalFileName
-        uploadedFiles.forEach(mf => {
-          const localUrl = filePreviewMap.get(mf.originalFileName);
-          if (localUrl) this._localPreviewMap.set(mf.id, localUrl);
+        // Move local preview URLs from temporary pending IDs to final server media IDs.
+        uploadedFiles.forEach((mf, index) => {
+          const entry = uploadEntries[index];
+          if (!entry) return;
+
+          this._localPreviewMap.set(mf.id, entry.previewUrl);
+          this._localPreviewMap.delete(entry.pendingId);
         });
-        // Clean up any unmatched previews
-        filePreviewMap.forEach((url, name) => {
-          if (!uploadedFiles.some(mf => mf.originalFileName === name)) URL.revokeObjectURL(url);
-        });
+
         // ── Update progress to validating ───────────────
-        uploadedFiles.forEach(file => {
+        uploadEntries.forEach(entry => {
           this.uploadProgress.update(progress => ({
             ...progress,
-            [file.originalFileName]: {
-              ...progress[file.originalFileName],
+            [entry.pendingId]: {
+              ...progress[entry.pendingId],
+              percentage: 100,
+              loaded: entry.file.size,
+              total: entry.file.size,
               status: 'validating'
             }
           }));
@@ -401,10 +443,18 @@ export class ComposePostComponent {
         // ── Show validating state briefly ────────────
         this.mediaValidating.set(true);
         setTimeout(() => {
+          const pendingIds = new Set(uploadEntries.map(entry => entry.pendingId));
+          this.pendingMediaFiles.update(current => current.filter(file => !pendingIds.has(file.id)));
           this.selectedMediaFiles.update(current => [...current, ...uploadedFiles]);
           this.mediaUploading.set(false);
           this.mediaValidating.set(false);
-          this.uploadProgress.set({});
+          this.uploadProgress.update(progress => {
+            const nextProgress: MediaUploadProgress = { ...progress };
+            pendingIds.forEach(id => {
+              delete nextProgress[id];
+            });
+            return nextProgress;
+          });
         }, 1000);
 
         this._messageService.add({
@@ -415,9 +465,24 @@ export class ComposePostComponent {
         });
       },
       error: () => {
+        const pendingIds = new Set(uploadEntries.map(entry => entry.pendingId));
+        this.pendingMediaFiles.update(current => current.filter(file => !pendingIds.has(file.id)));
+        uploadEntries.forEach(entry => {
+          const localUrl = this._localPreviewMap.get(entry.pendingId);
+          if (localUrl) {
+            URL.revokeObjectURL(localUrl);
+            this._localPreviewMap.delete(entry.pendingId);
+          }
+        });
         this.mediaError.set('Failed to upload media. Please try again.');
         this.mediaUploading.set(false);
-        this.uploadProgress.set({});
+        this.uploadProgress.update(progress => {
+          const nextProgress: MediaUploadProgress = { ...progress };
+          pendingIds.forEach(id => {
+            delete nextProgress[id];
+          });
+          return nextProgress;
+        });
         this._messageService.add({
           severity: 'error',
           summary: 'Upload Failed',
@@ -437,6 +502,7 @@ export class ComposePostComponent {
       URL.revokeObjectURL(url);
       this._localPreviewMap.delete(fileId);
     }
+    this.pendingMediaFiles.update(files => files.filter(f => f.id !== fileId));
     this.selectedMediaFiles.update(files => files.filter(f => f.id !== fileId));
   }
 
@@ -453,5 +519,18 @@ export class ComposePostComponent {
         return localUrl ? { ...a, url: localUrl } : a;
       })
     };
+  }
+
+  private _loadCurrentUserAvatar(): void {
+    const currentUserId = this._authService.getCurrentUserId();
+    if (!currentUserId) {
+      this.currentUserAvatarUrl.set(null);
+      return;
+    }
+
+    this._userApi.getUserProfile(currentUserId).subscribe({
+      next: profile => this.currentUserAvatarUrl.set(profile.avatarUrl ?? null),
+      error: () => this.currentUserAvatarUrl.set(null)
+    });
   }
 }

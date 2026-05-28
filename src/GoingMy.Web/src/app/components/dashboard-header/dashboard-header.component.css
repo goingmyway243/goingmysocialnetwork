@@ -8,7 +8,7 @@
   -webkit-backdrop-filter: var(--glass-blur-md) saturate(180%);
   border-bottom: 1px solid var(--glass-border-base);
   box-shadow: var(--glass-shadow-md),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -24,11 +24,10 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, 
-    transparent,
-    var(--glass-highlight-top) 50%,
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      var(--glass-highlight-top) 50%,
+      transparent);
   opacity: 0.8;
   pointer-events: none;
 }
@@ -103,21 +102,21 @@
   font-size: 0.95rem;
   transition: var(--transition-smooth);
   box-shadow: var(--glass-shadow-sm),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 .search-input:focus {
   background: var(--glass-elevated-bg);
   border: 1px solid transparent;
-  background-image: 
+  background-image:
     linear-gradient(var(--glass-elevated-bg), var(--glass-elevated-bg)),
     linear-gradient(135deg, var(--glass-border-accent), rgba(167, 139, 250, 0.3));
   background-origin: border-box;
   background-clip: padding-box, border-box;
   outline: none;
   box-shadow: var(--glass-shadow-md),
-              var(--glass-glow-sm),
-              inset 0 1px 2px var(--glass-highlight-inner);
+    var(--glass-glow-sm),
+    inset 0 1px 2px var(--glass-highlight-inner);
 }
 
 .search-input::placeholder {
@@ -128,6 +127,23 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.header-user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--glass-border-subtle);
+  box-sizing: content-box;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.header-user-avatar:hover {
+  transform: translateY(-2px);
+  border-color: var(--glass-border-accent);
+  box-shadow: var(--glass-shadow-sm), var(--glass-glow-sm);
 }
 
 /* ===== RESPONSIVE DESIGN ===== */

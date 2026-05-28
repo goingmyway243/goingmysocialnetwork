@@ -51,7 +51,7 @@
                 @if (n.actorAvatarUrl) {
                   <img [src]="n.actorAvatarUrl" [alt]="n.actorUsername" class="notif-avatar" />
                 } @else {
-                  <div class="notif-avatar notif-avatar-fallback">{{ getInitial(n.actorUsername) }}</div>
+                  <div class="notif-avatar notif-avatar-fallback"><i class="pi pi-user"></i></div>
                 }
                 <div class="notif-type-icon">
                   <i [class]="getIcon(n)"></i>

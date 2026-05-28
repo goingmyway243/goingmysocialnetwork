@@ -1,4 +1,4 @@
-import { Component, computed, input, output, inject } from '@angular/core';
+import { Component, computed, input, output, inject, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -11,6 +11,7 @@ import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { Post, PostCommentsState } from '../../models/post.model';
 import { AuthService } from '../../services/auth.service';
+import { UserApiService } from '../../services/user-api.service';
 
 @Component({
   selector: 'app-post-card',
@@ -23,6 +24,8 @@ export class PostCardComponent {
 
   // ── 0. Dependencies ───────────────────────────────────────────
   private readonly _authService = inject(AuthService);
+  private readonly _userApi = inject(UserApiService);
+  private readonly _commentAvatarCache = signal<Map<string, string | null>>(new Map());
 
   // ── 1. Inputs ─────────────────────────────────────────────────
   readonly post = input.required<Post>();
@@ -56,6 +59,19 @@ export class PostCardComponent {
       }
     ];
   });
+
+  constructor() {
+    const currentUserId = this._authService.getCurrentUserId();
+    if (currentUserId) {
+      this._ensureCommentAvatarCache([currentUserId]);
+    }
+
+    effect(() => {
+      const comments = this.commentState().comments;
+      const commenterIds = [...new Set(comments.map(comment => comment.userId).filter(Boolean))];
+      this._ensureCommentAvatarCache(commenterIds);
+    });
+  }
 
   // ── 3. Utilities ─────────────────────────────────────────────────
   isPostOwner(): boolean {
@@ -111,12 +127,50 @@ export class PostCardComponent {
     return this.post().author?.avatarUrl ?? null;
   }
 
+  getCurrentUserCommentAvatarUrl(): string | null {
+    const currentUserId = this._authService.getCurrentUserId();
+    if (!currentUserId) return null;
+    return this._commentAvatarCache().get(currentUserId) ?? null;
+  }
+
+  getCommentAvatarUrl(userId: string): string | null {
+    return this._commentAvatarCache().get(userId) ?? null;
+  }
+
   isAuthorVerified(): boolean {
     return this.post().author?.isVerified ?? false;
   }
 
   isVideoAttachment(contentType: string): boolean {
     return contentType.startsWith('video/');
+  }
+
+  private _ensureCommentAvatarCache(userIds: string[]): void {
+    if (userIds.length === 0) return;
+
+    const uncachedIds = userIds.filter(userId => !this._commentAvatarCache().has(userId));
+    if (uncachedIds.length === 0) return;
+
+    this._userApi.getUserProfilesByIdsBatch(uncachedIds).subscribe({
+      next: profiles => {
+        this._commentAvatarCache.update(current => {
+          const next = new Map(current);
+          uncachedIds.forEach(userId => {
+            next.set(userId, profiles[userId]?.avatarUrl ?? null);
+          });
+          return next;
+        });
+      },
+      error: () => {
+        this._commentAvatarCache.update(current => {
+          const next = new Map(current);
+          uncachedIds.forEach(userId => {
+            next.set(userId, null);
+          });
+          return next;
+        });
+      }
+    });
   }
 
   // ── 4. Utilities ─────────────────────────────────────────────

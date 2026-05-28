@@ -5,4 +5,5 @@ public record UserFollowedEvent(
     string FollowedUsername,
     string FollowerUserId,
     string FollowerUsername,
-    bool IsMutual);
+    bool IsMutual,
+    string? FollowerAvatarUrl);

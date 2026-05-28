@@ -19,7 +19,7 @@ export function getNotificationText(n: NotificationDto): string {
     case NotificationType.PostWithMediaFailed:
       return n.referencePreview ?? 'Your post with attachments could not be published';
     default:
-      return `GoingMySocial`;
+      return `<strong>${n.actorUsername}</strong>`;
   }
 }
 

@@ -24,7 +24,7 @@ public class CommentAddedNotificationConsumer(
             RecipientUserId: evt.PostAuthorUserId,
             ActorUserId: evt.CommenterId,
             ActorUsername: evt.CommenterUsername,
-            ActorAvatarUrl: null,
+            ActorAvatarUrl: evt.CommenterAvatarUrl,
             Type: NotificationType.PostCommented,
             ReferenceId: evt.PostId,
             ReferencePreview: evt.CommentPreview),

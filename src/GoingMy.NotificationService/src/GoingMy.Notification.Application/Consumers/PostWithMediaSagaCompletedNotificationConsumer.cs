@@ -27,7 +27,7 @@ public class PostWithMediaSagaCompletedNotificationConsumer(
         var dto = await mediator.Send(new CreateNotificationCommand(
             RecipientUserId: evt.UserId,
             ActorUserId: evt.UserId,
-            ActorUsername: "GoingMy",
+            ActorUsername: "GoingMySocial",
             ActorAvatarUrl: null,
             Type: notificationType,
             ReferenceId: evt.PostId,

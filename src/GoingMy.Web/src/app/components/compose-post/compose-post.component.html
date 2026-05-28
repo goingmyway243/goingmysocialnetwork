@@ -1,7 +1,11 @@
 <!-- ── Trigger Bar ──────────────────────────────────────── -->
 <div class="compose-trigger" (click)="openDialog()">
   <div class="trigger-avatar">
-    <i class="pi pi-user"></i>
+    @if (currentUserAvatarUrl()) {
+      <img class="trigger-avatar-image" [src]="currentUserAvatarUrl()!" alt="Your avatar" />
+    } @else {
+      <i class="pi pi-user"></i>
+    }
   </div>
   <div class="trigger-input-mock">
     <span>What's on your mind?</span>
@@ -57,7 +61,7 @@
 
   <!-- Media Preview Gallery -->
   <app-media-preview
-    [mediaFiles]="selectedMediaFiles()"
+    [mediaFiles]="previewMediaFiles()"
     [uploadProgress]="uploadProgress()"
     [isValidating]="mediaValidating()"
     (removeMedia)="removeMedia($event)">

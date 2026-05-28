@@ -20,7 +20,7 @@ public class UploadsController(IMediator mediator) : ControllerBase
     [RequestSizeLimit(110 * 1024 * 1024)] // 110 MB max
     public async Task<ActionResult<MediaFileDto>> Upload(
         IFormFile file,
-        [FromQuery] MediaPurpose purpose = MediaPurpose.PostMedia,
+        [FromForm] MediaPurpose purpose = MediaPurpose.PostMedia,
         CancellationToken ct = default)
     {
         if (file.Length == 0)
@@ -55,7 +55,7 @@ public class UploadsController(IMediator mediator) : ControllerBase
     [RequestSizeLimit(440 * 1024 * 1024)] // 4 × 110 MB
     public async Task<ActionResult<IReadOnlyList<MediaFileDto>>> UploadBatch(
         IFormFileCollection files,
-        [FromQuery] MediaPurpose purpose = MediaPurpose.PostMedia,
+        [FromForm] MediaPurpose purpose = MediaPurpose.PostMedia,
         CancellationToken ct = default)
     {
         if (files.Count == 0)

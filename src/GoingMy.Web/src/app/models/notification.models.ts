@@ -1,12 +1,12 @@
 export enum NotificationType {
-  PostLiked = 'PostLiked',
-  PostCommented = 'PostCommented',
-  NewFollower = 'NewFollower',
-  Mentioned = 'Mentioned',
-  PostShared = 'PostShared',
-  FollowRequestAccepted = 'FollowRequestAccepted',
-  PostWithMediaCreated = 'PostWithMediaCreated',
-  PostWithMediaFailed = 'PostWithMediaFailed'
+  PostLiked = 0,
+  PostCommented = 1,
+  NewFollower = 2,
+  Mentioned = 3,
+  PostShared = 4,
+  FollowRequestAccepted = 5,
+  PostWithMediaCreated = 6,
+  PostWithMediaFailed = 7
 }
 
 export interface NotificationDto {

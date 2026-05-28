@@ -1,5 +1,5 @@
 <div class="users-page">
-  <p-confirmDialog>
+  <p-confirmDialog styleClass="glass-dialog">
     <ng-template pTemplate="message" let-message>
       <div class="confirm-message" [innerHTML]="message.message"></div>
     </ng-template>
@@ -61,7 +61,7 @@
           <td>
             <p-tag
               [value]="isRoleAdmin(user) ? 'Admin' : 'User'"
-              [severity]="isRoleAdmin(user) ? 'warn' : 'secondary'"
+              [severity]="isRoleAdmin(user) ? 'warn' : 'info'"
               [rounded]="true" />
           </td>
           <td class="date-cell">{{ user.createdAt | date:'mediumDate' }}</td>
@@ -116,7 +116,7 @@
         </div>
         <p-tag
           [value]="isRoleAdmin(user) ? 'Admin' : 'User'"
-          [severity]="isRoleAdmin(user) ? 'warn' : 'secondary'"
+          [severity]="isRoleAdmin(user) ? 'warn' : 'info'"
           [rounded]="true"
           styleClass="detail-role-tag" />
       </div>
@@ -141,7 +141,7 @@
           <span class="detail-value">{{ user.lastLoginAt ? (user.lastLoginAt | date:'medium') : 'Never' }}</span>
         </div>
         <div class="detail-row">
-          <span class="detail-label"><i class="pi pi-circle-fill" [style.color]="user.isActive ? 'var(--green-400)' : 'var(--red-400)'"></i> Status</span>
+          <span class="detail-label"><i class="pi pi-circle-fill" [style.color]="user.isActive ? 'var(--p-tag-success-background)' : 'var(--p-tag-danger-background)'"></i> Status</span>
           <p-tag
             [value]="user.isActive ? 'Active' : 'Inactive'"
             [severity]="user.isActive ? 'success' : 'danger'"

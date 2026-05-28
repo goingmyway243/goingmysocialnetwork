@@ -7,7 +7,7 @@ using MediatR;
 
 namespace GoingMy.Post.Application.Commands;
 
-public record AddCommentCommand(string PostId, string UserId, string Username, string Content)
+public record AddCommentCommand(string PostId, string UserId, string Username, string Content, string? AvatarUrl)
     : IRequest<CommentDto>;
 
 public class AddCommentCommandHandler(
@@ -37,7 +37,7 @@ public class AddCommentCommandHandler(
             : request.Content;
 
         await publishEndpoint.Publish(
-            new CommentAddedEvent(request.PostId, post.UserId, request.UserId, request.Username, preview),
+            new CommentAddedEvent(request.PostId, post.UserId, request.UserId, request.Username, preview, request.AvatarUrl),
             cancellationToken);
 
         return MapToDto(comment);

@@ -37,7 +37,7 @@
 
 .dashboard-content {
   flex: 1;
-  padding: 2rem;
+  padding: 0 2rem;
   overflow-y: auto;
   max-height: calc(100vh - 70px);
 }

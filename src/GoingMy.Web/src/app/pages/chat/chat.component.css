@@ -6,7 +6,7 @@
 /* ── Layout ────────────────────────────────────────────────── */
 .chat-container {
   display: flex;
-  margin: -2rem;
+  margin: 0 -2rem;
   height: calc(100vh - 70px);
   overflow: hidden;
   position: relative;
