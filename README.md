@@ -8,6 +8,21 @@
 
 ---
 
+## Table of Contents
+
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Services](#services)
+- [Quick Start](#quick-start)
+- [Commands](#commands)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
 ## Screenshots
 
 ### Login
@@ -42,21 +57,6 @@
 | Notifications |
 |---------------|
 | ![Light Notifications](docs/sample/light-mode-notifications.png) |
-
----
-
-## Table of Contents
-
-- [Screenshots](#screenshots)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Tech Stack](#tech-stack)
-- [Services](#services)
-- [Quick Start](#quick-start)
-- [Commands](#commands)
-- [Documentation](#documentation)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
@@ -179,8 +179,8 @@ git clone https://github.com/goingmyway243/goingmysocialnetwork.git && cd goingm
 
 #### 2. Configure API keys & secrets
 - Add your Gemini API key to:
-  [Post.API appsettings.json](src/GoingMy.PostService/src/GoingMy.Post.API/appsettings.json)
-  → Set `"OpenAI": { "ApiKey": "your-gemini-key" }`
+  [AppHost:26](src/GoingMy.AppHost/AppHost.cs)
+  → Set `var openAiApiKey = "your-gemini-key"`
 
 #### 3. (Optional) Configure frontend environment
 Edit if needed: [environment.ts](src/GoingMy.Web/src/environments/environment.ts)
@@ -202,7 +202,7 @@ cd src && dotnet run --project GoingMy.AppHost
 cd src/GoingMy.Web && npm install && npm start
 ```
 
-> **Note:** Before running, ensure you've added your **Gemini API key** to `src/GoingMy.PostService/src/GoingMy.Post.API/appsettings.json` and reviewed frontend config in `src/GoingMy.Web/src/environments/environment.ts` (if needed).
+> **Note:** Before running, ensure you've added your **Gemini API key** to `src/GoingMy.AppHost/AppHost.cs` and reviewed frontend config in `src/GoingMy.Web/src/environments/environment.ts` (if needed).
 
 **Access the Application:**
 | Component | URL |
