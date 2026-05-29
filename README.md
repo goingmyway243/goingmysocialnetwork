@@ -8,8 +8,46 @@
 
 ---
 
+## Screenshots
+
+### Login
+![Login Page](docs/sample/login-page.png)
+
+### Dark Mode
+| Home Feed | Compose Post |
+|-----------|--------------|
+| ![Home](docs/sample/dark-mode-home.png) | ![Compose Post](docs/sample/dark-mode-compose-post.png) |
+
+| Discover | Notifications |
+|----------|---------------|
+| ![Discover](docs/sample/dark-mode-discover-page.png) | ![Notifications](docs/sample/dark-mode-notifications-page.png) |
+
+| Messages | Conversation |
+|----------|--------------|
+| ![Messages](docs/sample/dark-mode-message.png) | ![Conversation](docs/sample/dark-mode-conversation.png) |
+
+| Profile | Admin Dashboard |
+|---------|----------------|
+| ![Profile](docs/sample/dark-mode-profile.png) | ![Admin Dashboard](docs/sample/dark-mode-admin-page.png) |
+
+| Admin Users | User Detail |
+|-------------|-------------|
+| ![Admin Users](docs/sample/dark-mode-admin-users.png) | ![User Detail](docs/sample/dark-mode-user-detail-dialog.png) |
+
+### Light Mode
+| Home Feed | Discover |
+|-----------|----------|
+| ![Light Home](docs/sample/light-mode-dashboard.png) | ![Light Discover](docs/sample/light-mode-discover.png) |
+
+| Notifications |
+|---------------|
+| ![Light Notifications](docs/sample/light-mode-notifications.png) |
+
+---
+
 ## Table of Contents
 
+- [Screenshots](#screenshots)
 - [Features](#features)
 - [Architecture](#architecture)
 - [Tech Stack](#tech-stack)

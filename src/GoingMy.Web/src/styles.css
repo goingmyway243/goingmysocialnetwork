@@ -1071,7 +1071,7 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
     inset 0 1px 2px var(--glass-highlight-inner);
 }
 
-.p-menu.p-menu-overlay .p-menuitem-link {
+.p-menu.p-menu-overlay .p-menu-item-link {
   color: #ffffff;
   padding: 0.75rem 1rem;
   transition: var(--transition-smooth);
@@ -1079,14 +1079,8 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
   margin: 0.25rem 0.5rem;
 }
 
-.p-menu.p-menu-overlay .p-menuitem-link:hover {
-  background: var(--glass-elevated-hover);
-  box-shadow: var(--glass-shadow-sm),
-    var(--glass-glow-sm);
-}
-
-.p-menu.p-menu-overlay .p-menuitem-icon {
-  color: var(--color-accent-blue);
+.p-menu.p-menu-overlay .p-menu-item-icon {
+  color: var(--color-accent-blue) !important;
   margin-right: 0.75rem;
 }
 
@@ -2480,6 +2474,16 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
   transform: scale(0.95);
 }
 
+@keyframes mini-vibrate {
+  0%, 100% { transform: rotate(0deg); }
+  15%       { transform: rotate(-12deg); }
+  30%       { transform: rotate(12deg); }
+  45%       { transform: rotate(-8deg); }
+  60%       { transform: rotate(8deg); }
+  75%       { transform: rotate(-4deg); }
+  90%       { transform: rotate(4deg); }
+}
+
 .mini-chat-badge {
   position: absolute;
   top: -4px;
@@ -2497,6 +2501,8 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
   justify-content: center;
   border: 2px solid rgba(14, 16, 28, 0.97);
   box-shadow: 0 1px 6px rgba(239, 68, 68, 0.5);
+  animation: mini-vibrate 1.4s ease-in-out 0.6s infinite;
+  transform-origin: center;
 }
 
 /* Conversations panel */
@@ -2633,6 +2639,8 @@ button.p-button-text.p-button-secondary:not(:disabled):hover {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  animation: mini-vibrate 1.4s ease-in-out 0.6s infinite;
+  transform-origin: center;
 }
 
 .mini-empty {

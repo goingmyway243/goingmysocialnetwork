@@ -1,8 +1,7 @@
 import { Component, computed, effect, inject, OnInit, signal, untracked } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+
 import { ConversationDto, MessageDto } from '../../models/chat.models';
 import { ChatStateService } from '../../services/chat-state.service';
 import { AuthService } from '../../services/auth.service';
@@ -10,10 +9,8 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-mini-chat',
   standalone: true,
-  imports: [FormsModule, RouterLink, ToastModule],
-  providers: [MessageService],
+  imports: [FormsModule, RouterLink],
   template: `
-    <p-toast position="bottom-right" key="mini-chat-toast"></p-toast>
     <div class="mini-chat-host">
 
       <!-- Mini conversations panel -->
@@ -128,8 +125,6 @@ export class MiniChatComponent implements OnInit {
   readonly _state = inject(ChatStateService);
   private readonly _auth = inject(AuthService);
   private readonly _router = inject(Router);
-  private readonly _messageService = inject(MessageService);
-
   // ── 2. State ────────────────────────────────────────────────
   readonly _showPanel = signal(false);
   private readonly _activeConvId = signal<string | null>(null);
@@ -177,25 +172,6 @@ export class MiniChatComponent implements OnInit {
       }
     });
 
-    // Show toast notification for inbound messages from non-active conversations
-    effect(() => {
-      const notification = this._state.newMessageNotification();
-      if (notification) {
-        untracked(() => {
-          const truncated = notification.content.length > 60
-            ? notification.content.substring(0, 60) + '…'
-            : notification.content;
-          this._messageService.add({
-            key: 'mini-chat-toast',
-            severity: 'info',
-            summary: `@${notification.senderUsername}`,
-            detail: truncated,
-            life: 4000
-          });
-          this._state.newMessageNotification.set(null);
-        });
-      }
-    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -252,13 +228,6 @@ export class MiniChatComponent implements OnInit {
       },
       (err) => {
         console.error('Failed to send message:', err);
-        this._messageService.add({
-          key: 'mini-chat-toast',
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to send message',
-          life: 3000
-        });
       }
     );
   }

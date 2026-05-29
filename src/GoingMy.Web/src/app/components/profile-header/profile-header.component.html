@@ -39,15 +39,16 @@
         } @else {
           <div class="avatar-initials"><i class="pi pi-user"></i></div>
         }
-        @if (p.isVerified) {
-          <span class="verified-badge" title="Verified"><i class="pi pi-verified"></i></span>
-        }
 
         @if (avatarUploading()) {
           <p-progressSpinner strokeWidth="4" class="avatar-upload-spinner"></p-progressSpinner>
         }
         @else if (isOwnProfile()) {
           <span class="avatar-edit-icon"><i class="pi pi-camera"></i></span>
+        }
+        
+        @if (p.isVerified) {
+          <span class="verified-badge" title="Verified"><i class="pi pi-verified"></i></span>
         }
       </label>
 
