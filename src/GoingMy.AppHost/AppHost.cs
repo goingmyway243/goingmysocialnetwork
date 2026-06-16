@@ -23,7 +23,7 @@ var uploadDb = mongodb.AddDatabase(SharedServices.UploadDb);
 var notificationDb = mongodb.AddDatabase(SharedServices.NotificationDb);
 
 var simplePassword = builder.AddParameter("password", "123456", secret: true);
-var openAiApiKey = "123456789"; // Update with your actual OpenAI API key here
+var openAiApiKey = "AIzaSyDX2Kc0tsYhXSO8gNsEAiKI9q1FXDPX0a8"; // Update with your actual OpenAI API key here
 
 var rabbitmq = builder.AddRabbitMQ(SharedServices.RabbitMQ, password: simplePassword)
     .WithManagementPlugin()
