@@ -60,7 +60,7 @@ public class UserController : ControllerBase
             });
 
             return CreatedAtAction(
-                nameof(GetUserById),
+                nameof(SignUp),
                 new { id = user.Id },
                 MapToUserResponse(user));
         }
