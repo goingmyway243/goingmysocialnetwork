@@ -3,7 +3,6 @@ using GoingMy.Auth.API.Models;
 using GoingMy.Auth.API.Services;
 using GoingMy.ServiceDefaults;
 using GoingMy.Shared;
-using GoingMy.Shared.Events;
 using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -140,8 +139,11 @@ builder.Services.AddScoped<IUserRevocationService, UserRevocationService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 
 // Register Redis connection (Aspire provides connection string via configuration)
+// Keep startup non-fatal when Redis is temporarily unavailable (e.g. test environments).
 var redisConnectionString = builder.Configuration.GetConnectionString(SharedServices.Redis) ?? "localhost:6379";
-var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+var redisOptions = ConfigurationOptions.Parse(redisConnectionString);
+redisOptions.AbortOnConnectFail = false;
+var redis = ConnectionMultiplexer.Connect(redisOptions);
 builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 
 // ── MassTransit + RabbitMQ (event publisher) ─────────────────────

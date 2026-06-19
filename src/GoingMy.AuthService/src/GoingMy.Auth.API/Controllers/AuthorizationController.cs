@@ -164,9 +164,6 @@ public class AuthorizationController : ControllerBase
 
     private async Task<IActionResult> HandleClientCredentialsGrantTypeAsync(OpenIddictRequest request)
     {
-        var application = await _applicationManager.FindByClientIdAsync(request.ClientId ?? "")
-                        ?? throw new InvalidOperationException("The application cannot be found.");
-
         var identity = CreateBaseClaimsIdentity();
         identity.AddClaim(new Claim(Claims.Subject, request.ClientId ?? "client_app"));
         identity.AddClaim(new Claim(Claims.Name, request.ClientId ?? "client_app"));
@@ -278,7 +275,7 @@ public class AuthorizationController : ControllerBase
             nameType: Claims.Name,
             roleType: Claims.Role);
 
-    private static void AddUserClaimsToIdentity(ClaimsIdentity identity, dynamic user)
+    private void AddUserClaimsToIdentity(ClaimsIdentity identity, dynamic user)
     {
         identity.AddClaim(new Claim(Claims.Subject, user.Id.ToString()));
         identity.AddClaim(new Claim(Claims.Name, user.UserName ?? string.Empty));
@@ -311,6 +308,13 @@ public class AuthorizationController : ControllerBase
     private async Task<ClaimsPrincipal?> AuthenticateAndValidatePrincipalAsync(string errorDescription)
     {
         var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+
+        if (!result.Succeeded)
+        {
+            _logger.LogWarning("Authentication failed: {ErrorDescription}", errorDescription);
+            return null;
+        }
+        
         return result.Principal;
     }
 
