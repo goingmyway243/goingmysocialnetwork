@@ -14,8 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Moq;
-using StackExchange.Redis;
 using MassTransit;
+using System.Text.Json;
 namespace GoingMy.Auth.IntegrationTests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
@@ -29,8 +29,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["ConnectionStrings:Redis"] = "localhost:6379,abortConnect=false,connectTimeout=100,syncTimeout=100",
                 ["ConnectionStrings:RabbitMQ"] = "amqp://guest:guest@localhost:5672",
+                ["Redis:AbortOnConnectFail"] = "false"
             });
         });
 
@@ -41,29 +41,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services.RemoveAll(typeof(IDbContextOptionsConfiguration<ApplicationDbContext>));
             services.RemoveAll(typeof(ApplicationDbContext));
 
-            services.RemoveAll<IConnectionMultiplexer>();
-            services.RemoveAll<IPublishEndpoint>();
-
-            var massTransitHostedServices = services
-                .Where(d => d.ServiceType == typeof(IHostedService)
-                    && d.ImplementationType?.Namespace?.StartsWith("MassTransit", StringComparison.Ordinal) == true)
-                .ToList();
-
-            foreach (var descriptor in massTransitHostedServices)
-            {
-                services.Remove(descriptor);
-            }
-
             // Add in-memory database
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseInMemoryDatabase("TestDb");
                 options.UseOpenIddict();
             });
-
-            // Mock Redis connection
-            var redisMock = new Mock<IConnectionMultiplexer>();
-            services.AddSingleton(redisMock.Object);
 
             // Mock MassTransit IPublishEndpoint
             var publishEndpointMock = new Mock<IPublishEndpoint>();
@@ -93,8 +76,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
-
-            services.AddDistributedMemoryCache();
 
             // Create service provider to seed database
             var serviceProvider = services.BuildServiceProvider();
@@ -146,9 +127,17 @@ public class AuthorizationFlowTest : IClassFixture<CustomWebApplicationFactory>
         var response = await _client.PostAsJsonAsync("/api/user/signup", signUpRequest);
         var responseContent = await response.Content.ReadAsStringAsync();
 
+        var applicationUser = JsonSerializer.Deserialize<ApplicationUser>(responseContent, new JsonSerializerOptions
+        {
+          PropertyNameCaseInsensitive = true
+        });
+
         // Assert
         Assert.True(
             response.StatusCode == HttpStatusCode.Created,
             $"Expected status code 201 Created, but got {response.StatusCode}. Response: {responseContent}");
+
+        Assert.NotNull(applicationUser);
+        Assert.Contains(signUpRequest.Username, applicationUser.UserName, StringComparison.OrdinalIgnoreCase);
     }
 }
